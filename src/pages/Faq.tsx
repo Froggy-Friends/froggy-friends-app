@@ -5,11 +5,6 @@ import grass from '../images/grass.png';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
-    hills: {
-      [theme.breakpoints.up('xl')]: {
-        minHeight: 720
-      }
-    },
     faq: {
       backgroundColor: theme.palette.success.main
     }
@@ -20,11 +15,11 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Faq() {
   const classes = useStyles();
   return (
-    <Grid container direction='column'>
-      <Grid item className={classes.hills}>
-        <img alt='faq' src={hills} style={{width: '100%'}}/>  
+    <Grid className={classes.faq} container direction='column'>
+      <Grid item>
+        <img className={classes.hills} alt='faq' src={hills} style={{width: '100%', marginTop: '-450px'}}/>  
       </Grid>
-      <Grid item className={classes.faq} mt={-1}>
+      <Grid item pt={20}>
         <Container maxWidth='xl'>
           <Grid container direction='column' alignItems='center'>
             <Grid item pb={10}>
@@ -33,7 +28,7 @@ export default function Faq() {
           </Grid>
         </Container>
       </Grid>
-      <Grid item className={classes.faq}>
+      <Grid item>
         <img alt='grass' src={grass} style={{width: '100%'}}/>
       </Grid>
     </Grid>

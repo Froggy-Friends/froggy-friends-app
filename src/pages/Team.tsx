@@ -17,7 +17,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Team() {
   const classes = useStyles();
   return (
-    <Grid className={classes.team} container alignItems='center' mt={-1} pt={10} pb={10}>
+    <Grid className={classes.team} container alignItems='center' pt={10} pb={40}>
       <Container maxWidth='lg'>
         <Grid container direction='column' alignItems='center'>
           <Grid item pb={10}>
