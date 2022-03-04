@@ -37,22 +37,22 @@ export default function About() {
           </Grid>
           <Grid container item justifyContent='space-between'>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Avatar alt='froggy' src={froggy1} sx={{height: 150, width: 150}}/>  
+              <Avatar alt='froggy' src={froggy1} sx={{height: 175, width: 175}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Avatar alt='froggy' src={froggy2} sx={{height: 150, width: 150}}/>  
+              <Avatar alt='froggy' src={froggy2} sx={{height: 175, width: 175}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Avatar alt='froggy' src={froggy3} sx={{height: 150, width: 150}}/>  
+              <Avatar alt='froggy' src={froggy3} sx={{height: 175, width: 175}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Avatar alt='froggy' src={froggy4} sx={{height: 150, width: 150}}/>  
+              <Avatar alt='froggy' src={froggy4} sx={{height: 175, width: 175}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Avatar alt='froggy' src={froggy5} sx={{height: 150, width: 150}}/>  
+              <Avatar alt='froggy' src={froggy5} sx={{height: 175, width: 175}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Avatar alt='froggy' src={froggy6} sx={{height: 150, width: 150}}/>  
+              <Avatar alt='froggy' src={froggy6} sx={{height: 175, width: 175}}/>  
             </Grid>
           </Grid>
         </Grid>

@@ -36,6 +36,24 @@ let theme = createTheme({
           fontSize: '1.3rem'
         }
       }
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          border: '8px solid #1a1b1c',
+          borderRadius: 5,
+          width: '100%',
+          textAlign: 'center'
+        }
+      }
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          height: '100%',
+          width: '100%'
+        }
+      }
     }
   }
 });

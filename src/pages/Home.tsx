@@ -18,13 +18,10 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 export default function Home() {
   const classes = useStyles();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   return (
     <Grid className={classes.home} container direction='column' alignItems='center' pt={15}>
       <Grid id='header' container item justifyContent='center' pb={10}>
-        { !isMobile && <Avatar className={classes.avatar} alt='Home' src={froggy} sx={{height: 200, width: 200}}/>}
-        { isMobile && <Avatar className={classes.avatar} alt='Home' src={froggy} sx={{height: 75, width: 75}}/>}
+        <Avatar alt='Home' src={froggy} sx={{height: 250, width: 250}}/>
       </Grid>
       <Grid id='title' item pb={5}>
         <Typography variant='h1' textTransform='uppercase'>Froggy Friends</Typography>
