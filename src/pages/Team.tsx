@@ -1,6 +1,9 @@
 import { makeStyles } from '@mui/styles';
-import { Avatar, Card, CardContent, CardMedia, Container, createStyles, Grid, Theme, Typography } from "@mui/material";
-import froggy from '../images/froggy.jpg';
+import { Avatar, Card, CardContent, CardMedia, Container, createStyles, Grid, IconButton, Theme, Typography } from "@mui/material";
+import TwitterIcon from '@mui/icons-material/Twitter';
+import jpg from '../images/jpg.jpg';
+import cat from '../images/cat.png';
+import cat2 from '../images/cat2.png';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -24,33 +27,42 @@ export default function Team() {
             <Grid item xl={4} lg={4} md={4} sm={8} xs={12} p={2}>
               <Card>
                 <CardMedia sx={{padding: 3}}>
-                  <Avatar alt='Home' src={froggy}/>
+                  <Avatar alt='Home' src={jpg}/>
                 </CardMedia>
                 <CardContent>
                   <Typography variant='h2'>Jpeg Holdings</Typography>
                   <Typography variant='h3'>Founder / Artist </Typography>
+                  <IconButton color='primary' onClick={() => window.open('https://twitter.com/jpegholdings', '_blank')}>
+                    <TwitterIcon fontSize='large' />
+                  </IconButton>
                 </CardContent>
               </Card>
             </Grid>
             <Grid item xl={4} lg={4} md={4} sm={8} xs={12} p={2}>
               <Card>
                 <CardMedia sx={{padding: 3}}>
-                  <Avatar alt='Home' src={froggy}/>
+                  <Avatar alt='Home' src={cat2}/>
                 </CardMedia>
                 <CardContent>
                   <Typography variant='h2'>Mayan Mango</Typography>
                   <Typography variant='h3'>Project Manager </Typography>
+                  <IconButton color='primary' onClick={() => window.open('https://twitter.com/mayanmango', '_blank')}>
+                    <TwitterIcon fontSize='large' />
+                  </IconButton>
                 </CardContent>
               </Card>
             </Grid>
             <Grid item xl={4} lg={4} md={4} sm={8} xs={12} p={2}>
               <Card>
                 <CardMedia sx={{padding: 3}}>
-                  <Avatar alt='Home' src={froggy}/>
+                  <Avatar alt='Home' src={cat}/>
                 </CardMedia>
                 <CardContent>
                   <Typography variant='h2'>Fonzy</Typography>
-                  <Typography variant='h3'>Developer</Typography>
+                  <Typography variant='h3'>Solidity Developer</Typography>
+                  <IconButton color='primary' onClick={() => window.open('https://twitter.com/0xFonzy', '_blank')}>
+                    <TwitterIcon fontSize='large' />
+                  </IconButton>
                 </CardContent>
               </Card>
             </Grid>
