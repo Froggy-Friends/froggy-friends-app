@@ -6,11 +6,15 @@ import froggy3 from '../images/froggy3.png';
 import froggy4 from '../images/froggy4.png';
 import froggy5 from '../images/froggy5.png';
 import froggy6 from '../images/froggy6.png';
+import clouds from '../images/cloud2.png';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     about: {
       backgroundColor: theme.palette.common.white
+    },
+    clouds: {
+      width: '100%'
     }
   })
 );
@@ -33,26 +37,29 @@ export default function About() {
           </Grid>
           <Grid container item justifyContent='space-between'>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Avatar alt='froggy' src={froggy1} sx={{height: 100, width: 100}}/>  
+              <Avatar alt='froggy' src={froggy1} sx={{height: 150, width: 150}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Avatar alt='froggy' src={froggy2} sx={{height: 100, width: 100}}/>  
+              <Avatar alt='froggy' src={froggy2} sx={{height: 150, width: 150}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Avatar alt='froggy' src={froggy3} sx={{height: 100, width: 100}}/>  
+              <Avatar alt='froggy' src={froggy3} sx={{height: 150, width: 150}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Avatar alt='froggy' src={froggy4} sx={{height: 100, width: 100}}/>  
+              <Avatar alt='froggy' src={froggy4} sx={{height: 150, width: 150}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Avatar alt='froggy' src={froggy5} sx={{height: 100, width: 100}}/>  
+              <Avatar alt='froggy' src={froggy5} sx={{height: 150, width: 150}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Avatar alt='froggy' src={froggy6} sx={{height: 100, width: 100}}/>  
+              <Avatar alt='froggy' src={froggy6} sx={{height: 150, width: 150}}/>  
             </Grid>
           </Grid>
         </Grid>
       </Container>
+      <Grid id='clouds' className={classes.clouds} item>
+        <img alt='clouds' src={clouds} style={{width: '100%'}}/>
+      </Grid>
     </Grid>  
   );
 }
