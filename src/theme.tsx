@@ -13,16 +13,20 @@ let theme = createTheme({
     }
   },
   typography: {
-    fontFamily: ''
+    fontFamily: 'Billy, Outfit-Light'
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
           color: '#1a1b1c',
-          backgroundColor: '#dedede',
-          borderRadius: 50,
-          fontWeight: 'bold'
+          backgroundColor: '#ffffff',
+          borderRadius: 5,
+          border: '1px solid #1a1b1c',
+          fontWeight: 'bold',
+          ":hover": {
+            backgroundColor: '#dedede'
+          }
         }
       }
     },

@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles';
 import { createStyles, Grid, Theme } from "@mui/material";
-import Mint from './pages/Mint';
+import Home from './pages/Home';
 import About from './pages/About';
 import Team from './pages/Team';
 import Faq from './pages/Faq';
@@ -19,7 +19,7 @@ function App() {
   const classes = useStyles();
   return (
     <Grid className={classes.app} container direction='column' justifyContent='space-between'>
-      <Mint/>
+      <Home/>
       <About/>
       <Team/>
       <Faq/>

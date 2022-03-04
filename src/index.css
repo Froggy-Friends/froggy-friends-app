@@ -1,13 +1,20 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: 'Billy';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Billy'), url(./fonts/billy.ttf) format('ttf');
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@font-face {
+  font-family: 'Outfit-Light';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Outfit-Light'), url(./fonts/Outfit-Light.ttf) format('ttf');
+}
+
+body {
+  margin: 0;
+  font-family: 'Billy', 'Outfit-Light';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
