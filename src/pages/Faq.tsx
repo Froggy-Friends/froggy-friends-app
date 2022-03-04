@@ -15,8 +15,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Faq() {
   const classes = useStyles();
   return (
-    <Grid container direction='column' pt={10} pb={10}>
-      <Grid item pb={20}>
+    <Grid container direction='column'>
+      <Grid item>
         <img alt='faq' src={hills} style={{width: '100%'}}/>  
       </Grid>
       <Grid item className={classes.faq}>
