@@ -3,10 +3,18 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ThemeProvider } from '@mui/material';
+import { DAppProvider } from '@usedapp/core';
+import theme from './theme';
+import config from './config';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <DAppProvider config={config}>
+        <App />
+      </DAppProvider>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

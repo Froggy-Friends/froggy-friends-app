@@ -1,25 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { makeStyles } from '@mui/styles';
+import { createStyles, Grid, Theme } from "@mui/material";
+
+const useStyles: any = makeStyles((theme: Theme) => 
+  createStyles({
+    app: {
+      backgroundColor: theme.palette.background.default,
+      minHeight: '100vh'
+    }
+  })
+);
+
 
 function App() {
+  const classes = useStyles();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Grid className={classes.app} container direction='column' justifyContent='space-between'>
+      
+      
+    </Grid>
   );
 }
 
