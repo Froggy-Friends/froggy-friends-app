@@ -8,8 +8,7 @@ import Faq from './pages/Faq';
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     app: {
-      backgroundColor: theme.palette.background.default,
-      minHeight: '100vh'
+      backgroundColor: theme.palette.common.white
     }
   })
 );
@@ -18,7 +17,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
 function App() {
   const classes = useStyles();
   return (
-    <Grid className={classes.app} container direction='column' justifyContent='space-between'>
+    <Grid className={classes.app} container direction='column' alignItems='center'>
       <Home/>
       <About/>
       <Team/>
