@@ -10,6 +10,9 @@ let theme = createTheme({
     },
     secondary: {
       main: '#dedede'
+    },
+    success: {
+      main: '#cfdcae'
     }
   },
   typography: {
