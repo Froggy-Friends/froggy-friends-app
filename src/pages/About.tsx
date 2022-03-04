@@ -35,7 +35,7 @@ export default function About() {
               Our community-driven project is aimed at becoming a place every Froggy holder will be able to call home in the metaverse and in real life.  
             </Typography> 
           </Grid>
-          <Grid container item justifyContent='space-between'>
+          <Grid container item textAlign='center'>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={6}>
               <img alt='froggy' src={froggy1} style={{height: 150, width: 150}}/>  
             </Grid>
