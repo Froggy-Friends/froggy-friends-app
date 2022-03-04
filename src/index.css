@@ -1,20 +1,10 @@
 @font-face {
-  font-family: 'Billy';
-  font-style: normal;
-  font-weight: 500;
-  src: local('Billy'), url(./fonts/billy.ttf) format('ttf');
-}
-
-@font-face {
-  font-family: 'Outfit-Light';
-  font-style: normal;
-  font-weight: 500;
-  src: local('Outfit-Light'), url(./fonts/Outfit-Light.ttf) format('ttf');
+  font-family: 'billy';
+  src: local('billy'), url(./fonts/billy.ttf) format('truetype');
 }
 
 body {
   margin: 0;
-  font-family: 'Billy', 'Outfit-Light';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
