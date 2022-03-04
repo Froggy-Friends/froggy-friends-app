@@ -60,7 +60,7 @@ export default function Team() {
                 <CardContent>
                   <Typography variant='h2'>Fonzy</Typography>
                   <Typography variant='h3'>Solidity Developer</Typography>
-                  <IconButton color='primary' onClick={() => window.open('https://twitter.com/0xFonzy', '_blank')}>
+                  <IconButton color='primary' onClick={() => window.open('https://linktr.ee/fonzy.eth', '_blank')}>
                     <TwitterIcon fontSize='large' />
                   </IconButton>
                 </CardContent>
