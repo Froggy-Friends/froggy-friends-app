@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import { Avatar, Container, createStyles, Grid, Theme, Typography } from "@mui/material";
+import { Container, createStyles, Grid, Theme, Typography } from "@mui/material";
 import froggy1 from '../images/froggy1.png';
 import froggy2 from '../images/froggy2.png';
 import froggy3 from '../images/froggy3.png';
@@ -37,22 +37,22 @@ export default function About() {
           </Grid>
           <Grid container item justifyContent='space-between'>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={6}>
-              <Avatar alt='froggy' src={froggy1} sx={{height: 150, width: 150}}/>  
+              <img alt='froggy' src={froggy1} style={{height: 150, width: 150}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={6}>
-              <Avatar alt='froggy' src={froggy2} sx={{height: 150, width: 150}}/>  
+              <img alt='froggy' src={froggy2} style={{height: 150, width: 150}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={6}>
-              <Avatar alt='froggy' src={froggy3} sx={{height: 150, width: 150}}/>  
+              <img alt='froggy' src={froggy3} style={{height: 150, width: 150}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={6}>
-              <Avatar alt='froggy' src={froggy4} sx={{height: 150, width: 150}}/>  
+              <img alt='froggy' src={froggy4} style={{height: 150, width: 150}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={6}>
-              <Avatar alt='froggy' src={froggy5} sx={{height: 150, width: 150}}/>  
+              <img alt='froggy' src={froggy5} style={{height: 150, width: 150}}/>  
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={6}>
-              <Avatar alt='froggy' src={froggy6} sx={{height: 150, width: 150}}/>  
+              <img alt='froggy' src={froggy6} style={{height: 150, width: 150}}/>  
             </Grid>
           </Grid>
         </Grid>
