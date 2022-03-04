@@ -5,6 +5,11 @@ import grass from '../images/grass.png';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
+    hills: {
+      [theme.breakpoints.up('xl')]: {
+        minHeight: 720
+      }
+    },
     faq: {
       backgroundColor: theme.palette.success.main
     }
@@ -16,10 +21,10 @@ export default function Faq() {
   const classes = useStyles();
   return (
     <Grid container direction='column'>
-      <Grid item>
+      <Grid item className={classes.hills}>
         <img alt='faq' src={hills} style={{width: '100%'}}/>  
       </Grid>
-      <Grid item className={classes.faq}>
+      <Grid item className={classes.faq} mt={-1}>
         <Container maxWidth='xl'>
           <Grid container direction='column' alignItems='center'>
             <Grid item pb={10}>
