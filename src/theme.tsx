@@ -13,7 +13,7 @@ let theme = createTheme({
     }
   },
   typography: {
-    fontFamily: ['billy', 'sans-serif'].join(',')
+    fontFamily: ['billy', 'outfit', 'sans-serif'].join(',')
   },
   components: {
     MuiButton: {

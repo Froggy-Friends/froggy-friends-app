@@ -3,6 +3,11 @@
   src: local('billy'), url(./fonts/billy.ttf) format('truetype');
 }
 
+@font-face {
+  font-family: 'outfit';
+  src: local('outfit'), url(./fonts/outfit.ttf) format('truetype');
+}
+
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
