@@ -21,7 +21,7 @@ export default function Team() {
       <Container maxWidth='lg'>
         <Grid container direction='column' alignItems='center'>
           <Grid item pb={10}>
-            <Typography variant='h1' textTransform='uppercase'>Team</Typography>  
+            <Typography variant='h1' fontWeight='bold' textTransform='uppercase'>Team</Typography>  
           </Grid>
           <Grid container item justifyContent='center' pb={10} p={5}>
             <Grid item xl={4} lg={4} md={4} sm={8} xs={12} p={2}>

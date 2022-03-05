@@ -28,7 +28,7 @@ export default function Home() {
         <Avatar alt='Home' src={froggy} sx={{height: 250, width: 250}}/>
       </Grid>
       <Grid id='title' item pb={5}>
-        <Typography variant='h1' textTransform='uppercase'>Froggy Friends</Typography>
+        <Typography variant='h1' fontWeight='bold' textTransform='uppercase'>Froggy Friends</Typography>
       </Grid>
       <Grid id='mint' item pb={10}>
         <Button variant='contained' color='secondary'>

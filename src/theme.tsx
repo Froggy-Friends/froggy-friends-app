@@ -24,8 +24,8 @@ let theme = createTheme({
         root: {
           color: '#1a1b1c',
           backgroundColor: '#ffffff',
-          borderRadius: 5,
-          border: '1px solid #1a1b1c',
+          borderRadius: 16,
+          border: '4px solid #1a1b1c',
           fontWeight: 'bold',
           ":hover": {
             backgroundColor: '#dedede'

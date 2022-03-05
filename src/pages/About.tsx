@@ -27,7 +27,7 @@ export default function About() {
       <Container maxWidth='lg'>
         <Grid container direction='column' alignItems='center'>
           <Grid item pb={10}>
-            <Typography variant='h1' textTransform='uppercase'>About</Typography>  
+            <Typography variant='h1' fontWeight='bold' textTransform='uppercase'>About</Typography>  
           </Grid>
           <Grid item pb={10}>
             <Typography variant='h3' sx={{fontFamily: 'outfit'}}>

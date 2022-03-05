@@ -25,7 +25,7 @@ export default function Faq() {
         <Container maxWidth='lg'>
           <Grid container direction='column' alignItems='center'>
             <Grid item pb={10}>
-              <Typography variant='h1' textTransform='uppercase'>FAQs</Typography>  
+              <Typography variant='h1' fontWeight='bold' textTransform='uppercase'>FAQs</Typography>  
             </Grid>
             <Grid item width={'100%'} pb={5}>
               <Accordion>
