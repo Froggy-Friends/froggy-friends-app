@@ -1,7 +1,7 @@
 import { makeStyles } from '@mui/styles';
 import { Avatar, Card, CardContent, CardMedia, Container, createStyles, Grid, IconButton, Theme, Typography } from "@mui/material";
 import TwitterIcon from '@mui/icons-material/Twitter';
-import jpg from '../images/jpg.jpg';
+import jpg from '../images/lemon.jpg';
 import cat from '../images/cat.png';
 import cat2 from '../images/cat2.png';
 
