@@ -44,7 +44,7 @@ export default function Team() {
                   <Avatar alt='Home' src={cat2}/>
                 </CardMedia>
                 <CardContent>
-                  <Typography variant='h2'>Mayan Mango</Typography>
+                  <Typography variant='h2'>MayanMango.eth</Typography>
                   <Typography variant='h3'>Project Manager </Typography>
                   <IconButton color='primary' onClick={() => window.open('https://twitter.com/mayanmango', '_blank')}>
                     <TwitterIcon fontSize='large' />
@@ -58,7 +58,7 @@ export default function Team() {
                   <Avatar alt='Home' src={cat}/>
                 </CardMedia>
                 <CardContent>
-                  <Typography variant='h2'>Fonzy</Typography>
+                  <Typography variant='h2'>Fonzy.eth</Typography>
                   <Typography variant='h3'>Solidity Developer</Typography>
                   <IconButton color='primary' onClick={() => window.open('https://linktr.ee/fonzy.eth', '_blank')}>
                     <TwitterIcon fontSize='large' />
