@@ -37,7 +37,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
       }
     },
     mintButton: {
-      width: '80%',
+      width: '60%',
       marginTop: theme.spacing(5)
     },
     froggylist: {
@@ -116,7 +116,7 @@ function App() {
           <Typography variant='h2' fontWeight='bold'>Minting March 18</Typography>
           <Typography variant='h5' fontFamily='outfit'>4,444 Froggy Friends</Typography>
           <Typography variant='h5' fontFamily='outfit' pb={3}>0.03 ETH mint price</Typography>
-          <Slider sx={{width: '80%', paddingBottom: 5}} defaultValue={1} step={1} min={1} max={2}/>
+          <Slider sx={{width: '50%', paddingBottom: 5}} defaultValue={1} step={1} min={1} max={2}/>
           <Button className={classes.mintButton} variant='contained' color='secondary'>
             <Typography variant='h4'>Coming Soon</Typography>  
           </Button>
