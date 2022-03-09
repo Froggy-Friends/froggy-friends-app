@@ -35,12 +35,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
         marginTop: '10px'
       }
     },
-    slider: {
-      width: '80%'
-    },
     mintButton: {
       width: '80%',
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(5)
     },
     stepper: {
       width: '100%'
@@ -87,13 +84,13 @@ function App() {
             <Typography variant='h2' fontWeight='bold'>Minting March 18</Typography>
             <Typography variant='h5' fontFamily='outfit'>4,444 Froggy Friends</Typography>
             <Typography variant='h5' fontFamily='outfit' pb={3}>0.03 ETH mint price</Typography>
-            <Slider className={classes.slider} defaultValue={1} step={1} min={1} max={2} />
+            <Slider sx={{width: '80%', paddingBottom: 5}} defaultValue={1} step={1} min={1} max={2}/>
             <Button className={classes.mintButton} variant='contained' color='secondary'>
               <Typography variant='h4'>Coming Soon</Typography>  
             </Button>
           </Grid>
         </Grid>  
-        <Grid id='progress' container xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
+        <Grid id='progress' container xl={12} lg={12} md={12} sm={12} xs={12} pb={15}>
           <Stepper className={classes.stepper} activeStep={0} alternativeLabel>
             <Step>
               <StepLabel>
