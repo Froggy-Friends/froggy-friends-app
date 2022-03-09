@@ -49,14 +49,6 @@ let theme = createTheme({
           textAlign: 'center'
         }
       }
-    },
-    MuiAvatar: {
-      styleOverrides: {
-        root: {
-          height: '100%',
-          width: '100%'
-        }
-      }
     }
   }
 });
