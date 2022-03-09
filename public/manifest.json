@@ -3,8 +3,13 @@
   "name": "Froggy Friends",
   "icons": [
     {
-      "src": "favicon.jpg",
+      "src": "icon.png",
       "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "froggy.jpg",
+      "size": "400x400",
       "type": "image/x-icon"
     }
   ],
