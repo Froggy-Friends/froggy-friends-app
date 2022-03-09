@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import { Avatar, createStyles, Grid, Slider, Theme } from "@mui/material";
+import { Avatar, createStyles, Grid, Slider, Step, StepLabel, Stepper, Theme } from "@mui/material";
 
 import { Button, Container, Link, Typography } from "@mui/material";
 import froggy from './images/froggy.jpg';
@@ -30,6 +30,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
     },
     mintButton: {
       width: '80%'
+    },
+    stepper: {
+      width: '100%'
     }
   })
 );
@@ -68,7 +71,7 @@ function App() {
         </Grid>
       </Grid>
       <Container maxWidth='xl'>
-        <Grid id='info' container item justifyContent='center' textAlign='center' xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid id='info' container justifyContent='center' textAlign='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={20}>
           <Grid item xl={4} lg={4} md={6} sm={6} xs={12} p={3}>
             <Typography variant='h2' fontWeight='bold'>Minting March 18</Typography>
             <Typography variant='h5' fontFamily='outfit'>4,444 Froggy Friends</Typography>
@@ -79,6 +82,30 @@ function App() {
             </Button>
           </Grid>
         </Grid>  
+        <Grid id='progress' container xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
+          <Stepper className={classes.stepper} activeStep={0} alternativeLabel>
+            <Step>
+              <StepLabel>
+                <Typography variant='h3'>Prep</Typography>
+              </StepLabel>
+            </Step>
+            <Step>
+              <StepLabel>
+                <Typography variant='h3'>Froggylist Mint</Typography>
+              </StepLabel>
+            </Step>
+            <Step>
+              <StepLabel>
+                <Typography variant='h3'>Public Mint</Typography>
+              </StepLabel>
+            </Step>
+            <Step>
+              <StepLabel>
+                <Typography variant='h3'>Sold Out!</Typography>
+              </StepLabel>
+            </Step>
+          </Stepper>  
+        </Grid>
       </Container>
     </Grid>
   );
