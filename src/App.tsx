@@ -53,7 +53,7 @@ function App() {
       <Grid id='toolbar' container justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
         <Grid container item xl={5} lg={5} md={6} sm={8} xs={12}>
           <Avatar className={classes.avatar} alt='Home' src={froggy}/>
-          <Typography variant='h2' fontWeight='bold' textTransform='uppercase' pl={3}>Froggy Friends</Typography>
+          <Link href='https://www.froggyfriendsnft.com/' variant='h2' fontWeight='bold' textTransform='uppercase' underline='none' pl={3}>Froggy Friends</Link>
         </Grid>
         <Grid container item justifyContent='end' xl={3} lg={3} md={3} sm={4} xs={12}>
           <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
