@@ -39,6 +39,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
       width: '80%',
       marginTop: theme.spacing(5)
     },
+    froggylist: {
+      cursor: 'pointer'
+    },
     stepper: {
       width: '100%'
     }
@@ -51,11 +54,11 @@ function App() {
   return (
     <Grid id='app' className={classes.app} container p={2}>
       <Grid id='toolbar' container justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
-        <Grid container item xl={5} lg={5} md={6} sm={8} xs={12}>
+        <Grid container item justifyContent='center' xl={3} lg={4} md={5} sm={6} xs={12}>
           <Avatar className={classes.avatar} alt='Home' src={froggy}/>
           <Link href='https://www.froggyfriendsnft.com/' variant='h2' fontWeight='bold' textTransform='uppercase' underline='none' pl={3}>Froggy Friends</Link>
         </Grid>
-        <Grid container item justifyContent='end' xl={3} lg={3} md={3} sm={4} xs={12}>
+        <Grid container item justifyContent='center' textAlign='center' xl={3} lg={3} md={3} sm={4} xs={12}>
           <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
             <Link href='https://twitter.com/FroggyFriendNFT' target='_blank'>
               <img alt='Twitter' src={twitter} height={40}/>  
@@ -79,8 +82,8 @@ function App() {
         </Grid>
       </Grid>
       <Container maxWidth='xl'>
-        <Grid id='info' container justifyContent='center' textAlign='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={20}>
-          <Grid item xl={4} lg={4} md={6} sm={6} xs={12} p={3}>
+        <Grid id='info' container justifyContent='center' textAlign='center' pb={10}>
+          <Grid container item direction='column' alignItems='center' xl={4} lg={4} md={6} sm={6} xs={12} p={3}>
             <Typography variant='h2' fontWeight='bold'>Minting March 18</Typography>
             <Typography variant='h5' fontFamily='outfit'>4,444 Froggy Friends</Typography>
             <Typography variant='h5' fontFamily='outfit' pb={3}>0.03 ETH mint price</Typography>
@@ -88,6 +91,7 @@ function App() {
             <Button className={classes.mintButton} variant='contained' color='secondary'>
               <Typography variant='h4'>Coming Soon</Typography>  
             </Button>
+            <Link className={classes.froggylist} variant='h4' pt={3}>Check Froggylist</Link>
           </Grid>
         </Grid>  
         <Grid id='progress' container xl={12} lg={12} md={12} sm={12} xs={12} pb={15}>
