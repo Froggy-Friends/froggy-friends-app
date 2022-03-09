@@ -49,6 +49,13 @@ let theme = createTheme({
           textAlign: 'center'
         }
       }
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          fontFamily: 'outfit'
+        }
+      }
     }
   }
 });

@@ -1,6 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import { Avatar, createStyles, Grid, Slider, Step, StepLabel, Stepper, Theme } from "@mui/material";
-
+import { Avatar, Box, createStyles, Grid, Modal, Slider, Step, StepLabel, Stepper, TextField, Theme } from "@mui/material";
 import { Button, Container, Link, Typography } from "@mui/material";
 import froggy from './images/froggy.jpg';
 import grass from './images/grass.png';
@@ -8,6 +7,8 @@ import twitter from './images/twitter.png';
 import opensea from './images/opensea.png';
 import looksrare from './images/looksrare.png';
 import etherscan from './images/etherscan.png';
+import { useState } from 'react';
+import { Close } from '@mui/icons-material';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -44,6 +45,24 @@ const useStyles: any = makeStyles((theme: Theme) =>
     },
     stepper: {
       width: '100%'
+    },
+    modal: {
+      position: 'absolute' as 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 500,
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      borderRadius: 5,
+      boxShadow: 24,
+      padding: 4,
+      [theme.breakpoints.down('sm')]: {
+        width: 300
+      }
+    },
+    walletButton: {
+      marginTop: theme.spacing(3)
     }
   })
 );
@@ -51,6 +70,13 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 function App() {
   const classes = useStyles();
+  const [openModal, setOpenModal] = useState(false);
+  const [wallet, setWallet] = useState('');
+  const onModalClose = () => setOpenModal(false);
+  const onWalletChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setWallet(event.target.value);
+  };
+  
   return (
     <Grid id='app' className={classes.app} container p={2}>
       <Grid id='toolbar' container justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
@@ -91,7 +117,7 @@ function App() {
             <Button className={classes.mintButton} variant='contained' color='secondary'>
               <Typography variant='h4'>Coming Soon</Typography>  
             </Button>
-            <Link className={classes.froggylist} variant='h4' pt={3}>Check Froggylist</Link>
+            <Link className={classes.froggylist} variant='h4' pt={3} onClick={() => setOpenModal(true)}>Check Froggylist</Link>
           </Grid>
         </Grid>  
         <Grid id='progress' container xl={12} lg={12} md={12} sm={12} xs={12} pb={15}>
@@ -119,6 +145,21 @@ function App() {
           </Stepper>  
         </Grid>
       </Container>
+      <Modal open={openModal} onClose={onModalClose} keepMounted aria-labelledby='froggylist' aria-describedby='froggylist'>
+        <Box className={classes.modal} p={3}>
+          <Grid container justifyContent='space-between' item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
+            <Typography variant='h2'>Froggylist Checker</Typography>
+            <Close onClick={() => setOpenModal(false)} sx={{cursor: 'pointer'}}/>
+          </Grid>
+          <Grid container direction='column'>
+            <Typography variant='h6' fontFamily='outfit' pb={3}>Check your wallet</Typography>
+            <TextField id='wallet' placeholder='Your wallet address' value={wallet} onChange={onWalletChange} focused sx={{paddingBottom: 5}}/>
+            <Button className={classes.walletButton} variant='contained' color='secondary'>
+              <Typography variant='h4'>Check Wallet</Typography>  
+            </Button>
+          </Grid>
+        </Box>
+      </Modal>
     </Grid>
   );
 }
