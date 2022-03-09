@@ -29,7 +29,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
       width: '80%'
     },
     mintButton: {
-      width: '80%'
+      width: '80%',
+      marginTop: theme.spacing(3)
     },
     stepper: {
       width: '100%'
