@@ -25,6 +25,16 @@ const useStyles: any = makeStyles((theme: Theme) =>
         backgroundSize: '100% 30%'
       }
     },
+    avatar: {
+      borderRadius: '50%', 
+      border: '2px solid black', 
+      [theme.breakpoints.up('sm')]: {
+        marginTop: '5px'
+      },
+      [theme.breakpoints.up('lg')]: {
+        marginTop: '10px'
+      }
+    },
     slider: {
       width: '80%'
     },
@@ -45,7 +55,7 @@ function App() {
     <Grid id='app' className={classes.app} container p={2}>
       <Grid id='toolbar' container justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
         <Grid container item xl={5} lg={5} md={6} sm={8} xs={12}>
-          <Avatar alt='Home' src={froggy} sx={{borderRadius: '50%', border: '2px solid black'}}/>
+          <Avatar className={classes.avatar} alt='Home' src={froggy}/>
           <Typography variant='h2' fontWeight='bold' textTransform='uppercase' pl={3}>Froggy Friends</Typography>
         </Grid>
         <Grid container item justifyContent='end' xl={3} lg={3} md={3} sm={4} xs={12}>
