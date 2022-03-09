@@ -8,8 +8,17 @@
   src: local('outfit'), url(./fonts/outfit.ttf) format('truetype');
 }
 
+html {
+  height: '100%';
+}
+
 body {
+  height: '100%';
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height: '100%';
 }
