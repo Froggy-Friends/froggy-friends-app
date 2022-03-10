@@ -135,6 +135,28 @@ function App() {
     }
   }, [froggylistMintState.status])
 
+  useEffect(() => {
+    if (mintState.status === 'Exception') {
+      if (mintState.errorMessage?.includes('insufficient funds')) {
+        setAlertMessage('Insufficient funds');
+      } else if (mintState.errorMessage?.includes('unknown account')) {
+        setAlertMessage('Refresh page to login');
+      } else {
+        setAlertMessage(mintState.errorMessage?.replace(/^execution reverted:/i, ''));
+      }
+      setShowAlert(true);
+    } else if (mintState.status === 'Mining') {
+      setTx(mintState.transaction?.hash);
+      setTxPending(true);
+      setTxFail(false);
+      setShowModal(true);
+    } else if (mintState.status === 'Success') {
+      setTxPending(false);
+    } else if (mintState.status === 'Fail') {
+      setTxFail(true);
+    }
+  }, [mintState.status])
+
   const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -209,9 +231,9 @@ function App() {
       </Grid>
       <Grid id='info' container justifyContent='center' textAlign='center' mt={-10} maxHeight={350}>
         <Grid container item direction='column' alignItems='center' xl={4} lg={4} md={6} sm={6} xs={12} p={3}>
-          <Typography variant='h2' fontWeight='bold'>Minting March 18</Typography>
-          <Typography variant='h5' fontFamily='outfit'>4,444 Froggy Friends</Typography>
-          <Typography variant='h5' fontFamily='outfit' pb={3}>0.03 ETH mint price</Typography>
+          <Typography variant='h1' fontWeight='bold'>{minted} / {supply} Minted</Typography>
+          <Typography variant='h5' fontFamily='outfit'>0.03 ETH mint price</Typography>
+          <Typography variant='h5' fontFamily='outfit' pb={3}>Max 2 per wallet</Typography>
           <Slider sx={{width: '50%', paddingBottom: 5}} value={froggies} step={1} min={1} max={2} onChange={(e, val: any) => setFroggies(val)}/>
           {
             account && <Button className={classes.mintButton} variant='contained' disabled={soldOut} onClick={onMint}>
