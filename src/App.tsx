@@ -8,9 +8,10 @@ import twitter from './images/twitter.png';
 import opensea from './images/opensea.png';
 import looksrare from './images/looksrare.png';
 import etherscan from './images/etherscan.png';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Close } from '@mui/icons-material';
-import { useFroggyStatus } from './client';
+import { FroggyStatus, useFroggylistMint, useFroggyStatus, useMint, useMinted, useSupply } from './client';
+import { parseEther } from "@ethersproject/units";
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -77,13 +78,36 @@ function App() {
   const [openModal, setOpenModal] = useState(false);
   const [wallet, setWallet] = useState('');
   const [froggies, setFroggies] = useState(1);
+  const [step, setStep] = useState(0);
   const { activateBrowserWallet, account } = useEthers();
+  const { froggylistMint, froggylistMintState } = useFroggylistMint();
+  const { mint, mintState } = useMint();
   const froggyStatus = useFroggyStatus();
+  const supply = useSupply();
+  const minted = useMinted();
+  const soldOut = minted > 0 && supply > 0 && minted === supply;
+  const price = parseEther("0.03");
+
+  useEffect(() => {
+    soldOut ? setStep(4) : setStep(froggyStatus);
+  }, [froggyStatus, soldOut]);
   
   const onModalClose = () => setOpenModal(false);
   const onWalletChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setWallet(event.target.value);
   };
+
+  const onMint = () => {
+    const value = { value: price.mul(froggies)};
+    if (froggyStatus === FroggyStatus.FROGGYLIST) {
+      // TODO: get proof from api
+      froggylistMint(froggies, value);
+    } else if (froggyStatus === FroggyStatus.PUBLIC) {
+      mint(froggies, value);
+    } else {
+      // show alert message
+    }
+  }
   
   return (
     <Grid id='app' className={classes.app} container p={2}>
@@ -124,12 +148,12 @@ function App() {
           <Typography variant='h5' fontFamily='outfit' pb={3}>0.03 ETH mint price</Typography>
           <Slider sx={{width: '50%', paddingBottom: 5}} value={froggies} step={1} min={1} max={2} onChange={(e, val: any) => setFroggies(val)}/>
           {
-            account && <Button className={classes.mintButton} variant='contained' color='secondary'>
-                        <Typography variant='h4'>Mint {froggies}</Typography>  
+            account && <Button className={classes.mintButton} variant='contained' disabled={soldOut} onClick={onMint}>
+                        <Typography variant='h4'>{ soldOut ? 'Sold Out!' : `Mint ${froggies}`}</Typography>  
                       </Button>
           }
           {
-            !account && <Button className={classes.mintButton} variant='contained' color='secondary' onClick={() => activateBrowserWallet()}>
+            !account && <Button className={classes.mintButton} variant='contained' onClick={() => activateBrowserWallet()}>
                           <Typography variant='h4'>Connect</Typography>  
                         </Button>
           }
@@ -137,7 +161,7 @@ function App() {
         </Grid>
       </Grid>  
       <Grid id='progress' container xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
-        <Stepper className={classes.stepper} activeStep={0} alternativeLabel>
+        <Stepper className={classes.stepper} activeStep={step} alternativeLabel>
           <Step>
             <StepLabel>
               <Typography variant='h4'>Prep</Typography>

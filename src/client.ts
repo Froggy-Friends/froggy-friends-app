@@ -30,3 +30,41 @@ export function useFroggyStatus(): FroggyStatus {
     return FroggyStatus.OFF;
   }
 }
+
+export function useSupply(): number {
+  let supply = useContractCall({
+    abi: abi,
+    address: contract.address,
+    method: 'pond',
+    args: []
+  });
+
+  return supply ? supply[0].toNumber() : 0;
+}
+
+export function useMinted(): number {
+  let minted = useContractCall({
+    abi: abi,
+    address: contract.address,
+    method: 'totalSupply',
+    args: []
+  });
+
+  return minted ? minted[0].toNumber() : 0;
+}
+
+export function useFroggylistMint() {
+  const { send, state } = useContractFunction(contract, 'froggylistAdopt');
+  return {
+    froggylistMint: send,
+    froggylistMintState: state
+  };
+}
+
+export function useMint() {
+  const { send, state } = useContractFunction(contract, 'publicAdopt');
+  return {
+    mint: send,
+    mintState: state
+  };
+}
