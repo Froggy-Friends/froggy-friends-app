@@ -1,6 +1,6 @@
 import { useEthers } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, createStyles, Grid, IconButton, Modal, Slider, Snackbar, Step, StepLabel, Stepper, TextField, Theme, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, Modal, Slider, Snackbar, Step, StepLabel, Stepper, TextField, Theme, useMediaQuery, useTheme } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import froggy from './images/froggy.jpg';
 import grass from './images/grass.png';
@@ -9,7 +9,7 @@ import opensea from './images/opensea.png';
 import looksrare from './images/looksrare.png';
 import etherscan from './images/etherscan.png';
 import { useEffect, useState } from 'react';
-import { Close } from '@mui/icons-material';
+import { Close, Error } from '@mui/icons-material';
 import { FroggyStatus, useFroggylistMint, useFroggyStatus, useMint, useMinted, useSupply } from './client';
 import { parseEther } from "@ethersproject/units";
 import { getProof } from './http';
@@ -79,6 +79,10 @@ function App() {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [error, setError] = useState<any>(undefined);
   const [openModal, setOpenModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [tx, setTx] = useState<any>('');
+  const [txPending, setTxPending] = useState(false);
+  const [txFail, setTxFail] = useState(false);
   const [wallet, setWallet] = useState('');
   const [froggies, setFroggies] = useState(1);
   const [step, setStep] = useState(0);
@@ -109,6 +113,28 @@ function App() {
     }
   }, [account])
 
+  useEffect(() => {
+    if (froggylistMintState.status === 'Exception') {
+      if (froggylistMintState.errorMessage?.includes('insufficient funds')) {
+        setError('Insufficient funds');
+      } else if (froggylistMintState.errorMessage?.includes('unknown account')) {
+        setError('Refresh page to connect');
+      } else {
+        setError(froggylistMintState.errorMessage?.replace(/^execution reverted:/i, ''));
+      }
+      setShowErrorAlert(true);
+    } else if (froggylistMintState.status === 'Mining') {
+      setTx(froggylistMintState.transaction?.hash);
+      setTxPending(true);
+      setTxFail(false);
+      setShowModal(true);
+    } else if (froggylistMintState.status === 'Success') {
+      setTxPending(false);
+    } else if (froggylistMintState.status === 'Fail') {
+      setTxFail(true);
+    }
+  }, [froggylistMintState.status])
+
   const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -122,11 +148,16 @@ function App() {
     setWallet(event.target.value);
   };
 
+  const onTxModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setShowModal(false);
+    }
+  }
+
   const onMint = () => {
     const value = { value: price.mul(froggies)};
     if (froggyStatus === FroggyStatus.FROGGYLIST) {
-      // TODO: get proof from api
-      froggylistMint(froggies, value);
+      froggylistMint(froggies, mintProof, value);
     } else if (froggyStatus === FroggyStatus.PUBLIC) {
       mint(froggies, value);
     }
@@ -134,7 +165,7 @@ function App() {
   
   return (
     <Grid id='app' className={classes.app} container p={2}>
-      <Grid id='toolbar' container justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
+      <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
         <Grid container item justifyContent='center' xl={3} lg={4} md={5} sm={6} xs={12} pb={3}>
           <Avatar className={classes.avatar} alt='Home' src={froggy}/>
           <Link href='https://www.froggyfriendsnft.com/' variant='h2' fontWeight='bold' textTransform='uppercase' underline='none' pl={3}>Froggy Friends</Link>
@@ -183,7 +214,7 @@ function App() {
           <Link className={classes.froggylist} variant='h4' pt={3} onClick={() => setOpenModal(true)}>Check Froggylist</Link>
         </Grid>
       </Grid>  
-      <Grid id='progress' container xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
+      <Grid id='progress' container item xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
         <Stepper className={classes.stepper} activeStep={step} alternativeLabel>
           <Step>
             <StepLabel>
@@ -232,6 +263,26 @@ function App() {
               <Typography variant='h4'>Check Wallet</Typography>  
             </Button>
           </Grid>
+        </Box>
+      </Modal>
+      <Modal open={showModal} onClose={onTxModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
+        <Box className={classes.modal} p={3}>
+          <Grid container justifyContent='space-between' pb={5}>
+            <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
+              { txPending && <Typography id='modal-title' variant="h5" color='primary'>Mint In Progress</Typography> }
+              { !txPending && !txFail && <Typography id='modal-title' variant="h5" color='primary'>Froggy Friends Minted</Typography> }
+              { txFail && <Typography id='modal-title' variant="h5" color='primary'>Mint Failed <Error fontSize='large'/></Typography> }
+            </Grid>
+            <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
+              <IconButton size='small' color='inherit' onClick={onTxModalClose}>
+                <Close fontSize='small'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
+            <Typography id='modal-description' variant="h6" pt={3} pb={3}>View Transaction</Typography>
+          </Link>
+          { txPending && <LinearProgress/>}
         </Box>
       </Modal>
     </Grid>

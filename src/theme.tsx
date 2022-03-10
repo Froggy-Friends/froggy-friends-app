@@ -36,7 +36,8 @@ let theme = createTheme({
     MuiSnackbarContent: {
       styleOverrides: {
         root: {
-          fontSize: '1.3rem'
+          fontSize: '1.3rem',
+          fontFamily: 'outfit'
         }
       }
     },
