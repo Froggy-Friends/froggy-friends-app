@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { Close, Error } from '@mui/icons-material';
 import { FroggyStatus, useFroggylistMint, useFroggyStatus, useMint, useMinted, useSupply } from './client';
 import { parseEther } from "@ethersproject/units";
-import { getProof } from './http';
+import { getIsOnFroggylist, getProof } from './http';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -76,8 +76,8 @@ function App() {
   const classes = useStyles();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
-  const [error, setError] = useState<any>(undefined);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [openModal, setOpenModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [tx, setTx] = useState<any>('');
@@ -107,8 +107,8 @@ function App() {
           setMintProof(response.proof);
         })
         .catch(() => {
-          setError("Error getting froggylist proof");
-          setShowErrorAlert(true);
+          setAlertMessage("Error getting froggylist proof");
+          setShowAlert(true);
         })
     }
   }, [account])
@@ -116,13 +116,13 @@ function App() {
   useEffect(() => {
     if (froggylistMintState.status === 'Exception') {
       if (froggylistMintState.errorMessage?.includes('insufficient funds')) {
-        setError('Insufficient funds');
+        setAlertMessage('Insufficient funds');
       } else if (froggylistMintState.errorMessage?.includes('unknown account')) {
-        setError('Refresh page to connect');
+        setAlertMessage('Refresh page to connect');
       } else {
-        setError(froggylistMintState.errorMessage?.replace(/^execution reverted:/i, ''));
+        setAlertMessage(froggylistMintState.errorMessage?.replace(/^execution reverted:/i, ''));
       }
-      setShowErrorAlert(true);
+      setShowAlert(true);
     } else if (froggylistMintState.status === 'Mining') {
       setTx(froggylistMintState.transaction?.hash);
       setTxPending(true);
@@ -140,13 +140,25 @@ function App() {
       return;
     }
 
-    setShowErrorAlert(false);
+    setShowAlert(false);
   };
   
   const onModalClose = () => setOpenModal(false);
   const onWalletChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setWallet(event.target.value);
   };
+
+  const checkWallet = () => {
+    getIsOnFroggylist(wallet)
+      .then(isOnFroggylist => {
+        setAlertMessage(isOnFroggylist ? "Wallet on Froggylist" : "Wallet not on Froggylist");
+        setShowAlert(true);
+      })
+      .catch(error => {
+        setAlertMessage("Error getting Froggylist status");
+        setShowAlert(true);
+      });
+  }
 
   const onTxModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason !== 'backdropClick') {
@@ -239,9 +251,9 @@ function App() {
           </Stepper>  
         </Grid>
       <Snackbar 
-        open={showErrorAlert} 
+        open={showAlert} 
         autoHideDuration={5000} 
-        message={error} 
+        message={alertMessage} 
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         onClose={onAlertClose}
         action={
@@ -259,7 +271,7 @@ function App() {
           <Grid container direction='column'>
             <Typography variant='h6' fontFamily='outfit' pb={3}>Check your wallet</Typography>
             <TextField id='wallet' placeholder='Your wallet address' value={wallet} onChange={onWalletChange} focused sx={{paddingBottom: 5}}/>
-            <Button className={classes.walletButton} variant='contained' color='secondary'>
+            <Button className={classes.walletButton} variant='contained' color='secondary' onClick={checkWallet}>
               <Typography variant='h4'>Check Wallet</Typography>  
             </Button>
           </Grid>
