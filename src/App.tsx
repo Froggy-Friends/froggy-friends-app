@@ -269,9 +269,9 @@ function App() {
         <Box className={classes.modal} p={3}>
           <Grid container justifyContent='space-between' pb={5}>
             <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-              { txPending && <Typography id='modal-title' variant="h5" color='primary'>Mint In Progress</Typography> }
-              { !txPending && !txFail && <Typography id='modal-title' variant="h5" color='primary'>Froggy Friends Minted</Typography> }
-              { txFail && <Typography id='modal-title' variant="h5" color='primary'>Mint Failed <Error fontSize='large'/></Typography> }
+              { txPending && <Typography id='modal-title' variant="h3" color='primary'>Mint In Progress</Typography> }
+              { !txPending && !txFail && <Typography id='modal-title' variant="h3" color='primary'>Froggy Friend(s) Minted</Typography> }
+              { txFail && <Typography id='modal-title' variant="h3" color='primary'>Mint Failed <Error fontSize='large'/></Typography> }
             </Grid>
             <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
               <IconButton size='small' color='inherit' onClick={onTxModalClose}>
@@ -280,7 +280,7 @@ function App() {
             </Grid>
           </Grid>
           <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
-            <Typography id='modal-description' variant="h6" pt={3} pb={3}>View Transaction</Typography>
+            <Typography id='modal-description' variant="h4" pt={3} pb={3}>View Transaction</Typography>
           </Link>
           { txPending && <LinearProgress/>}
         </Box>
