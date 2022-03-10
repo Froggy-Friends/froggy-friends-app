@@ -1,3 +1,4 @@
+import { useEthers } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
 import { Avatar, Box, createStyles, Grid, Modal, Slider, Step, StepLabel, Stepper, TextField, Theme, useMediaQuery, useTheme } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
@@ -9,6 +10,7 @@ import looksrare from './images/looksrare.png';
 import etherscan from './images/etherscan.png';
 import { useState } from 'react';
 import { Close } from '@mui/icons-material';
+import { useFroggyStatus } from './client';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -74,6 +76,10 @@ function App() {
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
   const [openModal, setOpenModal] = useState(false);
   const [wallet, setWallet] = useState('');
+  const [froggies, setFroggies] = useState(1);
+  const { activateBrowserWallet, account } = useEthers();
+  const froggyStatus = useFroggyStatus();
+  
   const onModalClose = () => setOpenModal(false);
   const onWalletChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setWallet(event.target.value);
@@ -116,10 +122,17 @@ function App() {
           <Typography variant='h2' fontWeight='bold'>Minting March 18</Typography>
           <Typography variant='h5' fontFamily='outfit'>4,444 Froggy Friends</Typography>
           <Typography variant='h5' fontFamily='outfit' pb={3}>0.03 ETH mint price</Typography>
-          <Slider sx={{width: '50%', paddingBottom: 5}} defaultValue={1} step={1} min={1} max={2}/>
-          <Button className={classes.mintButton} variant='contained' color='secondary'>
-            <Typography variant='h4'>Coming Soon</Typography>  
-          </Button>
+          <Slider sx={{width: '50%', paddingBottom: 5}} value={froggies} step={1} min={1} max={2} onChange={(e, val: any) => setFroggies(val)}/>
+          {
+            account && <Button className={classes.mintButton} variant='contained' color='secondary'>
+                        <Typography variant='h4'>Mint {froggies}</Typography>  
+                      </Button>
+          }
+          {
+            !account && <Button className={classes.mintButton} variant='contained' color='secondary' onClick={() => activateBrowserWallet()}>
+                          <Typography variant='h4'>Connect</Typography>  
+                        </Button>
+          }
           <Link className={classes.froggylist} variant='h4' pt={3} onClick={() => setOpenModal(true)}>Check Froggylist</Link>
         </Grid>
       </Grid>  
