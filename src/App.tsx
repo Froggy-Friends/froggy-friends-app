@@ -104,7 +104,7 @@ function App() {
               </Link>
             </Grid>
             <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
-              <Link href='' target='_blank'>
+              <Link href={`${process.env.REACT_APP_ETHERSCAN}/address/${process.env.REACT_APP_CONTRACT}`} target='_blank'>
                 <img alt='Etherscan' src={etherscan} height={40}/>  
               </Link>
             </Grid>  
