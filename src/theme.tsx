@@ -57,6 +57,16 @@ let theme = createTheme({
           fontFamily: 'outfit'
         }
       }
+    },
+    MuiStepIcon: {
+      styleOverrides: {
+        root: {
+          '.MuiStepIcon-text': {
+            fontSize: '0.9rem',
+            fontFamily: 'outfit'
+          }
+        }
+      }
     }
   }
 });
