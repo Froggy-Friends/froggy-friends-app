@@ -1,6 +1,6 @@
 import { useEthers } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, createStyles, Grid, Modal, Slider, Step, StepLabel, Stepper, TextField, Theme, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Box, createStyles, Grid, IconButton, Modal, Slider, Snackbar, Step, StepLabel, Stepper, TextField, Theme, useMediaQuery, useTheme } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import froggy from './images/froggy.jpg';
 import grass from './images/grass.png';
@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { Close } from '@mui/icons-material';
 import { FroggyStatus, useFroggylistMint, useFroggyStatus, useMint, useMinted, useSupply } from './client';
 import { parseEther } from "@ethersproject/units";
+import { getProof } from './http';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -75,10 +76,13 @@ function App() {
   const classes = useStyles();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [error, setError] = useState<any>(undefined);
   const [openModal, setOpenModal] = useState(false);
   const [wallet, setWallet] = useState('');
   const [froggies, setFroggies] = useState(1);
   const [step, setStep] = useState(0);
+  const [mintProof, setMintProof] = useState<string[]>([]);
   const { activateBrowserWallet, account } = useEthers();
   const { froggylistMint, froggylistMintState } = useFroggylistMint();
   const { mint, mintState } = useMint();
@@ -91,6 +95,27 @@ function App() {
   useEffect(() => {
     soldOut ? setStep(4) : setStep(froggyStatus);
   }, [froggyStatus, soldOut]);
+
+  useEffect(() => {
+    if (account) {
+      getProof({ wallet: account})
+        .then(response => {
+          setMintProof(response.proof);
+        })
+        .catch(() => {
+          setError("Error getting froggylist proof");
+          setShowErrorAlert(true);
+        })
+    }
+  }, [account])
+
+  const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setShowErrorAlert(false);
+  };
   
   const onModalClose = () => setOpenModal(false);
   const onWalletChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,8 +129,6 @@ function App() {
       froggylistMint(froggies, value);
     } else if (froggyStatus === FroggyStatus.PUBLIC) {
       mint(froggies, value);
-    } else {
-      // show alert message
     }
   }
   
@@ -184,6 +207,18 @@ function App() {
             </Step>
           </Stepper>  
         </Grid>
+      <Snackbar 
+        open={showErrorAlert} 
+        autoHideDuration={5000} 
+        message={error} 
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={onAlertClose}
+        action={
+          <IconButton size='small' aria-label='close' color='inherit' onClick={onAlertClose}>
+            <Close fontSize='small' />
+          </IconButton>
+        }
+      />
       <Modal open={openModal} onClose={onModalClose} keepMounted aria-labelledby='froggylist' aria-describedby='froggylist'>
         <Box className={classes.modal} p={3}>
           <Grid container justifyContent='space-between' item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
