@@ -194,6 +194,9 @@ function App() {
       froggylistMint(froggies, mintProof, value);
     } else if (froggyStatus === FroggyStatus.PUBLIC) {
       mint(froggies, value);
+    } else {
+      setAlertMessage("Adopting is off");
+      setShowAlert(true);
     }
   }
   
@@ -231,13 +234,13 @@ function App() {
       </Grid>
       <Grid id='info' container justifyContent='center' textAlign='center' mt={-10} maxHeight={350}>
         <Grid container item direction='column' alignItems='center' xl={4} lg={6} md={6} sm={8} xs={12} p={3}>
-          <Typography variant='h1' fontWeight='bold'>{ supply ? `${minted} / ${supply} Minted` : 'Minting March 18' }</Typography>
-          <Typography variant='h5' fontFamily='outfit'>0.03 ETH mint price</Typography>
+          <Typography variant='h1' fontWeight='bold'>{ supply ? `${minted} / ${supply} Adopted` : 'Adopting March 18' }</Typography>
+          <Typography variant='h5' fontFamily='outfit'>0.03 ETH adopt price</Typography>
           <Typography variant='h5' fontFamily='outfit' pb={3}>Max 2 per wallet</Typography>
           <Slider sx={{width: '50%', paddingBottom: 5}} value={froggies} step={1} min={1} max={2} onChange={(e, val: any) => setFroggies(val)}/>
           {
             account && <Button className={classes.mintButton} variant='contained' disabled={soldOut} onClick={onMint}>
-                        <Typography variant='h4'>{ soldOut ? 'Sold Out!' : `Mint ${froggies}`}</Typography>  
+                        <Typography variant='h4'>{ soldOut ? 'Sold Out!' : `Adopt ${froggies}`}</Typography>  
                       </Button>
           }
           {
@@ -303,9 +306,9 @@ function App() {
         <Box className={classes.modal} p={3}>
           <Grid container justifyContent='space-between' pb={5}>
             <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-              { txPending && <Typography id='modal-title' variant="h3" color='primary'>Mint In Progress</Typography> }
-              { !txPending && !txFail && <Typography id='modal-title' variant="h3" color='primary'>Froggy Friend(s) Minted</Typography> }
-              { txFail && <Typography id='modal-title' variant="h3" color='primary'>Mint Failed <Error fontSize='large'/></Typography> }
+              { txPending && <Typography id='modal-title' variant="h3" color='primary'>Adopt In Progress</Typography> }
+              { !txPending && !txFail && <Typography id='modal-title' variant="h3" color='primary'>Froggy Friend(s) Adopted</Typography> }
+              { txFail && <Typography id='modal-title' variant="h3" color='primary'>Adopt Failed <Error fontSize='large'/></Typography> }
             </Grid>
             <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
               <IconButton size='small' color='inherit' onClick={onTxModalClose}>
