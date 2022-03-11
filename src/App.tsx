@@ -291,7 +291,7 @@ function App() {
             <Close onClick={() => setOpenModal(false)} sx={{cursor: 'pointer'}}/>
           </Grid>
           <Grid container direction='column'>
-            <Typography variant='h6' fontFamily='outfit' pb={3}>Check your wallet</Typography>
+            <Typography variant='h6' fontFamily='outfit' pb={3}>Enter your wallet address</Typography>
             <TextField id='wallet' placeholder='Your wallet address' value={wallet} onChange={onWalletChange} focused sx={{paddingBottom: 5}}/>
             <Button className={classes.walletButton} variant='contained' color='secondary' onClick={checkWallet}>
               <Typography variant='h4'>Check Wallet</Typography>  
