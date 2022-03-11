@@ -212,12 +212,12 @@ function App() {
               </Link>
             </Grid>
             <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
-              <Link href='' target='_blank'>
+              <Link href='https://opensea.io/collection/froggyfriendsnft' target='_blank'>
                 <img alt='Opensea' src={opensea} height={40}/>  
               </Link>
             </Grid>
             <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
-              <Link href='' target='_blank'>
+              <Link href='https://looksrare.org/collections/0x29652C2e9D3656434Bc8133c69258C8d05290f41' target='_blank'>
                 <img alt='LooksRare' src={looksrare} height={40}/>  
               </Link>
             </Grid>
