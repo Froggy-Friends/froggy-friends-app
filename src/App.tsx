@@ -230,7 +230,7 @@ function App() {
         }
       </Grid>
       <Grid id='info' container justifyContent='center' textAlign='center' mt={-10} maxHeight={350}>
-        <Grid container item direction='column' alignItems='center' xl={4} lg={4} md={6} sm={6} xs={12} p={3}>
+        <Grid container item direction='column' alignItems='center' xl={4} lg={6} md={6} sm={8} xs={12} p={3}>
           <Typography variant='h1' fontWeight='bold'>{ supply ? `${minted} / ${supply} Minted` : 'Minting March 18' }</Typography>
           <Typography variant='h5' fontFamily='outfit'>0.03 ETH mint price</Typography>
           <Typography variant='h5' fontFamily='outfit' pb={3}>Max 2 per wallet</Typography>
