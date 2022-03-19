@@ -236,8 +236,8 @@ function App() {
         <Grid container item direction='column' alignItems='center' xl={4} lg={6} md={6} sm={8} xs={12} p={3}>
           <Typography variant='h1' fontWeight='bold'>{ supply ? `${minted} / ${supply} Adopted` : 'Adopt March 18' }</Typography>
           <Typography variant='h5' fontFamily='outfit'>0.03 ETH adopt price</Typography>
-          <Typography variant='h5' fontFamily='outfit' pb={3}>Max 1 per wallet</Typography>
-          <Slider sx={{width: '50%', paddingBottom: 5}} value={froggies} step={1} min={1} max={1} onChange={(e, val: any) => setFroggies(val)}/>
+          <Typography variant='h5' fontFamily='outfit' pb={3}>Max 2 per wallet</Typography>
+          <Slider sx={{width: '50%', paddingBottom: 5}} value={froggies} step={1} min={1} max={2} onChange={(e, val: any) => setFroggies(val)}/>
           {
             account && <Button className={classes.mintButton} variant='contained' disabled={soldOut} onClick={onMint}>
                         <Typography variant='h4'>{ soldOut ? 'Sold Out!' : `Adopt ${froggies}`}</Typography>  
