@@ -248,7 +248,6 @@ function App() {
                           <Typography variant='h4'>Connect</Typography>  
                         </Button>
           }
-          <Link className={classes.froggylist} variant='h4' pt={3} onClick={() => setOpenModal(true)}>Check Froggylist</Link>
         </Grid>
       </Grid>  
       <Grid id='progress' container item xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
