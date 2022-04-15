@@ -58,6 +58,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
     },
     walletButton: {
       marginTop: theme.spacing(3)
+    },
+    footer: {
+      backgroundColor: '#181818'
     }
   })
 );
@@ -192,7 +195,7 @@ function App() {
   }
   
   return (
-    <Grid id='app' className={classes.app} container p={2}>
+    <Grid id='app' className={classes.app} container>
       <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
         <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
           <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 75, width: 75}}/>
@@ -234,6 +237,13 @@ function App() {
                           <Typography variant='h5'>Login</Typography>  
                         </Button>
           }
+        </Grid>
+      </Grid>
+      <Grid id='footer' className={classes.footer} container justifyContent='center' textAlign='center'>
+        <Grid container item direction='column' alignItems='center'>
+          <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
+            <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 50, width: 50}}/>
+          </Grid>
         </Grid>
       </Grid>  
       <Snackbar
