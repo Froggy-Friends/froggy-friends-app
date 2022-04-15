@@ -43,9 +43,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
         marginTop: '10px'
       }
     },
-    mintButton: {
-      marginTop: theme.spacing(5)
-    },
     modal: {
       position: 'absolute' as 'absolute',
       top: '50%',
@@ -124,7 +121,9 @@ function App() {
       <Container maxWidth='xl'>
         <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
           <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
-            <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 75, width: 75}}/>
+            <Link href={process.env.REACT_APP_WEBSITE_URL} underline='none'>
+              <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 75, width: 75}}/>
+            </Link>
           </Grid>
           { isDesktop && 
             <Grid container item justifyContent='center' textAlign='center' xl={6} lg={6} md={9} sm={9} xs={9} pt={2}>
@@ -165,12 +164,12 @@ function App() {
             <Typography variant='h5' color='primary'>{owned.totalRibbit} $RIBBIT per day</Typography>
           </Grid>
           { !account && <Grid item p={3}>
-              <Button className={classes.mintButton} variant='contained' onClick={() => activateBrowserWallet()}>
+              <Button variant='contained' onClick={() => activateBrowserWallet()}>
                 <Typography variant='h5'>Login</Typography>  
               </Button>
           </Grid>
           }
-          { loading && 
+          { account && loading && 
             <Grid item p={10}>
               <Typography variant='h3' color='primary'>Loading Froggies</Typography>
               <CircularProgress />
@@ -192,6 +191,17 @@ function App() {
               })
             }
           </Grid>
+          {
+            account && !loading && 
+            <Grid item>
+              <Typography variant='h6' color='primary' pb={5}>No froggies found on this wallet</Typography>
+              <Button variant='contained'>
+                <Link href="https://opensea.io/collection/froggyfriendsnft" underline="none" target="_blank">
+                  <Typography variant='h5'>Buy Froggies</Typography>
+                </Link>
+              </Button>
+            </Grid>
+          }
         </Grid>  
       </Container>  
       <Grid id='footer' className={classes.footer} container justifyContent='center' textAlign='center' mt={20}>
@@ -228,17 +238,17 @@ function App() {
             </Grid>
             <Grid container justifyContent='space-between' mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '1px solid #b3b6bb'}}>
               <Grid item>
-                <Typography color='secondary' pt={3}>Froggy Friends NFT</Typography>
+                <Typography color='secondary' pt={3}>&copy;	Froggy Friends NFT</Typography>
               </Grid>
               <Grid item>
                 <Grid container>
-                <Link href={process.env.REACT_APP_WEBSITE_URL + '/terms-of-use'} underline='none'>
-                  <Typography color='secondary' pt={3} pr={1}>Terms Of Use</Typography>
-                </Link>
-                <Typography color='secondary' pt={3}>•</Typography>
-                <Link href={process.env.REACT_APP_WEBSITE_URL + '/privacy-policy'} underline='none'>
-                  <Typography color='secondary' pt={3} pl={1}>Privacy Policy</Typography>
-                </Link>
+                  <Link href={process.env.REACT_APP_WEBSITE_URL + '/terms-of-use'} underline='none'>
+                    <Typography color='secondary' pt={3} pr={1}>Terms</Typography>
+                  </Link>
+                  <Typography color='secondary' pt={3}>•</Typography>
+                  <Link href={process.env.REACT_APP_WEBSITE_URL + '/privacy-policy'} underline='none'>
+                    <Typography color='secondary' pt={3} pl={1}>Privacy</Typography>
+                  </Link>
                 </Grid>
               </Grid>
             </Grid>
