@@ -7,6 +7,24 @@ import { useEffect, useState } from 'react';
 import { Close, Error } from '@mui/icons-material';
 import axios from 'axios';
 
+interface Attribute {
+  trait_type: string;
+  value: string;
+}
+
+interface Froggy {
+  name: string;
+  description: string;
+  image: string;
+  dna: string;
+  edition: number;
+  date: number;
+  attributes: Attribute[];
+}
+interface Owned {
+  froggies: Froggy[];
+  totalRibbit: number;
+}
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -27,12 +45,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
     mintButton: {
       marginTop: theme.spacing(5)
     },
-    froggylist: {
-      cursor: 'pointer'
-    },
-    stepper: {
-      width: '100%'
-    },
     modal: {
       position: 'absolute' as 'absolute',
       top: '50%',
@@ -50,6 +62,15 @@ const useStyles: any = makeStyles((theme: Theme) =>
     },
     walletButton: {
       marginTop: theme.spacing(3)
+    },
+    froggies: {
+      padding: theme.spacing(20),
+      [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(10),
+      },
+      [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(5),
+      }
     },
     footer: {
       backgroundColor: '#181818'
@@ -69,7 +90,7 @@ function App() {
   const [txPending, setTxPending] = useState(false);
   const [txFail, setTxFail] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [froggies, setFroggies] = useState([]);
+  const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0});
   const { activateBrowserWallet, account } = useEthers();
 
   useEffect(() => {
@@ -78,7 +99,7 @@ function App() {
         setLoading(true);
         const response = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: address});
         console.log("response data: ", response.data);
-        setFroggies(response.data);
+        setOwned(response.data);
         setLoading(false);
       } catch (error) {
         setAlertMessage("Issue fetching froggies owned");
@@ -180,15 +201,15 @@ function App() {
             <CircularProgress />
           </Grid>
         }
-        <Grid id='froggies' container item xl={12} lg={12} md={12} sm={12} xs={12} p={20}>
+        <Grid id='froggies' className={classes.froggies} container item xl={12} lg={12} md={12} sm={12} xs={12}>
           {
-            froggies.map((froggy: any) => {
-              return <Grid key={froggy.edition} item xl={2} lg={2} md={2} sm={6} xs={6}>
+            owned.froggies.map((froggy: any) => {
+              return <Grid key={froggy.edition} item xl={2} lg={2} md={3} sm={6} xs={12}>
                 <Card>
                   <CardMedia component='img' image={froggy.image} alt='Froggy'/>
                   <CardContent>
                     <Typography variant='h5'>{froggy.name}</Typography>
-                    <Typography>Ribbit</Typography>
+                    <Typography>{froggy.ribbit} $RIBBIT per day</Typography>
                   </CardContent>
                 </Card>
               </Grid>
