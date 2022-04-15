@@ -36,7 +36,6 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           fontSize: '1.3rem',
-          fontFamily: 'outfit'
         }
       }
     },
@@ -47,13 +46,6 @@ let theme = createTheme({
           borderRadius: 5,
           width: '100%',
           textAlign: 'center'
-        }
-      }
-    },
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          fontFamily: 'outfit'
         }
       }
     }

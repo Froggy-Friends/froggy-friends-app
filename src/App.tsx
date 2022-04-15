@@ -1,13 +1,12 @@
 import { useEthers } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, createStyles, Divider, Grid, IconButton, LinearProgress, Modal, Snackbar, TextField, Theme, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import logo from './images/logo.png';
 import { useEffect, useState } from 'react';
 import { Close, Error } from '@mui/icons-material';
-import { FroggyStatus, useFroggylistMint, useFroggyStatus, useMint, useMinted, useSupply } from './client';
-import { parseEther } from "@ethersproject/units";
-import { getIsOnFroggylist, getProof } from './http';
+import axios from 'axios';
+
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -24,6 +23,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
     avatar: {
       height: 100,
       width: 100,
+      cursor: 'pointer',
       [theme.breakpoints.up('sm')]: {
         marginTop: '5px'
       },
@@ -71,84 +71,63 @@ function App() {
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
-  const [openModal, setOpenModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [tx, setTx] = useState<any>('');
   const [txPending, setTxPending] = useState(false);
   const [txFail, setTxFail] = useState(false);
-  const [wallet, setWallet] = useState('');
-  const [froggies, setFroggies] = useState(1);
-  const [step, setStep] = useState(0);
-  const [mintProof, setMintProof] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
   const { activateBrowserWallet, account } = useEthers();
-  const { froggylistMint, froggylistMintState } = useFroggylistMint();
-  const { mint, mintState } = useMint();
-  const froggyStatus = useFroggyStatus();
-  const supply = useSupply();
-  const minted = useMinted();
-  const soldOut = minted > 0 && supply > 0 && minted === supply;
-  const price = parseEther("0.03");
 
   useEffect(() => {
-    soldOut ? setStep(4) : setStep(froggyStatus);
-  }, [froggyStatus, soldOut]);
+    async function getFroggiesOwned(address: string) {
+      try {
+        setAlertMessage("Issue fetching froggies owned");
+        setShowAlert(true);
+        // setLoading(true);
+        // const response = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: address});
+        // console.log("response: ", response.data);
+        // setLoading(false);
+      } catch (error) {
+        setAlertMessage("Issue fetching froggies owned");
+        setShowAlert(true);
+      }
+    }
 
-  useEffect(() => {
     if (account) {
-      getProof({ wallet: account})
-        .then(response => {
-          setMintProof(response.proof);
-        })
-        .catch(() => {
-          setAlertMessage("Error getting froggylist proof");
-          setShowAlert(true);
-        })
+      console.log("get froggies owned for account: ", account);
+      getFroggiesOwned(account);
+      // getProof({ wallet: account})
+      //   .then(response => {
+      //     setMintProof(response.proof);
+      //   })
+      //   .catch(() => {
+      //     setAlertMessage("Error getting froggylist proof");
+      //     setShowAlert(true);
+      //   })
     }
   }, [account])
 
-  useEffect(() => {
-    if (froggylistMintState.status === 'Exception') {
-      if (froggylistMintState.errorMessage?.includes('insufficient funds')) {
-        setAlertMessage('Insufficient funds');
-      } else if (froggylistMintState.errorMessage?.includes('unknown account')) {
-        setAlertMessage('Refresh page to connect');
-      } else {
-        setAlertMessage(froggylistMintState.errorMessage?.replace(/^execution reverted:/i, ''));
-      }
-      setShowAlert(true);
-    } else if (froggylistMintState.status === 'Mining') {
-      setTx(froggylistMintState.transaction?.hash);
-      setTxPending(true);
-      setTxFail(false);
-      setShowModal(true);
-    } else if (froggylistMintState.status === 'Success') {
-      setTxPending(false);
-    } else if (froggylistMintState.status === 'Fail') {
-      setTxFail(true);
-    }
-  }, [froggylistMintState.status])
-
-  useEffect(() => {
-    if (mintState.status === 'Exception') {
-      if (mintState.errorMessage?.includes('insufficient funds')) {
-        setAlertMessage('Insufficient funds');
-      } else if (mintState.errorMessage?.includes('unknown account')) {
-        setAlertMessage('Refresh page to login');
-      } else {
-        setAlertMessage(mintState.errorMessage?.replace(/^execution reverted:/i, ''));
-      }
-      setShowAlert(true);
-    } else if (mintState.status === 'Mining') {
-      setTx(mintState.transaction?.hash);
-      setTxPending(true);
-      setTxFail(false);
-      setShowModal(true);
-    } else if (mintState.status === 'Success') {
-      setTxPending(false);
-    } else if (mintState.status === 'Fail') {
-      setTxFail(true);
-    }
-  }, [mintState.status])
+  // useEffect(() => {
+  //   if (froggylistMintState.status === 'Exception') {
+  //     if (froggylistMintState.errorMessage?.includes('insufficient funds')) {
+  //       setAlertMessage('Insufficient funds');
+  //     } else if (froggylistMintState.errorMessage?.includes('unknown account')) {
+  //       setAlertMessage('Refresh page to connect');
+  //     } else {
+  //       setAlertMessage(froggylistMintState.errorMessage?.replace(/^execution reverted:/i, ''));
+  //     }
+  //     setShowAlert(true);
+  //   } else if (froggylistMintState.status === 'Mining') {
+  //     setTx(froggylistMintState.transaction?.hash);
+  //     setTxPending(true);
+  //     setTxFail(false);
+  //     setShowModal(true);
+  //   } else if (froggylistMintState.status === 'Success') {
+  //     setTxPending(false);
+  //   } else if (froggylistMintState.status === 'Fail') {
+  //     setTxFail(true);
+  //   }
+  // }, [froggylistMintState.status])
 
   const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -157,39 +136,10 @@ function App() {
 
     setShowAlert(false);
   };
-  
-  const onModalClose = () => setOpenModal(false);
-  const onWalletChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setWallet(event.target.value);
-  };
-
-  const checkWallet = () => {
-    getIsOnFroggylist(wallet)
-      .then(isOnFroggylist => {
-        setAlertMessage(isOnFroggylist ? "Wallet on Froggylist" : "Wallet not on Froggylist");
-        setShowAlert(true);
-      })
-      .catch(error => {
-        setAlertMessage("Error getting Froggylist status");
-        setShowAlert(true);
-      });
-  }
 
   const onTxModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason !== 'backdropClick') {
       setShowModal(false);
-    }
-  }
-
-  const onMint = () => {
-    const value = { value: price.mul(froggies)};
-    if (froggyStatus === FroggyStatus.FROGGYLIST) {
-      froggylistMint(froggies, mintProof, value);
-    } else if (froggyStatus === FroggyStatus.PUBLIC) {
-      mint(froggies, value);
-    } else {
-      setAlertMessage("Adopting is off");
-      setShowAlert(true);
     }
   }
   
@@ -229,13 +179,19 @@ function App() {
           </Grid>
         }
       </Grid>
-      <Grid id='info' container direction='column' justifyContent='space-between' textAlign='center' height={500} pt={10} pb={10}>
+      <Grid id='info' container direction='column' justifyContent='space-between' textAlign='center' height={800} pt={20} pb={20}>
         <Typography variant='h2' color='primary'>Froggy Friends Staking</Typography>
         { !account && <Grid item p={3}>
             <Button className={classes.mintButton} variant='contained' onClick={() => activateBrowserWallet()}>
               <Typography variant='h5'>Login</Typography>  
             </Button>
         </Grid>
+        }
+        { loading && 
+          <Grid item>
+            <Typography variant='h3' color='primary'>Loading Froggies</Typography>
+            <CircularProgress />
+          </Grid>
         }
       </Grid>
       <Grid id='footer' className={classes.footer} container justifyContent='center' textAlign='center'>
@@ -288,21 +244,6 @@ function App() {
           </IconButton>
         }
       />
-      <Modal open={openModal} onClose={onModalClose} keepMounted aria-labelledby='froggylist' aria-describedby='froggylist'>
-        <Box className={classes.modal} p={3}>
-          <Grid container justifyContent='space-between' item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
-            <Typography variant='h2'>Froggylist Checker</Typography>
-            <Close onClick={() => setOpenModal(false)} sx={{cursor: 'pointer'}}/>
-          </Grid>
-          <Grid container direction='column'>
-            <Typography variant='h6' fontFamily='outfit' pb={3}>Enter your wallet address</Typography>
-            <TextField id='wallet' placeholder='Your wallet address' value={wallet} onChange={onWalletChange} focused sx={{paddingBottom: 5}}/>
-            <Button className={classes.walletButton} variant='contained' color='secondary' onClick={checkWallet}>
-              <Typography variant='h4'>Check Wallet</Typography>  
-            </Button>
-          </Grid>
-        </Box>
-      </Modal>
       <Modal open={showModal} onClose={onTxModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
         <Box className={classes.modal} p={3}>
           <Grid container justifyContent='space-between' pb={5}>
