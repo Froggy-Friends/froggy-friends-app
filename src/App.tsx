@@ -198,7 +198,6 @@ function App() {
           {
             account && !loading && 
             <Grid item>
-              <Typography variant='h6' color='primary' pb={5}>No froggies found on this wallet</Typography>
               <Button variant='contained'>
                 <Link href="https://opensea.io/collection/froggyfriendsnft" underline="none" target="_blank">
                   <Typography variant='h5'>Buy Froggies</Typography>
