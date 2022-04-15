@@ -1,11 +1,12 @@
 import { useEthers } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, CardHeader, Card, CardContent, CardMedia } from "@mui/material";
+import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, CardHeader, Card, CardContent, CardMedia, Container } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import logo from './images/logo.png';
 import { useEffect, useState } from 'react';
 import { Close, Error } from '@mui/icons-material';
 import axios from 'axios';
+import ribbit from './images/ribbit.gif';
 
 interface Attribute {
   trait_type: string;
@@ -62,15 +63,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
     },
     walletButton: {
       marginTop: theme.spacing(3)
-    },
-    froggies: {
-      padding: theme.spacing(20),
-      [theme.breakpoints.down('lg')]: {
-        padding: theme.spacing(10),
-      },
-      [theme.breakpoints.down('md')]: {
-        padding: theme.spacing(5),
-      }
     },
     footer: {
       backgroundColor: '#181818'
@@ -151,111 +143,117 @@ function App() {
   
   return (
     <Grid id='app' className={classes.app} container direction='column'>
-      <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
-        <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
-          <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 75, width: 75}}/>
-        </Grid>
-        { isDesktop && 
-          <Grid container item justifyContent='center' textAlign='center' xl={6} lg={6} md={9} sm={9} xs={9} pt={2}>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Link href='https://alpha.froggyfriendsnft.com/team' underline='none'>
-                <Typography variant='h5'>Team</Typography>
-              </Link>
-            </Grid>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Link href='https://alpha.froggyfriendsnft.com/collabs' underline='none'>
-                <Typography variant='h5'>Collabs</Typography>
-              </Link>
-            </Grid>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
-                <Typography variant='h5'>Stake</Typography>
-              </Link>
-            </Grid>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Link href='https://alpha.froggyfriendsnft.com/marketplace' underline='none'>
-                <Typography variant='h5'>Market</Typography>
-              </Link>
-            </Grid>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Link href='https://alpha.froggyfriendsnft.com/license' underline='none'>
-                <Typography variant='h5'>License</Typography>
-              </Link>
-            </Grid> 
+      <Container maxWidth='xl'>
+        <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
+          <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
+            <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 75, width: 75}}/>
           </Grid>
-        }
-      </Grid>
-      <Grid id='info' container direction='column' textAlign='center' pt={20}>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
-          <Typography variant='h2' color='primary'>Froggy Friends Staking</Typography>
-        </Grid>
-        { !account && <Grid item p={3}>
-            <Button className={classes.mintButton} variant='contained' onClick={() => activateBrowserWallet()}>
-              <Typography variant='h5'>Login</Typography>  
-            </Button>
-        </Grid>
-        }
-        { loading && 
-          <Grid item>
-            <Typography variant='h3' color='primary'>Loading Froggies</Typography>
-            <CircularProgress />
-          </Grid>
-        }
-        <Grid id='froggies' className={classes.froggies} container item xl={12} lg={12} md={12} sm={12} xs={12}>
-          {
-            owned.froggies.map((froggy: any) => {
-              return <Grid key={froggy.edition} item xl={2} lg={2} md={3} sm={6} xs={12}>
-                <Card>
-                  <CardMedia component='img' image={froggy.image} alt='Froggy'/>
-                  <CardContent>
-                    <Typography variant='h5'>{froggy.name}</Typography>
-                    <Typography>{froggy.ribbit} $RIBBIT per day</Typography>
-                  </CardContent>
-                </Card>
+          { isDesktop && 
+            <Grid container item justifyContent='center' textAlign='center' xl={6} lg={6} md={9} sm={9} xs={9} pt={2}>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                <Link href='https://alpha.froggyfriendsnft.com/team' underline='none'>
+                  <Typography variant='h5'>Team</Typography>
+                </Link>
               </Grid>
-
-            })
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                <Link href='https://alpha.froggyfriendsnft.com/collabs' underline='none'>
+                  <Typography variant='h5'>Collabs</Typography>
+                </Link>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
+                  <Typography variant='h5'>Stake</Typography>
+                </Link>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                <Link href='https://alpha.froggyfriendsnft.com/marketplace' underline='none'>
+                  <Typography variant='h5'>Market</Typography>
+                </Link>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                <Link href='https://alpha.froggyfriendsnft.com/license' underline='none'>
+                  <Typography variant='h5'>License</Typography>
+                </Link>
+              </Grid> 
+            </Grid>
           }
         </Grid>
-      </Grid>
-      <Grid id='footer' className={classes.footer} container justifyContent='center' textAlign='center'>
-        <Grid container item direction='column' alignItems='center' pb={10}>
-          <Grid item p={5}>
-            <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 50, width: 50}}/>
+        <Grid id='staking' container direction='column' textAlign='center' pt={20}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
+            <Typography variant='h2' color='primary'>Froggy Friends Staking</Typography>
           </Grid>
-          <Grid item>
-            <Typography variant='body1' color='secondary'>
-              4,444 of the friendliest frogs in the metaverse. 
-            </Typography>
+          <Grid container item textAlign='left' alignItems='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
+            <img src={ribbit} style={{height: 50, width: 50}}/>
+            <Typography variant='h5' color='primary'>{owned.totalRibbit} $RIBBIT per day</Typography>
           </Grid>
-          <Grid container justifyContent='center' pt={2} maxWidth={500}>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-              <Typography color='primary'>Team</Typography>
-            </Grid>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-            <Typography color='primary'>Collabs</Typography>
-            </Grid>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-            <Typography color='primary'>Staking</Typography>
-            </Grid>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-            <Typography color='primary'>Market</Typography>
-            </Grid>
+          { !account && <Grid item p={3}>
+              <Button className={classes.mintButton} variant='contained' onClick={() => activateBrowserWallet()}>
+                <Typography variant='h5'>Login</Typography>  
+              </Button>
           </Grid>
-          <Grid container justifyContent='space-between' mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '1px solid #b3b6bb'}}>
+          }
+          { loading && 
+            <Grid item p={10}>
+              <Typography variant='h3' color='primary'>Loading Froggies</Typography>
+              <CircularProgress />
+            </Grid>
+          }
+          <Grid id='froggies' container item xl={12} lg={12} md={12} sm={12} xs={12}>
+            {
+              owned.froggies.map((froggy: any) => {
+                return <Grid key={froggy.edition} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                  <Card sx={{height: '100%'}}>
+                    <CardMedia component='img' image={froggy.image} alt='Froggy'/>
+                    <CardContent>
+                      <Typography variant='h5'>{froggy.name}</Typography>
+                      <Typography>{froggy.ribbit} $RIBBIT per day</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+              })
+            }
+          </Grid>
+        </Grid>  
+      </Container>  
+      <Grid id='footer' className={classes.footer} container justifyContent='center' textAlign='center' mt={20}>
+          <Grid container item direction='column' alignItems='center' pb={10}>
+            <Grid item p={5}>
+              <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 50, width: 50}}/>
+            </Grid>
             <Grid item>
-              <Typography color='secondary' pt={3}>Froggy Friends NFT</Typography>
+              <Typography variant='body1' color='secondary'>
+                4,444 of the friendliest frogs in the metaverse. 
+              </Typography>
             </Grid>
-            <Grid item>
-              <Grid container>
-              <Typography color='secondary' pt={3} pr={1}>Terms Of Use</Typography>
-              <Typography color='secondary' pt={3}>•</Typography>
-              <Typography color='secondary' pt={3} pl={1}>Privacy Policy</Typography>
+            <Grid container justifyContent='center' pt={2} maxWidth={500}>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+                <Typography color='primary'>Team</Typography>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+              <Typography color='primary'>Collabs</Typography>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+              <Typography color='primary'>Staking</Typography>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+              <Typography color='primary'>Market</Typography>
+              </Grid>
+            </Grid>
+            <Grid container justifyContent='space-between' mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '1px solid #b3b6bb'}}>
+              <Grid item>
+                <Typography color='secondary' pt={3}>Froggy Friends NFT</Typography>
+              </Grid>
+              <Grid item>
+                <Grid container>
+                <Typography color='secondary' pt={3} pr={1}>Terms Of Use</Typography>
+                <Typography color='secondary' pt={3}>•</Typography>
+                <Typography color='secondary' pt={3} pl={1}>Privacy Policy</Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>  
       <Snackbar
         open={showAlert} 
         autoHideDuration={5000} 
