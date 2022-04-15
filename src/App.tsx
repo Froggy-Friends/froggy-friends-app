@@ -97,6 +97,7 @@ function App() {
       } catch (error) {
         setAlertMessage("Issue fetching froggies owned");
         setShowAlert(true);
+        setLoading(false);
       }
     }
 
