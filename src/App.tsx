@@ -241,8 +241,27 @@ function App() {
       </Grid>
       <Grid id='footer' className={classes.footer} container justifyContent='center' textAlign='center'>
         <Grid container item direction='column' alignItems='center'>
-          <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
+          <Grid item p={5}>
             <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 50, width: 50}}/>
+          </Grid>
+          <Grid item>
+            <Typography variant='body1' color='secondary'>
+              4,444 of the friendliest frogs in the metaverse. 
+            </Typography>
+          </Grid>
+          <Grid container justifyContent='center' pt={2} maxWidth={500}>
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+              <Typography color='primary'>Team</Typography>
+            </Grid>
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+            <Typography color='primary'>Collabs</Typography>
+            </Grid>
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+            <Typography color='primary'>Staking</Typography>
+            </Grid>
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+            <Typography color='primary'>Market</Typography>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>  

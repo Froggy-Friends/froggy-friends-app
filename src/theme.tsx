@@ -9,7 +9,7 @@ let theme = createTheme({
       main: '#ebedf1'
     },
     secondary: {
-      main: '#dedede'
+      main: '#b3b6bb'
     },
     success: {
       main: '#cfdcae'
