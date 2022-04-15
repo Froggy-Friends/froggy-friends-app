@@ -126,7 +126,7 @@ function App() {
         <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
           <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
             <Link href={process.env.REACT_APP_WEBSITE_URL} underline='none'>
-              <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 75, width: 75}}/>
+              <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 125, width: 125}}/>
             </Link>
           </Grid>
           { isDesktop && 
