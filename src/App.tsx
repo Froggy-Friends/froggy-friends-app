@@ -32,7 +32,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
       }
     },
     mintButton: {
-      width: '60%',
       marginTop: theme.spacing(5)
     },
     froggylist: {
@@ -195,7 +194,7 @@ function App() {
   }
   
   return (
-    <Grid id='app' className={classes.app} container>
+    <Grid id='app' className={classes.app} container justifyContent='space-between'>
       <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
         <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
           <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 75, width: 75}}/>
@@ -230,17 +229,17 @@ function App() {
           </Grid>
         }
       </Grid>
-      <Grid id='info' container justifyContent='center' textAlign='center' mt={-10} maxHeight={350}>
-        <Grid container item direction='column' alignItems='center' xl={4} lg={6} md={6} sm={8} xs={12} p={3}>
-          {
-            !account && <Button className={classes.mintButton} variant='contained' onClick={() => activateBrowserWallet()}>
-                          <Typography variant='h5'>Login</Typography>  
-                        </Button>
-          }
+      <Grid id='info' container direction='column' justifyContent='space-between' textAlign='center' height={500} pt={10} pb={10}>
+        <Typography variant='h2' color='primary'>Froggy Friends Staking</Typography>
+        { !account && <Grid item p={3}>
+            <Button className={classes.mintButton} variant='contained' onClick={() => activateBrowserWallet()}>
+              <Typography variant='h5'>Login</Typography>  
+            </Button>
         </Grid>
+        }
       </Grid>
       <Grid id='footer' className={classes.footer} container justifyContent='center' textAlign='center'>
-        <Grid container item direction='column' alignItems='center'>
+        <Grid container item direction='column' alignItems='center' pb={10}>
           <Grid item p={5}>
             <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 50, width: 50}}/>
           </Grid>
@@ -263,7 +262,7 @@ function App() {
             <Typography color='primary'>Market</Typography>
             </Grid>
           </Grid>
-          <Grid container justifyContent='space-between' mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '2px solid #b3b6bb'}}>
+          <Grid container justifyContent='space-between' mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '1px solid #b3b6bb'}}>
             <Grid item>
               <Typography color='secondary' pt={3}>Froggy Friends NFT</Typography>
             </Grid>
