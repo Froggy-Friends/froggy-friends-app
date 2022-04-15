@@ -7,11 +7,11 @@ import { useEffect, useState } from 'react';
 import { Close, Error } from '@mui/icons-material';
 import axios from 'axios';
 import ribbit from './images/ribbit.gif';
-import twitter from './images/Twitter.png';
-import opensea from './images/Opensea.png';
-import looksrare from './images/Looksrare.png';
-import etherscan from './images/Etherscan.png';
-import discord from './images/Discord.png';
+import twitter from './images/twitter.png';
+import opensea from './images/opensea.png';
+import looksrare from './images/looksrare.png';
+import etherscan from './images/etherscan.png';
+import discord from './images/discord.png';
 interface Attribute {
   trait_type: string;
   value: string;
