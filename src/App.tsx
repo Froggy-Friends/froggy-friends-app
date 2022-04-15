@@ -198,7 +198,7 @@ function App() {
           </Grid>
           {
             account && !loading && 
-            <Grid item>
+            <Grid item pt={5}>
               <Button variant='contained'>
                 <Link href="https://opensea.io/collection/froggyfriendsnft" underline="none" target="_blank">
                   <Typography variant='h5'>Buy Froggies</Typography>
