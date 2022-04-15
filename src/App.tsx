@@ -105,28 +105,6 @@ function App() {
     }
   }, [account])
 
-  // useEffect(() => {
-  //   if (froggylistMintState.status === 'Exception') {
-  //     if (froggylistMintState.errorMessage?.includes('insufficient funds')) {
-  //       setAlertMessage('Insufficient funds');
-  //     } else if (froggylistMintState.errorMessage?.includes('unknown account')) {
-  //       setAlertMessage('Refresh page to connect');
-  //     } else {
-  //       setAlertMessage(froggylistMintState.errorMessage?.replace(/^execution reverted:/i, ''));
-  //     }
-  //     setShowAlert(true);
-  //   } else if (froggylistMintState.status === 'Mining') {
-  //     setTx(froggylistMintState.transaction?.hash);
-  //     setTxPending(true);
-  //     setTxFail(false);
-  //     setShowModal(true);
-  //   } else if (froggylistMintState.status === 'Success') {
-  //     setTxPending(false);
-  //   } else if (froggylistMintState.status === 'Fail') {
-  //     setTxFail(true);
-  //   }
-  // }, [froggylistMintState.status])
-
   const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -151,12 +129,12 @@ function App() {
           { isDesktop && 
             <Grid container item justifyContent='center' textAlign='center' xl={6} lg={6} md={9} sm={9} xs={9} pt={2}>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                <Link href='https://alpha.froggyfriendsnft.com/team' underline='none'>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none'>
                   <Typography variant='h5'>Team</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                <Link href='https://alpha.froggyfriendsnft.com/collabs' underline='none'>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none'>
                   <Typography variant='h5'>Collabs</Typography>
                 </Link>
               </Grid>
@@ -166,12 +144,12 @@ function App() {
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                <Link href='https://alpha.froggyfriendsnft.com/marketplace' underline='none'>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/market'} underline='none'>
                   <Typography variant='h5'>Market</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                <Link href='https://alpha.froggyfriendsnft.com/license' underline='none'>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/license'} underline='none'>
                   <Typography variant='h5'>License</Typography>
                 </Link>
               </Grid> 
@@ -228,16 +206,24 @@ function App() {
             </Grid>
             <Grid container justifyContent='center' pt={2} maxWidth={500}>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-                <Typography color='primary'>Team</Typography>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none'>
+                  <Typography color='primary'>Team</Typography>
+                </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-              <Typography color='primary'>Collabs</Typography>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none'>
+                  <Typography color='primary'>Collabs</Typography>
+                </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-              <Typography color='primary'>Staking</Typography>
+                <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
+                  <Typography color='primary'>Staking</Typography>
+                </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-              <Typography color='primary'>Market</Typography>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/market'} underline='none'>
+                  <Typography color='primary'>Market</Typography>
+                </Link>
               </Grid>
             </Grid>
             <Grid container justifyContent='space-between' mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '1px solid #b3b6bb'}}>
@@ -246,9 +232,13 @@ function App() {
               </Grid>
               <Grid item>
                 <Grid container>
-                <Typography color='secondary' pt={3} pr={1}>Terms Of Use</Typography>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/terms-of-use'} underline='none'>
+                  <Typography color='secondary' pt={3} pr={1}>Terms Of Use</Typography>
+                </Link>
                 <Typography color='secondary' pt={3}>•</Typography>
-                <Typography color='secondary' pt={3} pl={1}>Privacy Policy</Typography>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/privacy-policy'} underline='none'>
+                  <Typography color='secondary' pt={3} pl={1}>Privacy Policy</Typography>
+                </Link>
                 </Grid>
               </Grid>
             </Grid>

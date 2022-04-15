@@ -48,6 +48,15 @@ let theme = createTheme({
           textAlign: 'center'
         }
       }
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          ":hover": {
+            color: '#5ea14e'
+          }
+        }
+      }
     }
   }
 });
