@@ -2,6 +2,7 @@ import { useEthers } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
 import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, Modal, Slider, Snackbar, Step, StepLabel, Stepper, TextField, Theme, useMediaQuery, useTheme } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
+import logo from './images/logo.png';
 import froggy from './images/froggy.jpg';
 import grass from './images/grass.png';
 import twitter from './images/twitter.png';
@@ -18,10 +19,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
   createStyles({
     app: {
       backgroundColor: theme.palette.background.default,
-      background: `url(${grass})`,
-      backgroundPosition: 'bottom left',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'contain',
       height: '100%',
       [theme.breakpoints.up('md')]: {
         backgroundSize: '100% 20%'
@@ -31,8 +28,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
       }
     },
     avatar: {
-      borderRadius: '50%', 
-      border: '2px solid black', 
+      height: 100,
+      width: 100,
       [theme.breakpoints.up('sm')]: {
         marginTop: '5px'
       },
@@ -203,32 +200,36 @@ function App() {
   return (
     <Grid id='app' className={classes.app} container p={2}>
       <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
-        <Grid container item justifyContent='center' xl={3} lg={4} md={5} sm={6} xs={12} pb={3}>
-          <Avatar className={classes.avatar} alt='Home' src={froggy}/>
-          <Link href='https://www.froggyfriendsnft.com/' variant='h2' fontWeight='bold' textTransform='uppercase' underline='none' pl={3}>Froggy Friends</Link>
+        <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
+          <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 75, width: 75}}/>
         </Grid>
         { isDesktop && 
-          <Grid container item justifyContent='center' textAlign='center' xl={3} lg={3} md={3} sm={4} xs={12}>
-            <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
-              <Link href='https://twitter.com/FroggyFriendNFT' target='_blank'>
-                <img alt='Twitter' src={twitter} height={40}/>  
+          <Grid container item justifyContent='center' textAlign='center' xl={6} lg={6} md={9} sm={9} xs={9}>
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+              <Link href='https://alpha.froggyfriendsnft.com/team' underline='none'>
+                <Typography variant='h3'>Team</Typography>
               </Link>
             </Grid>
-            <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
-              <Link href='https://opensea.io/collection/froggyfriendsnft' target='_blank'>
-                <img alt='Opensea' src={opensea} height={40}/>  
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+              <Link href='https://alpha.froggyfriendsnft.com/collabs' underline='none'>
+                <Typography variant='h3'>Collabs</Typography>
               </Link>
             </Grid>
-            <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
-              <Link href='https://looksrare.org/collections/0x29652C2e9D3656434Bc8133c69258C8d05290f41' target='_blank'>
-                <img alt='LooksRare' src={looksrare} height={40}/>  
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+              <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
+                <Typography variant='h3'>Stake</Typography>
               </Link>
             </Grid>
-            <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
-              <Link href={`${process.env.REACT_APP_ETHERSCAN}/address/${process.env.REACT_APP_CONTRACT}`} target='_blank'>
-                <img alt='Etherscan' src={etherscan} height={40}/>  
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+              <Link href='https://alpha.froggyfriendsnft.com/marketplace' underline='none'>
+                <Typography variant='h3'>Market</Typography>
               </Link>
-            </Grid>  
+            </Grid>
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+              <Link href='https://alpha.froggyfriendsnft.com/license' underline='none'>
+                <Typography variant='h3'>License</Typography>
+              </Link>
+            </Grid> 
           </Grid>
         }
       </Grid>
