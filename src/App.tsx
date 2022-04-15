@@ -268,7 +268,11 @@ function App() {
               <Typography color='secondary' pt={3}>Froggy Friends NFT</Typography>
             </Grid>
             <Grid item>
-              <Typography color='secondary' pt={3}>Terms of use</Typography>
+              <Grid container>
+              <Typography color='secondary' pt={3} pr={1}>Terms Of Use</Typography>
+              <Typography color='secondary' pt={3}>•</Typography>
+              <Typography color='secondary' pt={3} pl={1}>Privacy Policy</Typography>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
