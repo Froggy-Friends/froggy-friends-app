@@ -27,7 +27,7 @@ let theme = createTheme({
           borderRadius: 25,
           fontWeight: 'bold',
           ":hover": {
-            backgroundColor: '#dedede'
+            backgroundColor: '#48793c'
           }
         }
       }
