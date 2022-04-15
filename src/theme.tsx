@@ -3,32 +3,31 @@ import { createTheme, responsiveFontSizes } from '@mui/material';
 let theme = createTheme({
   palette: {
     background: {
-      default: '#d5e5ef'
+      default: '#000000'
     },
     primary: {
-      main: '#1a1b1c'
+      main: '#ebedf1'
     },
     secondary: {
-      main: '#dedede'
+      main: '#b3b6bb'
     },
     success: {
       main: '#cfdcae'
     }
   },
   typography: {
-    fontFamily: ['billy', 'outfit', 'sans-serif'].join(',')
+    fontFamily: 'nunito'
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          color: '#1a1b1c',
-          backgroundColor: '#ffffff',
-          borderRadius: 16,
-          border: '4px solid #1a1b1c',
+          color: '#ebedf1',
+          backgroundColor: '#5ea14e',
+          borderRadius: 25,
           fontWeight: 'bold',
           ":hover": {
-            backgroundColor: '#dedede'
+            backgroundColor: '#48793c'
           }
         }
       }
@@ -37,7 +36,6 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           fontSize: '1.3rem',
-          fontFamily: 'outfit'
         }
       }
     },
@@ -51,19 +49,11 @@ let theme = createTheme({
         }
       }
     },
-    MuiOutlinedInput: {
+    MuiLink: {
       styleOverrides: {
         root: {
-          fontFamily: 'outfit'
-        }
-      }
-    },
-    MuiStepIcon: {
-      styleOverrides: {
-        root: {
-          '.MuiStepIcon-text': {
-            fontSize: '0.9rem',
-            fontFamily: 'outfit'
+          ":hover": {
+            color: '#5ea14e'
           }
         }
       }

@@ -1,54 +1,51 @@
 import { useEthers } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, Modal, Slider, Snackbar, Step, StepLabel, Stepper, TextField, Theme, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, CardHeader, Card, CardContent, CardMedia, Container } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
-import froggy from './images/froggy.jpg';
-import grass from './images/grass.png';
-import twitter from './images/twitter.png';
-import opensea from './images/opensea.png';
-import looksrare from './images/looksrare.png';
-import etherscan from './images/etherscan.png';
+import logo from './images/logo.png';
 import { useEffect, useState } from 'react';
 import { Close, Error } from '@mui/icons-material';
-import { FroggyStatus, useFroggylistMint, useFroggyStatus, useMint, useMinted, useSupply } from './client';
-import { parseEther } from "@ethersproject/units";
-import { getIsOnFroggylist, getProof } from './http';
+import axios from 'axios';
+import ribbit from './images/ribbit.gif';
+import twitter from './images/Twitter.png';
+import opensea from './images/Opensea.png';
+import looksrare from './images/Looksrare.png';
+import etherscan from './images/Etherscan.png';
+import discord from './images/Discord.png';
+interface Attribute {
+  trait_type: string;
+  value: string;
+}
+
+interface Froggy {
+  name: string;
+  description: string;
+  image: string;
+  dna: string;
+  edition: number;
+  date: number;
+  attributes: Attribute[];
+}
+interface Owned {
+  froggies: Froggy[];
+  totalRibbit: number;
+}
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     app: {
-      backgroundColor: theme.palette.background.default,
-      background: `url(${grass})`,
-      backgroundPosition: 'bottom left',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'contain',
-      height: '100%',
-      [theme.breakpoints.up('md')]: {
-        backgroundSize: '100% 20%'
-      },
-      [theme.breakpoints.up('lg')]: {
-        backgroundSize: '100% 30%'
-      }
+      backgroundColor: '#000000'
     },
     avatar: {
-      borderRadius: '50%', 
-      border: '2px solid black', 
+      height: 100,
+      width: 100,
+      cursor: 'pointer',
       [theme.breakpoints.up('sm')]: {
         marginTop: '5px'
       },
       [theme.breakpoints.up('lg')]: {
         marginTop: '10px'
       }
-    },
-    mintButton: {
-      width: '60%',
-      marginTop: theme.spacing(5)
-    },
-    froggylist: {
-      cursor: 'pointer'
-    },
-    stepper: {
-      width: '100%'
     },
     modal: {
       position: 'absolute' as 'absolute',
@@ -67,6 +64,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
     },
     walletButton: {
       marginTop: theme.spacing(3)
+    },
+    footer: {
+      backgroundColor: '#181818'
     }
   })
 );
@@ -78,84 +78,33 @@ function App() {
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
-  const [openModal, setOpenModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [tx, setTx] = useState<any>('');
   const [txPending, setTxPending] = useState(false);
   const [txFail, setTxFail] = useState(false);
-  const [wallet, setWallet] = useState('');
-  const [froggies, setFroggies] = useState(1);
-  const [step, setStep] = useState(0);
-  const [mintProof, setMintProof] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0});
   const { activateBrowserWallet, account } = useEthers();
-  const { froggylistMint, froggylistMintState } = useFroggylistMint();
-  const { mint, mintState } = useMint();
-  const froggyStatus = useFroggyStatus();
-  const supply = useSupply();
-  const minted = useMinted();
-  const soldOut = minted > 0 && supply > 0 && minted === supply;
-  const price = parseEther("0.03");
 
   useEffect(() => {
-    soldOut ? setStep(4) : setStep(froggyStatus);
-  }, [froggyStatus, soldOut]);
+    async function getFroggiesOwned(address: string) {
+      try {
+        setLoading(true);
+        const response = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: address});
+        console.log("response data: ", response.data);
+        setOwned(response.data);
+        setLoading(false);
+      } catch (error) {
+        setAlertMessage("Issue fetching froggies owned");
+        setShowAlert(true);
+      }
+    }
 
-  useEffect(() => {
     if (account) {
-      getProof({ wallet: account})
-        .then(response => {
-          setMintProof(response.proof);
-        })
-        .catch(() => {
-          setAlertMessage("Error getting froggylist proof");
-          setShowAlert(true);
-        })
+      console.log("get froggies owned for account: ", account);
+      getFroggiesOwned(account);
     }
   }, [account])
-
-  useEffect(() => {
-    if (froggylistMintState.status === 'Exception') {
-      if (froggylistMintState.errorMessage?.includes('insufficient funds')) {
-        setAlertMessage('Insufficient funds');
-      } else if (froggylistMintState.errorMessage?.includes('unknown account')) {
-        setAlertMessage('Refresh page to connect');
-      } else {
-        setAlertMessage(froggylistMintState.errorMessage?.replace(/^execution reverted:/i, ''));
-      }
-      setShowAlert(true);
-    } else if (froggylistMintState.status === 'Mining') {
-      setTx(froggylistMintState.transaction?.hash);
-      setTxPending(true);
-      setTxFail(false);
-      setShowModal(true);
-    } else if (froggylistMintState.status === 'Success') {
-      setTxPending(false);
-    } else if (froggylistMintState.status === 'Fail') {
-      setTxFail(true);
-    }
-  }, [froggylistMintState.status])
-
-  useEffect(() => {
-    if (mintState.status === 'Exception') {
-      if (mintState.errorMessage?.includes('insufficient funds')) {
-        setAlertMessage('Insufficient funds');
-      } else if (mintState.errorMessage?.includes('unknown account')) {
-        setAlertMessage('Refresh page to login');
-      } else {
-        setAlertMessage(mintState.errorMessage?.replace(/^execution reverted:/i, ''));
-      }
-      setShowAlert(true);
-    } else if (mintState.status === 'Mining') {
-      setTx(mintState.transaction?.hash);
-      setTxPending(true);
-      setTxFail(false);
-      setShowModal(true);
-    } else if (mintState.status === 'Success') {
-      setTxPending(false);
-    } else if (mintState.status === 'Fail') {
-      setTxFail(true);
-    }
-  }, [mintState.status])
 
   const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -164,117 +113,179 @@ function App() {
 
     setShowAlert(false);
   };
-  
-  const onModalClose = () => setOpenModal(false);
-  const onWalletChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setWallet(event.target.value);
-  };
-
-  const checkWallet = () => {
-    getIsOnFroggylist(wallet)
-      .then(isOnFroggylist => {
-        setAlertMessage(isOnFroggylist ? "Wallet on Froggylist" : "Wallet not on Froggylist");
-        setShowAlert(true);
-      })
-      .catch(error => {
-        setAlertMessage("Error getting Froggylist status");
-        setShowAlert(true);
-      });
-  }
 
   const onTxModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason !== 'backdropClick') {
       setShowModal(false);
     }
   }
-
-  const onMint = () => {
-    const value = { value: price.mul(froggies)};
-    if (froggyStatus === FroggyStatus.FROGGYLIST) {
-      froggylistMint(froggies, mintProof, value);
-    } else if (froggyStatus === FroggyStatus.PUBLIC) {
-      mint(froggies, value);
-    } else {
-      setAlertMessage("Adopting is off");
-      setShowAlert(true);
-    }
-  }
   
   return (
-    <Grid id='app' className={classes.app} container p={2}>
-      <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
-        <Grid container item justifyContent='center' xl={3} lg={4} md={5} sm={6} xs={12} pb={3}>
-          <Avatar className={classes.avatar} alt='Home' src={froggy}/>
-          <Link href='https://www.froggyfriendsnft.com/' variant='h2' fontWeight='bold' textTransform='uppercase' underline='none' pl={3}>Froggy Friends</Link>
-        </Grid>
-        { isDesktop && 
-          <Grid container item justifyContent='center' textAlign='center' xl={3} lg={3} md={3} sm={4} xs={12}>
-            <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
-              <Link href='https://twitter.com/FroggyFriendNFT' target='_blank'>
-                <img alt='Twitter' src={twitter} height={40}/>  
-              </Link>
-            </Grid>
-            <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
-              <Link href='https://opensea.io/collection/froggyfriendsnft' target='_blank'>
-                <img alt='Opensea' src={opensea} height={40}/>  
-              </Link>
-            </Grid>
-            <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
-              <Link href='https://looksrare.org/collections/0x29652C2e9D3656434Bc8133c69258C8d05290f41' target='_blank'>
-                <img alt='LooksRare' src={looksrare} height={40}/>  
-              </Link>
-            </Grid>
-            <Grid item xl={2} lg={2} md={3} sm={3} xs={3}>
-              <Link href={`${process.env.REACT_APP_ETHERSCAN}/address/${process.env.REACT_APP_CONTRACT}`} target='_blank'>
-                <img alt='Etherscan' src={etherscan} height={40}/>  
-              </Link>
-            </Grid>  
+    <Grid id='app' className={classes.app} container direction='column'>
+      <Container maxWidth='xl'>
+        <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
+          <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
+            <Link href={process.env.REACT_APP_WEBSITE_URL} underline='none'>
+              <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 125, width: 125}}/>
+            </Link>
           </Grid>
-        }
-      </Grid>
-      <Grid id='info' container justifyContent='center' textAlign='center' mt={-10} maxHeight={350}>
-        <Grid container item direction='column' alignItems='center' xl={4} lg={6} md={6} sm={8} xs={12} p={3}>
-          <Typography variant='h1' fontWeight='bold'>{ supply ? `${minted} / ${supply} Adopted` : 'Adopt March 18' }</Typography>
-          <Typography variant='h5' fontFamily='outfit'>0.03 ETH adopt price</Typography>
-          <Typography variant='h5' fontFamily='outfit' pb={3}>Max 3 per wallet</Typography>
-          <Slider sx={{width: '50%', paddingBottom: 5}} value={froggies} step={1} min={1} max={3} onChange={(e, val: any) => setFroggies(val)}/>
-          {
-            account && <Button className={classes.mintButton} variant='contained' disabled={soldOut} onClick={onMint}>
-                        <Typography variant='h4'>{ soldOut ? 'Sold Out!' : `Adopt ${froggies}`}</Typography>  
-                      </Button>
-          }
-          {
-            !account && <Button className={classes.mintButton} variant='contained' onClick={() => activateBrowserWallet()}>
-                          <Typography variant='h4'>Connect</Typography>  
-                        </Button>
+          { isDesktop && 
+            <Grid container item justifyContent='center' textAlign='center' xl={6} lg={6} md={9} sm={9} xs={9} pt={2}>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none'>
+                  <Typography variant='h5'>Team</Typography>
+                </Link>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none'>
+                  <Typography variant='h5'>Collabs</Typography>
+                </Link>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
+                  <Typography variant='h5'>Stake</Typography>
+                </Link>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/market'} underline='none'>
+                  <Typography variant='h5'>Market</Typography>
+                </Link>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/license'} underline='none'>
+                  <Typography variant='h5'>License</Typography>
+                </Link>
+              </Grid> 
+            </Grid>
           }
         </Grid>
-      </Grid>  
-      <Grid id='progress' container item xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
-        <Stepper className={classes.stepper} activeStep={step} alternativeLabel>
-          <Step>
-            <StepLabel>
-              <Typography variant='h4'>Prep</Typography>
-            </StepLabel>
-          </Step>
-          <Step>
-            <StepLabel>
-              <Typography variant='h4'>Froggylist</Typography>
-            </StepLabel>
-          </Step>
-          <Step>
-            <StepLabel>
-              <Typography variant='h4'>Public</Typography>
-            </StepLabel>
-          </Step>
-          <Step>
-            <StepLabel>
-              <Typography variant='h4'>Sold Out!</Typography>
-              </StepLabel>
-            </Step>
-          </Stepper>  
+        <Grid id='staking' container direction='column' textAlign='center' pt={20}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
+            <Typography variant='h2' color='primary'>Froggy Friends Staking</Typography>
+          </Grid>
+          <Grid container item textAlign='left' alignItems='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
+            <img src={ribbit} style={{height: 50, width: 50}}/>
+            <Typography variant='h5' color='primary'>{owned.totalRibbit} $RIBBIT per day</Typography>
+          </Grid>
+          { !account && <Grid item p={3}>
+              <Button variant='contained' onClick={() => activateBrowserWallet()}>
+                <Typography variant='h5'>Login</Typography>  
+              </Button>
+          </Grid>
+          }
+          { account && loading && 
+            <Grid item p={10}>
+              <Typography variant='h3' color='primary'>Loading Froggies</Typography>
+              <CircularProgress />
+            </Grid>
+          }
+          <Grid id='froggies' container item xl={12} lg={12} md={12} sm={12} xs={12}>
+            {
+              owned.froggies.map((froggy: any) => {
+                return <Grid key={froggy.edition} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                  <Card sx={{height: '100%'}}>
+                    <CardMedia component='img' image={froggy.image} alt='Froggy'/>
+                    <CardContent>
+                      <Typography variant='h5'>{froggy.name}</Typography>
+                      <Typography>{froggy.ribbit} $RIBBIT per day</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+              })
+            }
+          </Grid>
+          {
+            account && !loading && 
+            <Grid item>
+              <Typography variant='h6' color='primary' pb={5}>No froggies found on this wallet</Typography>
+              <Button variant='contained'>
+                <Link href="https://opensea.io/collection/froggyfriendsnft" underline="none" target="_blank">
+                  <Typography variant='h5'>Buy Froggies</Typography>
+                </Link>
+              </Button>
+            </Grid>
+          }
+        </Grid>  
+      </Container>  
+      <Grid id='footer' className={classes.footer} container justifyContent='center' textAlign='center' mt={20}>
+          <Grid container item direction='column' alignItems='center' pb={10}>
+            <Grid item p={5}>
+              <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 50, width: 50}}/>
+            </Grid>
+            <Grid item>
+              <Typography variant='body1' color='secondary'>
+                4,444 of the friendliest frogs in the metaverse. 
+              </Typography>
+            </Grid>
+            <Grid container justifyContent='center' p={2}>
+                <Grid item p={1}>
+                  <Link href="https://twitter.com/FroggyFriendNFT" underline='none' target='_blank'>
+                    <Avatar className={classes.avatar} alt='Home' src={twitter} sx={{height: 35, width: 35}}/>
+                  </Link>
+                </Grid>
+                <Grid item p={1}>
+                  <Link href="https://opensea.io/collection/froggyfriendsnft" underline='none' target='_blank'>
+                    <Avatar className={classes.avatar} alt='Home' src={opensea} sx={{height: 35, width: 35}}/>
+                  </Link>
+                </Grid>
+                <Grid item p={1}>
+                  <Link href="https://looksrare.org/collections/0x29652C2e9D3656434Bc8133c69258C8d05290f41" underline='none' target='_blank'>
+                    <Avatar className={classes.avatar} alt='Home' src={looksrare} sx={{height: 35, width: 35}}/>
+                  </Link>
+                </Grid>
+                <Grid item p={1}>
+                  <Link href="https://etherscan.io/address/0x29652C2e9D3656434Bc8133c69258C8d05290f41#code" underline='none' target='_blank'>
+                    <Avatar className={classes.avatar} alt='Home' src={etherscan} sx={{height: 35, width: 35}}/>
+                  </Link>
+                </Grid>
+                <Grid item p={1}>
+                  <Link href="https://discord.com/invite/froggyfriends" underline='none' target='_blank'>
+                    <Avatar className={classes.avatar} alt='Home' src={discord} sx={{height: 35, width: 35}}/>
+                  </Link>
+                </Grid>
+            </Grid>
+            <Grid container justifyContent='center' pt={2} maxWidth={500}>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none'>
+                  <Typography color='primary'>Team</Typography>
+                </Link>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none'>
+                  <Typography color='primary'>Collabs</Typography>
+                </Link>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+                <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
+                  <Typography color='primary'>Staking</Typography>
+                </Link>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+                <Link href={process.env.REACT_APP_WEBSITE_URL + '/market'} underline='none'>
+                  <Typography color='primary'>Market</Typography>
+                </Link>
+              </Grid>
+            </Grid>
+            <Grid container justifyContent='space-between' mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '1px solid #b3b6bb'}}>
+              <Grid item>
+                <Typography color='secondary' pt={3}>&copy;	Froggy Friends NFT</Typography>
+              </Grid>
+              <Grid item>
+                <Grid container>
+                  <Link href={process.env.REACT_APP_WEBSITE_URL + '/terms-of-use'} underline='none'>
+                    <Typography color='secondary' pt={3} pr={1}>Terms</Typography>
+                  </Link>
+                  <Typography color='secondary' pt={3}>•</Typography>
+                  <Link href={process.env.REACT_APP_WEBSITE_URL + '/privacy-policy'} underline='none'>
+                    <Typography color='secondary' pt={3} pl={1}>Privacy</Typography>
+                  </Link>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-      <Snackbar 
+      <Snackbar
         open={showAlert} 
         autoHideDuration={5000} 
         message={alertMessage} 
@@ -286,21 +297,6 @@ function App() {
           </IconButton>
         }
       />
-      <Modal open={openModal} onClose={onModalClose} keepMounted aria-labelledby='froggylist' aria-describedby='froggylist'>
-        <Box className={classes.modal} p={3}>
-          <Grid container justifyContent='space-between' item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
-            <Typography variant='h2'>Froggylist Checker</Typography>
-            <Close onClick={() => setOpenModal(false)} sx={{cursor: 'pointer'}}/>
-          </Grid>
-          <Grid container direction='column'>
-            <Typography variant='h6' fontFamily='outfit' pb={3}>Enter your wallet address</Typography>
-            <TextField id='wallet' placeholder='Your wallet address' value={wallet} onChange={onWalletChange} focused sx={{paddingBottom: 5}}/>
-            <Button className={classes.walletButton} variant='contained' color='secondary' onClick={checkWallet}>
-              <Typography variant='h4'>Check Wallet</Typography>  
-            </Button>
-          </Grid>
-        </Box>
-      </Modal>
       <Modal open={showModal} onClose={onTxModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
         <Box className={classes.modal} p={3}>
           <Grid container justifyContent='space-between' pb={5}>

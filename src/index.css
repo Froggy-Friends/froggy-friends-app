@@ -1,11 +1,6 @@
 @font-face {
-  font-family: 'billy';
-  src: local('billy'), url(./fonts/billy.ttf) format('truetype');
-}
-
-@font-face {
-  font-family: 'outfit';
-  src: local('outfit'), url(./fonts/outfit.ttf) format('truetype');
+  font-family: 'nunito';
+  src: local('nunito'), url(./fonts/nunito/Nunito-Regular.ttf) format('truetype');
 }
 
 html {
