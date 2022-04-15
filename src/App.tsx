@@ -1,6 +1,6 @@
 import { useEthers } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, Modal, Snackbar, TextField, Theme, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Box, createStyles, Divider, Grid, IconButton, LinearProgress, Modal, Snackbar, TextField, Theme, useMediaQuery, useTheme } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import logo from './images/logo.png';
 import { useEffect, useState } from 'react';
@@ -261,6 +261,14 @@ function App() {
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
             <Typography color='primary'>Market</Typography>
+            </Grid>
+          </Grid>
+          <Grid container justifyContent='space-between' mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '2px solid #b3b6bb'}}>
+            <Grid item>
+              <Typography color='secondary' pt={3}>Froggy Friends NFT</Typography>
+            </Grid>
+            <Grid item>
+              <Typography color='secondary' pt={3}>Terms of use</Typography>
             </Grid>
           </Grid>
         </Grid>
