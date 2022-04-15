@@ -1,6 +1,6 @@
 import { useEthers } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, CardHeader, Card, CardContent, CardMedia } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import logo from './images/logo.png';
 import { useEffect, useState } from 'react';
@@ -11,14 +11,7 @@ import axios from 'axios';
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     app: {
-      backgroundColor: theme.palette.background.default,
-      height: '100%',
-      [theme.breakpoints.up('md')]: {
-        backgroundSize: '100% 20%'
-      },
-      [theme.breakpoints.up('lg')]: {
-        backgroundSize: '100% 30%'
-      }
+      backgroundColor: '#000000'
     },
     avatar: {
       height: 100,
@@ -76,17 +69,17 @@ function App() {
   const [txPending, setTxPending] = useState(false);
   const [txFail, setTxFail] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [froggies, setFroggies] = useState([]);
   const { activateBrowserWallet, account } = useEthers();
 
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
       try {
-        setAlertMessage("Issue fetching froggies owned");
-        setShowAlert(true);
-        // setLoading(true);
-        // const response = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: address});
-        // console.log("response: ", response.data);
-        // setLoading(false);
+        setLoading(true);
+        const response = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: address});
+        console.log("response data: ", response.data);
+        setFroggies(response.data);
+        setLoading(false);
       } catch (error) {
         setAlertMessage("Issue fetching froggies owned");
         setShowAlert(true);
@@ -96,14 +89,6 @@ function App() {
     if (account) {
       console.log("get froggies owned for account: ", account);
       getFroggiesOwned(account);
-      // getProof({ wallet: account})
-      //   .then(response => {
-      //     setMintProof(response.proof);
-      //   })
-      //   .catch(() => {
-      //     setAlertMessage("Error getting froggylist proof");
-      //     setShowAlert(true);
-      //   })
     }
   }, [account])
 
@@ -144,7 +129,7 @@ function App() {
   }
   
   return (
-    <Grid id='app' className={classes.app} container justifyContent='space-between'>
+    <Grid id='app' className={classes.app} container direction='column'>
       <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
         <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
           <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 75, width: 75}}/>
@@ -179,8 +164,10 @@ function App() {
           </Grid>
         }
       </Grid>
-      <Grid id='info' container direction='column' justifyContent='space-between' textAlign='center' height={800} pt={20} pb={20}>
-        <Typography variant='h2' color='primary'>Froggy Friends Staking</Typography>
+      <Grid id='info' container direction='column' textAlign='center' pt={20}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
+          <Typography variant='h2' color='primary'>Froggy Friends Staking</Typography>
+        </Grid>
         { !account && <Grid item p={3}>
             <Button className={classes.mintButton} variant='contained' onClick={() => activateBrowserWallet()}>
               <Typography variant='h5'>Login</Typography>  
@@ -193,6 +180,22 @@ function App() {
             <CircularProgress />
           </Grid>
         }
+        <Grid id='froggies' container item xl={12} lg={12} md={12} sm={12} xs={12} p={20}>
+          {
+            froggies.map((froggy: any) => {
+              return <Grid key={froggy.edition} item xl={2} lg={2} md={2} sm={6} xs={6}>
+                <Card>
+                  <CardMedia component='img' image={froggy.image} alt='Froggy'/>
+                  <CardContent>
+                    <Typography variant='h5'>{froggy.name}</Typography>
+                    <Typography>Ribbit</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+            })
+          }
+        </Grid>
       </Grid>
       <Grid id='footer' className={classes.footer} container justifyContent='center' textAlign='center'>
         <Grid container item direction='column' alignItems='center' pb={10}>
