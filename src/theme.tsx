@@ -16,16 +16,15 @@ let theme = createTheme({
     }
   },
   typography: {
-    fontFamily: ['billy', 'outfit', 'sans-serif'].join(',')
+    fontFamily: 'nunito'
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          color: '#1a1b1c',
-          backgroundColor: '#ffffff',
-          borderRadius: 16,
-          border: '4px solid #1a1b1c',
+          color: '#ebedf1',
+          backgroundColor: '#5ea14e',
+          borderRadius: 25,
           fontWeight: 'bold',
           ":hover": {
             backgroundColor: '#dedede'
@@ -55,16 +54,6 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           fontFamily: 'outfit'
-        }
-      }
-    },
-    MuiStepIcon: {
-      styleOverrides: {
-        root: {
-          '.MuiStepIcon-text': {
-            fontSize: '0.9rem',
-            fontFamily: 'outfit'
-          }
         }
       }
     }

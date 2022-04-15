@@ -1,14 +1,8 @@
 import { useEthers } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, Modal, Slider, Snackbar, Step, StepLabel, Stepper, TextField, Theme, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, Modal, Snackbar, TextField, Theme, useMediaQuery, useTheme } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import logo from './images/logo.png';
-import froggy from './images/froggy.jpg';
-import grass from './images/grass.png';
-import twitter from './images/twitter.png';
-import opensea from './images/opensea.png';
-import looksrare from './images/looksrare.png';
-import etherscan from './images/etherscan.png';
 import { useEffect, useState } from 'react';
 import { Close, Error } from '@mui/icons-material';
 import { FroggyStatus, useFroggylistMint, useFroggyStatus, useMint, useMinted, useSupply } from './client';
@@ -204,30 +198,30 @@ function App() {
           <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 75, width: 75}}/>
         </Grid>
         { isDesktop && 
-          <Grid container item justifyContent='center' textAlign='center' xl={6} lg={6} md={9} sm={9} xs={9}>
+          <Grid container item justifyContent='center' textAlign='center' xl={6} lg={6} md={9} sm={9} xs={9} pt={2}>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
               <Link href='https://alpha.froggyfriendsnft.com/team' underline='none'>
-                <Typography variant='h3'>Team</Typography>
+                <Typography variant='h5'>Team</Typography>
               </Link>
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
               <Link href='https://alpha.froggyfriendsnft.com/collabs' underline='none'>
-                <Typography variant='h3'>Collabs</Typography>
+                <Typography variant='h5'>Collabs</Typography>
               </Link>
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
               <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
-                <Typography variant='h3'>Stake</Typography>
+                <Typography variant='h5'>Stake</Typography>
               </Link>
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
               <Link href='https://alpha.froggyfriendsnft.com/marketplace' underline='none'>
-                <Typography variant='h3'>Market</Typography>
+                <Typography variant='h5'>Market</Typography>
               </Link>
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
               <Link href='https://alpha.froggyfriendsnft.com/license' underline='none'>
-                <Typography variant='h3'>License</Typography>
+                <Typography variant='h5'>License</Typography>
               </Link>
             </Grid> 
           </Grid>
@@ -235,47 +229,14 @@ function App() {
       </Grid>
       <Grid id='info' container justifyContent='center' textAlign='center' mt={-10} maxHeight={350}>
         <Grid container item direction='column' alignItems='center' xl={4} lg={6} md={6} sm={8} xs={12} p={3}>
-          <Typography variant='h1' fontWeight='bold'>{ supply ? `${minted} / ${supply} Adopted` : 'Adopt March 18' }</Typography>
-          <Typography variant='h5' fontFamily='outfit'>0.03 ETH adopt price</Typography>
-          <Typography variant='h5' fontFamily='outfit' pb={3}>Max 3 per wallet</Typography>
-          <Slider sx={{width: '50%', paddingBottom: 5}} value={froggies} step={1} min={1} max={3} onChange={(e, val: any) => setFroggies(val)}/>
-          {
-            account && <Button className={classes.mintButton} variant='contained' disabled={soldOut} onClick={onMint}>
-                        <Typography variant='h4'>{ soldOut ? 'Sold Out!' : `Adopt ${froggies}`}</Typography>  
-                      </Button>
-          }
           {
             !account && <Button className={classes.mintButton} variant='contained' onClick={() => activateBrowserWallet()}>
-                          <Typography variant='h4'>Connect</Typography>  
+                          <Typography variant='h5'>Login</Typography>  
                         </Button>
           }
         </Grid>
       </Grid>  
-      <Grid id='progress' container item xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
-        <Stepper className={classes.stepper} activeStep={step} alternativeLabel>
-          <Step>
-            <StepLabel>
-              <Typography variant='h4'>Prep</Typography>
-            </StepLabel>
-          </Step>
-          <Step>
-            <StepLabel>
-              <Typography variant='h4'>Froggylist</Typography>
-            </StepLabel>
-          </Step>
-          <Step>
-            <StepLabel>
-              <Typography variant='h4'>Public</Typography>
-            </StepLabel>
-          </Step>
-          <Step>
-            <StepLabel>
-              <Typography variant='h4'>Sold Out!</Typography>
-              </StepLabel>
-            </Step>
-          </Stepper>  
-        </Grid>
-      <Snackbar 
+      <Snackbar
         open={showAlert} 
         autoHideDuration={5000} 
         message={alertMessage} 
