@@ -196,7 +196,7 @@ function App() {
               </Grid>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={ribbit} style={{height: 50, width: 50}}/>
-                <Typography variant='h6' color='primary'>0 $RIBBIT Farmed</Typography>
+                <Typography variant='h6' color='primary'>0 $RIBBIT Staked</Typography>
               </Grid>
             </Grid>
             <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -240,7 +240,10 @@ function App() {
                     <CardMedia component='img' image={froggy.image} alt='Froggy'/>
                     <CardContent>
                       <Typography variant='h5'>{froggy.name}</Typography>
-                      <Typography>{froggy.ribbit} $RIBBIT per day</Typography>
+                      <Typography pb={2}>{froggy.ribbit} $RIBBIT per day</Typography>
+                      <Button variant='contained'>
+                        <Typography variant='h5'>{froggy.isStaked ? 'Unstake' : 'Stake'}</Typography>
+                      </Button>
                     </CardContent>
                   </Card>
                 </Grid>
