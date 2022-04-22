@@ -174,7 +174,7 @@ function App() {
             <Typography variant='h2' color='primary' fontWeight='bold'>Froggy Friends Staking</Typography>
           </Grid>
           <Grid container item textAlign='left' alignItems='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={2}>
-            <Grid container item justifyContent='space-evenly' xl={12} lg={12} md={12} sm={12} xs={12} pb={5} pt={1}>
+            <Grid container item justifyContent='space-evenly' xl={12} lg={12} md={12} sm={12} xs={12} pb={5} pt={2}>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={ribbit} style={{height: 50, width: 50}}/>
                 <Typography variant='h6' color='primary'>{owned.totalRibbit} $RIBBIT Per Day</Typography>
@@ -189,17 +189,17 @@ function App() {
               </Grid>
             </Grid>
             <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={12} p={2}>
+              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={4}>
                 <Button variant='contained'>
                   <Typography variant='h5'>Stake</Typography>  
                 </Button>
               </Grid>
-              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={3} xs={12} p={2}>
+              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={3} xs={4}>
                 <Button variant='contained'>
                   <Typography variant='h5'>Unstake</Typography>  
                 </Button>
               </Grid>
-              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={12} p={2}>
+              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={4}>
                 <Button variant='contained'>
                   <Typography variant='h5'>Claim</Typography>  
                 </Button>
