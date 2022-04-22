@@ -6,6 +6,7 @@ import logo from './images/logo.png';
 import { useEffect, useState } from 'react';
 import { Close, Error } from '@mui/icons-material';
 import axios from 'axios';
+import stake from './images/stake.png';
 import ribbit from './images/ribbit.gif';
 import twitter from './images/twitter.png';
 import opensea from './images/opensea.png';
@@ -34,7 +35,8 @@ interface Owned {
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     app: {
-      backgroundColor: '#000000'
+      backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.1) ), url(${stake})`,
+      backgroundSize: 'contain'
     },
     avatar: {
       height: 100,
