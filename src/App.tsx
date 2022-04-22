@@ -36,9 +36,12 @@ const useStyles: any = makeStyles((theme: Theme) =>
   createStyles({
     app: {
       backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${stake})`,
-      backgroundSize: 'contain',
       backgroundColor: '#000000',
-      backgroundRepeat: 'no-repeat'
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'contain',
+      [theme.breakpoints.down('md')]: {
+        backgroundSize: 'cover',
+      }
     },
     avatar: {
       height: 100,
@@ -71,6 +74,13 @@ const useStyles: any = makeStyles((theme: Theme) =>
       borderRadius: 25,
       padding: 5
     },
+    buttons: {
+      [theme.breakpoints.down(375)]: {
+        maxWidth: '100%',
+        flexBasis: '100%',
+        padding: theme.spacing(2)
+      }
+    },
     walletButton: {
       marginTop: theme.spacing(3)
     },
@@ -94,6 +104,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0});
   const { activateBrowserWallet, account } = useEthers();
+  const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
 
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
@@ -189,17 +200,17 @@ function App() {
               </Grid>
             </Grid>
             <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={4}>
+              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={4} sx={isTinyMobile ? {maxWidth: '100%',flexBasis: '100%',padding: theme.spacing(2)} : {}}>
                 <Button variant='contained'>
                   <Typography variant='h5'>Stake</Typography>  
                 </Button>
               </Grid>
-              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={3} xs={4}>
+              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={3} xs={4} sx={isTinyMobile ? {maxWidth: '100%',flexBasis: '100%',padding: theme.spacing(2)} : {}}>
                 <Button variant='contained'>
                   <Typography variant='h5'>Unstake</Typography>  
                 </Button>
               </Grid>
-              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={4}>
+              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={4} sx={isTinyMobile ? {maxWidth: '100%',flexBasis: '100%',padding: theme.spacing(2)} : {}}>
                 <Button variant='contained'>
                   <Typography variant='h5'>Claim</Typography>  
                 </Button>
