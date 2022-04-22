@@ -35,7 +35,7 @@ interface Owned {
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     app: {
-      backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.1) ), url(${stake})`,
+      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${stake})`,
       backgroundSize: 'contain',
       backgroundColor: '#000000',
       backgroundRepeat: 'no-repeat'
@@ -65,6 +65,11 @@ const useStyles: any = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         width: 300
       }
+    },
+    ribbit: {
+      background: theme.palette.background.default,
+      borderRadius: 25,
+      padding: 5
     },
     walletButton: {
       marginTop: theme.spacing(3)
@@ -164,30 +169,45 @@ function App() {
             </Grid>
           }
         </Grid>
-        <Grid id='staking' container direction='column' textAlign='center' pt={20}>
+        <Grid id='staking' container direction='column' textAlign='center' pt={10}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
-            <Typography variant='h2' color='primary'>Froggy Friends Staking</Typography>
+            <Typography variant='h2' color='primary' fontWeight='bold'>Froggy Friends Staking</Typography>
           </Grid>
-          <Grid container item textAlign='left' alignItems='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
-            <Grid item display='flex' alignItems='center' xl={3} lg={3} md={4} sm={12} xs={12} p={2}>
-              <img src={ribbit} style={{height: 50, width: 50}}/>
-              <Typography variant='h5' color='primary'>{owned.totalRibbit} $RIBBIT per day</Typography>
+          <Grid container item textAlign='left' alignItems='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={2}>
+            <Grid container item justifyContent='space-evenly' xl={12} lg={12} md={12} sm={12} xs={12} pb={5} pt={1}>
+              <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
+                <img src={ribbit} style={{height: 50, width: 50}}/>
+                <Typography variant='h6' color='primary'>{owned.totalRibbit} $RIBBIT Per Day</Typography>
+              </Grid>
+              <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
+                <img src={ribbit} style={{height: 50, width: 50}}/>
+                <Typography variant='h6' color='primary'>0 $RIBBIT Balance</Typography>
+              </Grid>
+              <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
+                <img src={ribbit} style={{height: 50, width: 50}}/>
+                <Typography variant='h6' color='primary'>0 $RIBBIT Farmed</Typography>
+              </Grid>
             </Grid>
-            <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={12} p={2}>
-              <Button variant='contained'>
-                <Typography variant='h5'>Stake</Typography>  
-              </Button>
+            <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={12} p={2}>
+                <Button variant='contained'>
+                  <Typography variant='h5'>Stake</Typography>  
+                </Button>
+              </Grid>
+              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={3} xs={12} p={2}>
+                <Button variant='contained'>
+                  <Typography variant='h5'>Unstake</Typography>  
+                </Button>
+              </Grid>
+              <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={12} p={2}>
+                <Button variant='contained'>
+                  <Typography variant='h5'>Claim</Typography>  
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item textAlign='center' xl={2} lg={2} md={2} sm={3} xs={12} p={2}>
-              <Button variant='contained'>
-                <Typography variant='h5'>Unstake</Typography>  
-              </Button>
-            </Grid>
-            <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={12} p={2}>
-              <Button variant='contained'>
-                <Typography variant='h5'>Claim</Typography>  
-              </Button>
-            </Grid>
+          </Grid>
+          <Grid container item textAlign='left' alignItems='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
+            
           </Grid>
           { !account && <Grid item p={3}>
               <Button variant='contained' onClick={() => activateBrowserWallet()}>
