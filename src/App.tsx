@@ -36,7 +36,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
   createStyles({
     app: {
       backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.1) ), url(${stake})`,
-      backgroundSize: 'contain'
+      backgroundSize: 'contain',
+      backgroundColor: '#000000',
+      backgroundRepeat: 'no-repeat'
     },
     avatar: {
       height: 100,
@@ -167,18 +169,23 @@ function App() {
             <Typography variant='h2' color='primary'>Froggy Friends Staking</Typography>
           </Grid>
           <Grid container item textAlign='left' alignItems='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
-            <Grid item display='flex' alignItems='center' xl={3} lg={3} md={4} sm={5} xs={12} p={2}>
+            <Grid item display='flex' alignItems='center' xl={3} lg={3} md={4} sm={12} xs={12} p={2}>
               <img src={ribbit} style={{height: 50, width: 50}}/>
               <Typography variant='h5' color='primary'>{owned.totalRibbit} $RIBBIT per day</Typography>
             </Grid>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={4} p={2}>
+            <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={12} p={2}>
               <Button variant='contained'>
                 <Typography variant='h5'>Stake</Typography>  
               </Button>
             </Grid>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={4} p={2}>
+            <Grid item textAlign='center' xl={2} lg={2} md={2} sm={3} xs={12} p={2}>
               <Button variant='contained'>
                 <Typography variant='h5'>Unstake</Typography>  
+              </Button>
+            </Grid>
+            <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={12} p={2}>
+              <Button variant='contained'>
+                <Typography variant='h5'>Claim</Typography>  
               </Button>
             </Grid>
           </Grid>
