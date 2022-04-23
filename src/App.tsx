@@ -95,6 +95,8 @@ function App() {
   const classes = useStyles();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
+  const [froggiesToStake, setFroggiesToStake] = useState<number[]>([]);
+  const [froggiesToUnstake, setFroggiesToUnstake] = useState<number[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showModal, setShowModal] = useState(false);
@@ -126,6 +128,36 @@ function App() {
       getFroggiesOwned(account);
     }
   }, [account])
+
+  const onSelectFroggyToStake = (tokenId: number) => {
+    if (froggiesToStake.includes(tokenId)) {
+      const newFroggiesToStake = froggiesToStake.filter(token => token !== tokenId);
+      setFroggiesToStake(newFroggiesToStake);
+    } else {
+      const newFroggiesToStake = [...froggiesToStake, tokenId];
+      setFroggiesToStake(newFroggiesToStake);
+    }
+  }
+
+  const onSelectFroggyToUnstake = (tokenId: number) => {
+    if (froggiesToUnstake.includes(tokenId)) {
+      const newFroggiesToUnstake = froggiesToUnstake.filter(token => token !== tokenId);
+      setFroggiesToUnstake(newFroggiesToUnstake);
+    } else {
+      const newFroggiesToUnstake = [...froggiesToUnstake, tokenId];
+      setFroggiesToUnstake(newFroggiesToUnstake);
+    }
+  }
+
+  const getBorderColor = (tokenId: number): string => {
+    if (froggiesToStake.includes(tokenId)) {
+      return "#5ea14e";
+    } else if (froggiesToUnstake.includes(tokenId)) {
+      return "#73161D";
+    } else {
+      return "#1a1b1c";
+    }
+  };
 
   const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -236,14 +268,23 @@ function App() {
             {
               owned.froggies.map((froggy: any) => {
                 return <Grid key={froggy.edition} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
-                  <Card sx={{height: '100%'}}>
+                  <Card sx={{height: '100%', borderColor: getBorderColor(froggy.edition)}}>
                     <CardMedia component='img' image={froggy.image} alt='Froggy'/>
                     <CardContent>
                       <Typography variant='h5'>{froggy.name}</Typography>
                       <Typography pb={2}>{froggy.ribbit} $RIBBIT per day</Typography>
-                      <Button variant='contained'>
-                        <Typography variant='h5'>{froggy.isStaked ? 'Unstake' : 'Stake'}</Typography>
-                      </Button>
+                      {
+                        froggy.isStaked == true && 
+                        <Button variant='contained' color='success'  onClick={() => onSelectFroggyToUnstake(froggy.edition)}>
+                          <Typography variant='h5'>Unstake</Typography>
+                        </Button>
+                      }
+                      {
+                        froggy.isStaked == false && 
+                        <Button variant='contained' color='success' onClick={() => onSelectFroggyToStake(froggy.edition)}>
+                          <Typography variant='h5'>Stake</Typography>
+                        </Button>
+                      }
                     </CardContent>
                   </Card>
                 </Grid>
