@@ -106,6 +106,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0});
   const { activateBrowserWallet, account } = useEthers();
+  const [allowance, setAllowance] = useState(0);
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
 
   useEffect(() => {
@@ -126,6 +127,21 @@ function App() {
     if (account) {
       console.log("get froggies owned for account: ", account);
       getFroggiesOwned(account);
+    }
+  }, [account])
+
+  useEffect(() => {
+    async function getAllowance(address: string) {
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_API}/allowance`, { owner: address, spender: process.env.REACT_APP_STAKING_CONTRACT});
+        setAllowance(response.data);
+      } catch (error) {
+        setShowAlert(true);
+      }
+    }
+
+    if (account) {
+      getAllowance(account);
     }
   }, [account])
 
@@ -233,17 +249,17 @@ function App() {
             </Grid>
             <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12}>
               <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={4} sx={isTinyMobile ? {maxWidth: '100%',flexBasis: '100%',padding: theme.spacing(2)} : {}}>
-                <Button variant='contained'>
-                  <Typography variant='h5'>Stake</Typography>  
+                <Button variant='contained' disabled={froggiesToStake.length === 0}>
+                  <Typography variant='h5'>Stake {froggiesToStake.length || ''}</Typography>  
                 </Button>
               </Grid>
               <Grid item textAlign='center' xl={2} lg={2} md={2} sm={3} xs={4} sx={isTinyMobile ? {maxWidth: '100%',flexBasis: '100%',padding: theme.spacing(2)} : {}}>
-                <Button variant='contained'>
-                  <Typography variant='h5'>Unstake</Typography>  
+                <Button variant='contained' disabled={froggiesToUnstake.length === 0}>
+                  <Typography variant='h5'>Unstake {froggiesToUnstake.length || ''}</Typography>  
                 </Button>
               </Grid>
               <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={4} sx={isTinyMobile ? {maxWidth: '100%',flexBasis: '100%',padding: theme.spacing(2)} : {}}>
-                <Button variant='contained'>
+                <Button variant='contained' disabled>
                   <Typography variant='h5'>Claim</Typography>  
                 </Button>
               </Grid>
