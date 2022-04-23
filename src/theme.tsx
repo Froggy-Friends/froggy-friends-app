@@ -28,6 +28,9 @@ let theme = createTheme({
           fontWeight: 'bold',
           ":hover": {
             backgroundColor: '#48793c'
+          },
+          ":disabled": {
+            backgroundColor: "#b3b6bb"
           }
         }
       }
