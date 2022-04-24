@@ -2,10 +2,11 @@ import { useEthers } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
 import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, CardHeader, Card, CardContent, CardMedia, Container } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
-import logo from './images/logo.png';
 import { useEffect, useState } from 'react';
 import { Close, Error } from '@mui/icons-material';
+import { useApproveSpender } from './client';
 import axios from 'axios';
+import { BigNumber } from 'ethers';
 import stake from './images/stake.png';
 import ribbit from './images/ribbit.gif';
 import twitter from './images/twitter.png';
@@ -13,6 +14,8 @@ import opensea from './images/opensea.png';
 import looksrare from './images/looksrare.png';
 import etherscan from './images/etherscan.png';
 import discord from './images/discord.png';
+import logo from './images/logo.png';
+
 interface Attribute {
   trait_type: string;
   value: string;
@@ -30,6 +33,7 @@ interface Froggy {
 interface Owned {
   froggies: Froggy[];
   totalRibbit: number;
+  allowance: number;
 }
 
 const useStyles: any = makeStyles((theme: Theme) => 
@@ -104,9 +108,11 @@ function App() {
   const [txPending, setTxPending] = useState(false);
   const [txFail, setTxFail] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0});
+  const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0});
+  const [stakingInProgress, setStakingInProgress] = useState(false);
+  const [approvingSpender, setApprovingSpender] = useState(false);
   const { activateBrowserWallet, account } = useEthers();
-  const [allowance, setAllowance] = useState(0);
+  const { approveSpender, approveSpenderState } = useApproveSpender();
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
 
   useEffect(() => {
@@ -131,19 +137,33 @@ function App() {
   }, [account])
 
   useEffect(() => {
-    async function getAllowance(address: string) {
-      try {
-        const response = await axios.post(`${process.env.REACT_APP_API}/allowance`, { owner: address, spender: process.env.REACT_APP_STAKING_CONTRACT});
-        setAllowance(response.data);
-      } catch (error) {
-        setShowAlert(true);
-      }
+    if (approveSpenderState.status === "Exception") {
+      console.log("approve spender error: ", approveSpenderState.errorMessage);
+      setApprovingSpender(false);
+    } else if (approveSpenderState.status === "Mining") {
+      setApprovingSpender(true);
+      setShowModal(true);
+    } else if (approveSpenderState.status === "Success") {
+      setApprovingSpender(false);
+    } else if (approveSpenderState.status === "Fail") {
+      console.log("approve spender fail: ", approveSpenderState.errorMessage);
+      setApprovingSpender(false);
     }
+  }, [approveSpenderState])
 
-    if (account) {
-      getAllowance(account);
+  const onStake = async () => {
+    if (owned.allowance === 0) {
+      console.log("approving spender...");
+      console.log("staking contract: ", process.env.REACT_APP_STAKING_CONTRACT);
+      const spender = process.env.REACT_APP_STAKING_CONTRACT;
+      const am = BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+      console.log("amount to approve: ", am.toString());
+      await approveSpender(spender, am);
     }
-  }, [account])
+    // prompt allowance approval
+    // prompt nft transfer approval
+    // deposit nft to staking contract
+  }
 
   const onSelectFroggyToStake = (tokenId: number) => {
     if (froggiesToStake.includes(tokenId)) {
@@ -249,7 +269,7 @@ function App() {
             </Grid>
             <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12}>
               <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={4} sx={isTinyMobile ? {maxWidth: '100%',flexBasis: '100%',padding: theme.spacing(2)} : {}}>
-                <Button variant='contained' disabled={froggiesToStake.length === 0}>
+                <Button variant='contained' disabled={froggiesToStake.length === 0} onClick={() => onStake()}>
                   <Typography variant='h5'>Stake {froggiesToStake.length || ''}</Typography>  
                 </Button>
               </Grid>
@@ -413,9 +433,7 @@ function App() {
         <Box className={classes.modal} p={3}>
           <Grid container justifyContent='space-between' pb={5}>
             <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-              { txPending && <Typography id='modal-title' variant="h3" color='primary'>Adopt In Progress</Typography> }
-              { !txPending && !txFail && <Typography id='modal-title' variant="h3" color='primary'>Froggy Friend(s) Adopted</Typography> }
-              { txFail && <Typography id='modal-title' variant="h3" color='primary'>Adopt Failed <Error fontSize='large'/></Typography> }
+              <Typography id='modal-title' variant="h3" color='primary'>Staking Froggies</Typography>
             </Grid>
             <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
               <IconButton size='small' color='inherit' onClick={onTxModalClose}>
@@ -423,10 +441,19 @@ function App() {
               </IconButton>
             </Grid>
           </Grid>
+          {
+            approvingSpender && 
+            <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
+              <Typography id='modal-description' variant="h4" pt={3} pb={3}>Granting Staking $RIBBIT Permissions...</Typography>
+            </Link>
+          }
           <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
-            <Typography id='modal-description' variant="h4" pt={3} pb={3}>View Transaction</Typography>
+            <Typography id='modal-description' variant="h4" pt={3} pb={3}>Granting Staking Froggy Permissions...</Typography>
           </Link>
-          { txPending && <LinearProgress/>}
+          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
+            <Typography id='modal-description' variant="h4" pt={3} pb={3}>Staking Froggies...</Typography>
+          </Link>
+          { stakingInProgress && <LinearProgress/>}
         </Box>
       </Modal>
     </Grid>
