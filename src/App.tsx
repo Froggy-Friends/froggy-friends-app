@@ -4,7 +4,7 @@ import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularPr
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Close, Error } from '@mui/icons-material';
-import { useApproveSpender } from './client';
+import { useApproveSpender, useSetApprovalForAll } from './client';
 import axios from 'axios';
 import { BigNumber } from 'ethers';
 import stake from './images/stake.png';
@@ -34,6 +34,7 @@ interface Owned {
   froggies: Froggy[];
   totalRibbit: number;
   allowance: number;
+  isStakingApproved: boolean;
 }
 
 const useStyles: any = makeStyles((theme: Theme) => 
@@ -108,11 +109,12 @@ function App() {
   const [txPending, setTxPending] = useState(false);
   const [txFail, setTxFail] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0});
+  const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
   const [stakingInProgress, setStakingInProgress] = useState(false);
   const [approvingSpender, setApprovingSpender] = useState(false);
   const { activateBrowserWallet, account } = useEthers();
   const { approveSpender, approveSpenderState } = useApproveSpender();
+  const { setApprovalForAll, setApprovalForAllState } = useSetApprovalForAll();
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
 
   useEffect(() => {
@@ -152,17 +154,23 @@ function App() {
   }, [approveSpenderState])
 
   const onStake = async () => {
-    if (owned.allowance === 0) {
+    // grant staking contract ribbit permissions
+    if (!owned.allowance) {
       console.log("approving spender...");
       console.log("staking contract: ", process.env.REACT_APP_STAKING_CONTRACT);
       const spender = process.env.REACT_APP_STAKING_CONTRACT;
-      const am = BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-      console.log("amount to approve: ", am.toString());
-      await approveSpender(spender, am);
+      await approveSpender(spender, BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
     }
-    // prompt allowance approval
-    // prompt nft transfer approval
+
+    // grant staking contract nft transfer permissions
+    if (!owned.isStakingApproved) {
+      console.log("prompt staking contract permissions to NFT...");
+      await setApprovalForAll(process.env.REACT_APP_STAKING_CONTRACT, true);
+    }
+    
+
     // deposit nft to staking contract
+    
   }
 
   const onSelectFroggyToStake = (tokenId: number) => {
@@ -433,7 +441,7 @@ function App() {
         <Box className={classes.modal} p={3}>
           <Grid container justifyContent='space-between' pb={5}>
             <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-              <Typography id='modal-title' variant="h3" color='primary'>Staking Froggies</Typography>
+              <Typography id='modal-title' variant="h4" color='primary'>Staking Froggies</Typography>
             </Grid>
             <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
               <IconButton size='small' color='inherit' onClick={onTxModalClose}>
@@ -444,14 +452,14 @@ function App() {
           {
             approvingSpender && 
             <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
-              <Typography id='modal-description' variant="h4" pt={3} pb={3}>Granting Staking $RIBBIT Permissions...</Typography>
+              <Typography id='modal-description' variant="h6" color='secondary' pt={3} pb={3}>Granting Staking $RIBBIT Permissions...</Typography>
             </Link>
           }
           <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
-            <Typography id='modal-description' variant="h4" pt={3} pb={3}>Granting Staking Froggy Permissions...</Typography>
+            <Typography id='modal-description' variant="h6" color='primary' pt={3} pb={3}>Granting Staking Froggy Permissions...</Typography>
           </Link>
           <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
-            <Typography id='modal-description' variant="h4" pt={3} pb={3}>Staking Froggies...</Typography>
+            <Typography id='modal-description' variant="h6" color='primary' pt={3} pb={3}>Staking Froggies...</Typography>
           </Link>
           { stakingInProgress && <LinearProgress/>}
         </Box>
