@@ -43,3 +43,11 @@ export function useUnstake() {
     unstakeState: state
   };
 }
+
+export function useClaim() {
+  const { send, state } = useContractFunction(stakingContract, 'claimreward');
+  return {
+    claim: send,
+    claimState: state
+  }
+}

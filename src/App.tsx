@@ -4,7 +4,7 @@ import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularPr
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Warning } from '@mui/icons-material';
-import { useSetApprovalForAll, useStake, useUnstake } from './client';
+import { useSetApprovalForAll, useStake, useUnstake, useClaim } from './client';
 import { formatEther } from '@ethersproject/units';
 import axios from 'axios';
 import stakingBackground from './images/stake.png';
@@ -107,6 +107,7 @@ function App() {
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showStakeModal, setShowStakeModal] = useState(false);
   const [showUnstakeModal, setShowUnstakeModal] = useState(false);
+  const [showClaimModal, setShowClamModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
   const { activateBrowserWallet, account } = useEthers();
@@ -114,7 +115,7 @@ function App() {
   const { setApprovalForAll, setApprovalForAllState } = useSetApprovalForAll();
   const { stake, stakeState } = useStake();
   const { unstake, unstakeState } = useUnstake();
-  
+  const { claim, claimState } = useClaim();
 
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
@@ -176,13 +177,27 @@ function App() {
     }
   }, [unstakeState])
 
-  const onStake = async () => {
-    // grant staking contract nft transfer permissions
-    if (!owned.isStakingApproved) {
-      await setApprovalForAll(process.env.REACT_APP_STAKING_CONTRACT, true);
+  useEffect(() => {
+    if (claimState.status === "Exception" || claimState.status === "Fail") {
+      console.log("claim error: ", claimState.errorMessage);
+      if (claimState.errorMessage?.includes("execution reverted")) {
+        setAlertMessage(claimState.errorMessage.replace(/^execution reverted:/i, ''));
+        setShowAlert(true);
+      }
+    } else if (claimState.status === "Mining") {
+      setShowClamModal(true);
+    } else if (claimState.status === "Success") {
+      console.log("claim success: ", claimState);
     }
-    
+  }, [claimState])
+
+  const onStake = async () => {
     try {
+      // grant staking contract nft transfer permissions
+      if (!owned.isStakingApproved) {
+        await setApprovalForAll(process.env.REACT_APP_STAKING_CONTRACT, true);
+      }
+
       // get proof for froggies to stake
       const response = await axios.post(`${process.env.REACT_APP_API}/stake`, froggiesToStake);
       const proof = response.data;
@@ -212,6 +227,16 @@ function App() {
       setLoading(false);
     } catch (error) {
       setAlertMessage("Issue unstaking froggies");
+      setShowAlert(true);
+      setLoading(false);
+    }
+  }
+
+  const onClaim = async () => {
+    try {
+      await claim();
+    } catch (error) {
+      setAlertMessage("Issue claiming $RIBBIT");
       setShowAlert(true);
       setLoading(false);
     }
@@ -264,6 +289,12 @@ function App() {
   const onUnstakeModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason !== 'backdropClick') {
       setShowUnstakeModal(false);
+    }
+  }
+
+  const onClaimModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setShowClamModal(false);
     }
   }
   
@@ -337,7 +368,7 @@ function App() {
                 </Button>
               </Grid>
               <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={4} sx={isTinyMobile ? {maxWidth: '100%',flexBasis: '100%',padding: theme.spacing(2)} : {}}>
-                <Button variant='contained' disabled>
+                <Button variant='contained' onClick={() => onClaim()}>
                   <Typography variant='h5'>Claim</Typography>  
                 </Button>
               </Grid>
@@ -388,10 +419,8 @@ function App() {
           {
             account && !loading && 
             <Grid item pt={5}>
-              <Button variant='contained'>
-                <Link href="https://opensea.io/collection/froggyfriendsnft" underline="none" target="_blank">
+              <Button variant='contained' onClick={() => window.open("https://opensea.io/collection/froggyfriendsnft", "_blank")}>
                   <Typography variant='h5'>Buy Froggies</Typography>
-                </Link>
               </Button>
             </Grid>
           }
@@ -532,6 +561,26 @@ function App() {
             </Typography>
           </Link>
           { unstakeState.status === "Mining" && <LinearProgress/>}
+        </Box>
+      </Modal>
+      <Modal open={showClaimModal} onClose={onClaimModalClose} keepMounted aria-labelledby='claim-title' aria-describedby='claim-description'>
+        <Box className={classes.modal}>
+          <Grid container justifyContent='space-between' alignItems='center' pb={5}>
+            <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
+              <Typography id='modal-title' variant="h4" color='primary' p={3}>{claimState.status === "Mining" ? "Claiming $RIBBIT" : "$RIBBIT Claimed"}</Typography>
+            </Grid>
+            <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
+              <IconButton size='small' color='inherit' onClick={onClaimModalClose}>
+                <Close fontSize='small'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${claimState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+            <Typography id='modal-description' color='primary' variant="h6" p={3}>
+              Claim $RIBBIT... {claimState.status === "Success" && <Check/>} {claimState.status === "Fail" && <Warning/>}
+            </Typography>
+          </Link>
+          { claimState.status === "Mining" && <LinearProgress/>}
         </Box>
       </Modal>
     </Grid>
