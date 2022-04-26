@@ -28,13 +28,10 @@ export function useSetApprovalForAll() {
   }
 }
 
-// export function useMinted(): number {
-//   let minted = useContractCall({
-//     abi: abi,
-//     address: contract.address,
-//     method: 'totalSupply',
-//     args: []
-//   });
-
-//   return minted ? minted[0].toNumber() : 0;
-// }
+export function useStake() {
+  const { send, state } = useContractFunction(stakingContract, 'stake');
+  return {
+    stake: send,
+    stakeState: state
+  };
+}

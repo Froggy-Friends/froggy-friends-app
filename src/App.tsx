@@ -4,9 +4,9 @@ import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularPr
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Warning } from '@mui/icons-material';
-import { useSetApprovalForAll } from './client';
+import { useSetApprovalForAll, useStake } from './client';
 import axios from 'axios';
-import stake from './images/stake.png';
+import staking from './images/stake.png';
 import ribbit from './images/ribbit.gif';
 import twitter from './images/twitter.png';
 import opensea from './images/opensea.png';
@@ -39,7 +39,7 @@ interface Owned {
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     app: {
-      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${stake})`,
+      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${staking})`,
       backgroundColor: '#000000',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'contain',
@@ -107,8 +107,10 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
   const [approvingForAll, setApprovingForAll] = useState(false);
+  const [staking, setStaking] = useState(false);
   const { activateBrowserWallet, account } = useEthers();
   const { setApprovalForAll, setApprovalForAllState } = useSetApprovalForAll();
+  const { stake, stakeState } = useStake();
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
 
   useEffect(() => {
@@ -149,15 +151,46 @@ function App() {
     }
   }, [setApprovalForAllState])
 
+  useEffect(() => {
+    if (stakeState.status === "Exception") {
+      console.log("stake error: ", stakeState.errorMessage);
+      setStaking(false);
+    } else if (stakeState.status === "Mining") {
+      console.log("stake mining...", stakeState);
+      setStaking(true);
+      setShowModal(true);
+    } else if (stakeState.status === "Success") {
+      console.log("stake success: ", stakeState);
+      setStaking(false);
+    } else if (stakeState.status === "Fail") {
+      console.log("stake error: ", stakeState.errorMessage);
+      setStaking(false);
+    }
+  }, [stakeState])
+
   const onStake = async () => {
     // grant staking contract nft transfer permissions
     if (!owned.isStakingApproved) {
-      console.log("prompt staking contract permissions to NFT...");
       await setApprovalForAll(process.env.REACT_APP_STAKING_CONTRACT, true);
     }
     
+    try {
+      // get proof for froggies to stake
+      const response = await axios.post(`${process.env.REACT_APP_API}/stake`, froggiesToStake);
+      const proof = response.data;
+      // deposit nft to staking contract
+      await stake(froggiesToStake, proof);
+      setFroggiesToStake([]);
 
-    // deposit nft to staking contract
+      setLoading(true);
+      const ownedResponse = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: account});
+      setOwned(ownedResponse.data);
+      setLoading(false);
+    } catch (error) {
+      setAlertMessage("Issue staking froggies");
+      setShowAlert(true);
+      setLoading(false);
+    }
     
   }
 
@@ -437,15 +470,20 @@ function App() {
               </IconButton>
             </Grid>
           </Grid>
-          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${setApprovalForAllState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+          {
+            setApprovalForAllState && 
+            <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${setApprovalForAllState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+              <Typography id='modal-description' color='primary' variant="h6" p={3}>
+                Grant Staking Permissions... {setApprovalForAllState.status === "Success" && <Check/>} {setApprovalForAllState.status === "Fail" && <Warning/>}
+              </Typography>
+            </Link>
+          }
+          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${stakeState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
             <Typography id='modal-description' color='primary' variant="h6" p={3}>
-              Granting Staking Froggy Permissions... {setApprovalForAllState.status === "Success" && <Check/>} {setApprovalForAllState.status === "Fail" && <Warning/>}
+              Stake Froggies... {stakeState.status === "Success" && <Check/>} {stakeState.status === "Fail" && <Warning/>}
             </Typography>
           </Link>
-          {/* <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
-            <Typography id='modal-description' color='primary' variant="h6" pt={3} pb={3}>Staking Froggies...</Typography>
-          </Link> */}
-          { approvingForAll && <LinearProgress/>}
+          { approvingForAll || staking && <LinearProgress/>}
         </Box>
       </Modal>
     </Grid>
