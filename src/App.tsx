@@ -1,10 +1,11 @@
-import { useEtherBalance, useEthers } from '@usedapp/core';
+import { useEthers, useTokenBalance } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
 import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake } from './client';
+import { formatEther } from '@ethersproject/units';
 import axios from 'axios';
 import staking from './images/stake.png';
 import ribbit from './images/ribbit.gif';
@@ -109,8 +110,7 @@ function App() {
   const [approvingForAll, setApprovingForAll] = useState(false);
   const [staking, setStaking] = useState(false);
   const { activateBrowserWallet, account } = useEthers();
-  const ribbitBalance = useEtherBalance(process.env.REACT_APP_RIBBIT_CONTRACT);
-  console.log("ribbit balance: ", ribbitBalance);
+  const ribbitBalance = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || 0;
   const { setApprovalForAll, setApprovalForAllState } = useSetApprovalForAll();
   const { stake, stakeState } = useStake();
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
@@ -291,7 +291,7 @@ function App() {
               </Grid>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={ribbit} style={{height: 50, width: 50}}/>
-                <Typography variant='h6' color='secondary'>{ribbitBalance?.toNumber()} $RIBBIT Balance</Typography>
+                <Typography variant='h6' color='secondary'>{formatEther(ribbitBalance).slice(0,7)} $RIBBIT Balance</Typography>
               </Grid>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={ribbit} style={{height: 50, width: 50}}/>
