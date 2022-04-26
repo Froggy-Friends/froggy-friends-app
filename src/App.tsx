@@ -1,12 +1,11 @@
 import { useEthers } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, CardHeader, Card, CardContent, CardMedia, Container } from "@mui/material";
+import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
-import { Close, Error } from '@mui/icons-material';
-import { useApproveSpender, useSetApprovalForAll } from './client';
+import { Check, Close, Warning } from '@mui/icons-material';
+import { useSetApprovalForAll } from './client';
 import axios from 'axios';
-import { BigNumber } from 'ethers';
 import stake from './images/stake.png';
 import ribbit from './images/ribbit.gif';
 import twitter from './images/twitter.png';
@@ -66,9 +65,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
       transform: 'translate(-50%, -50%)',
       width: 500,
       backgroundColor: theme.palette.background.paper,
+      color: theme.palette.background.default,
       border: '2px solid #000',
       borderRadius: 5,
-      boxShadow: 24,
       padding: 4,
       [theme.breakpoints.down('sm')]: {
         width: 300
@@ -105,15 +104,10 @@ function App() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showModal, setShowModal] = useState(false);
-  const [tx, setTx] = useState<any>('');
-  const [txPending, setTxPending] = useState(false);
-  const [txFail, setTxFail] = useState(false);
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
-  const [stakingInProgress, setStakingInProgress] = useState(false);
-  const [approvingSpender, setApprovingSpender] = useState(false);
+  const [approvingForAll, setApprovingForAll] = useState(false);
   const { activateBrowserWallet, account } = useEthers();
-  const { approveSpender, approveSpenderState } = useApproveSpender();
   const { setApprovalForAll, setApprovalForAllState } = useSetApprovalForAll();
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
 
@@ -139,29 +133,23 @@ function App() {
   }, [account])
 
   useEffect(() => {
-    if (approveSpenderState.status === "Exception") {
-      console.log("approve spender error: ", approveSpenderState.errorMessage);
-      setApprovingSpender(false);
-    } else if (approveSpenderState.status === "Mining") {
-      setApprovingSpender(true);
+    if (setApprovalForAllState.status === "Exception") {
+      console.log("set approval for all error: ", setApprovalForAllState.errorMessage);
+      setApprovingForAll(false);
+    } else if (setApprovalForAllState.status === "Mining") {
+      console.log("set approval for all mining...", setApprovalForAllState);
+      setApprovingForAll(true);
       setShowModal(true);
-    } else if (approveSpenderState.status === "Success") {
-      setApprovingSpender(false);
-    } else if (approveSpenderState.status === "Fail") {
-      console.log("approve spender fail: ", approveSpenderState.errorMessage);
-      setApprovingSpender(false);
+    } else if (setApprovalForAllState.status === "Success") {
+      console.log("set approval for all success: ", setApprovalForAllState);
+      setApprovingForAll(false);
+    } else if (setApprovalForAllState.status === "Fail") {
+      console.log("set approval for all error: ", setApprovalForAllState.errorMessage);
+      setApprovingForAll(false);
     }
-  }, [approveSpenderState])
+  }, [setApprovalForAllState])
 
   const onStake = async () => {
-    // grant staking contract ribbit permissions
-    if (!owned.allowance) {
-      console.log("approving spender...");
-      console.log("staking contract: ", process.env.REACT_APP_STAKING_CONTRACT);
-      const spender = process.env.REACT_APP_STAKING_CONTRACT;
-      await approveSpender(spender, BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
-    }
-
     // grant staking contract nft transfer permissions
     if (!owned.isStakingApproved) {
       console.log("prompt staking contract permissions to NFT...");
@@ -230,27 +218,27 @@ function App() {
             <Grid container item justifyContent='center' textAlign='center' xl={6} lg={6} md={9} sm={9} xs={9} pt={2}>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none'>
-                  <Typography variant='h5'>Team</Typography>
+                  <Typography color='secondary' variant='h5'>Team</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none'>
-                  <Typography variant='h5'>Collabs</Typography>
+                  <Typography color='secondary' variant='h5'>Collabs</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
-                  <Typography variant='h5'>Stake</Typography>
+                  <Typography color='secondary' variant='h5'>Stake</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/market'} underline='none'>
-                  <Typography variant='h5'>Market</Typography>
+                  <Typography color='secondary' variant='h5'>Market</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/license'} underline='none'>
-                  <Typography variant='h5'>License</Typography>
+                  <Typography color='secondary' variant='h5'>License</Typography>
                 </Link>
               </Grid> 
             </Grid>
@@ -258,21 +246,21 @@ function App() {
         </Grid>
         <Grid id='staking' container direction='column' textAlign='center' pt={10}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
-            <Typography variant='h2' color='primary' fontWeight='bold'>Froggy Friends Staking</Typography>
+            <Typography variant='h2' color='secondary' fontWeight='bold'>Froggy Friends Staking</Typography>
           </Grid>
           <Grid container item textAlign='left' alignItems='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={2}>
             <Grid container item justifyContent='space-evenly' xl={12} lg={12} md={12} sm={12} xs={12} pb={5} pt={2}>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={ribbit} style={{height: 50, width: 50}}/>
-                <Typography variant='h6' color='primary'>{owned.totalRibbit} $RIBBIT Per Day</Typography>
+                <Typography variant='h6' color='secondary'>{owned.totalRibbit} $RIBBIT Per Day</Typography>
               </Grid>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={ribbit} style={{height: 50, width: 50}}/>
-                <Typography variant='h6' color='primary'>0 $RIBBIT Balance</Typography>
+                <Typography variant='h6' color='secondary'>0 $RIBBIT Balance</Typography>
               </Grid>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={ribbit} style={{height: 50, width: 50}}/>
-                <Typography variant='h6' color='primary'>0 $RIBBIT Staked</Typography>
+                <Typography variant='h6' color='secondary'>0 $RIBBIT Staked</Typography>
               </Grid>
             </Grid>
             <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -304,7 +292,7 @@ function App() {
           }
           { account && loading && 
             <Grid item p={10}>
-              <Typography variant='h3' color='primary'>Loading Froggies</Typography>
+              <Typography variant='h3' color='secondary'>Loading Froggies</Typography>
               <CircularProgress />
             </Grid>
           }
@@ -388,22 +376,22 @@ function App() {
             <Grid container justifyContent='center' pt={2} maxWidth={500}>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none'>
-                  <Typography color='primary'>Team</Typography>
+                  <Typography color='secondary'>Team</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none'>
-                  <Typography color='primary'>Collabs</Typography>
+                  <Typography color='secondary'>Collabs</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
                 <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
-                  <Typography color='primary'>Staking</Typography>
+                  <Typography color='secondary'>Staking</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/market'} underline='none'>
-                  <Typography color='primary'>Market</Typography>
+                  <Typography color='secondary'>Market</Typography>
                 </Link>
               </Grid>
             </Grid>
@@ -438,10 +426,10 @@ function App() {
         }
       />
       <Modal open={showModal} onClose={onTxModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
-        <Box className={classes.modal} p={3}>
-          <Grid container justifyContent='space-between' pb={5}>
+        <Box className={classes.modal}>
+          <Grid container justifyContent='space-between' alignItems='center' pb={5}>
             <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-              <Typography id='modal-title' variant="h4" color='primary'>Staking Froggies</Typography>
+              <Typography id='modal-title' variant="h4" color='primary' p={3}>Staking Froggies</Typography>
             </Grid>
             <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
               <IconButton size='small' color='inherit' onClick={onTxModalClose}>
@@ -449,19 +437,15 @@ function App() {
               </IconButton>
             </Grid>
           </Grid>
-          {
-            approvingSpender && 
-            <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
-              <Typography id='modal-description' variant="h6" color='secondary' pt={3} pb={3}>Granting Staking $RIBBIT Permissions...</Typography>
-            </Link>
-          }
-          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
-            <Typography id='modal-description' variant="h6" color='primary' pt={3} pb={3}>Granting Staking Froggy Permissions...</Typography>
+          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${setApprovalForAllState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+            <Typography id='modal-description' color='primary' variant="h6" p={3}>
+              Granting Staking Froggy Permissions... {setApprovalForAllState.status === "Success" && <Check/>} {setApprovalForAllState.status === "Fail" && <Warning/>}
+            </Typography>
           </Link>
-          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
-            <Typography id='modal-description' variant="h6" color='primary' pt={3} pb={3}>Staking Froggies...</Typography>
-          </Link>
-          { stakingInProgress && <LinearProgress/>}
+          {/* <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
+            <Typography id='modal-description' color='primary' variant="h6" pt={3} pb={3}>Staking Froggies...</Typography>
+          </Link> */}
+          { approvingForAll && <LinearProgress/>}
         </Box>
       </Modal>
     </Grid>

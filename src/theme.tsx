@@ -60,13 +60,6 @@ let theme = createTheme({
           }
         }
       }
-    },
-    MuiModal: {
-      styleOverrides: {
-        root: {
-          color: '#ebedf1'
-        }
-      }
     }
   }
 });
