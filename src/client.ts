@@ -35,3 +35,11 @@ export function useStake() {
     stakeState: state
   };
 }
+
+export function useUnstake() {
+  const { send, state } = useContractFunction(stakingContract, 'unstake');
+  return {
+    unstake: send,
+    unstakeState: state
+  };
+}

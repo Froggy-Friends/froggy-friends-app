@@ -4,10 +4,10 @@ import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularPr
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Warning } from '@mui/icons-material';
-import { useSetApprovalForAll, useStake } from './client';
+import { useSetApprovalForAll, useStake, useUnstake } from './client';
 import { formatEther } from '@ethersproject/units';
 import axios from 'axios';
-import staking from './images/stake.png';
+import stakingBackground from './images/stake.png';
 import ribbit from './images/ribbit.gif';
 import twitter from './images/twitter.png';
 import opensea from './images/opensea.png';
@@ -40,7 +40,7 @@ interface Owned {
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     app: {
-      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${staking})`,
+      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${stakingBackground})`,
       backgroundColor: '#000000',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'contain',
@@ -100,20 +100,21 @@ function App() {
   const classes = useStyles();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
+  const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
   const [froggiesToStake, setFroggiesToStake] = useState<number[]>([]);
   const [froggiesToUnstake, setFroggiesToUnstake] = useState<number[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
-  const [showModal, setShowModal] = useState(false);
+  const [showStakeModal, setShowStakeModal] = useState(false);
+  const [showUnstakeModal, setShowUnstakeModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
-  const [approvingForAll, setApprovingForAll] = useState(false);
-  const [staking, setStaking] = useState(false);
   const { activateBrowserWallet, account } = useEthers();
   const ribbitBalance = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || 0;
   const { setApprovalForAll, setApprovalForAllState } = useSetApprovalForAll();
   const { stake, stakeState } = useStake();
-  const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
+  const { unstake, unstakeState } = useUnstake();
+  
 
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
@@ -139,36 +140,41 @@ function App() {
   useEffect(() => {
     if (setApprovalForAllState.status === "Exception") {
       console.log("set approval for all error: ", setApprovalForAllState.errorMessage);
-      setApprovingForAll(false);
     } else if (setApprovalForAllState.status === "Mining") {
       console.log("set approval for all mining...", setApprovalForAllState);
-      setApprovingForAll(true);
-      setShowModal(true);
+      setShowStakeModal(true);
     } else if (setApprovalForAllState.status === "Success") {
       console.log("set approval for all success: ", setApprovalForAllState);
-      setApprovingForAll(false);
     } else if (setApprovalForAllState.status === "Fail") {
       console.log("set approval for all error: ", setApprovalForAllState.errorMessage);
-      setApprovingForAll(false);
     }
   }, [setApprovalForAllState])
 
   useEffect(() => {
     if (stakeState.status === "Exception") {
       console.log("stake error: ", stakeState.errorMessage);
-      setStaking(false);
     } else if (stakeState.status === "Mining") {
       console.log("stake mining...", stakeState);
-      setStaking(true);
-      setShowModal(true);
+      setShowStakeModal(true);
     } else if (stakeState.status === "Success") {
       console.log("stake success: ", stakeState);
-      setStaking(false);
     } else if (stakeState.status === "Fail") {
       console.log("stake error: ", stakeState.errorMessage);
-      setStaking(false);
     }
   }, [stakeState])
+
+  useEffect(() => {
+    if (unstakeState.status === "Exception") {
+      console.log("unstake error: ", unstakeState.errorMessage);
+    } else if (unstakeState.status === "Mining") {
+      console.log("unstake mining...", unstakeState);
+      setShowUnstakeModal(true);
+    } else if (unstakeState.status === "Success") {
+      console.log("unstake success: ", unstakeState);
+    } else if (unstakeState.status === "Fail") {
+      console.log("unstake error: ", unstakeState.errorMessage);
+    }
+  }, [unstakeState])
 
   const onStake = async () => {
     // grant staking contract nft transfer permissions
@@ -193,7 +199,22 @@ function App() {
       setShowAlert(true);
       setLoading(false);
     }
-    
+  }
+
+  const onUnstake = async () => {
+    try {
+      await unstake(froggiesToUnstake);
+      setFroggiesToUnstake([]);
+
+      setLoading(true);
+      const ownedResponse = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: account});
+      setOwned(ownedResponse.data);
+      setLoading(false);
+    } catch (error) {
+      setAlertMessage("Issue unstaking froggies");
+      setShowAlert(true);
+      setLoading(false);
+    }
   }
 
   const onSelectFroggyToStake = (tokenId: number) => {
@@ -234,9 +255,15 @@ function App() {
     setShowAlert(false);
   };
 
-  const onTxModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+  const onStakeModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason !== 'backdropClick') {
-      setShowModal(false);
+      setShowStakeModal(false);
+    }
+  }
+
+  const onUnstakeModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setShowUnstakeModal(false);
     }
   }
   
@@ -305,7 +332,7 @@ function App() {
                 </Button>
               </Grid>
               <Grid item textAlign='center' xl={2} lg={2} md={2} sm={3} xs={4} sx={isTinyMobile ? {maxWidth: '100%',flexBasis: '100%',padding: theme.spacing(2)} : {}}>
-                <Button variant='contained' disabled={froggiesToUnstake.length === 0}>
+                <Button variant='contained' disabled={froggiesToUnstake.length === 0} onClick={() => onUnstake()}>
                   <Typography variant='h5'>Unstake {froggiesToUnstake.length || ''}</Typography>  
                 </Button>
               </Grid>
@@ -327,8 +354,7 @@ function App() {
           }
           { account && loading && 
             <Grid item p={10}>
-              <Typography variant='h3' color='secondary'>Loading Froggies</Typography>
-              <CircularProgress />
+              <CircularProgress color='secondary' size={80}/>
             </Grid>
           }
           <Grid id='froggies' container item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -460,20 +486,20 @@ function App() {
           </IconButton>
         }
       />
-      <Modal open={showModal} onClose={onTxModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
+      <Modal open={showStakeModal} onClose={onStakeModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
         <Box className={classes.modal}>
           <Grid container justifyContent='space-between' alignItems='center' pb={5}>
             <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-              <Typography id='modal-title' variant="h4" color='primary' p={3}>Staking Froggies</Typography>
+              <Typography id='modal-title' variant="h4" color='primary' p={3}>{stakeState.status === "Mining" ? "Staking Froggies" : "Froggies Staked"}</Typography>
             </Grid>
             <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
-              <IconButton size='small' color='inherit' onClick={onTxModalClose}>
+              <IconButton size='small' color='inherit' onClick={onStakeModalClose}>
                 <Close fontSize='small'/>
               </IconButton>
             </Grid>
           </Grid>
           {
-            setApprovalForAllState && 
+            !owned.isStakingApproved && 
             <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${setApprovalForAllState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
               <Typography id='modal-description' color='primary' variant="h6" p={3}>
                 Grant Staking Permissions... {setApprovalForAllState.status === "Success" && <Check/>} {setApprovalForAllState.status === "Fail" && <Warning/>}
@@ -485,7 +511,27 @@ function App() {
               Stake Froggies... {stakeState.status === "Success" && <Check/>} {stakeState.status === "Fail" && <Warning/>}
             </Typography>
           </Link>
-          { approvingForAll || staking && <LinearProgress/>}
+          { setApprovalForAllState.status === "Mining" || stakeState.status === "Mining" && <LinearProgress/>}
+        </Box>
+      </Modal>
+      <Modal open={showUnstakeModal} onClose={onUnstakeModalClose} keepMounted aria-labelledby='unstake-title' aria-describedby='unstake-description'>
+        <Box className={classes.modal}>
+          <Grid container justifyContent='space-between' alignItems='center' pb={5}>
+            <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
+              <Typography id='modal-title' variant="h4" color='primary' p={3}>{unstakeState.status === "Mining" ? "Unstaking Froggies" : "Froggies Unstaked"}</Typography>
+            </Grid>
+            <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
+              <IconButton size='small' color='inherit' onClick={onUnstakeModalClose}>
+                <Close fontSize='small'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${unstakeState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+            <Typography id='modal-description' color='primary' variant="h6" p={3}>
+              Unstake Froggies... {unstakeState.status === "Success" && <Check/>} {unstakeState.status === "Fail" && <Warning/>}
+            </Typography>
+          </Link>
+          { unstakeState.status === "Mining" && <LinearProgress/>}
         </Box>
       </Modal>
     </Grid>
