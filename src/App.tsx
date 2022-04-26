@@ -152,28 +152,28 @@ function App() {
   }, [setApprovalForAllState])
 
   useEffect(() => {
-    if (stakeState.status === "Exception") {
+    if (stakeState.status === "Exception" || stakeState.status === "Fail") {
       console.log("stake error: ", stakeState.errorMessage);
+      if (stakeState.errorMessage?.includes("execution reverted")) {
+        setAlertMessage(stakeState.errorMessage.replace(/^execution reverted:/i, ''));
+        setShowAlert(true);
+      }
     } else if (stakeState.status === "Mining") {
       console.log("stake mining...", stakeState);
       setShowStakeModal(true);
-    } else if (stakeState.status === "Success") {
-      console.log("stake success: ", stakeState);
-    } else if (stakeState.status === "Fail") {
-      console.log("stake error: ", stakeState.errorMessage);
     }
   }, [stakeState])
 
   useEffect(() => {
-    if (unstakeState.status === "Exception") {
+    if (unstakeState.status === "Exception" || unstakeState.status === "Fail") {
       console.log("unstake error: ", unstakeState.errorMessage);
+      if (unstakeState.errorMessage?.includes("execution reverted")) {
+        setAlertMessage(unstakeState.errorMessage.replace(/^execution reverted:/i, ''));
+        setShowAlert(true);
+      }
     } else if (unstakeState.status === "Mining") {
       console.log("unstake mining...", unstakeState);
       setShowUnstakeModal(true);
-    } else if (unstakeState.status === "Success") {
-      console.log("unstake success: ", unstakeState);
-    } else if (unstakeState.status === "Fail") {
-      console.log("unstake error: ", unstakeState.errorMessage);
     }
   }, [unstakeState])
 
@@ -186,8 +186,6 @@ function App() {
       }
     } else if (claimState.status === "Mining") {
       setShowClamModal(true);
-    } else if (claimState.status === "Success") {
-      console.log("claim success: ", claimState);
     }
   }, [claimState])
 
