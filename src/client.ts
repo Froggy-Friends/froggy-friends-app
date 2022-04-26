@@ -1,5 +1,5 @@
 import { Contract } from "@ethersproject/contracts";
-import { useContractCall, useContractFunction } from '@usedapp/core';
+import { useCall, useContractFunction } from '@usedapp/core';
 import { Interface } from '@ethersproject/abi';
 import froggyfriendsjson from './abi/froggyfriends.json';
 import ribbitJson from './abi/ribbit.json';
@@ -50,4 +50,10 @@ export function useClaim() {
     claim: send,
     claimState: state
   }
+}
+
+export function useCheckStakingBalance(account: string) {
+  let balance = useCall({contract: stakingContract, method: 'checkrewardbalforall', args: [account]}) ?? 0;
+  console.log("balance: ", balance);
+  return balance;
 }

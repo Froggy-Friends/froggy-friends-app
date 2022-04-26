@@ -4,7 +4,7 @@ import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularPr
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Warning } from '@mui/icons-material';
-import { useSetApprovalForAll, useStake, useUnstake, useClaim } from './client';
+import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance } from './client';
 import { formatEther } from '@ethersproject/units';
 import axios from 'axios';
 import stakingBackground from './images/stake.png';
@@ -116,6 +116,7 @@ function App() {
   const { stake, stakeState } = useStake();
   const { unstake, unstakeState } = useUnstake();
   const { claim, claimState } = useClaim();
+  const stakingBalance = useCheckStakingBalance(account ?? '');
 
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
