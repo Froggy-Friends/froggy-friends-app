@@ -6,10 +6,10 @@ let theme = createTheme({
       default: '#000000'
     },
     primary: {
-      main: '#ebedf1'
+      main: '#2d343a'
     },
     secondary: {
-      main: '#b3b6bb'
+      main: '#ebedf1'
     },
     success: {
       main: '#cfdcae'
