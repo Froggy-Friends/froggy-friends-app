@@ -14,6 +14,5 @@ const devConfig: Config = {
   }
 }
 
-console.log("node env: ", process.env.NODE_ENV);
-
-export default process.env.NODE_ENV === "production" ? prodConfig : devConfig;
+const config = process.env.NODE_ENV === "production" ? prodConfig : devConfig
+export default config;
