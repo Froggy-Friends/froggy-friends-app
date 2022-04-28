@@ -577,21 +577,28 @@ function App() {
       <Modal open={showUnstakeModal} onClose={onUnstakeModalClose} keepMounted aria-labelledby='unstake-title' aria-describedby='unstake-description'>
         <Box className={classes.modal}>
           <Grid container justifyContent='space-between' alignItems='center' pb={5}>
-            <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-              <Typography id='modal-title' variant="h4" color='primary' p={3}>{unstakeState.status === "Mining" ? "Unstaking Froggies" : "Froggies Unstaked"}</Typography>
+            <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
+              <Typography id='modal-title' variant="h4" fontWeight='bold' p={3}>{unstakeState.status === "Mining" ? "Unstaking Froggies" : "Froggies Unstaked"}</Typography>
             </Grid>
-            <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
-              <IconButton size='small' color='inherit' onClick={onUnstakeModalClose}>
-                <Close fontSize='small'/>
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+              <IconButton size='medium' color='inherit' onClick={onUnstakeModalClose}>
+                <Close fontSize='medium'/>
               </IconButton>
+            </Grid>
+          </Grid>
+          <Grid container justifyContent='center' p={3}>
+            <Grid item>
+              { unstakeState.status === "Success" && <img src={hype} style={{height: 100, width: 100}} alt='hype'/> }
+              { unstakeState.status === "Mining" && <img src={please} style={{height: 100, width: 100}} alt='please'/> }
+              { unstakeState.status === "Fail" && <img src={uhhh} style={{height: 100, width: 100}} alt='uhhh'/> }
             </Grid>
           </Grid>
           <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${unstakeState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
             <Typography id='modal-description' color='primary' variant="h6" p={3}>
-              Unstake Froggies... {unstakeState.status === "Success" && <Check/>} {unstakeState.status === "Fail" && <Warning/>}
+              Unstake Froggies {unstakeState.status === "Success" && <Check/>} {unstakeState.status === "Fail" && <Warning/>}
             </Typography>
           </Link>
-          { unstakeState.status === "Mining" && <LinearProgress/>}
+          { unstakeState.status === "Mining" && <LinearProgress  sx={{margin: 2}}/>}
         </Box>
       </Modal>
       <Modal open={showClaimModal} onClose={onClaimModalClose} keepMounted aria-labelledby='claim-title' aria-describedby='claim-description'>
