@@ -37,7 +37,7 @@ export function useStake() {
 }
 
 export function useUnstake() {
-  const { send, state } = useContractFunction(stakingContract, 'unstake');
+  const { send, state } = useContractFunction(stakingContract, 'unStake');
   return {
     unstake: send,
     unstakeState: state
@@ -45,7 +45,7 @@ export function useUnstake() {
 }
 
 export function useClaim() {
-  const { send, state } = useContractFunction(stakingContract, 'claimreward');
+  const { send, state } = useContractFunction(stakingContract, 'claim');
   return {
     claim: send,
     claimState: state
@@ -53,7 +53,7 @@ export function useClaim() {
 }
 
 export function useCheckStakingBalance(account: string) {
-  let result = useCall({contract: stakingContract, method: 'checkrewardbalforall', args: [account]});
+  let result = useCall({contract: stakingContract, method: 'balanceOf', args: [account]});
   
   if (result?.value) {
     return result.value[0];
