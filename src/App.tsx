@@ -549,29 +549,36 @@ function App() {
       <Modal open={showStakeModal} onClose={onStakeModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
         <Box className={classes.modal}>
           <Grid container justifyContent='space-between' alignItems='center' pb={5}>
-            <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-              <Typography id='modal-title' variant="h4" color='primary' p={3}>{stakeState.status === "Mining" ? "Staking Froggies" : "Froggies Staked"}</Typography>
+            <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
+              <Typography id='modal-title' variant="h4" p={3}>{stakeState.status === "Mining" ? "Staking Froggies" : "Froggies Staked"}</Typography>
             </Grid>
-            <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
-              <IconButton size='small' color='inherit' onClick={onStakeModalClose}>
-                <Close fontSize='small'/>
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+              <IconButton size='medium' color='inherit' onClick={onStakeModalClose}>
+                <Close fontSize='medium'/>
               </IconButton>
+            </Grid>
+          </Grid>
+          <Grid container justifyContent='center' p={3}>
+            <Grid item>
+              { stakeState.status === "Success" && <img src={hype} style={{height: 100, width: 100}} alt='hype'/> }
+              { stakeState.status === "Mining" && <img src={please} style={{height: 100, width: 100}} alt='please'/> }
+              { stakeState.status === "Fail" && <img src={uhhh} style={{height: 100, width: 100}} alt='uhhh'/> }
             </Grid>
           </Grid>
           {
             !owned.isStakingApproved && 
             <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${setApprovalForAllState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
               <Typography id='modal-description' color='primary' variant="h6" p={3}>
-                Grant Staking Permissions... {setApprovalForAllState.status === "Success" && <Check/>} {setApprovalForAllState.status === "Fail" && <Warning/>}
+                Grant Staking Permissions {setApprovalForAllState.status === "Success" && <Check/>} {setApprovalForAllState.status === "Fail" && <Warning/>}
               </Typography>
             </Link>
           }
           <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${stakeState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
             <Typography id='modal-description' color='primary' variant="h6" p={3}>
-              Stake Froggies... {stakeState.status === "Success" && <Check/>} {stakeState.status === "Fail" && <Warning/>}
+              Stake Froggies {stakeState.status === "Success" && <Check/>} {stakeState.status === "Fail" && <Warning/>}
             </Typography>
           </Link>
-          { (setApprovalForAllState.status === "Mining" || stakeState.status === "Mining") && <LinearProgress/>}
+          { (setApprovalForAllState.status === "Mining" || stakeState.status === "Mining") && <LinearProgress  sx={{margin: 2}}/>}
         </Box>
       </Modal>
       <Modal open={showUnstakeModal} onClose={onUnstakeModalClose} keepMounted aria-labelledby='unstake-title' aria-describedby='unstake-description'>
