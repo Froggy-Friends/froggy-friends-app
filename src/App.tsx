@@ -352,7 +352,7 @@ function App() {
               </Grid>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={ribbit} style={{height: 50, width: 50}}/>
-                <Typography variant='h6' color='secondary'>0 $RIBBIT Staked</Typography>
+                <Typography variant='h6' color='secondary'>{formatEther(stakingBalance).slice(0,7)} $RIBBIT Staked</Typography>
               </Grid>
             </Grid>
             <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12}>

@@ -53,7 +53,11 @@ export function useClaim() {
 }
 
 export function useCheckStakingBalance(account: string) {
-  let balance = useCall({contract: stakingContract, method: 'checkrewardbalforall', args: [account]}) ?? 0;
-  console.log("balance: ", balance);
-  return balance;
+  let result = useCall({contract: stakingContract, method: 'checkrewardbalforall', args: [account]});
+  
+  if (result?.value) {
+    return result.value[0];
+  }
+
+  return 0;
 }
