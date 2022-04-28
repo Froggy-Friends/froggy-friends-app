@@ -11,6 +11,9 @@ const stakingAbi = new Interface(stakingJson);
 const froggyContract = new Contract(`${process.env.REACT_APP_CONTRACT}`, abi);
 const ribbitContract = new Contract(`${process.env.REACT_APP_RIBBIT_CONTRACT}`, ribbitAbi);
 const stakingContract = new Contract(`${process.env.REACT_APP_STAKING_CONTRACT}`, stakingAbi);
+console.log("froggy address: ", froggyContract.address);
+console.log("ribbit address: ", ribbitContract.address);
+console.log("staking address: ", stakingContract.address);
 
 export function useApproveSpender() {
   const { send, state } = useContractFunction(ribbitContract, 'approve');

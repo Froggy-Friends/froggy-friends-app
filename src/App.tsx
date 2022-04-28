@@ -21,6 +21,7 @@ import rain from './images/rain.png';
 import please from './images/plz.png';
 import hype from './images/hype.png';
 import uhhh from './images/uhhh.png';
+import hi from './images/hi.png';
 
 interface Attribute {
   trait_type: string;
@@ -595,7 +596,7 @@ function App() {
           </Grid>
           <Grid container justifyContent='center' p={3}>
             <Grid item>
-              { unstakeState.status === "Success" && <img src={hype} style={{height: 100, width: 100}} alt='hype'/> }
+              { unstakeState.status === "Success" && <img src={hi} style={{height: 100, width: 100}} alt='hi'/> }
               { unstakeState.status === "Mining" && <img src={please} style={{height: 100, width: 100}} alt='please'/> }
               { unstakeState.status === "Fail" && <img src={uhhh} style={{height: 100, width: 100}} alt='uhhh'/> }
             </Grid>
