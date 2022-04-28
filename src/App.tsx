@@ -4,7 +4,7 @@ import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularPr
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Warning } from '@mui/icons-material';
-import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance } from './client';
+import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted } from './client';
 import { formatEther } from '@ethersproject/units';
 import axios from 'axios';
 import stakingBackground from './images/stake.png';
@@ -117,6 +117,8 @@ function App() {
   const { unstake, unstakeState } = useUnstake();
   const { claim, claimState } = useClaim();
   const stakingBalance = useCheckStakingBalance(account ?? '');
+  const stakingStarted = useStakingStarted();
+  console.log("staking started: ", stakingStarted);
 
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
@@ -197,17 +199,23 @@ function App() {
 
   const onStake = async () => {
     try {
-      // grant staking contract nft transfer permissions
-      if (!owned.isStakingApproved) {
-        await setApprovalForAll(process.env.REACT_APP_STAKING_CONTRACT, true);
-      }
+      if (stakingStarted) {
+        // grant staking contract nft transfer permissions
+        if (!owned.isStakingApproved) {
+          await setApprovalForAll(process.env.REACT_APP_STAKING_CONTRACT, true);
+        }
 
-      // get proof for froggies to stake
-      const response = await axios.post(`${process.env.REACT_APP_API}/stake`, froggiesToStake);
-      const proof = response.data;
-      // deposit nft to staking contract
-      await stake(froggiesToStake, proof);
-      setFroggiesToStake([]);
+        // get proof for froggies to stake
+        const response = await axios.post(`${process.env.REACT_APP_API}/stake`, froggiesToStake);
+        const proof = response.data;
+        // deposit nft to staking contract
+        await stake(froggiesToStake, proof);
+        setFroggiesToStake([]);
+      } else {
+        setAlertMessage("$RIBBIT staking has not started");
+        setShowAlert(true);
+        setLoading(false);
+      }
     } catch (error) {
       setAlertMessage("Issue staking froggies");
       setShowAlert(true);

@@ -61,3 +61,13 @@ export function useCheckStakingBalance(account: string) {
 
   return 0;
 }
+
+export function useStakingStarted() {
+  let result = useCall({contract: stakingContract, method: 'started', args: []});
+
+  if (result?.value) {
+    return result.value[0];
+  }
+
+  return false;
+}
