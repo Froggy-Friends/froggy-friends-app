@@ -369,7 +369,7 @@ function App() {
             <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' justifyContent='center' xl={4} lg={4} md={6} sm={7} xs={12}>
                 <img src={think} style={{height: 50, width: 50}} alt='think'/>
-                <Typography variant='h6' color='secondary' pl={2}>{froggiesStakedPercentage()}&#37; Froggies Staked!</Typography>
+                <Typography variant='h6' color='secondary' pl={2}>{froggiesStakedPercentage()}&#37; Froggies Staked</Typography>
               </Grid>
             </Grid>
           }
