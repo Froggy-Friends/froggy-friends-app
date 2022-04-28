@@ -1,70 +1,63 @@
 import { Contract } from "@ethersproject/contracts";
-import { useContractCall, useContractFunction } from '@usedapp/core';
+import { useCall, useContractFunction } from '@usedapp/core';
 import { Interface } from '@ethersproject/abi';
 import froggyfriendsjson from './abi/froggyfriends.json';
+import ribbitJson from './abi/ribbit.json';
+import stakingJson from './abi/staking.json';
 
 const abi = new Interface(froggyfriendsjson);
-const contract = new Contract(`${process.env.REACT_APP_CONTRACT}`, abi);
+const ribbitAbi = new Interface(ribbitJson);
+const stakingAbi = new Interface(stakingJson);
+const froggy = new Contract(`${process.env.REACT_APP_CONTRACT}`, abi);
+const ribbitContract = new Contract(`${process.env.REACT_APP_RIBBIT_CONTRACT}`, ribbitAbi);
+const stakingContract = new Contract(`${process.env.REACT_APP_STAKING_CONTRACT}`, stakingAbi);
 
-export enum FroggyStatus {
-  OFF,
-  FROGGYLIST,
-  PUBLIC
-}
-
-export function useFroggyStatus(): FroggyStatus {
-  let result = useContractCall({
-    abi: abi,
-    address: contract.address,
-    method: 'froggyStatus',
-    args: []
-  });
-
-  if (result && result[0]) {
-    const status = result[0];
-    if (status == FroggyStatus.OFF) return FroggyStatus.OFF;
-    else if (status == FroggyStatus.FROGGYLIST) return FroggyStatus.FROGGYLIST;
-    else if (status == FroggyStatus.PUBLIC) return FroggyStatus.PUBLIC;
-    else return FroggyStatus.OFF;
-  } else {
-    return FroggyStatus.OFF;
+export function useApproveSpender() {
+  const { send, state } = useContractFunction(ribbitContract, 'approve');
+  return {
+    approveSpender: send,
+    approveSpenderState: state
   }
 }
 
-export function useSupply(): number {
-  let supply = useContractCall({
-    abi: abi,
-    address: contract.address,
-    method: 'pond',
-    args: []
-  });
-
-  return supply ? supply[0].toNumber() : 0;
-}
-
-export function useMinted(): number {
-  let minted = useContractCall({
-    abi: abi,
-    address: contract.address,
-    method: 'totalSupply',
-    args: []
-  });
-
-  return minted ? minted[0].toNumber() : 0;
-}
-
-export function useFroggylistMint() {
-  const { send, state } = useContractFunction(contract, 'froggylistAdopt');
+export function useSetApprovalForAll() {
+  const { send, state } = useContractFunction(froggy, 'setApprovalForAll');
   return {
-    froggylistMint: send,
-    froggylistMintState: state
+    setApprovalForAll: send,
+    setApprovalForAllState: state
+  }
+}
+
+export function useStake() {
+  const { send, state } = useContractFunction(stakingContract, 'stake');
+  return {
+    stake: send,
+    stakeState: state
   };
 }
 
-export function useMint() {
-  const { send, state } = useContractFunction(contract, 'publicAdopt');
+export function useUnstake() {
+  const { send, state } = useContractFunction(stakingContract, 'unStake');
   return {
-    mint: send,
-    mintState: state
+    unstake: send,
+    unstakeState: state
   };
+}
+
+export function useClaim() {
+  const { send, state } = useContractFunction(stakingContract, 'claim');
+  return {
+    claim: send,
+    claimState: state
+  }
+}
+
+export function useCheckStakingBalance(account: string) {
+  let result = useCall({contract: stakingContract, method: 'balanceOf', args: [account]});
+  
+  if (result?.value) {
+    return result.value[0];
+  }
+
+  return 0;
 }
