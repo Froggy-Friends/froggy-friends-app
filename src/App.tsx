@@ -174,7 +174,7 @@ function App() {
     } else if (stakeState.status === "Success") {
       fetchFroggies();
     }
-  }, [stakeState])
+  }, [stakeState, account])
 
   useEffect(() => {
     if (unstakeState.status === "Exception" || unstakeState.status === "Fail") {
@@ -354,15 +354,15 @@ function App() {
           <Grid container item textAlign='left' alignItems='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={2}>
             <Grid container item justifyContent='space-evenly' xl={12} lg={12} md={12} sm={12} xs={12} pb={5} pt={2}>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
-                <img src={ribbit} style={{height: 50, width: 50}}/>
+                <img src={ribbit} style={{height: 50, width: 50}} alt='ribbit'/>
                 <Typography variant='h6' color='secondary'>{owned.totalRibbit} $RIBBIT Per Day</Typography>
               </Grid>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
-                <img src={ribbit} style={{height: 50, width: 50}}/>
+                <img src={ribbit} style={{height: 50, width: 50}} alt='ribbit'/>
                 <Typography variant='h6' color='secondary'>{formatEther(ribbitBalance).slice(0,7)} $RIBBIT Balance</Typography>
               </Grid>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
-                <img src={ribbit} style={{height: 50, width: 50}}/>
+                <img src={ribbit} style={{height: 50, width: 50}} alt='ribbit'/>
                 <Typography variant='h6' color='secondary'>{formatEther(stakingBalance).slice(0,7)} $RIBBIT Staked</Typography>
               </Grid>
             </Grid>
@@ -408,13 +408,13 @@ function App() {
                       <Typography variant='h5'>{froggy.name}</Typography>
                       <Typography pb={2}>{froggy.ribbit} $RIBBIT per day</Typography>
                       {
-                        froggy.isStaked == true && 
+                        froggy.isStaked === true && 
                         <Button variant='contained' color='success'  onClick={() => onSelectFroggyToUnstake(froggy.edition)}>
                           <Typography variant='h5'>Unstake</Typography>
                         </Button>
                       }
                       {
-                        froggy.isStaked == false && 
+                        froggy.isStaked === false && 
                         <Button variant='contained' color='success' onClick={() => onSelectFroggyToStake(froggy.edition)}>
                           <Typography variant='h5'>Stake</Typography>
                         </Button>
@@ -550,7 +550,7 @@ function App() {
               Stake Froggies... {stakeState.status === "Success" && <Check/>} {stakeState.status === "Fail" && <Warning/>}
             </Typography>
           </Link>
-          { setApprovalForAllState.status === "Mining" || stakeState.status === "Mining" && <LinearProgress/>}
+          { (setApprovalForAllState.status === "Mining" || stakeState.status === "Mining") && <LinearProgress/>}
         </Box>
       </Modal>
       <Modal open={showUnstakeModal} onClose={onUnstakeModalClose} keepMounted aria-labelledby='unstake-title' aria-describedby='unstake-description'>
