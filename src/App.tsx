@@ -153,6 +153,13 @@ function App() {
   }, [setApprovalForAllState])
 
   useEffect(() => {
+    async function fetchFroggies() {
+      setLoading(true);
+      const ownedResponse = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: account});
+      setOwned(ownedResponse.data);
+      setLoading(false);
+    }
+
     if (stakeState.status === "Exception" || stakeState.status === "Fail") {
       console.log("stake error: ", stakeState.errorMessage);
       if (stakeState.errorMessage?.includes("execution reverted")) {
@@ -162,6 +169,8 @@ function App() {
     } else if (stakeState.status === "Mining") {
       console.log("stake mining...", stakeState);
       setShowStakeModal(true);
+    } else if (stakeState.status === "Success") {
+      fetchFroggies();
     }
   }, [stakeState])
 
@@ -203,11 +212,6 @@ function App() {
       // deposit nft to staking contract
       await stake(froggiesToStake, proof);
       setFroggiesToStake([]);
-
-      setLoading(true);
-      const ownedResponse = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: account});
-      setOwned(ownedResponse.data);
-      setLoading(false);
     } catch (error) {
       setAlertMessage("Issue staking froggies");
       setShowAlert(true);
