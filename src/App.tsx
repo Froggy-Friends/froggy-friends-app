@@ -123,7 +123,6 @@ function App() {
       try {
         setLoading(true);
         const response = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: address});
-        console.log("response data: ", response.data);
         setOwned(response.data);
         setLoading(false);
       } catch (error) {
@@ -134,7 +133,6 @@ function App() {
     }
 
     if (account) {
-      console.log("get froggies owned for account: ", account);
       getFroggiesOwned(account);
     }
   }, [account])
@@ -167,7 +165,6 @@ function App() {
         setShowAlert(true);
       }
     } else if (stakeState.status === "Mining") {
-      console.log("stake mining...", stakeState);
       setShowStakeModal(true);
     } else if (stakeState.status === "Success") {
       fetchFroggies();
@@ -182,7 +179,6 @@ function App() {
         setShowAlert(true);
       }
     } else if (unstakeState.status === "Mining") {
-      console.log("unstake mining...", unstakeState);
       setShowUnstakeModal(true);
     }
   }, [unstakeState])
