@@ -118,7 +118,10 @@ function App() {
   const { claim, claimState } = useClaim();
   const stakingBalance = useCheckStakingBalance(account ?? '');
   const stakingStarted = useStakingStarted();
-  console.log("staking started: ", stakingStarted);
+
+  useEffect(() => {
+    console.log("staking started: ", stakingStarted);
+  }, [stakingStarted])
 
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
