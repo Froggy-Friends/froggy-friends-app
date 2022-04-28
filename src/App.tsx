@@ -4,7 +4,7 @@ import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularPr
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Warning } from '@mui/icons-material';
-import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted } from './client';
+import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted, useFroggiesStaked } from './client';
 import { formatEther } from '@ethersproject/units';
 import axios from 'axios';
 import stakingBackground from './images/stake.png';
@@ -15,6 +15,9 @@ import looksrare from './images/looksrare.png';
 import etherscan from './images/etherscan.png';
 import discord from './images/discord.png';
 import logo from './images/logo.png';
+import think from './images/think.png';
+import chest from './images/chest.png';
+import rain from './images/rain.png';
 
 interface Attribute {
   trait_type: string;
@@ -76,7 +79,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
     },
     ribbit: {
       background: theme.palette.background.default,
-      borderRadius: 25,
+      borderRadius: 30,
       padding: 5
     },
     buttons: {
@@ -118,6 +121,7 @@ function App() {
   const { claim, claimState } = useClaim();
   const stakingBalance = useCheckStakingBalance(account ?? '');
   const stakingStarted = useStakingStarted();
+  const froggiesStaked = useFroggiesStaked();
 
   useEffect(() => {
     console.log("staking started: ", stakingStarted);
@@ -307,6 +311,11 @@ function App() {
       setShowClamModal(false);
     }
   }
+
+  const froggiesStakedPercentage = () => {
+    let staked = (froggiesStaked / 4444) * 100;
+    return staked.toFixed(2);
+  }
   
   return (
     <Grid id='app' className={classes.app} container direction='column'>
@@ -348,22 +357,31 @@ function App() {
           }
         </Grid>
         <Grid id='staking' container direction='column' textAlign='center' pt={10}>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={8}>
             <Typography variant='h2' color='secondary' fontWeight='bold'>Froggy Friends Staking</Typography>
           </Grid>
+          {
+            froggiesStaked > 0 && 
+            <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
+              <Grid className={classes.ribbit} item display='flex' alignItems='center' justifyContent='center' xl={4} lg={4} md={6} sm={7} xs={12}>
+                <img src={think} style={{height: 50, width: 50}} alt='think'/>
+                <Typography variant='h6' color='secondary' pl={2}>{froggiesStaked} Froggies Staked &bull; {froggiesStakedPercentage()} &#37;</Typography>
+              </Grid>
+            </Grid>
+          }
           <Grid container item textAlign='left' alignItems='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={2}>
             <Grid container item justifyContent='space-evenly' xl={12} lg={12} md={12} sm={12} xs={12} pb={5} pt={2}>
-              <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
+              <Grid className={classes.ribbit} item display='flex' justifyContent='center' alignItems='center' mb={1} xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={ribbit} style={{height: 50, width: 50}} alt='ribbit'/>
-                <Typography variant='h6' color='secondary'>{owned.totalRibbit} $RIBBIT Per Day</Typography>
+                <Typography variant='h6' color='secondary' pl={2}>{owned.totalRibbit} $RIBBIT Per Day</Typography>
               </Grid>
-              <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
-                <img src={ribbit} style={{height: 50, width: 50}} alt='ribbit'/>
-                <Typography variant='h6' color='secondary'>{formatEther(ribbitBalance).slice(0,7)} $RIBBIT Balance</Typography>
+              <Grid className={classes.ribbit} item display='flex' justifyContent='center' alignItems='center' mb={1} xl={3} lg={3} md={3} sm={3} xs={12} p={1}>
+                <img src={chest} style={{height: 50, width: 50}} alt='chest'/>
+                <Typography variant='h6' color='secondary' pl={2}>{formatEther(ribbitBalance).slice(0,4)} $RIBBIT Balance</Typography>
               </Grid>
-              <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
-                <img src={ribbit} style={{height: 50, width: 50}} alt='ribbit'/>
-                <Typography variant='h6' color='secondary'>{formatEther(stakingBalance).slice(0,7)} $RIBBIT Staked</Typography>
+              <Grid className={classes.ribbit} item display='flex' justifyContent='center' alignItems='center' mb={1} xl={3} lg={3} md={3} sm={3} xs={12}>
+                <img src={rain} style={{height: 50, width: 50}} alt='rain'/>
+                <Typography variant='h6' color='secondary' pl={2}>{formatEther(stakingBalance).slice(0,4)} $RIBBIT Staked</Typography>
               </Grid>
             </Grid>
             <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12}>

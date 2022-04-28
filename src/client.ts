@@ -8,7 +8,7 @@ import stakingJson from './abi/staking.json';
 const abi = new Interface(froggyfriendsjson);
 const ribbitAbi = new Interface(ribbitJson);
 const stakingAbi = new Interface(stakingJson);
-const froggy = new Contract(`${process.env.REACT_APP_CONTRACT}`, abi);
+const froggyContract = new Contract(`${process.env.REACT_APP_CONTRACT}`, abi);
 const ribbitContract = new Contract(`${process.env.REACT_APP_RIBBIT_CONTRACT}`, ribbitAbi);
 const stakingContract = new Contract(`${process.env.REACT_APP_STAKING_CONTRACT}`, stakingAbi);
 
@@ -21,7 +21,7 @@ export function useApproveSpender() {
 }
 
 export function useSetApprovalForAll() {
-  const { send, state } = useContractFunction(froggy, 'setApprovalForAll');
+  const { send, state } = useContractFunction(froggyContract, 'setApprovalForAll');
   return {
     setApprovalForAll: send,
     setApprovalForAllState: state
@@ -70,4 +70,13 @@ export function useStakingStarted() {
   }
 
   return false;
+}
+
+export function useFroggiesStaked() {
+  const { value, error } = useCall({contract: froggyContract, method: 'balanceOf', args: [stakingContract.address]}) ?? {};
+  if (error) {
+    console.log("get froggies staked error: ", error);
+  }
+
+  return value?.[0].toNumber();
 }
