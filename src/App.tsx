@@ -1,18 +1,21 @@
-import { useEthers } from '@usedapp/core';
+import { useEthers, useTokenBalance } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, CardHeader, Card, CardContent, CardMedia, Container } from "@mui/material";
+import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
-import logo from './images/logo.png';
 import { useEffect, useState } from 'react';
-import { Close, Error } from '@mui/icons-material';
+import { Check, Close, Warning } from '@mui/icons-material';
+import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance } from './client';
+import { formatEther } from '@ethersproject/units';
 import axios from 'axios';
-import stake from './images/stake.png';
+import stakingBackground from './images/stake.png';
 import ribbit from './images/ribbit.gif';
 import twitter from './images/twitter.png';
 import opensea from './images/opensea.png';
 import looksrare from './images/looksrare.png';
 import etherscan from './images/etherscan.png';
 import discord from './images/discord.png';
+import logo from './images/logo.png';
+
 interface Attribute {
   trait_type: string;
   value: string;
@@ -30,12 +33,14 @@ interface Froggy {
 interface Owned {
   froggies: Froggy[];
   totalRibbit: number;
+  allowance: number;
+  isStakingApproved: boolean;
 }
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     app: {
-      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${stake})`,
+      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${stakingBackground})`,
       backgroundColor: '#000000',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'contain',
@@ -61,9 +66,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
       transform: 'translate(-50%, -50%)',
       width: 500,
       backgroundColor: theme.palette.background.paper,
+      color: theme.palette.background.default,
       border: '2px solid #000',
       borderRadius: 5,
-      boxShadow: 24,
       padding: 4,
       [theme.breakpoints.down('sm')]: {
         width: 300
@@ -95,25 +100,29 @@ function App() {
   const classes = useStyles();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
+  const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
   const [froggiesToStake, setFroggiesToStake] = useState<number[]>([]);
   const [froggiesToUnstake, setFroggiesToUnstake] = useState<number[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
-  const [showModal, setShowModal] = useState(false);
-  const [tx, setTx] = useState<any>('');
-  const [txPending, setTxPending] = useState(false);
-  const [txFail, setTxFail] = useState(false);
+  const [showStakeModal, setShowStakeModal] = useState(false);
+  const [showUnstakeModal, setShowUnstakeModal] = useState(false);
+  const [showClaimModal, setShowClamModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0});
+  const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
   const { activateBrowserWallet, account } = useEthers();
-  const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
+  const ribbitBalance = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || 0;
+  const { setApprovalForAll, setApprovalForAllState } = useSetApprovalForAll();
+  const { stake, stakeState } = useStake();
+  const { unstake, unstakeState } = useUnstake();
+  const { claim, claimState } = useClaim();
+  const stakingBalance = useCheckStakingBalance(account ?? '');
 
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
       try {
         setLoading(true);
         const response = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: address});
-        console.log("response data: ", response.data);
         setOwned(response.data);
         setLoading(false);
       } catch (error) {
@@ -124,10 +133,113 @@ function App() {
     }
 
     if (account) {
-      console.log("get froggies owned for account: ", account);
       getFroggiesOwned(account);
     }
   }, [account])
+
+  useEffect(() => {
+    if (setApprovalForAllState.status === "Exception") {
+      console.log("set approval for all error: ", setApprovalForAllState.errorMessage);
+    } else if (setApprovalForAllState.status === "Mining") {
+      console.log("set approval for all mining...", setApprovalForAllState);
+      setShowStakeModal(true);
+    } else if (setApprovalForAllState.status === "Success") {
+      console.log("set approval for all success: ", setApprovalForAllState);
+    } else if (setApprovalForAllState.status === "Fail") {
+      console.log("set approval for all error: ", setApprovalForAllState.errorMessage);
+    }
+  }, [setApprovalForAllState])
+
+  useEffect(() => {
+    async function fetchFroggies() {
+      setLoading(true);
+      const ownedResponse = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: account});
+      setOwned(ownedResponse.data);
+      setLoading(false);
+    }
+
+    if (stakeState.status === "Exception" || stakeState.status === "Fail") {
+      console.log("stake error: ", stakeState.errorMessage);
+      if (stakeState.errorMessage?.includes("execution reverted")) {
+        setAlertMessage(stakeState.errorMessage.replace(/^execution reverted:/i, ''));
+        setShowAlert(true);
+      }
+    } else if (stakeState.status === "Mining") {
+      setShowStakeModal(true);
+    } else if (stakeState.status === "Success") {
+      fetchFroggies();
+    }
+  }, [stakeState])
+
+  useEffect(() => {
+    if (unstakeState.status === "Exception" || unstakeState.status === "Fail") {
+      console.log("unstake error: ", unstakeState.errorMessage);
+      if (unstakeState.errorMessage?.includes("execution reverted")) {
+        setAlertMessage(unstakeState.errorMessage.replace(/^execution reverted:/i, ''));
+        setShowAlert(true);
+      }
+    } else if (unstakeState.status === "Mining") {
+      setShowUnstakeModal(true);
+    }
+  }, [unstakeState])
+
+  useEffect(() => {
+    if (claimState.status === "Exception" || claimState.status === "Fail") {
+      console.log("claim error: ", claimState.errorMessage);
+      if (claimState.errorMessage?.includes("execution reverted")) {
+        setAlertMessage(claimState.errorMessage.replace(/^execution reverted:/i, ''));
+        setShowAlert(true);
+      }
+    } else if (claimState.status === "Mining") {
+      setShowClamModal(true);
+    }
+  }, [claimState])
+
+  const onStake = async () => {
+    try {
+      // grant staking contract nft transfer permissions
+      if (!owned.isStakingApproved) {
+        await setApprovalForAll(process.env.REACT_APP_STAKING_CONTRACT, true);
+      }
+
+      // get proof for froggies to stake
+      const response = await axios.post(`${process.env.REACT_APP_API}/stake`, froggiesToStake);
+      const proof = response.data;
+      // deposit nft to staking contract
+      await stake(froggiesToStake, proof);
+      setFroggiesToStake([]);
+    } catch (error) {
+      setAlertMessage("Issue staking froggies");
+      setShowAlert(true);
+      setLoading(false);
+    }
+  }
+
+  const onUnstake = async () => {
+    try {
+      await unstake(froggiesToUnstake);
+      setFroggiesToUnstake([]);
+
+      setLoading(true);
+      const ownedResponse = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: account});
+      setOwned(ownedResponse.data);
+      setLoading(false);
+    } catch (error) {
+      setAlertMessage("Issue unstaking froggies");
+      setShowAlert(true);
+      setLoading(false);
+    }
+  }
+
+  const onClaim = async () => {
+    try {
+      await claim();
+    } catch (error) {
+      setAlertMessage("Issue claiming $RIBBIT");
+      setShowAlert(true);
+      setLoading(false);
+    }
+  }
 
   const onSelectFroggyToStake = (tokenId: number) => {
     if (froggiesToStake.includes(tokenId)) {
@@ -167,9 +279,21 @@ function App() {
     setShowAlert(false);
   };
 
-  const onTxModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+  const onStakeModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason !== 'backdropClick') {
-      setShowModal(false);
+      setShowStakeModal(false);
+    }
+  }
+
+  const onUnstakeModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setShowUnstakeModal(false);
+    }
+  }
+
+  const onClaimModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setShowClamModal(false);
     }
   }
   
@@ -186,27 +310,27 @@ function App() {
             <Grid container item justifyContent='center' textAlign='center' xl={6} lg={6} md={9} sm={9} xs={9} pt={2}>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none'>
-                  <Typography variant='h5'>Team</Typography>
+                  <Typography color='secondary' variant='h5'>Team</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none'>
-                  <Typography variant='h5'>Collabs</Typography>
+                  <Typography color='secondary' variant='h5'>Collabs</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
-                  <Typography variant='h5'>Stake</Typography>
+                  <Typography color='secondary' variant='h5'>Stake</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/market'} underline='none'>
-                  <Typography variant='h5'>Market</Typography>
+                  <Typography color='secondary' variant='h5'>Market</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/license'} underline='none'>
-                  <Typography variant='h5'>License</Typography>
+                  <Typography color='secondary' variant='h5'>License</Typography>
                 </Link>
               </Grid> 
             </Grid>
@@ -214,36 +338,36 @@ function App() {
         </Grid>
         <Grid id='staking' container direction='column' textAlign='center' pt={10}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={10}>
-            <Typography variant='h2' color='primary' fontWeight='bold'>Froggy Friends Staking</Typography>
+            <Typography variant='h2' color='secondary' fontWeight='bold'>Froggy Friends Staking</Typography>
           </Grid>
           <Grid container item textAlign='left' alignItems='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={2}>
             <Grid container item justifyContent='space-evenly' xl={12} lg={12} md={12} sm={12} xs={12} pb={5} pt={2}>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={ribbit} style={{height: 50, width: 50}}/>
-                <Typography variant='h6' color='primary'>{owned.totalRibbit} $RIBBIT Per Day</Typography>
+                <Typography variant='h6' color='secondary'>{owned.totalRibbit} $RIBBIT Per Day</Typography>
               </Grid>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={ribbit} style={{height: 50, width: 50}}/>
-                <Typography variant='h6' color='primary'>0 $RIBBIT Balance</Typography>
+                <Typography variant='h6' color='secondary'>{formatEther(ribbitBalance).slice(0,7)} $RIBBIT Balance</Typography>
               </Grid>
               <Grid className={classes.ribbit} item display='flex' alignItems='center' xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={ribbit} style={{height: 50, width: 50}}/>
-                <Typography variant='h6' color='primary'>0 $RIBBIT Staked</Typography>
+                <Typography variant='h6' color='secondary'>{formatEther(stakingBalance).slice(0,7)} $RIBBIT Staked</Typography>
               </Grid>
             </Grid>
             <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12}>
               <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={4} sx={isTinyMobile ? {maxWidth: '100%',flexBasis: '100%',padding: theme.spacing(2)} : {}}>
-                <Button variant='contained'>
-                  <Typography variant='h5'>Stake</Typography>  
+                <Button variant='contained' disabled={froggiesToStake.length === 0} onClick={() => onStake()}>
+                  <Typography variant='h5'>Stake {froggiesToStake.length || ''}</Typography>  
                 </Button>
               </Grid>
               <Grid item textAlign='center' xl={2} lg={2} md={2} sm={3} xs={4} sx={isTinyMobile ? {maxWidth: '100%',flexBasis: '100%',padding: theme.spacing(2)} : {}}>
-                <Button variant='contained'>
-                  <Typography variant='h5'>Unstake</Typography>  
+                <Button variant='contained' disabled={froggiesToUnstake.length === 0} onClick={() => onUnstake()}>
+                  <Typography variant='h5'>Unstake {froggiesToUnstake.length || ''}</Typography>  
                 </Button>
               </Grid>
               <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={4} sx={isTinyMobile ? {maxWidth: '100%',flexBasis: '100%',padding: theme.spacing(2)} : {}}>
-                <Button variant='contained'>
+                <Button variant='contained' onClick={() => onClaim()}>
                   <Typography variant='h5'>Claim</Typography>  
                 </Button>
               </Grid>
@@ -260,8 +384,7 @@ function App() {
           }
           { account && loading && 
             <Grid item p={10}>
-              <Typography variant='h3' color='primary'>Loading Froggies</Typography>
-              <CircularProgress />
+              <CircularProgress color='secondary' size={80}/>
             </Grid>
           }
           <Grid id='froggies' container item xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -295,10 +418,8 @@ function App() {
           {
             account && !loading && 
             <Grid item pt={5}>
-              <Button variant='contained'>
-                <Link href="https://opensea.io/collection/froggyfriendsnft" underline="none" target="_blank">
+              <Button variant='contained' onClick={() => window.open("https://opensea.io/collection/froggyfriendsnft", "_blank")}>
                   <Typography variant='h5'>Buy Froggies</Typography>
-                </Link>
               </Button>
             </Grid>
           }
@@ -344,22 +465,22 @@ function App() {
             <Grid container justifyContent='center' pt={2} maxWidth={500}>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none'>
-                  <Typography color='primary'>Team</Typography>
+                  <Typography color='secondary'>Team</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none'>
-                  <Typography color='primary'>Collabs</Typography>
+                  <Typography color='secondary'>Collabs</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
                 <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
-                  <Typography color='primary'>Staking</Typography>
+                  <Typography color='secondary'>Staking</Typography>
                 </Link>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
                 <Link href={process.env.REACT_APP_WEBSITE_URL + '/market'} underline='none'>
-                  <Typography color='primary'>Market</Typography>
+                  <Typography color='secondary'>Market</Typography>
                 </Link>
               </Grid>
             </Grid>
@@ -393,24 +514,72 @@ function App() {
           </IconButton>
         }
       />
-      <Modal open={showModal} onClose={onTxModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
-        <Box className={classes.modal} p={3}>
-          <Grid container justifyContent='space-between' pb={5}>
+      <Modal open={showStakeModal} onClose={onStakeModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
+        <Box className={classes.modal}>
+          <Grid container justifyContent='space-between' alignItems='center' pb={5}>
             <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
-              { txPending && <Typography id='modal-title' variant="h3" color='primary'>Adopt In Progress</Typography> }
-              { !txPending && !txFail && <Typography id='modal-title' variant="h3" color='primary'>Froggy Friend(s) Adopted</Typography> }
-              { txFail && <Typography id='modal-title' variant="h3" color='primary'>Adopt Failed <Error fontSize='large'/></Typography> }
+              <Typography id='modal-title' variant="h4" color='primary' p={3}>{stakeState.status === "Mining" ? "Staking Froggies" : "Froggies Staked"}</Typography>
             </Grid>
             <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
-              <IconButton size='small' color='inherit' onClick={onTxModalClose}>
+              <IconButton size='small' color='inherit' onClick={onStakeModalClose}>
                 <Close fontSize='small'/>
               </IconButton>
             </Grid>
           </Grid>
-          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${tx}`} target='_blank' sx={{cursor: 'pointer'}}>
-            <Typography id='modal-description' variant="h4" pt={3} pb={3}>View Transaction</Typography>
+          {
+            !owned.isStakingApproved && 
+            <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${setApprovalForAllState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+              <Typography id='modal-description' color='primary' variant="h6" p={3}>
+                Grant Staking Permissions... {setApprovalForAllState.status === "Success" && <Check/>} {setApprovalForAllState.status === "Fail" && <Warning/>}
+              </Typography>
+            </Link>
+          }
+          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${stakeState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+            <Typography id='modal-description' color='primary' variant="h6" p={3}>
+              Stake Froggies... {stakeState.status === "Success" && <Check/>} {stakeState.status === "Fail" && <Warning/>}
+            </Typography>
           </Link>
-          { txPending && <LinearProgress/>}
+          { setApprovalForAllState.status === "Mining" || stakeState.status === "Mining" && <LinearProgress/>}
+        </Box>
+      </Modal>
+      <Modal open={showUnstakeModal} onClose={onUnstakeModalClose} keepMounted aria-labelledby='unstake-title' aria-describedby='unstake-description'>
+        <Box className={classes.modal}>
+          <Grid container justifyContent='space-between' alignItems='center' pb={5}>
+            <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
+              <Typography id='modal-title' variant="h4" color='primary' p={3}>{unstakeState.status === "Mining" ? "Unstaking Froggies" : "Froggies Unstaked"}</Typography>
+            </Grid>
+            <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
+              <IconButton size='small' color='inherit' onClick={onUnstakeModalClose}>
+                <Close fontSize='small'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${unstakeState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+            <Typography id='modal-description' color='primary' variant="h6" p={3}>
+              Unstake Froggies... {unstakeState.status === "Success" && <Check/>} {unstakeState.status === "Fail" && <Warning/>}
+            </Typography>
+          </Link>
+          { unstakeState.status === "Mining" && <LinearProgress/>}
+        </Box>
+      </Modal>
+      <Modal open={showClaimModal} onClose={onClaimModalClose} keepMounted aria-labelledby='claim-title' aria-describedby='claim-description'>
+        <Box className={classes.modal}>
+          <Grid container justifyContent='space-between' alignItems='center' pb={5}>
+            <Grid item xl={11} lg={11} md={11} sm={11} xs={11}>
+              <Typography id='modal-title' variant="h4" color='primary' p={3}>{claimState.status === "Mining" ? "Claiming $RIBBIT" : "$RIBBIT Claimed"}</Typography>
+            </Grid>
+            <Grid item xl={1} lg={1} md={1} sm={1} xs={1}>
+              <IconButton size='small' color='inherit' onClick={onClaimModalClose}>
+                <Close fontSize='small'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${claimState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+            <Typography id='modal-description' color='primary' variant="h6" p={3}>
+              Claim $RIBBIT... {claimState.status === "Success" && <Check/>} {claimState.status === "Fail" && <Warning/>}
+            </Typography>
+          </Link>
+          { claimState.status === "Mining" && <LinearProgress/>}
         </Box>
       </Modal>
     </Grid>
