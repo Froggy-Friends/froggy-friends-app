@@ -1,6 +1,6 @@
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container } from "@mui/material";
+import { Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Warning } from '@mui/icons-material';
@@ -9,7 +9,6 @@ import { formatEther, commify } from '@ethersproject/units';
 import axios from 'axios';
 import stakingBackground from '../images/stake.png';
 import ribbit from '../images/ribbit.gif';
-import logo from '../images/logo.png';
 import think from '../images/think.png';
 import chest from '../images/chest.png';
 import rain from '../images/rain.png';
@@ -50,17 +49,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
         backgroundSize: 'contain',
       }
     },
-    avatar: {
-      height: 100,
-      width: 100,
-      cursor: 'pointer',
-      [theme.breakpoints.up('sm')]: {
-        marginTop: '5px'
-      },
-      [theme.breakpoints.up('lg')]: {
-        marginTop: '10px'
-      }
-    },
     modal: {
       position: 'absolute' as 'absolute',
       top: '50%',
@@ -90,9 +78,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
     },
     walletButton: {
       marginTop: theme.spacing(3)
-    },
-    footer: {
-      backgroundColor: '#181818'
     }
   })
 );
@@ -101,7 +86,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Staking() {
   const classes = useStyles();
   const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
+  
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
   const [froggiesToStake, setFroggiesToStake] = useState<number[]>([]);
   const [froggiesToUnstake, setFroggiesToUnstake] = useState<number[]>([]);
@@ -323,44 +308,8 @@ export default function Staking() {
   }
   
   return (
-    <Grid id='app' className={classes.app} container direction='column' pb={20}>
+    <Grid id='app' className={classes.app} container direction='column' pb={30}>
       <Container maxWidth='xl'>
-        <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
-          <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
-            <Link href={process.env.REACT_APP_WEBSITE_URL} underline='none'>
-              <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 125, width: 125}}/>
-            </Link>
-          </Grid>
-          { isDesktop && 
-            <Grid container item justifyContent='center' textAlign='center' xl={6} lg={6} md={9} sm={9} xs={9} pt={2}>
-              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none'>
-                  <Typography color='secondary' variant='h5'>Team</Typography>
-                </Link>
-              </Grid>
-              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none'>
-                  <Typography color='secondary' variant='h5'>Collabs</Typography>
-                </Link>
-              </Grid>
-              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
-                  <Typography color='secondary' variant='h5'>Stake</Typography>
-                </Link>
-              </Grid>
-              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                <Link href={process.env.REACT_APP_WEBSITE_URL + '/market'} underline='none'>
-                  <Typography color='secondary' variant='h5'>Market</Typography>
-                </Link>
-              </Grid>
-              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                <Link href={process.env.REACT_APP_WEBSITE_URL + '/license'} underline='none'>
-                  <Typography color='secondary' variant='h5'>License</Typography>
-                </Link>
-              </Grid> 
-            </Grid>
-          }
-        </Grid>
         <Grid id='staking' container direction='column' textAlign='center' pt={10}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={8}>
             <Typography variant='h2' color='secondary' fontWeight='bold'>Froggy Friends Staking</Typography>
