@@ -4,6 +4,7 @@ import { Interface } from '@ethersproject/abi';
 import froggyfriendsjson from './abi/froggyfriends.json';
 import ribbitJson from './abi/ribbit.json';
 import stakingJson from './abi/staking.json';
+import { BigNumber } from "ethers";
 
 const abi = new Interface(froggyfriendsjson);
 const ribbitAbi = new Interface(ribbitJson);
@@ -82,4 +83,18 @@ export function useFroggiesStaked() {
   }
 
   return value?.[0].toNumber();
+}
+
+export function useStakingDeposits(account: string) {
+  const { value, error } = useCall({contract: stakingContract, method: 'deposits', args: [account]}) ?? {};
+  if (error) {
+    console.log("get staking deposits error: ", error);
+  }
+
+  if (value) {
+    const deposits: BigNumber[] = value?.[0];
+    return deposits.map(d => d.toNumber());
+  } else {
+    return [];
+  }
 }
