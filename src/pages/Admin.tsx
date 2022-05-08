@@ -1,4 +1,4 @@
-import { Grid, TextField, Typography, createStyles, Theme } from "@mui/material";
+import { Grid, TextField, Typography, createStyles, Theme, Button } from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import { ChangeEvent, useEffect, useState } from "react";
 
@@ -18,22 +18,25 @@ export default function Admin() {
     setStakingWallet(event.target.value);
   }
 
-  useEffect(() => {
-    if (stakingWallet) {
-      console.log("staking wallet change: ", stakingWallet);
-    }
-  }, [stakingWallet])
+  const onCheckStakingWallet = () => {
+    
+  }
 
   return (
     <Grid id="admin" container alignItems="center" direction="column" pt={10} pb={30}>
-      <Typography variant="h3" pb={10}>Admin Page </Typography>
+      <Typography variant="h3" pb={10}>Wallet Staking Checker </Typography>
 
-      <Grid id="staker" justifyContent="center" container>
+      <Grid id="wallet" justifyContent="center" container pb={5}>
         <Grid item xl={4} lg={4} md={6} sm={8} xs={10}>
-          <TextField id="wallet" label="Staking Wallet" variant="outlined" fullWidth value={stakingWallet} onChange={onStakingWalletChange}/>
+          <TextField label="Wallet" variant="outlined" fullWidth value={stakingWallet} onChange={onStakingWalletChange}/>
         </Grid>
-        <Grid item>
+      </Grid>
 
+      <Grid id="check" textAlign="center" container>
+        <Grid item xl={4} lg={4} md={6} sm={8} xs={10}>
+          <Button variant='contained' onClick={onCheckStakingWallet}>
+            <Typography variant='h5'>Check</Typography>  
+          </Button>
         </Grid>
       </Grid>
     </Grid>
