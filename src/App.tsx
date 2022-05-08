@@ -1,12 +1,17 @@
-import * as React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Fragment } from "react";
+import { Routes, Route } from "react-router-dom";
+import Admin from "./pages/Admin";
 import Staking from "./pages/Staking";
+import Footer from "./components/Footer";
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Staking/>} />
-      
-    </Routes>
+    <Fragment>
+      <Routes>
+        <Route path="/" element={<Staking/>} />
+        <Route path="/admin" element={<Admin/>} />
+      </Routes>
+      <Footer/>
+    </Fragment>
   )
 }

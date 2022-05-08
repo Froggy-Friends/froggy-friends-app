@@ -9,11 +9,6 @@ import { formatEther, commify } from '@ethersproject/units';
 import axios from 'axios';
 import stakingBackground from '../images/stake.png';
 import ribbit from '../images/ribbit.gif';
-import twitter from '../images/twitter.png';
-import opensea from '../images/opensea.png';
-import looksrare from '../images/looksrare.png';
-import etherscan from '../images/etherscan.png';
-import discord from '../images/discord.png';
 import logo from '../images/logo.png';
 import think from '../images/think.png';
 import chest from '../images/chest.png';
@@ -328,7 +323,7 @@ export default function Staking() {
   }
   
   return (
-    <Grid id='app' className={classes.app} container direction='column'>
+    <Grid id='app' className={classes.app} container direction='column' pb={20}>
       <Container maxWidth='xl'>
         <Grid id='toolbar' container item justifyContent='space-between' height={100} xl={12} lg={12} md={12} sm={12} xs={12} p={1}>
           <Grid container item justifyContent='center' xl={4} lg={4} md={3} sm={3} xs={3} pb={3}>
@@ -464,83 +459,7 @@ export default function Staking() {
           }
         </Grid>  
       </Container>  
-      <Grid id='footer' className={classes.footer} container justifyContent='center' textAlign='center' mt={20}>
-          <Grid container item direction='column' alignItems='center' pb={10}>
-            <Grid item p={5}>
-              <Avatar className={classes.avatar} alt='Home' src={logo} sx={{height: 50, width: 50}}/>
-            </Grid>
-            <Grid item>
-              <Typography variant='body1' color='secondary'>
-                4,444 of the friendliest frogs in the metaverse. 
-              </Typography>
-            </Grid>
-            <Grid container justifyContent='center' p={2}>
-                <Grid item p={1}>
-                  <Link href="https://twitter.com/FroggyFriendNFT" underline='none' target='_blank'>
-                    <Avatar className={classes.avatar} alt='Home' src={twitter} sx={{height: 35, width: 35}}/>
-                  </Link>
-                </Grid>
-                <Grid item p={1}>
-                  <Link href="https://opensea.io/collection/froggyfriendsnft" underline='none' target='_blank'>
-                    <Avatar className={classes.avatar} alt='Home' src={opensea} sx={{height: 35, width: 35}}/>
-                  </Link>
-                </Grid>
-                <Grid item p={1}>
-                  <Link href="https://looksrare.org/collections/0x29652C2e9D3656434Bc8133c69258C8d05290f41" underline='none' target='_blank'>
-                    <Avatar className={classes.avatar} alt='Home' src={looksrare} sx={{height: 35, width: 35}}/>
-                  </Link>
-                </Grid>
-                <Grid item p={1}>
-                  <Link href="https://etherscan.io/address/0x29652C2e9D3656434Bc8133c69258C8d05290f41#code" underline='none' target='_blank'>
-                    <Avatar className={classes.avatar} alt='Home' src={etherscan} sx={{height: 35, width: 35}}/>
-                  </Link>
-                </Grid>
-                <Grid item p={1}>
-                  <Link href="https://discord.com/invite/froggyfriends" underline='none' target='_blank'>
-                    <Avatar className={classes.avatar} alt='Home' src={discord} sx={{height: 35, width: 35}}/>
-                  </Link>
-                </Grid>
-            </Grid>
-            <Grid container justifyContent='center' pt={2} maxWidth={500}>
-              <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-                <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none'>
-                  <Typography color='secondary'>Team</Typography>
-                </Link>
-              </Grid>
-              <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-                <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none'>
-                  <Typography color='secondary'>Collabs</Typography>
-                </Link>
-              </Grid>
-              <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-                <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
-                  <Typography color='secondary'>Staking</Typography>
-                </Link>
-              </Grid>
-              <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-                <Link href={process.env.REACT_APP_WEBSITE_URL + '/market'} underline='none'>
-                  <Typography color='secondary'>Market</Typography>
-                </Link>
-              </Grid>
-            </Grid>
-            <Grid container justifyContent='space-between' mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '1px solid #b3b6bb'}}>
-              <Grid item>
-                <Typography color='secondary' pt={3}>&copy;	Froggy Friends NFT</Typography>
-              </Grid>
-              <Grid item>
-                <Grid container>
-                  <Link href={process.env.REACT_APP_WEBSITE_URL + '/terms-of-use'} underline='none'>
-                    <Typography color='secondary' pt={3} pr={1}>Terms</Typography>
-                  </Link>
-                  <Typography color='secondary' pt={3}>•</Typography>
-                  <Link href={process.env.REACT_APP_WEBSITE_URL + '/privacy-policy'} underline='none'>
-                    <Typography color='secondary' pt={3} pl={1}>Privacy</Typography>
-                  </Link>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
+      
       <Snackbar
         open={showAlert} 
         autoHideDuration={5000} 
