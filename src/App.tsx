@@ -5,7 +5,7 @@ import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted, useFroggiesStaked } from './client';
-import { formatEther } from '@ethersproject/units';
+import { formatEther, commify } from '@ethersproject/units';
 import axios from 'axios';
 import stakingBackground from './images/stake.png';
 import ribbit from './images/ribbit.gif';
@@ -118,7 +118,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
   const { activateBrowserWallet, account } = useEthers();
-  const ribbitBalance = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || 0;
+  const ribbitBalance: any = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || 0;
   const { setApprovalForAll, setApprovalForAllState } = useSetApprovalForAll();
   const { stake, stakeState } = useStake();
   const { unstake, unstakeState } = useUnstake();
@@ -320,6 +320,12 @@ function App() {
     let staked = (froggiesStaked / 4444) * 100;
     return staked.toFixed(2);
   }
+
+  const formatBalance = (balance: any) => {
+    const etherFormat = formatEther(balance);
+    const number = +etherFormat;
+    return commify(number.toFixed(2));
+  }
   
   return (
     <Grid id='app' className={classes.app} container direction='column'>
@@ -381,11 +387,11 @@ function App() {
               </Grid>
               <Grid className={classes.ribbit} item display='flex' justifyContent='center' alignItems='center' mb={1} xl={3} lg={3} md={3} sm={3} xs={12} p={1}>
                 <img src={chest} style={{height: 50, width: 50}} alt='chest'/>
-                <Typography variant='h6' color='secondary' pl={2}>{formatEther(ribbitBalance).slice(0,4)} $RIBBIT Balance</Typography>
+                <Typography variant='h6' color='secondary' pl={2}>{formatBalance(ribbitBalance)} $RIBBIT Balance</Typography>
               </Grid>
               <Grid className={classes.ribbit} item display='flex' justifyContent='center' alignItems='center' mb={1} xl={3} lg={3} md={3} sm={3} xs={12}>
                 <img src={rain} style={{height: 50, width: 50}} alt='rain'/>
-                <Typography variant='h6' color='secondary' pl={2}>{formatEther(stakingBalance).slice(0,4)} $RIBBIT Staked</Typography>
+                <Typography variant='h6' color='secondary' pl={2}>{formatBalance(stakingBalance)} $RIBBIT Staked</Typography>
               </Grid>
             </Grid>
             <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12}>
