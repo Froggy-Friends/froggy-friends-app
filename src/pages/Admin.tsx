@@ -1,10 +1,11 @@
 import { Grid, TextField, Typography } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { useStakingDeposits } from "../client";
+import { useFroggiesOwned, useStakingDeposits } from "../client";
 
 export default function Admin() {
   const [stakingWallet, setStakingWallet] = useState("");
   const deposits = useStakingDeposits(stakingWallet);
+  const owned = useFroggiesOwned(stakingWallet);
 
   const onStakingWalletChange = (event: ChangeEvent<HTMLInputElement>) => {
     setStakingWallet(event.target.value);
@@ -36,13 +37,19 @@ export default function Admin() {
       </Grid>
 
       {
-        deposits && 
+        deposits &&
         <Grid id="staked" pb={5}>
-          <Grid item xl={12} lg={12}>
+          <Grid item>
+            <Typography variant="h5">Froggies Unstaked: {owned}</Typography>
+          </Grid>
+          <Grid item>
             <Typography variant="h5">Froggies Staked: {deposits.length}</Typography>
           </Grid>
           <Grid item>
-            <Typography variant="h5">Roles: {getRole(deposits)}</Typography>
+          <Typography variant="h5">Froggies Owned: {owned + deposits.length}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="h5">Whale Roles: {getRole(deposits)}</Typography>
           </Grid>
         </Grid> 
       }

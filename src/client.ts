@@ -98,3 +98,17 @@ export function useStakingDeposits(account: string) {
     return [];
   }
 }
+
+export function useFroggiesOwned(account: string): number {
+  const { value, error } = useCall({contract: froggyContract, method: 'balanceOf', args: [account]}) ?? {};
+  if (error) {
+    console.log("get froggies owned error: ", error);
+  }
+
+  if (value) {
+    const owned: BigNumber = value?.[0];
+    return owned.toNumber();
+  } else {
+    return 0;
+  }
+}
