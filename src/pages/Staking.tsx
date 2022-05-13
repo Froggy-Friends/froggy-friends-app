@@ -44,7 +44,10 @@ const useStyles: any = makeStyles((theme: Theme) =>
       backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${stakingBackground})`,
       backgroundColor: '#000000',
       backgroundRepeat: 'no-repeat',
-      backgroundSize: 'contain'
+      backgroundSize: 'cover',
+      [theme.breakpoints.down('xl')]: {
+        backgroundSize: 'contain',
+      }
     },
     modal: {
       position: 'absolute' as 'absolute',
