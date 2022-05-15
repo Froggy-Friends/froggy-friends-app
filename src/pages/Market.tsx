@@ -48,6 +48,22 @@ const useStyles: any = makeStyles((theme: Theme) =>
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       minHeight: '100%'
+    },
+    friend: {
+      flexBasis: "20%",
+      maxWidth: "20%",
+      [theme.breakpoints.down('lg')]: {
+        flexBasis: "33%",
+        maxWidth: "33%",
+      },
+      [theme.breakpoints.down('md')]: {
+        flexBasis: "50%",
+        maxWidth: "50%",
+      },
+      [theme.breakpoints.down('sm')]: {
+        flexBasis: "100%",
+        maxWidth: "100%",
+      }
     }
   })
 );
@@ -124,12 +140,12 @@ export default function Market() {
                   <Grid container xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                     {
                       friends.map(friend => {
-                        return <Grid key={friend.id} item p={2} minHeight={300} flexBasis="20%" maxWidth="20%">
+                        return <Grid className={classes.friend} key={friend.id} item p={2} minHeight={300}>
                                 <Card>
                                   <CardMedia component='img' image={friend.image} alt='Froggy'/>
                                   <CardContent>
                                     <Typography variant='h5' pb={1}>{friend.name}</Typography>
-                                    <Typography pb={1}>10 / {friend.supply} Avl.</Typography>
+                                    <Typography pb={1}>10 / {friend.supply} Remain</Typography>
                                     <Grid item display='flex' justifyContent='center' pb={2}>
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                       <Typography>{friend.price}</Typography>
