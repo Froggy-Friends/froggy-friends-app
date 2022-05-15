@@ -66,48 +66,49 @@ export default function Market() {
           </Grid>
         </Grid>
         <Grid container pt={10} pb={10}>
-          <Grid id="left" xl={8} lg={8} md={12} sm={12} xs={12}>
+          <Grid id="left" xl={10} lg={10} md={12} sm={12} xs={12}>
+            <Typography variant='h3' color='secondary' pb={2}>$RIBBIT Items</Typography>
             <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 500 }}>
               <Tabs
                 orientation="vertical"
                 variant="scrollable"
                 value={value}
                 onChange={handleChange}
-                aria-label="Vertical tabs example"
+                aria-label="$RIBBIT Marketplace"
                 sx={{ borderRight: 1, borderColor: 'divider' }}
               >
-                <Tab label="Item One" {...a11yProps(0)} />
-                <Tab label="Item Two" {...a11yProps(1)} />
-                <Tab label="Item Three" {...a11yProps(2)} />
-                <Tab label="Item Four" {...a11yProps(3)} />
-                <Tab label="Item Five" {...a11yProps(4)} />
-                <Tab label="Item Six" {...a11yProps(5)} />
-                <Tab label="Item Seven" {...a11yProps(6)} />
+                <Tab label="Friends" {...a11yProps(0)} />
+                <Tab label="Epic" {...a11yProps(1)} />
+                <Tab label="Vito's Art" {...a11yProps(2)} />
+                <Tab label="Allowlists" {...a11yProps(3)} />
+                <Tab label="NFTs" {...a11yProps(4)} />
+                <Tab label="Merch" {...a11yProps(5)} />
+                <Tab label="Costumes" {...a11yProps(6)} />
               </Tabs>
               <TabPanel value={value} index={0}>
-                Item One
+                <Typography variant='h4' color='primary' fontWeight='bold'>Friends</Typography>
               </TabPanel>
               <TabPanel value={value} index={1}>
-                Item Two
+                <Typography variant='h4' color='primary' fontWeight='bold'>Epic</Typography>
               </TabPanel>
               <TabPanel value={value} index={2}>
-                Item Three
+                <Typography variant='h4' color='primary' fontWeight='bold'>Vito's Art</Typography>
               </TabPanel>
               <TabPanel value={value} index={3}>
-                Item Four
+                <Typography variant='h4' color='primary' fontWeight='bold'>Allowlists</Typography>
               </TabPanel>
               <TabPanel value={value} index={4}>
-                Item Five
+                <Typography variant='h4' color='primary' fontWeight='bold'>NFTs</Typography>
               </TabPanel>
               <TabPanel value={value} index={5}>
-                Item Six
+                <Typography variant='h4' color='primary' fontWeight='bold'>Merch</Typography>
               </TabPanel>
               <TabPanel value={value} index={6}>
-                Item Seven
+                <Typography variant='h4' color='primary' fontWeight='bold'>Costumes</Typography>
               </TabPanel>
             </Box>
           </Grid>
-          <Grid id="right"  xl={4} lg={4} md={4} sm={4} xs={4}>
+          <Grid id="right"  xl={2} lg={2} md={4} sm={4} xs={4}>
 
           </Grid>
         </Grid>
