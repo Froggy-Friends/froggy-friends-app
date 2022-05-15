@@ -53,13 +53,15 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Market() {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const [alignment, setAlignment] = useState('active');
+  const [filter, setFilter] = useState('active');
 
   const onFilterToggle = (
     event: React.MouseEvent<HTMLElement>,
-    newAlignment: string,
+    newFilter: string,
   ) => {
-    setAlignment(newAlignment);
+    if (newFilter !== null) {
+      setFilter(newFilter);
+    }
   };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -75,12 +77,12 @@ export default function Market() {
           </Grid>
         </Grid>
         <Grid container pt={10} pb={10}>
-          <Grid id="left" xl={10} lg={10} md={12} sm={12} xs={12}>
-            <Grid container pb={1}>
-              <Typography variant='h4' color='secondary' pb={2} pr={1}>$RIBBIT Items</Typography>
+          <Grid id="left" xl={12} lg={12} md={12} sm={12} xs={12}>
+            <Grid container alignItems="center" pb={1}>
+              <Typography variant='h4' color='secondary' pr={1}>$RIBBIT Items</Typography>
               <ToggleButtonGroup
                 color="primary"
-                value={alignment}
+                value={filter}
                 exclusive
                 onChange={onFilterToggle}
               >

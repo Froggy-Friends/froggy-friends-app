@@ -67,20 +67,16 @@ let theme = createTheme({
     MuiToggleButtonGroup: {
       styleOverrides: {
         root: {
-          backgroundColor: "#ebedf1",
-
+          backgroundColor: "#0000008a"
         }
       }
     },
     MuiToggleButton: {
       styleOverrides: {
         root: {
+          color: "#ebedf1",
           "&.Mui-selected": {
-            color: "#ebedf1",
-            backgroundColor: "#5ea14e",
-            ":hover": {
-              backgroundColor: "#48793c"
-            }
+            color: "#5ea14e"
           }
         }
       }
