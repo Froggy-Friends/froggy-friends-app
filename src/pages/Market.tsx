@@ -121,17 +121,18 @@ export default function Market() {
                 </Typography>
                 <Grid id="friends" container direction='column' pt={3} pb={3}>
                   <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
-                  <Grid container xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <Grid container xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                     {
                       friends.map(friend => {
-                        return <Grid key={friend.id} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
-                                <Card sx={{height: '100%'}}>
+                        return <Grid key={friend.id} item p={2} minHeight={300} flexBasis="20%" maxWidth="20%">
+                                <Card>
                                   <CardMedia component='img' image={friend.image} alt='Froggy'/>
                                   <CardContent>
-                                    <Typography variant='h5'>{friend.name}</Typography>
-                                    <Grid item display='flex' justifyContent='center'>
+                                    <Typography variant='h5' pb={1}>{friend.name}</Typography>
+                                    <Typography pb={1}>10 / {friend.supply} Avl.</Typography>
+                                    <Grid item display='flex' justifyContent='center' pb={2}>
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                      <Typography pb={2}>{friend.price} $RIBBIT</Typography>
+                                      <Typography>{friend.price}</Typography>
                                     </Grid>
                                     {/* Add amount slider with friend.limit as max */}
                                     <Button variant='contained' color='success' onClick={() => onBuyItem(friend.id)}>
