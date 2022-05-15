@@ -92,6 +92,13 @@ let theme = createTheme({
           },
         },
       }
+    },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          minWidth: 200
+        }
+      }
     }
   }
 });

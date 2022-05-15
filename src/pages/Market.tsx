@@ -1,7 +1,10 @@
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Paper } from "@mui/material";
+import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Paper, Button, Card, CardContent, CardMedia } from "@mui/material";
 import market from "../images/market.png";
 import { useState } from 'react';
+import { Friend } from '../models/Friend';
+import { friendsData } from '../data';
+import ribbit from '../images/ribbit.gif';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -54,11 +57,9 @@ export default function Market() {
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [filter, setFilter] = useState('active');
+  const [friends, setFriends] = useState<Friend[]>(friendsData);
 
-  const onFilterToggle = (
-    event: React.MouseEvent<HTMLElement>,
-    newFilter: string,
-  ) => {
+  const onFilterToggle = (event: React.MouseEvent<HTMLElement>, newFilter: string) => {
     if (newFilter !== null) {
       setFilter(newFilter);
     }
@@ -68,6 +69,10 @@ export default function Market() {
     setValue(newValue);
   };
 
+  const onBuyItem = (itemId: number) => {
+
+  }
+
   return (
     <Grid id="market" className={classes.market} container direction="column" pb={30}>
       <Container maxWidth="xl">
@@ -76,7 +81,7 @@ export default function Market() {
             <Typography variant='h2' color='secondary' fontWeight='bold'>$RIBBIT Marketplace</Typography>
           </Grid>
         </Grid>
-        <Grid container pt={10} pb={10}>
+        <Grid container pb={10}>
           <Grid id="left" xl={12} lg={12} md={12} sm={12} xs={12}>
             <Grid container alignItems="center" pb={1}>
               <Typography variant='h4' color='secondary' pr={1}>$RIBBIT Items</Typography>
@@ -90,7 +95,7 @@ export default function Market() {
                 <ToggleButton value="inactive">Inactive</ToggleButton>
               </ToggleButtonGroup>
             </Grid>
-            <Box sx={{ flexGrow: 1, bgcolor: '#0000008a', display: 'flex', height: 500 }}>
+            <Box sx={{ flexGrow: 1, bgcolor: '#0000008a', display: 'flex', minHeight: 800 }}>
               <Tabs
                 orientation="vertical"
                 variant="scrollable"
@@ -109,7 +114,36 @@ export default function Market() {
                 <Tab label="Costumes" {...a11yProps(6)} />
               </Tabs>
               <TabPanel value={value} index={0}>
-                <Typography variant='h4' color='secondary' fontWeight='bold'>Friends</Typography>
+                <Typography variant='h4' color='secondary' fontWeight='bold' pb={2}>Friends</Typography>
+                <Typography variant='body1' color='secondary'>
+                  Friends offer $RIBBIT staking boosts and will be pairable with your Froggy. <br/>
+                  Pairing a Friend with your Froggy applies the boost and burns the item.
+                </Typography>
+                <Grid id="friends" container direction='column' pt={3} pb={3}>
+                  <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
+                  <Grid container xl={12} lg={12} md={12} sm={12} xs={12}>
+                    {
+                      friends.map(friend => {
+                        return <Grid key={friend.id} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                                <Card sx={{height: '100%'}}>
+                                  <CardMedia component='img' image={friend.image} alt='Froggy'/>
+                                  <CardContent>
+                                    <Typography variant='h5'>{friend.name}</Typography>
+                                    <Grid item display='flex' justifyContent='center'>
+                                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                      <Typography pb={2}>{friend.price} $RIBBIT</Typography>
+                                    </Grid>
+                                    {/* Add amount slider with friend.limit as max */}
+                                    <Button variant='contained' color='success' onClick={() => onBuyItem(friend.id)}>
+                                      <Typography variant='h6' color='secondary'>Buy</Typography>
+                                    </Button>
+                                  </CardContent>
+                                </Card>
+                              </Grid> 
+                      })
+                    }
+                  </Grid>
+                </Grid>
               </TabPanel>
               <TabPanel value={value} index={1}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Epic</Typography>
@@ -130,6 +164,7 @@ export default function Market() {
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Costumes</Typography>
               </TabPanel>
             </Box>
+            {/* TODO: Horizontal tabs on mobile */}
           </Grid>
           <Grid id="right"  xl={2} lg={2} md={4} sm={4} xs={4}>
 
