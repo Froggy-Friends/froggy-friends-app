@@ -43,27 +43,27 @@ export default function Footer() {
         <Grid container justifyContent='center' p={2}>
             <Grid item p={1}>
               <Link href="https://twitter.com/FroggyFriendNFT" underline='none' target='_blank'>
-                <Avatar className={classes.avatar} alt='Home' src={twitter} sx={{height: 35, width: 35}}/>
+                <Avatar className={classes.avatar} alt='Twitter' src={twitter} sx={{height: 35, width: 35}}/>
               </Link>
             </Grid>
             <Grid item p={1}>
               <Link href="https://opensea.io/collection/froggyfriendsnft" underline='none' target='_blank'>
-                <Avatar className={classes.avatar} alt='Home' src={opensea} sx={{height: 35, width: 35}}/>
+                <Avatar className={classes.avatar} alt='Opensea' src={opensea} sx={{height: 35, width: 35}}/>
               </Link>
             </Grid>
             <Grid item p={1}>
               <Link href="https://looksrare.org/collections/0x29652C2e9D3656434Bc8133c69258C8d05290f41" underline='none' target='_blank'>
-                <Avatar className={classes.avatar} alt='Home' src={looksrare} sx={{height: 35, width: 35}}/>
+                <Avatar className={classes.avatar} alt='Looks Rare' src={looksrare} sx={{height: 35, width: 35}}/>
               </Link>
             </Grid>
             <Grid item p={1}>
               <Link href="https://etherscan.io/address/0x29652C2e9D3656434Bc8133c69258C8d05290f41#code" underline='none' target='_blank'>
-                <Avatar className={classes.avatar} alt='Home' src={etherscan} sx={{height: 35, width: 35}}/>
+                <Avatar className={classes.avatar} alt='Etherscan' src={etherscan} sx={{height: 35, width: 35}}/>
               </Link>
             </Grid>
             <Grid item p={1}>
               <Link href="https://discord.com/invite/froggyfriends" underline='none' target='_blank'>
-                <Avatar className={classes.avatar} alt='Home' src={discord} sx={{height: 35, width: 35}}/>
+                <Avatar className={classes.avatar} alt='Discord' src={discord} sx={{height: 35, width: 35}}/>
               </Link>
             </Grid>
         </Grid>
@@ -84,7 +84,7 @@ export default function Footer() {
             </Link>
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-            <Link href={process.env.REACT_APP_WEBSITE_URL + '/market'} underline='none'>
+            <Link href="/market" underline='none'>
               <Typography color='secondary'>Market</Typography>
             </Link>
           </Grid>

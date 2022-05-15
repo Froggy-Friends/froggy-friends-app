@@ -45,7 +45,7 @@ export default function Header() {
             <Link href={process.env.REACT_APP_STAKING_URL} underline='none' variant="h5" color="secondary">Stake</Link>
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-            <Link href={process.env.REACT_APP_WEBSITE_URL + '/market'} underline='none' variant="h5" color="secondary">Market</Link>
+            <Link href="/market" underline='none' variant="h5" color="secondary">Market</Link>
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
             <Link href={process.env.REACT_APP_WEBSITE_URL + '/license'} underline='none' variant="h5" color="secondary">License</Link>
