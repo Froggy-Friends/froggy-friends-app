@@ -6,7 +6,7 @@ let theme = createTheme({
       default: '#000000'
     },
     primary: {
-      main: '#2d343a'
+      main: '#5ea14e'
     },
     secondary: {
       main: '#ebedf1'
@@ -16,7 +16,10 @@ let theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'nunito'
+    fontFamily: 'nunito',
+    h6: {
+      color: 'black'
+    }
   },
   components: {
     MuiButton: {
@@ -59,6 +62,39 @@ let theme = createTheme({
             color: '#5ea14e'
           }
         }
+      }
+    },
+    MuiToggleButtonGroup: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#ebedf1",
+
+        }
+      }
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          "&.Mui-selected": {
+            color: "#ebedf1",
+            backgroundColor: "#5ea14e",
+            ":hover": {
+              backgroundColor: "#48793c"
+            }
+          }
+        }
+      }
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          color: "#ebedf1",
+          fontSize: '1.2rem',
+          alignItems: 'start',
+          "&.Mui-selected": {
+            color: "#5ea14e"
+          },
+        },
       }
     }
   }

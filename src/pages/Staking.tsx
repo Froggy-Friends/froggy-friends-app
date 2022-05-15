@@ -443,13 +443,13 @@ export default function Staking() {
           {
             !owned.isStakingApproved && 
             <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${setApprovalForAllState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
-              <Typography id='modal-description' color='primary' variant="h6" p={3}>
+              <Typography id='modal-description' variant="h6" p={3}>
                 Grant Staking Permissions {setApprovalForAllState.status === "Success" && <Check/>} {setApprovalForAllState.status === "Fail" && <Warning/>}
               </Typography>
             </Link>
           }
           <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${stakeState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
-            <Typography id='modal-description' color='primary' variant="h6" p={3}>
+            <Typography id='modal-description' variant="h6" p={3}>
               Stake Froggies {stakeState.status === "Success" && <Check/>} {stakeState.status === "Fail" && <Warning/>}
             </Typography>
           </Link>
@@ -476,7 +476,7 @@ export default function Staking() {
             </Grid>
           </Grid>
           <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${unstakeState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
-            <Typography id='modal-description' color='primary' variant="h6" p={3}>
+            <Typography id='modal-description' variant="h6" p={3}>
               Unstake Froggies {unstakeState.status === "Success" && <Check/>} {unstakeState.status === "Fail" && <Warning/>}
             </Typography>
           </Link>
@@ -503,7 +503,7 @@ export default function Staking() {
             </Grid>
           </Grid>
           <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${claimState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
-            <Typography id='modal-description' variant="h6" color='primary' p={3}>
+            <Typography id='modal-description' variant="h6" p={3}>
               Claim $RIBBIT {claimState.status === "Success" && <Check/>} {claimState.status === "Fail" && <Warning/>}
             </Typography>
           </Link>
