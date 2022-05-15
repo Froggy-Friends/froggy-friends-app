@@ -13,7 +13,7 @@ export default function App() {
       <Routes>
         <Route path="/staking" element={<Staking/>} />
         <Route path="/admin" element={<Admin/>} />
-        <Route path="/market" element={Market}/>
+        <Route path="/market" element={<Market/>}/>
         <Route path="*" element={ <Navigate to="/staking" replace />} />
       </Routes>
       <Footer/>
