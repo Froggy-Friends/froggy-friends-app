@@ -2,7 +2,7 @@ import { Friend } from "./models/Friend";
 
 export const friendsData: Friend[] = [
   {
-    id: 0,
+    id: 3,
     name: "Rabbit",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/3.png",
@@ -13,7 +13,7 @@ export const friendsData: Friend[] = [
     attributes: []
   },
   {
-    id: 1,
+    id: 4,
     name: "Bear",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/4.png",
@@ -24,7 +24,7 @@ export const friendsData: Friend[] = [
     attributes: []
   },
   {
-    id: 2,
+    id: 5,
     name: "Red Panda",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/5.png",
@@ -35,7 +35,7 @@ export const friendsData: Friend[] = [
     attributes: []
   },
   {
-    id: 3,
+    id: 6,
     name: "Cat",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/6.png",
@@ -46,7 +46,7 @@ export const friendsData: Friend[] = [
     attributes: []
   },
   {
-    id: 4,
+    id: 7,
     name: "Unicorn",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/7.png",
@@ -56,4 +56,29 @@ export const friendsData: Friend[] = [
     limit: 1,
     attributes: []
   }
-]
+];
+
+export const collabFriendsData: Friend[] = [
+  {
+    id: 8,
+    name: "Kaiju King",
+    description: "",
+    image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/8.png",
+    boost: 5,
+    price: 1000,
+    supply: 5,
+    limit: 1,
+    attributes: []
+  },
+  {
+    id: 9,
+    name: "Cheetopia",
+    description: "",
+    image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/9.png",
+    boost: 5,
+    price: 1000,
+    supply: 5,
+    limit: 1,
+    attributes: []
+  }
+];

@@ -3,7 +3,7 @@ import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, Toggl
 import market from "../images/market.png";
 import { useState } from 'react';
 import { Friend } from '../models/Friend';
-import { friendsData } from '../data';
+import { collabFriendsData, friendsData } from '../data';
 import ribbit from '../images/ribbit.gif';
 
 interface TabPanelProps {
@@ -74,6 +74,7 @@ export default function Market() {
   const [value, setValue] = useState(0);
   const [filter, setFilter] = useState('active');
   const [friends, setFriends] = useState<Friend[]>(friendsData);
+  const [collabFriends, setCollabFriends] = useState<Friend[]>(collabFriendsData);
 
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, newFilter: string) => {
     if (newFilter !== null) {
@@ -131,12 +132,12 @@ export default function Market() {
               </Tabs>
               <TabPanel value={value} index={0}>
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={2}>Friends</Typography>
-                <Typography variant='body1' color='secondary'>
+                <Typography variant='body1' color='secondary' pb={5}>
                   Friends offer $RIBBIT staking boosts and will be pairable with your Froggy. <br/>
                   Pairing a Friend with your Froggy applies the boost and burns the item.
                 </Typography>
-                <Grid id="friends" container direction='column' pt={3} pb={3}>
-                  <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
+                <Grid id="friends" container direction='column' pb={3}>
+                  <Typography variant='h5' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
                   <Grid container xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                     {
                       friends.map(friend => { 
@@ -160,6 +161,32 @@ export default function Market() {
                       })
                     }
                   </Grid>
+                </Grid>
+                <Grid id="collab-friends" container direction="column" pt={3} pb={3}>
+                  <Typography variant='h5' color='secondary' fontWeight='bold' pb={2}>Collab Friends</Typography>
+                    <Grid container xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                      {
+                        collabFriends.map(friend => { 
+                          return <Grid className={classes.friend} key={friend.id} item p={2} minHeight={300}>
+                                  <Card>
+                                    <CardHeader title={`${friend.name}`}/>
+                                    <CardMedia component='img' image={friend.image} alt='Froggy'/>
+                                    <CardContent>
+                                      <Typography variant='h6' color='secondary' pb={1}>{`1 / ${friend.supply} Avail`}</Typography>
+                                      <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                        <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                        <Typography>{friend.price}</Typography>
+                                      </Grid>
+                                      {/* Add amount slider with friend.limit as max */}
+                                      <Button variant='contained' color='success' onClick={() => onBuyItem(friend.id)}>
+                                        <Typography variant='h6' color='secondary'>Buy</Typography>
+                                      </Button>
+                                    </CardContent>
+                                  </Card>
+                                </Grid> 
+                        })
+                      }
+                    </Grid>
                 </Grid>
               </TabPanel>
               <TabPanel value={value} index={1}>
