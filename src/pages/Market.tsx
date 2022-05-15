@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Paper, Button, Card, CardContent, CardMedia } from "@mui/material";
+import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Paper, Button, Card, CardContent, CardMedia, CardHeader } from "@mui/material";
 import market from "../images/market.png";
 import { useState } from 'react';
 import { Friend } from '../models/Friend';
@@ -139,14 +139,14 @@ export default function Market() {
                   <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
                   <Grid container xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                     {
-                      friends.map(friend => {
+                      friends.map(friend => { 
                         return <Grid className={classes.friend} key={friend.id} item p={2} minHeight={300}>
                                 <Card>
+                                  <CardHeader title={`${friend.name}`}/>
                                   <CardMedia component='img' image={friend.image} alt='Froggy'/>
                                   <CardContent>
-                                    <Typography variant='h5' pb={1}>{friend.name}</Typography>
-                                    <Typography pb={1}>10 / {friend.supply} Remain</Typography>
-                                    <Grid item display='flex' justifyContent='center' pb={2}>
+                                    <Typography variant='h6' color='secondary' pb={1}>{`10 / ${friend.supply} Avail`}</Typography>
+                                    <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                       <Typography>{friend.price}</Typography>
                                     </Grid>

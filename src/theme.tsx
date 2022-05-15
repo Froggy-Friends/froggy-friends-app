@@ -48,8 +48,9 @@ let theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          border: '8px solid #1a1b1c',
-          borderRadius: 5,
+          border: '5px solid #1a1b1c',
+          backgroundColor: '#181818',
+          color: '#ebedf1',
           width: '100%',
           textAlign: 'center'
         }
