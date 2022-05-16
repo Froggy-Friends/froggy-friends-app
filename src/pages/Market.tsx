@@ -148,7 +148,7 @@ export default function Market() {
                     {
                       friends.map(friend => { 
                         return <Grid className={classes.friend} key={friend.id} item p={2} minHeight={300}>
-                                <Card>
+                                <Card className={friend.isActive ? "" : "disabled"}>
                                   <CardHeader title={`${friend.name}`}/>
                                   <CardMedia component='img' image={friend.image} alt='Froggy'/>
                                   <CardContent>
@@ -158,8 +158,8 @@ export default function Market() {
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                       <Typography>{friend.price}</Typography>
                                     </Grid>
-                                    {/* Add amount slider with friend.limit as max */}
-                                    <Button variant='contained' color='success' onClick={() => onBuyItem(friend.id)}>
+                                    {/* TODO: Add amount slider with friend.limit max */}
+                                    <Button variant='contained' color='success' onClick={() => onBuyItem(friend.id)} disabled={!friend.isActive}>
                                       <Typography variant='h6' color='secondary'>Buy</Typography>
                                     </Button>
                                   </CardContent>

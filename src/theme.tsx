@@ -33,7 +33,9 @@ let theme = createTheme({
             backgroundColor: '#48793c'
           },
           ":disabled": {
-            backgroundColor: "#b3b6bb"
+            backgroundColor: "#b3b6bb",
+            cursor: "not-allowed",
+            pointerEvents: "auto"
           }
         }
       }
@@ -52,7 +54,10 @@ let theme = createTheme({
           backgroundColor: '#181818',
           color: '#ebedf1',
           width: '100%',
-          textAlign: 'center'
+          textAlign: 'center',
+          "&.disabled": {
+            backgroundColor: "#ebedf145"
+          }
         }
       }
     },
