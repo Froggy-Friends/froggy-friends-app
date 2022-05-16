@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSound from 'use-sound';
 import { makeStyles } from '@mui/styles';
 import { Card, Box, CardContent, Typography, CardMedia, useTheme, Theme, createStyles } from "@mui/material";
@@ -30,8 +30,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function MusicPlayer() {
   const classes = useStyles();
   const theme = useTheme();
-  const [track, setTrack] = useState<Track>(tracks[0]);
-  const [play, {stop, pause}] = useSound(track.sound);
+  const [current, setCurrent] = useState(0);
+  const [track, setTrack] = useState<Track>(tracks[current]);
+  const [play, {stop, pause, sound}] = useSound(track.sound);
   const [playing, setPlaying] = useState(false);
 
   const onToggle = (isPlaying: boolean) => {
@@ -39,21 +40,39 @@ export default function MusicPlayer() {
     setPlaying(isPlaying);
   }
 
+  const onPrevious = () => {
+    // end of playlist, start from beginning
+    if (current === 0) {
+      setCurrent(tracks.length-1);
+      setTrack(tracks[tracks.length-1]);
+      // play({id: track.id})
+    }
+  }
+
+  const onNext = () => {
+    if (current === tracks.length -1) {
+      setCurrent(0);
+      setTrack(tracks[0]);
+      // play({id: track.id})
+    }
+  }
+
   return (
     <Card className={classes.player}>
       <Box className={classes.playerBox}>
         <CardContent sx={{ flex: '1 0 auto' }}>
           <Typography component="div" variant="h6" color="secondary">{track.name}</Typography>
+          <Typography variant="subtitle1" color="secondary" component="div">{track.producer}</Typography>
         </CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
-          <IconButton aria-label="previous" color="secondary">
-            {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
+          <IconButton aria-label="previous" color="secondary" onClick={onPrevious}>
+            <SkipPreviousIcon />
           </IconButton>
           <IconButton aria-label="play/pause" color="secondary" onClick={() => onToggle(!playing)}>
             { playing ? <PauseIcon sx={{ height: 38, width: 38 }}/> : <PlayArrowIcon sx={{ height: 38, width: 38 }} /> }
           </IconButton>
-          <IconButton aria-label="next" color="secondary">
-            {theme.direction === 'rtl' ? <SkipPreviousIcon /> : <SkipNextIcon />}
+          <IconButton aria-label="next" color="secondary" onClick={onNext}>
+            <SkipNextIcon />
           </IconButton>
         </Box>
       </Box>

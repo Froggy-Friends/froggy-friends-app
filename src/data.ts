@@ -89,6 +89,7 @@ export const collabFriendsData: Friend[] = [
 export const tracks: Track[] = [
   {
     name: "Chocolate Lily",
+    producer: "Lidly",
     sound: emirald,
     image: stake
   }
