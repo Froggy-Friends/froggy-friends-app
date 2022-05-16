@@ -1,13 +1,5 @@
-import { Attribute } from "./Attribute";
+import { RibbitItem } from "./RibbitItem";
 
-export interface Friend {
-  id: number;
-  name: string;
-  description: string;
-  image: string;
+export interface Friend extends RibbitItem {
   boost: number;
-  price: number;
-  supply: number;
-  limit: number;
-  attributes: Attribute[];
 }

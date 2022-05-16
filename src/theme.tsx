@@ -68,7 +68,7 @@ let theme = createTheme({
     MuiToggleButtonGroup: {
       styleOverrides: {
         root: {
-          backgroundColor: "#0000008a"
+          backgroundColor: "#00000099"
         }
       }
     },

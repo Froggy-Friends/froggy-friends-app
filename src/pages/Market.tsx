@@ -42,7 +42,7 @@ function a11yProps(index: number) {
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     market: {
-      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${market})`,
+      backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0, 0, 0, 0)), url(${market})`,
       backgroundPosition: "center",
       backgroundColor: '#000000',
       backgroundRepeat: 'no-repeat',
@@ -112,7 +112,7 @@ export default function Market() {
                 <ToggleButton value="inactive">Inactive</ToggleButton>
               </ToggleButtonGroup>
             </Grid>
-            <Box sx={{ flexGrow: 1, bgcolor: '#0000008a', display: 'flex', minHeight: 800 }}>
+            <Box sx={{ flexGrow: 1, bgcolor: '#00000099', display: 'flex', minHeight: 800 }}>
               <Tabs
                 orientation="vertical"
                 variant="scrollable"
@@ -147,6 +147,7 @@ export default function Market() {
                                   <CardMedia component='img' image={friend.image} alt='Froggy'/>
                                   <CardContent>
                                     <Typography variant='h6' color='secondary' pb={1}>{`10 / ${friend.supply} Avail`}</Typography>
+                                    <Typography variant='h6' color='secondary' pb={1}>{friend.boost}% Boost</Typography>
                                     <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                       <Typography>{friend.price}</Typography>
@@ -177,7 +178,6 @@ export default function Market() {
                                         <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                         <Typography>{friend.price}</Typography>
                                       </Grid>
-                                      {/* Add amount slider with friend.limit as max */}
                                       <Button variant='contained' color='success' onClick={() => onBuyItem(friend.id)}>
                                         <Typography variant='h6' color='secondary'>Buy</Typography>
                                       </Button>
