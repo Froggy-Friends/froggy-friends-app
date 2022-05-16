@@ -1,5 +1,5 @@
 export interface Track {
   name: string;
-  path: string;
+  sound: any;
   image: string;
 }
