@@ -5,6 +5,7 @@ import Staking from "./pages/Staking";
 import Market from "./pages/Market";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import MusicPlayer from "./components/MusicPlayer";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="*" element={ <Navigate to="/staking" replace />} />
       </Routes>
       <Footer/>
+      <MusicPlayer/>
     </Fragment>
   )
 }
