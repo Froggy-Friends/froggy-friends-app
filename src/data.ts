@@ -1,6 +1,7 @@
 import { Friend } from "./models/Friend";
 import { Track } from "./models/Track";
 import stake from "./images/stake.png";
+import emirald from "./tracks/Emirald.mp3";
 
 export const friendsData: Friend[] = [
   {
@@ -88,7 +89,7 @@ export const collabFriendsData: Friend[] = [
 export const tracks: Track[] = [
   {
     name: "Chocolate Lily",
-    path: "./tracks/Emirald.mp3",
+    sound: emirald,
     image: stake
   }
 ]
