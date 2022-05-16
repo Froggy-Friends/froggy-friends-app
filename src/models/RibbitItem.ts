@@ -7,5 +7,6 @@ export interface RibbitItem {
   price: number;
   supply: number;
   limit: number;
+  isActive: boolean;
   attributes: Attribute[];
 }

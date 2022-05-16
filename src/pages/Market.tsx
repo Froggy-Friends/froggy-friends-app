@@ -72,13 +72,19 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Market() {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const [filter, setFilter] = useState('active');
-  const [friends, setFriends] = useState<Friend[]>(friendsData);
-  const [collabFriends, setCollabFriends] = useState<Friend[]>(collabFriendsData);
+  const [activeFilter, setActiveFilter] = useState(true);
+  const [friends, setFriends] = useState<Friend[]>(friendsData.filter(friend => friend.isActive));
+  const [collabFriends, setCollabFriends] = useState<Friend[]>(collabFriendsData.filter(friend => friend.isActive));
 
-  const onFilterToggle = (event: React.MouseEvent<HTMLElement>, newFilter: string) => {
-    if (newFilter !== null) {
-      setFilter(newFilter);
+  const onFilterToggle = (event: React.MouseEvent<HTMLElement>, isActiveFilter: boolean) => {
+    if (isActiveFilter === null) return;
+    setActiveFilter(isActiveFilter);
+    if (isActiveFilter) {
+      setFriends(friendsData.filter(friend => friend.isActive));
+      setCollabFriends(collabFriendsData.filter(friend => friend.isActive));
+    } else {
+      setFriends(friendsData);
+      setCollabFriends(collabFriendsData);
     }
   };
 
@@ -104,12 +110,12 @@ export default function Market() {
               <Typography variant='h4' color='secondary' pr={1}>$RIBBIT Items</Typography>
               <ToggleButtonGroup
                 color="primary"
-                value={filter}
+                value={activeFilter}
                 exclusive
                 onChange={onFilterToggle}
               >
-                <ToggleButton value="active">Active</ToggleButton>
-                <ToggleButton value="inactive">Inactive</ToggleButton>
+                <ToggleButton value={true}>Active</ToggleButton>
+                <ToggleButton value={false}>Inactive</ToggleButton>
               </ToggleButtonGroup>
             </Grid>
             <Box sx={{ flexGrow: 1, bgcolor: '#00000099', display: 'flex', minHeight: 800 }}>

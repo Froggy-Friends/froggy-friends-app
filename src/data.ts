@@ -13,6 +13,7 @@ export const friendsData: Friend[] = [
     price: 1000,
     supply: 200,
     limit: 2,
+    isActive: true,
     attributes: []
   },
   {
@@ -24,6 +25,7 @@ export const friendsData: Friend[] = [
     price: 2000,
     supply: 100,
     limit: 2,
+    isActive: true,
     attributes: []
   },
   {
@@ -35,6 +37,7 @@ export const friendsData: Friend[] = [
     price: 3000,
     supply: 50,
     limit: 2,
+    isActive: true,
     attributes: []
   },
   {
@@ -46,6 +49,7 @@ export const friendsData: Friend[] = [
     price: 4000,
     supply: 25,
     limit: 1,
+    isActive: false,
     attributes: []
   },
   {
@@ -57,6 +61,7 @@ export const friendsData: Friend[] = [
     price: 5000,
     supply: 10,
     limit: 1,
+    isActive: false,
     attributes: []
   }
 ];
@@ -71,6 +76,7 @@ export const collabFriendsData: Friend[] = [
     price: 1000,
     supply: 5,
     limit: 1,
+    isActive: true,
     attributes: []
   },
   {
@@ -82,6 +88,7 @@ export const collabFriendsData: Friend[] = [
     price: 1000,
     supply: 5,
     limit: 1,
+    isActive: false,
     attributes: []
   }
 ];
