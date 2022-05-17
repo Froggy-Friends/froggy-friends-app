@@ -78,7 +78,7 @@ export default function MusicPlayer() {
       </Box>
       <CardMedia
         component="img"
-        sx={{ maxWidth: 180 }}
+        sx={{ maxWidth: 160 }}
         image={track.image}
         alt={track.name}
       />

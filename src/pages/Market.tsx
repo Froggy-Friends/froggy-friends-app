@@ -1,10 +1,11 @@
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Paper, Button, Card, CardContent, CardMedia, CardHeader } from "@mui/material";
+import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Paper, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme } from "@mui/material";
 import market from "../images/market.png";
 import { useState } from 'react';
 import { Friend } from '../models/Friend';
 import { collabFriendsData, friendsData } from '../data';
 import ribbit from '../images/ribbit.gif';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -52,8 +53,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
       flexBasis: "20%",
       maxWidth: "20%",
       [theme.breakpoints.down('lg')]: {
-        flexBasis: "33%",
-        maxWidth: "33%",
+        flexBasis: "50%",
+        maxWidth: "50%",
       },
       [theme.breakpoints.down('md')]: {
         flexBasis: "50%",
@@ -63,6 +64,16 @@ const useStyles: any = makeStyles((theme: Theme) =>
         flexBasis: "100%",
         maxWidth: "100%",
       }
+    },
+    cart: {
+      padding: theme.spacing(1),
+      [theme.breakpoints.up('xl')]: {
+        padding: theme.spacing(7)
+      },
+    },
+    cartIcon: {
+      height: 80,
+      width: 80
     }
   })
 );
@@ -70,6 +81,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 export default function Market() {
   const classes = useStyles();
+  const theme = useTheme();
+  const isBigScreen = useMediaQuery(theme.breakpoints.up('xl'));
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const [value, setValue] = useState(0);
   const [activeFilter, setActiveFilter] = useState(true);
   const [friends, setFriends] = useState<Friend[]>(friendsData.filter(friend => friend.isActive));
@@ -97,16 +111,15 @@ export default function Market() {
 
   return (
     <Grid id="market" className={classes.market} container direction="column" pb={30}>
-      <Container maxWidth="xl">
-        <Grid container direction='column' textAlign='center' pt={10}>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={8}>
-            <Typography variant='h2' color='secondary' fontWeight='bold'>$RIBBIT Marketplace</Typography>
-          </Grid>
+      <Grid container direction='column' textAlign='center' pt={10}>
+        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={8}>
+          <Typography variant='h2' color='secondary' fontWeight='bold'>$RIBBIT Marketplace</Typography>
         </Grid>
-        <Grid container pb={10}>
-          <Grid id="left" xl={12} lg={12} md={12} sm={12} xs={12}>
-            <Grid container alignItems="center" pb={1}>
-              <Typography variant='h4' color='secondary' pr={1}>$RIBBIT Items</Typography>
+      </Grid>
+      <Container maxWidth='xl' disableGutters={isBigScreen}>
+        <Grid container>
+          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+            <Grid id="filters" container alignItems="center" pb={1}>
               <ToggleButtonGroup
                 color="primary"
                 value={activeFilter}
@@ -117,7 +130,7 @@ export default function Market() {
                 <ToggleButton value={false}>All</ToggleButton>
               </ToggleButtonGroup>
             </Grid>
-            <Box sx={{ flexGrow: 1, bgcolor: '#00000099', display: 'flex', minHeight: 800 }}>
+            <Box id="market-container" sx={{ flexGrow: 1, bgcolor: '#00000099', display: 'flex', minHeight: 800 }}>
               <Tabs
                 orientation="vertical"
                 variant="scrollable"
@@ -152,7 +165,7 @@ export default function Market() {
                                   <CardHeader title={`${friend.name}`}/>
                                   <CardMedia component='img' image={friend.image} alt='Froggy'/>
                                   <CardContent>
-                                    <Typography variant='h6' color='secondary' pb={1}>{`10 / ${friend.supply} Avail`}</Typography>
+                                    <Typography variant='h6' color='secondary' pb={1}>{`10 / ${friend.supply} Avl`}</Typography>
                                     <Typography variant='h6' color='secondary' pb={1}>{friend.boost}% Boost</Typography>
                                     <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
@@ -179,7 +192,7 @@ export default function Market() {
                                     <CardHeader title={`${friend.name}`}/>
                                     <CardMedia component='img' image={friend.image} alt='Froggy'/>
                                     <CardContent>
-                                      <Typography variant='h6' color='secondary' pb={1}>{`1 / ${friend.supply} Avail`}</Typography>
+                                      <Typography variant='h6' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
                                       <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                         <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                         <Typography>{friend.price}</Typography>
@@ -219,11 +232,11 @@ export default function Market() {
             </Box>
             {/* TODO: Horizontal tabs on mobile */}
           </Grid>
-          <Grid id="right"  xl={2} lg={2} md={4} sm={4} xs={4}>
-
-          </Grid>
         </Grid>
       </Container>
+      <Grid id="cart" className={classes.cart} container justifyContent="end" position="absolute">
+        <ShoppingCartIcon color='primary' sx={{ height: isDesktop ? 80 : 60, width: isDesktop ? 80 : 60}}/>
+      </Grid>
     </Grid>
   )
 }
