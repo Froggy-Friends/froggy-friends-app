@@ -113,7 +113,7 @@ export default function Market() {
                 exclusive
                 onChange={onFilterToggle}
               >
-                <ToggleButton value={true}>Avl.</ToggleButton>
+                <ToggleButton value={true}>Avl</ToggleButton>
                 <ToggleButton value={false}>All</ToggleButton>
               </ToggleButtonGroup>
             </Grid>
@@ -138,7 +138,7 @@ export default function Market() {
               </Tabs>
               <TabPanel value={value} index={0}>
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={2}>Friends</Typography>
-                <Typography variant='body1' color='secondary' pb={5}>
+                <Typography variant='h6' color='secondary' pb={5}>
                   Friends offer $RIBBIT staking boosts and will be pairable with your Froggy. <br/>
                   Pairing a Friend with your Froggy applies the boost and burns the item.
                 </Typography>
