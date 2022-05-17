@@ -7,7 +7,6 @@ import { Check, Close, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted, useFroggiesStaked } from '../client';
 import { formatEther, commify } from '@ethersproject/units';
 import axios from 'axios';
-import stakingBackground from '../images/stake.png';
 import ribbit from '../images/ribbit.gif';
 import think from '../images/think.png';
 import chest from '../images/chest.png';
@@ -41,13 +40,9 @@ interface Owned {
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     app: {
-      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${stakingBackground})`,
       backgroundColor: '#000000',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover',
-      [theme.breakpoints.down('xl')]: {
-        backgroundSize: 'contain',
-      }
+      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(https://froggyfriends.mypinata.cloud/ipfs/QmWh3P7tFJ3inUWKDC63331Fc9pAjPY7uALQobQG3fNT9H)`,
+      backgroundRepeat: 'no-repeat'
     },
     modal: {
       position: 'absolute' as 'absolute',
@@ -86,7 +81,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Staking() {
   const classes = useStyles();
   const theme = useTheme();
-  
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
   const [froggiesToStake, setFroggiesToStake] = useState<number[]>([]);
   const [froggiesToUnstake, setFroggiesToUnstake] = useState<number[]>([]);
@@ -306,9 +301,16 @@ export default function Staking() {
     const number = +etherFormat;
     return commify(number.toFixed(2));
   }
+
+  const getBackgroundSize = () => {
+    if (!isDesktop) {
+      return "contain";
+    }
+    return isDesktop && owned.froggies.length ? "contain" : "cover";
+  }
   
   return (
-    <Grid id='app' className={classes.app} container direction='column' pb={30}>
+    <Grid id='app' className={classes.app} sx={{backgroundSize: getBackgroundSize()}} container direction='column' pb={30}>
       <Container maxWidth='xl'>
         <Grid id='staking' container direction='column' textAlign='center' pt={10}>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={8}>
