@@ -4,13 +4,17 @@ import { Interface } from '@ethersproject/abi';
 import froggyfriendsjson from './abi/froggyfriends.json';
 import ribbitJson from './abi/ribbit.json';
 import stakingJson from './abi/staking.json';
+import { BigNumber } from "ethers";
 
 const abi = new Interface(froggyfriendsjson);
 const ribbitAbi = new Interface(ribbitJson);
 const stakingAbi = new Interface(stakingJson);
-const froggy = new Contract(`${process.env.REACT_APP_CONTRACT}`, abi);
+const froggyContract = new Contract(`${process.env.REACT_APP_CONTRACT}`, abi);
 const ribbitContract = new Contract(`${process.env.REACT_APP_RIBBIT_CONTRACT}`, ribbitAbi);
 const stakingContract = new Contract(`${process.env.REACT_APP_STAKING_CONTRACT}`, stakingAbi);
+console.log("froggy address: ", froggyContract.address);
+console.log("ribbit address: ", ribbitContract.address);
+console.log("staking address: ", stakingContract.address);
 
 export function useApproveSpender() {
   const { send, state } = useContractFunction(ribbitContract, 'approve');
@@ -21,7 +25,7 @@ export function useApproveSpender() {
 }
 
 export function useSetApprovalForAll() {
-  const { send, state } = useContractFunction(froggy, 'setApprovalForAll');
+  const { send, state } = useContractFunction(froggyContract, 'setApprovalForAll');
   return {
     setApprovalForAll: send,
     setApprovalForAllState: state
@@ -60,4 +64,51 @@ export function useCheckStakingBalance(account: string) {
   }
 
   return 0;
+}
+
+export function useStakingStarted() {
+  let result = useCall({contract: stakingContract, method: 'started', args: []});
+
+  if (result?.value) {
+    return result.value[0];
+  }
+
+  return false;
+}
+
+export function useFroggiesStaked() {
+  const { value, error } = useCall({contract: froggyContract, method: 'balanceOf', args: [stakingContract.address]}) ?? {};
+  if (error) {
+    console.log("get froggies staked error: ", error);
+  }
+
+  return value?.[0].toNumber();
+}
+
+export function useStakingDeposits(account: string) {
+  const { value, error } = useCall({contract: stakingContract, method: 'deposits', args: [account]}) ?? {};
+  if (error) {
+    console.log("get staking deposits error: ", error);
+  }
+
+  if (value) {
+    const deposits: BigNumber[] = value?.[0];
+    return deposits.map(d => d.toNumber());
+  } else {
+    return [];
+  }
+}
+
+export function useFroggiesOwned(account: string): number {
+  const { value, error } = useCall({contract: froggyContract, method: 'balanceOf', args: [account]}) ?? {};
+  if (error) {
+    console.log("get froggies owned error: ", error);
+  }
+
+  if (value) {
+    const owned: BigNumber = value?.[0];
+    return owned.toNumber();
+  } else {
+    return 0;
+  }
 }

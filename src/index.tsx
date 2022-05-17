@@ -7,12 +7,15 @@ import { ThemeProvider } from '@mui/material';
 import { DAppProvider } from '@usedapp/core';
 import theme from './theme';
 import config from './config';
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <DAppProvider config={config}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </DAppProvider>
     </ThemeProvider>
   </React.StrictMode>,
