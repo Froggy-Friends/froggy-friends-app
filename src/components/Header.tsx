@@ -1,4 +1,5 @@
-import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography } from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import logo from '../images/logo.png';
 import theme from "../theme";
@@ -24,6 +25,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 export default function Header() {
   const classes = useStyles();
+  const navigate = useNavigate();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
 
   return (
@@ -42,10 +44,10 @@ export default function Header() {
             <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none' variant="h5" color="secondary">Collabs</Link>
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-            <Link href={process.env.REACT_APP_STAKING_URL} underline='none' variant="h5" color="secondary">Stake</Link>
+            <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/staking")}>Stake</Typography>
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-            <Link href="/market" underline='none' variant="h5" color="secondary">Market</Link>
+            <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/market")}>Market</Typography>
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
             <Link href={process.env.REACT_APP_WEBSITE_URL + '/license'} underline='none' variant="h5" color="secondary">License</Link>

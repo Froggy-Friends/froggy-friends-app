@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Avatar, Grid, Link, Typography, Theme, createStyles } from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import logo from '../images/logo.png';
@@ -28,6 +29,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 export default function Footer() {
   const classes = useStyles();
+  const navigate = useNavigate();
 
   return (
     <Grid id='footer' className={classes.footer} container justifyContent='center' textAlign='center'>
@@ -69,24 +71,16 @@ export default function Footer() {
         </Grid>
         <Grid container justifyContent='center' pt={2} maxWidth={500}>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-            <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none'>
-              <Typography color='secondary'>Team</Typography>
-            </Link>
+            <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none' color='secondary' variant="h6">Team</Link>
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-            <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none'>
-              <Typography color='secondary'>Collabs</Typography>
-            </Link>
+            <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none' color='secondary' variant="h6">Collabs</Link>
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-            <Link href={process.env.REACT_APP_STAKING_URL} underline='none'>
-              <Typography color='secondary'>Staking</Typography>
-            </Link>
+            <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/staking")}>Staking</Typography>
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
-            <Link href="/market" underline='none'>
-              <Typography color='secondary'>Market</Typography>
-            </Link>
+            <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/market")}>Market</Typography>
           </Grid>
         </Grid>
         <Grid container justifyContent='space-between' mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '1px solid #b3b6bb'}}>

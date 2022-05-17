@@ -61,6 +61,18 @@ let theme = createTheme({
         }
       }
     },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          "&.link": {
+            cursor: "pointer",
+            ":hover": {
+              color: "#5ea14e"
+            }
+          }
+        }
+      }
+    },
     MuiLink: {
       styleOverrides: {
         root: {
