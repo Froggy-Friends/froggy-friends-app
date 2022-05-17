@@ -1,10 +1,11 @@
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Paper, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme } from "@mui/material";
+import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Paper, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme, Fab } from "@mui/material";
 import market from "../images/market.png";
 import { useState } from 'react';
 import { Friend } from '../models/Friend';
 import { collabFriendsData, friendsData } from '../data';
 import ribbit from '../images/ribbit.gif';
+import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 interface TabPanelProps {
@@ -234,8 +235,11 @@ export default function Market() {
           </Grid>
         </Grid>
       </Container>
-      <Grid id="cart" className={classes.cart} container justifyContent="end" position="absolute">
-        <ShoppingCartIcon color='primary' sx={{ height: isDesktop ? 80 : 60, width: isDesktop ? 80 : 60}}/>
+      <Grid id="cart" container justifyContent="end" position="absolute" p={5}>
+        <Fab>
+          <ShoppingCartIcon fontSize='large' color="secondary"/>
+        </Fab>
+        
       </Grid>
     </Grid>
   )

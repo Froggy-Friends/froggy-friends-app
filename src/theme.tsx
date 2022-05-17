@@ -127,6 +127,13 @@ let theme = createTheme({
           minWidth: 200
         }
       }
+    },
+    MuiFab: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#181818"
+        }
+      }
     }
   }
 });
