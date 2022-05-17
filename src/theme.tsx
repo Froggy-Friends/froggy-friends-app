@@ -112,6 +112,7 @@ let theme = createTheme({
           color: "#ebedf1",
           fontSize: '1.2rem',
           alignItems: 'start',
+          padding: 24,
           "&.Mui-selected": {
             color: "#5ea14e"
           },
