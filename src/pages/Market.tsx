@@ -24,7 +24,7 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ pl: 5, pt: 5 }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -128,12 +128,13 @@ export default function Market() {
                 sx={{ borderRight: 5, borderColor: 'divider' }}
               >
                 <Tab label="Friends" {...a11yProps(0)} />
-                <Tab label="Epic" {...a11yProps(1)} />
-                <Tab label="Vito's Art" {...a11yProps(2)} />
-                <Tab label="Allowlists" {...a11yProps(3)} />
-                <Tab label="NFTs" {...a11yProps(4)} />
-                <Tab label="Merch" {...a11yProps(5)} />
-                <Tab label="Costumes" {...a11yProps(6)} />
+                <Tab label="Golden Lily" {...a11yProps(1)} />
+                <Tab label="Froggy King" {...a11yProps(2)} />
+                <Tab label="Vito's Art" {...a11yProps(3)} />
+                <Tab label="Allowlists" {...a11yProps(4)} />
+                <Tab label="NFTs" {...a11yProps(5)} />
+                <Tab label="Merch" {...a11yProps(6)} />
+                <Tab label="Costumes" {...a11yProps(7)} />
               </Tabs>
               <TabPanel value={value} index={0}>
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={2}>Friends</Typography>
@@ -195,21 +196,24 @@ export default function Market() {
                 </Grid>
               </TabPanel>
               <TabPanel value={value} index={1}>
-                <Typography variant='h4' color='secondary' fontWeight='bold'>Epic</Typography>
+                <Typography variant='h4' color='secondary' fontWeight='bold'>Golden Lily Pad</Typography>
               </TabPanel>
               <TabPanel value={value} index={2}>
-                <Typography variant='h4' color='secondary' fontWeight='bold'>Vito's Art</Typography>
+                <Typography variant='h4' color='secondary' fontWeight='bold'>Froggy King</Typography>
               </TabPanel>
               <TabPanel value={value} index={3}>
-                <Typography variant='h4' color='secondary' fontWeight='bold'>Allowlists</Typography>
+                <Typography variant='h4' color='secondary' fontWeight='bold'>Vito's Art</Typography>
               </TabPanel>
               <TabPanel value={value} index={4}>
-                <Typography variant='h4' color='secondary' fontWeight='bold'>NFTs</Typography>
+                <Typography variant='h4' color='secondary' fontWeight='bold'>Allowlists</Typography>
               </TabPanel>
               <TabPanel value={value} index={5}>
-                <Typography variant='h4' color='secondary' fontWeight='bold'>Merch</Typography>
+                <Typography variant='h4' color='secondary' fontWeight='bold'>NFTs</Typography>
               </TabPanel>
               <TabPanel value={value} index={6}>
+                <Typography variant='h4' color='secondary' fontWeight='bold'>Merch</Typography>
+              </TabPanel>
+              <TabPanel value={value} index={7}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Costumes</Typography>
               </TabPanel>
             </Box>
