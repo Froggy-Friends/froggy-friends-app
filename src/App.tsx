@@ -2,8 +2,10 @@ import { Fragment } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Admin from "./pages/Admin";
 import Staking from "./pages/Staking";
+import Market from "./pages/Market";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import MusicPlayer from "./components/MusicPlayer";
 
 export default function App() {
   return (
@@ -12,9 +14,11 @@ export default function App() {
       <Routes>
         <Route path="/staking" element={<Staking/>} />
         <Route path="/admin" element={<Admin/>} />
+        <Route path="/market" element={<Market/>}/>
         <Route path="*" element={ <Navigate to="/staking" replace />} />
       </Routes>
       <Footer/>
+      <MusicPlayer/>
     </Fragment>
   )
 }

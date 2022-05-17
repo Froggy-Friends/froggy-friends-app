@@ -6,7 +6,7 @@ let theme = createTheme({
       default: '#000000'
     },
     primary: {
-      main: '#2d343a'
+      main: '#5ea14e'
     },
     secondary: {
       main: '#ebedf1'
@@ -16,9 +16,19 @@ let theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'nunito'
+    fontFamily: 'nunito',
+    h6: {
+      color: 'black'
+    }
   },
   components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          minHeight: 1500
+        }
+      }
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -30,7 +40,9 @@ let theme = createTheme({
             backgroundColor: '#48793c'
           },
           ":disabled": {
-            backgroundColor: "#b3b6bb"
+            backgroundColor: "#b3b6bb",
+            cursor: "not-allowed",
+            pointerEvents: "auto"
           }
         }
       }
@@ -45,10 +57,26 @@ let theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          border: '8px solid #1a1b1c',
-          borderRadius: 5,
+          border: '5px solid #1a1b1c',
+          backgroundColor: '#181818',
+          color: '#ebedf1',
           width: '100%',
-          textAlign: 'center'
+          textAlign: 'center',
+          "&.disabled": {
+            backgroundColor: "#ebedf145"
+          }
+        }
+      }
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          "&.link": {
+            cursor: "pointer",
+            ":hover": {
+              color: "#5ea14e"
+            }
+          }
         }
       }
     },
@@ -58,6 +86,43 @@ let theme = createTheme({
           ":hover": {
             color: '#5ea14e'
           }
+        }
+      }
+    },
+    MuiToggleButtonGroup: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#00000099"
+        }
+      }
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          color: "#ebedf1",
+          "&.Mui-selected": {
+            color: "#5ea14e"
+          }
+        }
+      }
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          color: "#ebedf1",
+          fontSize: '1.2rem',
+          alignItems: 'start',
+          padding: 24,
+          "&.Mui-selected": {
+            color: "#5ea14e"
+          },
+        },
+      }
+    },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          minWidth: 200
         }
       }
     }
