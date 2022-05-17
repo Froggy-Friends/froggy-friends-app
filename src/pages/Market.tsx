@@ -114,8 +114,8 @@ export default function Market() {
                 exclusive
                 onChange={onFilterToggle}
               >
-                <ToggleButton value={true}>Active</ToggleButton>
-                <ToggleButton value={false}>Inactive</ToggleButton>
+                <ToggleButton value={true}>Avl.</ToggleButton>
+                <ToggleButton value={false}>All</ToggleButton>
               </ToggleButtonGroup>
             </Grid>
             <Box sx={{ flexGrow: 1, bgcolor: '#00000099', display: 'flex', minHeight: 800 }}>
