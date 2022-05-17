@@ -43,7 +43,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
   createStyles({
     market: {
       backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0, 0, 0, 0)), url(${market})`,
-      backgroundPosition: "center",
       backgroundColor: '#000000',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',

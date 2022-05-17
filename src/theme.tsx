@@ -22,6 +22,13 @@ let theme = createTheme({
     }
   },
   components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          minHeight: 1500
+        }
+      }
+    },
     MuiButton: {
       styleOverrides: {
         root: {

@@ -80,7 +80,6 @@ export default function MusicPlayer() {
         component="img"
         sx={{ maxWidth: 200 }}
         image={track.image}
-        src="img"
         alt={track.name}
       />
     </Card>

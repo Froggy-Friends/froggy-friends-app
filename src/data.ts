@@ -1,7 +1,8 @@
 import { Friend } from "./models/Friend";
 import { Track } from "./models/Track";
-import stake from "./images/stake.png";
 import emirald from "./tracks/Emirald.mp3";
+
+export const stakeUrl = "https://froggyfriends.mypinata.cloud/ipfs/QmWh3P7tFJ3inUWKDC63331Fc9pAjPY7uALQobQG3fNT9H";
 
 export const friendsData: Friend[] = [
   {
@@ -98,6 +99,6 @@ export const tracks: Track[] = [
     name: "Chocolate Lily",
     producer: "Lidly",
     sound: emirald,
-    image: stake
+    image: stakeUrl
   }
 ]

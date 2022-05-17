@@ -7,6 +7,7 @@ import { Check, Close, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted, useFroggiesStaked } from '../client';
 import { formatEther, commify } from '@ethersproject/units';
 import axios from 'axios';
+import { stakeUrl } from '../data';
 import ribbit from '../images/ribbit.gif';
 import think from '../images/think.png';
 import chest from '../images/chest.png';
@@ -41,7 +42,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
   createStyles({
     app: {
       backgroundColor: '#000000',
-      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(https://froggyfriends.mypinata.cloud/ipfs/QmWh3P7tFJ3inUWKDC63331Fc9pAjPY7uALQobQG3fNT9H)`,
+      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${stakeUrl})`,
       backgroundRepeat: 'no-repeat'
     },
     modal: {
