@@ -237,7 +237,7 @@ export default function Market() {
       </Container>
       <Grid id="cart" container justifyContent="end" position="absolute" p={5}>
         <Fab>
-          <ShoppingCartIcon fontSize='large' color="secondary"/>
+          <ShoppingCartIcon fontSize='large'/>
         </Fab>
         
       </Grid>

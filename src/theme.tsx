@@ -131,7 +131,12 @@ let theme = createTheme({
     MuiFab: {
       styleOverrides: {
         root: {
-          backgroundColor: "#181818"
+          backgroundColor: "#181818",
+          color: "#ebedf1",
+          ":hover": {
+            backgroundColor: "#181818",
+            color: "#5ea14e"
+          }
         }
       }
     }
