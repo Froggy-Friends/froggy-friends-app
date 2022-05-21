@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Paper, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme, Fab } from "@mui/material";
+import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Paper, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme, Fab, List, ListItem, ListItemText } from "@mui/material";
 import market from "../images/market.png";
 import { useState } from 'react';
 import { Friend } from '../models/Friend';
@@ -9,19 +9,20 @@ import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 interface TabPanelProps {
+  id: string;
   children?: React.ReactNode;
   index: number;
   value: number;
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, id, ...other } = props;
 
   return (
     <div
+      id={id}
       role="tabpanel"
       hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
@@ -34,10 +35,10 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function a11yProps(index: number) {
+function a11yProps(id: string) {
   return {
-    id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
+    id: `${id}-tab`,
+    'aria-controls': `${id}-tabpanel`,
   };
 }
 
@@ -141,16 +142,16 @@ export default function Market() {
                 aria-label="$RIBBIT Marketplace"
                 sx={{ borderRight: 5, borderColor: 'divider' }}
               >
-                <Tab label="Friends" {...a11yProps(0)} />
-                <Tab label="Golden Lily" {...a11yProps(1)} />
-                <Tab label="Froggy King" {...a11yProps(2)} />
-                <Tab label="Vito's Art" {...a11yProps(3)} />
-                <Tab label="Allowlists" {...a11yProps(4)} />
-                <Tab label="NFTs" {...a11yProps(5)} />
-                <Tab label="Merch" {...a11yProps(6)} />
-                <Tab label="Costumes" {...a11yProps(7)} />
+                <Tab label="Friends" {...a11yProps('friends')} />
+                <Tab label="Golden Lily" {...a11yProps('golden-lily')} />
+                <Tab label="Froggy King" {...a11yProps('froggy-king')} />
+                <Tab label="Vito's Art" {...a11yProps('vitos-art')} />
+                <Tab label="Allowlists" {...a11yProps('allowlists')} />
+                <Tab label="NFTs" {...a11yProps('nfts')} />
+                <Tab label="Merch" {...a11yProps('merch')} />
+                <Tab label="Costumes" {...a11yProps('costumes')} />
               </Tabs>
-              <TabPanel value={value} index={0}>
+              <TabPanel id='friends-panel' value={value} index={0}>
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={2}>Friends</Typography>
                 <Typography variant='h6' color='secondary' pb={5}>
                   Friends offer $RIBBIT staking boosts and will be pairable with your Froggy. <br/>
@@ -209,25 +210,56 @@ export default function Market() {
                     </Grid>
                 </Grid>
               </TabPanel>
-              <TabPanel value={value} index={1}>
-                <Typography variant='h4' color='secondary' fontWeight='bold'>Golden Lily Pad</Typography>
+              <TabPanel id='golden-lily-pad-panel' value={value} index={1}>
+                <Typography variant='h4' color='secondary' fontWeight='bold' pb={2}>Golden Lily Pad</Typography>
+                <Typography variant='h6' color='secondary' pb={1}>
+                  There will only be 5 Golden Lily Pads for sale and each one will cost 200,000 $RIBBIT. <br/>
+                  Golden Lily Pads are loaded with perks that include but are not limited to:
+                </Typography>
+                <List>
+                  <ListItem>
+                    <ListItemText>
+                      <Typography variant='h6' color='secondary'>&bull; Golden embroidery hoodie</Typography>
+                    </ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText>
+                      <Typography variant='h6' color='secondary'>&bull; Guaranteed WL Spots</Typography>
+                    </ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText>
+                      <Typography variant='h6' color='secondary'>&bull; Complimentary bottle service at IRL events</Typography>
+                    </ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText>
+                      <Typography variant='h6' color='secondary'>&bull; Complimentary bud service at IRL events</Typography>
+                    </ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText>
+                      <Typography variant='h6' color='secondary'>&bull; Complimentary food at IRL events</Typography>
+                    </ListItemText>
+                  </ListItem>
+                </List>
               </TabPanel>
-              <TabPanel value={value} index={2}>
+              <TabPanel id='froggy-king-panel' value={value} index={2}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Froggy King</Typography>
               </TabPanel>
-              <TabPanel value={value} index={3}>
+              <TabPanel id='vitos-art-panel' value={value} index={3}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Vito's Art</Typography>
               </TabPanel>
-              <TabPanel value={value} index={4}>
+              <TabPanel id='allowlists-panel' value={value} index={4}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Allowlists</Typography>
               </TabPanel>
-              <TabPanel value={value} index={5}>
+              <TabPanel id='nfts-panel' value={value} index={5}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>NFTs</Typography>
               </TabPanel>
-              <TabPanel value={value} index={6}>
+              <TabPanel id='merch-panel' value={value} index={6}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Merch</Typography>
               </TabPanel>
-              <TabPanel value={value} index={7}>
+              <TabPanel id='costumes-panel' value={value} index={7}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Costumes</Typography>
               </TabPanel>
             </Box>
