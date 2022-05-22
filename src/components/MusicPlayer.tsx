@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useSound from 'use-sound';
 import { makeStyles } from '@mui/styles';
-import { Card, Box, CardContent, Typography, CardMedia, useTheme, Theme, createStyles } from "@mui/material";
+import { Card, Box, CardContent, Typography, CardMedia, Theme, createStyles } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -29,10 +29,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 export default function MusicPlayer() {
   const classes = useStyles();
-  const theme = useTheme();
   const [current, setCurrent] = useState(0);
   const [track, setTrack] = useState<Track>(tracks[current]);
-  const [play, {stop, pause, sound}] = useSound(track.sound);
+  const [play, {pause}] = useSound(track.sound);
   const [playing, setPlaying] = useState(false);
 
   const onToggle = (isPlaying: boolean) => {

@@ -9,7 +9,6 @@ import { collabFriendsData, friendsData, froggyKingData, goldenLilyPadsData, nft
 import market from "../images/market.png";
 import ribbit from '../images/ribbit.gif';
 import biz from '../images/biz.png';
-import dragon from '../images/dragon.png';
 
 interface TabPanelProps {
   id: string;
@@ -88,7 +87,6 @@ export default function Market() {
   const classes = useStyles();
   const theme = useTheme();
   const isBigScreen = useMediaQuery(theme.breakpoints.up('xl'));
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const [value, setValue] = useState(0);
   const [activeFilter, setActiveFilter] = useState(true);
   const [friends, setFriends] = useState<Friend[]>(friendsData.filter(friend => friend.isActive));
@@ -293,7 +291,7 @@ export default function Market() {
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Vito's Art Coming Soon</Typography>
                 <Grid container justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
                     <Grid item>
-                      <img src={biz} />
+                      <img src={biz} alt="Coming Soon"/>
                     </Grid>
                 </Grid>
               </TabPanel>
@@ -301,7 +299,7 @@ export default function Market() {
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Allowlists Coming Soon</Typography>
                 <Grid container justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
                     <Grid item>
-                      <img src={biz} />
+                      <img src={biz} alt="Coming Soon"/>
                     </Grid>
                 </Grid>
               </TabPanel>
@@ -369,7 +367,7 @@ export default function Market() {
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Merch Coming Soon</Typography>
                 <Grid container justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
                     <Grid item>
-                      <img src={biz} />
+                      <img src={biz} alt="Coming Soon"/>
                     </Grid>
                 </Grid>
               </TabPanel>
@@ -377,7 +375,7 @@ export default function Market() {
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Costumes Coming Soon</Typography>
                 <Grid container justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
                     <Grid item>
-                      <img src={biz} />
+                      <img src={biz} alt="Coming Soon"/>
                     </Grid>
                 </Grid>
               </TabPanel>
