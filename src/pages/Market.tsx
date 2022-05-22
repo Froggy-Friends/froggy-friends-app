@@ -149,6 +149,7 @@ export default function Market() {
                 <Tab label="Froggy King" {...a11yProps('froggy-king')} />
                 <Tab label="Vito's Art" {...a11yProps('vitos-art')} />
                 <Tab label="Allowlists" {...a11yProps('allowlists')} />
+                <Tab label="Raffles" {...a11yProps('raffles')} />
                 <Tab label="NFTs" {...a11yProps('nfts')} />
                 <Tab label="Merch" {...a11yProps('merch')} />
                 <Tab label="Costumes" {...a11yProps('costumes')} />
@@ -253,13 +254,16 @@ export default function Market() {
               <TabPanel id='allowlists-panel' value={value} index={4}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Allowlists</Typography>
               </TabPanel>
-              <TabPanel id='nfts-panel' value={value} index={5}>
+              <TabPanel id='raffles-panel' value={value} index={5}>
+                <Typography variant='h4' color='secondary' fontWeight='bold'>Raffles</Typography>
+              </TabPanel>
+              <TabPanel id='nfts-panel' value={value} index={6}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>NFTs</Typography>
               </TabPanel>
-              <TabPanel id='merch-panel' value={value} index={6}>
+              <TabPanel id='merch-panel' value={value} index={7}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Merch</Typography>
               </TabPanel>
-              <TabPanel id='costumes-panel' value={value} index={7}>
+              <TabPanel id='costumes-panel' value={value} index={8}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Costumes</Typography>
               </TabPanel>
             </Box>
