@@ -139,6 +139,14 @@ let theme = createTheme({
           }
         }
       }
+    },
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          paddingTop: 0,
+          paddingBottom: 0
+        }
+      }
     }
   }
 });

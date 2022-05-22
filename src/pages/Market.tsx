@@ -3,10 +3,12 @@ import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, Toggl
 import market from "../images/market.png";
 import { useState } from 'react';
 import { Friend } from '../models/Friend';
-import { collabFriendsData, friendsData } from '../data';
+import { collabFriendsData, friendsData, goldenLilyPadsData } from '../data';
 import ribbit from '../images/ribbit.gif';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { RibbitItem } from '../models/RibbitItem';
+import { commify } from '@ethersproject/units';
 
 interface TabPanelProps {
   id: string;
@@ -90,6 +92,7 @@ export default function Market() {
   const [activeFilter, setActiveFilter] = useState(true);
   const [friends, setFriends] = useState<Friend[]>(friendsData.filter(friend => friend.isActive));
   const [collabFriends, setCollabFriends] = useState<Friend[]>(collabFriendsData.filter(friend => friend.isActive));
+  const [goldenLilyPads, setGoldenLilyPads] = useState<RibbitItem[]>(goldenLilyPadsData.filter(lily => lily.isActive));
 
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, isActiveFilter: boolean) => {
     if (isActiveFilter === null) return;
@@ -243,6 +246,30 @@ export default function Market() {
                     </ListItemText>
                   </ListItem>
                 </List>
+                <Grid id="golden-lilies" container direction='column' pt={3} pb={3}>
+                  <Grid container justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                    {
+                      goldenLilyPads.map(lily => {
+                        return <Grid item xl={4} lg={4} md={4} sm={4} xs={4} p={2} minHeight={300}>
+                                <Card className={lily.isActive ? "" : "disabled"}>
+                                  <CardHeader title="Golden Lily Pad"/>
+                                  <CardMedia component='img' image={lily.image} alt='Froggy'/>
+                                  <CardContent>
+                                    <Typography variant='h6' color='secondary' pb={1}>{`5 / ${lily.supply} Available`}</Typography>
+                                    <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                      <Typography>{commify(lily.price)}</Typography>
+                                    </Grid>
+                                    <Button variant='contained' color='success' onClick={() => onBuyItem(lily.id)} disabled={!lily.isActive}>
+                                      <Typography variant='h6' color='secondary'>Buy</Typography>
+                                    </Button>
+                                  </CardContent>
+                                </Card>
+                              </Grid> 
+                      })
+                    }
+                  </Grid>
+                </Grid>
               </TabPanel>
               <TabPanel id='froggy-king-panel' value={value} index={2}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Froggy King</Typography>

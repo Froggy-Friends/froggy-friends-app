@@ -1,3 +1,4 @@
+import { RibbitItem } from './models/RibbitItem';
 import { Friend } from "./models/Friend";
 import { Track } from "./models/Track";
 import emirald from "./tracks/Emirald.mp3";
@@ -93,6 +94,20 @@ export const collabFriendsData: Friend[] = [
     attributes: []
   }
 ];
+
+export const goldenLilyPadsData: RibbitItem[] = [
+  {
+    id: 2,
+    name: "Golden Lily Pad",
+    description: "",
+    image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/2.png",
+    price: 200000,
+    supply: 5,
+    limit: 1,
+    isActive: true,
+    attributes: []
+  }
+]
 
 export const tracks: Track[] = [
   {
