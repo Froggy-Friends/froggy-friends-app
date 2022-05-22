@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme, Fab } from "@mui/material";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme } from "@mui/material";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { RibbitItem } from '../models/RibbitItem';
 import { commify } from '@ethersproject/units';
@@ -134,13 +133,8 @@ export default function Market() {
   }
 
   return (
-    <Grid id="market" className={classes.market} container direction="column" pb={30}>
-      <Grid container direction='column' textAlign='center' pt={10}>
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
-          <Typography variant='h2' color='secondary' fontWeight='bold'>Ribbit Prime</Typography>
-        </Grid>
-      </Grid>
-      <Container maxWidth='xl' disableGutters={isBigScreen}>
+    <Grid id="market" className={classes.market} container direction="column" pt={20} pb={30}>
+      <Container maxWidth='lg' disableGutters={isBigScreen}>
         <Grid container>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <Grid id="filters" container alignItems="center" pb={1}>
@@ -393,12 +387,6 @@ export default function Market() {
           </Grid>
         </Grid>
       </Container>
-      <Grid id="cart" container justifyContent="end" position="absolute" p={5}>
-        <Fab>
-          <ShoppingCartIcon fontSize='large'/>
-        </Fab>
-        
-      </Grid>
     </Grid>
   )
 }

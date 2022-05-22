@@ -22,6 +22,13 @@ let theme = createTheme({
     }
   },
   components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#181818",
+        }
+      }
+    },
     MuiContainer: {
       styleOverrides: {
         root: {
@@ -131,10 +138,11 @@ let theme = createTheme({
     MuiFab: {
       styleOverrides: {
         root: {
-          backgroundColor: "#181818",
-          color: "#ebedf1",
+          backgroundColor: "#ebedf1",
+          color: "#181818",
+          marginRight: 24,
           ":hover": {
-            backgroundColor: "#181818",
+            backgroundColor: "#ebedf1",
             color: "#5ea14e"
           }
         }
