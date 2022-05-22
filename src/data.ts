@@ -5,6 +5,20 @@ import emirald from "./tracks/Emirald.mp3";
 
 export const stakeUrl = "https://froggyfriends.mypinata.cloud/ipfs/QmWh3P7tFJ3inUWKDC63331Fc9pAjPY7uALQobQG3fNT9H";
 
+export const goldenLilyPadsData: RibbitItem[] = [
+  {
+    id: 2,
+    name: "Golden Lily Pad",
+    description: "",
+    image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/2.png",
+    price: 200000,
+    supply: 5,
+    limit: 1,
+    isActive: true,
+    attributes: []
+  }
+]
+
 export const friendsData: Friend[] = [
   {
     id: 3,
@@ -95,14 +109,36 @@ export const collabFriendsData: Friend[] = [
   }
 ];
 
-export const goldenLilyPadsData: RibbitItem[] = [
+export const nftData: RibbitItem[] = [
   {
-    id: 2,
-    name: "Golden Lily Pad",
+    id: 10,
+    name: "Froggy Friend #1424",
     description: "",
-    image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/2.png",
-    price: 200000,
-    supply: 5,
+    image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/1424.png",
+    price: 5000,
+    supply: 1,
+    limit: 1,
+    isActive: true,
+    attributes: []
+  },
+  {
+    id: 11,
+    name: "Froggy Friend #1673",
+    description: "",
+    image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/1673.png",
+    price: 5000,
+    supply: 1,
+    limit: 1,
+    isActive: true,
+    attributes: []
+  },
+  {
+    id: 12,
+    name: "Froggy Friend #800",
+    description: "",
+    image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/800.png",
+    price: 5000,
+    supply: 1,
     limit: 1,
     isActive: true,
     attributes: []

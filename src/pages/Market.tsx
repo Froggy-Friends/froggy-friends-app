@@ -3,7 +3,7 @@ import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, Toggl
 import market from "../images/market.png";
 import { useState } from 'react';
 import { Friend } from '../models/Friend';
-import { collabFriendsData, friendsData, goldenLilyPadsData } from '../data';
+import { collabFriendsData, friendsData, goldenLilyPadsData, nftData } from '../data';
 import ribbit from '../images/ribbit.gif';
 import biz from '../images/biz.png';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -93,6 +93,7 @@ export default function Market() {
   const [friends, setFriends] = useState<Friend[]>(friendsData.filter(friend => friend.isActive));
   const [collabFriends, setCollabFriends] = useState<Friend[]>(collabFriendsData.filter(friend => friend.isActive));
   const [goldenLilyPads, setGoldenLilyPads] = useState<RibbitItem[]>(goldenLilyPadsData.filter(lily => lily.isActive));
+  const [nfts, setNfts] = useState<RibbitItem[]>(nftData.filter(nft => nft.isActive));
 
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, isActiveFilter: boolean) => {
     if (isActiveFilter === null) return;
@@ -269,7 +270,34 @@ export default function Market() {
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Raffles</Typography>
               </TabPanel>
               <TabPanel id='nfts-panel' value={value} index={6}>
-                <Typography variant='h4' color='secondary' fontWeight='bold'>NFTs</Typography>
+                <Typography variant='h4' color='secondary' fontWeight='bold' pb={3}>NFTs</Typography>
+                <Typography variant='h6' color='secondary' pb={1}>
+                  Purchase community owned NFTs with $RIBBIT.
+                </Typography>
+                <Grid id="nfts" container direction='column' pt={3} pb={3}>
+                  <Grid container xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                    {
+                      nfts.map(nft => {
+                        return <Grid item xl={3} lg={3} md={3} sm={3} xs={3} p={2} minHeight={300}>
+                                <Card className={nft.isActive ? "" : "disabled"}>
+                                  <CardHeader title={nft.name}/>
+                                  <CardMedia component='img' image={nft.image} alt='Froggy'/>
+                                  <CardContent>
+                                    <Typography variant='h6' color='secondary' pb={1}>{`1 / ${nft.supply} Available`}</Typography>
+                                    <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                      <Typography>{commify(nft.price)}</Typography>
+                                    </Grid>
+                                    <Button variant='contained' color='success' onClick={() => onBuyItem(nft.id)} disabled={!nft.isActive}>
+                                      <Typography variant='h6' color='secondary'>Buy</Typography>
+                                    </Button>
+                                  </CardContent>
+                                </Card>
+                              </Grid> 
+                      })
+                    }
+                  </Grid>
+                </Grid>
               </TabPanel>
               <TabPanel id='merch-panel' value={value} index={7}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Merch</Typography>
