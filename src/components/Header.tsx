@@ -57,7 +57,7 @@ export default function Header() {
             </Grid>
           }
           <Grid item alignSelf="center">
-            <Fab>
+            <Fab size='medium'>
               <Badge badgeContent={1} color="primary">
                 <ShoppingCartIcon fontSize='large'/>
               </Badge>

@@ -139,7 +139,6 @@ let theme = createTheme({
         root: {
           backgroundColor: "#ebedf1",
           color: "#181818",
-          marginRight: 24,
           ":hover": {
             backgroundColor: "#ebedf1",
             color: "#5ea14e"

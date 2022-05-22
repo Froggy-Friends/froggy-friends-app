@@ -169,11 +169,12 @@ export default function Market() {
                 <Tab label="Costumes" {...a11yProps('costumes')} />
               </Tabs>
               <TabPanel id='froggy-king-panel' value={value} index={0}>
-                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Froggy King</Typography>
-                <Typography variant='h6' color='secondary' pb={1}>
-                  The one who climbs to the mountain top of the $RIBBIT leaderboard and purchases the crown for 1,000,000 $RIBBIT
-                  is hereby known as the 'Froggy King' and can redeem: a Tailored Suit, Oxfords not brogues and a Rolex. 
-                </Typography>
+                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Froggy King Coming Soon</Typography>
+                <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <Grid item>
+                      <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
+                    </Grid>
+                </Grid>
               </TabPanel>
               <TabPanel id='golden-lily-pad-panel' value={value} index={1}>
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Golden Lily Pad</Typography>
