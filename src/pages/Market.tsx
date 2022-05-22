@@ -29,7 +29,7 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ pl: 5, pt: 5 }}>
+        <Box sx={{ p: 5 }}>
           {children}
         </Box>
       )}
@@ -134,7 +134,7 @@ export default function Market() {
 
   return (
     <Grid id="market" className={classes.market} container direction="column" pt={20} pb={30}>
-      <Container maxWidth='lg' disableGutters={isBigScreen}>
+      <Container maxWidth='xl' disableGutters={isBigScreen}>
         <Grid container>
           <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
             <Grid id="filters" container alignItems="center" pb={1}>
@@ -171,33 +171,9 @@ export default function Market() {
               <TabPanel id='froggy-king-panel' value={value} index={0}>
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Froggy King</Typography>
                 <Typography variant='h6' color='secondary' pb={1}>
-                  The one who climbs to the mountain top of the $RIBBIT leaderboard and reaches 1,000,000 $RIBBIT can become the 'Froggy King' by purchasing
-                  the 1 of 1 Golden Dragon Friend.
+                  The one who climbs to the mountain top of the $RIBBIT leaderboard and purchases the crown for 1,000,000 $RIBBIT
+                  is hereby known as the 'Froggy King' and can redeem: a Tailored Suit, Oxfords not brogues and a Rolex. 
                 </Typography>
-                <Grid container direction='column' pt={3} pb={3}>
-                  <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
-                    {
-                      froggyKing.map((king, index) => {
-                        return <Grid key={index} item xl={4} lg={4} md={4} sm={4} xs={4} p={2} minHeight={300}>
-                                <Card className={king.isActive ? "" : "disabled"}>
-                                  <CardHeader title={king.name}/>
-                                  <CardMedia component='img' image={king.image} alt='Froggy King'/>
-                                  <CardContent>
-                                    <Typography variant='h6' color='secondary' pb={1}>{`1 / ${king.supply} Available`}</Typography>
-                                    <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                      <Typography>{commify(king.price)}</Typography>
-                                    </Grid>
-                                    <Button variant='contained' color='success' onClick={() => onBuyItem(king)} disabled={!king.isActive}>
-                                      <AddShoppingCartIcon/>
-                                    </Button>
-                                  </CardContent>
-                                </Card>
-                              </Grid>
-                      })
-                    }
-                  </Grid>
-                </Grid>
               </TabPanel>
               <TabPanel id='golden-lily-pad-panel' value={value} index={1}>
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Golden Lily Pad</Typography>
@@ -210,7 +186,7 @@ export default function Market() {
                   <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                     {
                       goldenLilyPads.map((lily, index) => {
-                        return <Grid key={index} item xl={4} lg={4} md={4} sm={4} xs={4} p={2} minHeight={300}>
+                        return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} p={2} minHeight={300}>
                                 <Card className={lily.isActive ? "" : "disabled"}>
                                   <CardHeader title="Golden Lily Pad"/>
                                   <CardMedia component='img' image={lily.image} alt='Froggy'/>
@@ -247,11 +223,11 @@ export default function Market() {
                                   <CardHeader title={`${friend.name}`}/>
                                   <CardMedia component='img' image={friend.image} alt='Froggy'/>
                                   <CardContent>
-                                    <Typography variant='h6' color='secondary' pb={1}>{`10 / ${friend.supply} Avl`}</Typography>
+                                    <Typography variant='h6' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
                                     <Typography variant='h6' color='secondary' pb={1}>{friend.boost}% Boost</Typography>
                                     <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                      <Typography>{friend.price}</Typography>
+                                      <Typography>{commify(friend.price)}</Typography>
                                     </Grid>
                                     {/* TODO: Add amount slider with friend.limit max */}
                                     <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={!friend.isActive}>
@@ -294,7 +270,7 @@ export default function Market() {
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Vito's Art Coming Soon</Typography>
                 <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
                     <Grid item>
-                      <img src={biz} alt="Coming Soon"/>
+                      <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
                     </Grid>
                 </Grid>
               </TabPanel>
@@ -302,7 +278,7 @@ export default function Market() {
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Allowlists Coming Soon</Typography>
                 <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
                     <Grid item>
-                      <img src={biz} alt="Coming Soon"/>
+                      <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
                     </Grid>
                 </Grid>
               </TabPanel>
@@ -370,7 +346,7 @@ export default function Market() {
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Merch Coming Soon</Typography>
                 <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
                     <Grid item>
-                      <img src={biz} alt="Coming Soon"/>
+                      <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
                     </Grid>
                 </Grid>
               </TabPanel>
@@ -378,7 +354,7 @@ export default function Market() {
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Costumes Coming Soon</Typography>
                 <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
                     <Grid item>
-                      <img src={biz} alt="Coming Soon"/>
+                      <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
                     </Grid>
                 </Grid>
               </TabPanel>
