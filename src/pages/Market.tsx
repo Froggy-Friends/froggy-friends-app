@@ -366,7 +366,12 @@ export default function Market() {
                 </Grid>
               </TabPanel>
               <TabPanel id='merch-panel' value={value} index={7}>
-                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Merch</Typography>
+                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Merch Coming Soon</Typography>
+                <Grid container justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <Grid item>
+                      <img src={biz} />
+                    </Grid>
+                </Grid>
               </TabPanel>
               <TabPanel id='costumes-panel' value={value} index={8}>
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Costumes Coming Soon</Typography>
