@@ -1,11 +1,10 @@
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Paper, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme, Fab, List, ListItem, ListItemText } from "@mui/material";
+import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme, Fab } from "@mui/material";
 import market from "../images/market.png";
 import { useState } from 'react';
 import { Friend } from '../models/Friend';
 import { collabFriendsData, friendsData, goldenLilyPadsData } from '../data';
 import ribbit from '../images/ribbit.gif';
-import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { RibbitItem } from '../models/RibbitItem';
 import { commify } from '@ethersproject/units';
@@ -217,35 +216,9 @@ export default function Market() {
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={2}>Golden Lily Pad</Typography>
                 <Typography variant='h6' color='secondary' pb={1}>
                   There will only be 5 Golden Lily Pads for sale and each one will cost 200,000 $RIBBIT. <br/>
-                  Golden Lily Pads are loaded with perks that include but are not limited to:
+                  Golden Lily Pads are loaded with perks that include: Golden Embroidery Hoodie, Guaranteed WL Spots,
+                  Complimentary Bottle Service At IRL Events, Complimentary Bud Service At IRL Events, Complimentary Food At IRL Events.
                 </Typography>
-                <List>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant='h6' color='secondary'>&bull; Golden embroidery hoodie</Typography>
-                    </ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant='h6' color='secondary'>&bull; Guaranteed WL Spots</Typography>
-                    </ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant='h6' color='secondary'>&bull; Complimentary bottle service at IRL events</Typography>
-                    </ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant='h6' color='secondary'>&bull; Complimentary bud service at IRL events</Typography>
-                    </ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant='h6' color='secondary'>&bull; Complimentary food at IRL events</Typography>
-                    </ListItemText>
-                  </ListItem>
-                </List>
                 <Grid id="golden-lilies" container direction='column' pt={3} pb={3}>
                   <Grid container justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                     {
