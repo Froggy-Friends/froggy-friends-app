@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme, Fab } from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { RibbitItem } from '../models/RibbitItem';
 import { commify } from '@ethersproject/units';
 import { Friend } from '../models/Friend';
@@ -95,6 +96,7 @@ export default function Market() {
   const [froggyKing, setFroggyKing] = useState<RibbitItem[]>(froggyKingData.filter(king => king.isActive));
   const [nfts, setNfts] = useState<RibbitItem[]>(nftData.filter(nft => nft.isActive));
   const [raffles, setRaffles] = useState<RibbitItem[]>(raffleData.filter(raffle => raffle.isActive));
+  const [cart, setCart] = useState<RibbitItem[]>([]);
 
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, isActiveFilter: boolean) => {
     if (isActiveFilter === null) return;
@@ -186,7 +188,7 @@ export default function Market() {
                                       <Typography>{commify(king.price)}</Typography>
                                     </Grid>
                                     <Button variant='contained' color='success' onClick={() => onBuyItem(king.id)} disabled={!king.isActive}>
-                                      <Typography variant='h6' color='secondary'>Buy</Typography>
+                                      <AddShoppingCartIcon/>
                                     </Button>
                                   </CardContent>
                                 </Card>
@@ -218,7 +220,7 @@ export default function Market() {
                                       <Typography>{commify(lily.price)}</Typography>
                                     </Grid>
                                     <Button variant='contained' color='success' onClick={() => onBuyItem(lily.id)} disabled={!lily.isActive}>
-                                      <Typography variant='h6' color='secondary'>Buy</Typography>
+                                      <AddShoppingCartIcon/>
                                     </Button>
                                   </CardContent>
                                 </Card>
@@ -252,7 +254,7 @@ export default function Market() {
                                     </Grid>
                                     {/* TODO: Add amount slider with friend.limit max */}
                                     <Button variant='contained' color='success' onClick={() => onBuyItem(friend.id)} disabled={!friend.isActive}>
-                                      <Typography variant='h6' color='secondary'>Buy</Typography>
+                                      <AddShoppingCartIcon/>
                                     </Button>
                                   </CardContent>
                                 </Card>
@@ -277,7 +279,7 @@ export default function Market() {
                                         <Typography>{friend.price}</Typography>
                                       </Grid>
                                       <Button variant='contained' color='success' onClick={() => onBuyItem(friend.id)} disabled={!friend.isActive}>
-                                        <Typography variant='h6' color='secondary'>Buy</Typography>
+                                        <AddShoppingCartIcon/>
                                       </Button>
                                     </CardContent>
                                   </Card>
@@ -323,7 +325,7 @@ export default function Market() {
                                       <Typography>{commify(nft.price)}</Typography>
                                     </Grid>
                                     <Button variant='contained' color='success' onClick={() => onBuyItem(nft.id)} disabled={!nft.isActive}>
-                                      <Typography variant='h6' color='secondary'>Buy</Typography>
+                                      <AddShoppingCartIcon/>
                                     </Button>
                                   </CardContent>
                                 </Card>
@@ -353,7 +355,7 @@ export default function Market() {
                                       <Typography>{commify(raffle.price)}</Typography>
                                     </Grid>
                                     <Button variant='contained' color='success' onClick={() => onBuyItem(raffle.id)} disabled={!raffle.isActive}>
-                                      <Typography variant='h6' color='secondary'>Buy</Typography>
+                                      <AddShoppingCartIcon/>
                                     </Button>
                                   </CardContent>
                                 </Card>
