@@ -140,6 +140,42 @@ export const nftData: RibbitItem[] = [
     price: 5000,
     supply: 1,
     limit: 1,
+    isActive: false,
+    attributes: []
+  }
+];
+
+export const raffleData: RibbitItem[] = [
+  {
+    id: 13,
+    name: "Froggy Friend #11",
+    description: "",
+    image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/11.png",
+    price: 1000,
+    supply: 200,
+    limit: 1,
+    isActive: true,
+    attributes: []
+  },
+  {
+    id: 14,
+    name: "Froggy Friend #12",
+    description: "",
+    image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/12.png",
+    price: 1000,
+    supply: 200,
+    limit: 1,
+    isActive: true,
+    attributes: []
+  },
+  {
+    id: 15,
+    name: "Froggy Friend #21",
+    description: "",
+    image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/21.png",
+    price: 1000,
+    supply: 200,
+    limit: 1,
     isActive: true,
     attributes: []
   }

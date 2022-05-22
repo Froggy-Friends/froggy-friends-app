@@ -3,7 +3,7 @@ import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, Toggl
 import market from "../images/market.png";
 import { useState } from 'react';
 import { Friend } from '../models/Friend';
-import { collabFriendsData, friendsData, goldenLilyPadsData, nftData } from '../data';
+import { collabFriendsData, friendsData, goldenLilyPadsData, nftData, raffleData } from '../data';
 import ribbit from '../images/ribbit.gif';
 import biz from '../images/biz.png';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -94,6 +94,7 @@ export default function Market() {
   const [collabFriends, setCollabFriends] = useState<Friend[]>(collabFriendsData.filter(friend => friend.isActive));
   const [goldenLilyPads, setGoldenLilyPads] = useState<RibbitItem[]>(goldenLilyPadsData.filter(lily => lily.isActive));
   const [nfts, setNfts] = useState<RibbitItem[]>(nftData.filter(nft => nft.isActive));
+  const [raffles, setRaffles] = useState<RibbitItem[]>(raffleData.filter(raffle => raffle.isActive));
 
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, isActiveFilter: boolean) => {
     if (isActiveFilter === null) return;
@@ -101,9 +102,15 @@ export default function Market() {
     if (isActiveFilter) {
       setFriends(friendsData.filter(friend => friend.isActive));
       setCollabFriends(collabFriendsData.filter(friend => friend.isActive));
+      setGoldenLilyPads(goldenLilyPadsData.filter(lily => lily.isActive));
+      setNfts(nftData.filter(nft => nft.isActive));
+      setRaffles(raffleData.filter(raffle => raffle.isActive));
     } else {
       setFriends(friendsData);
       setCollabFriends(collabFriendsData);
+      setGoldenLilyPads(goldenLilyPadsData);
+      setNfts(nftData);
+      setRaffles(raffleData);
     }
   };
 
@@ -151,8 +158,8 @@ export default function Market() {
                 <Tab label="Froggy King" {...a11yProps('froggy-king')} />
                 <Tab label="Vito's Art" {...a11yProps('vitos-art')} />
                 <Tab label="Allowlists" {...a11yProps('allowlists')} />
-                <Tab label="Raffles" {...a11yProps('raffles')} />
                 <Tab label="NFTs" {...a11yProps('nfts')} />
+                <Tab label="Raffles" {...a11yProps('raffles')} />
                 <Tab label="Merch" {...a11yProps('merch')} />
                 <Tab label="Costumes" {...a11yProps('costumes')} />
               </Tabs>
@@ -266,10 +273,7 @@ export default function Market() {
                     </Grid>
                 </Grid>
               </TabPanel>
-              <TabPanel id='raffles-panel' value={value} index={5}>
-                <Typography variant='h4' color='secondary' fontWeight='bold'>Raffles</Typography>
-              </TabPanel>
-              <TabPanel id='nfts-panel' value={value} index={6}>
+              <TabPanel id='nfts-panel' value={value} index={5}>
                 <Typography variant='h4' color='secondary' fontWeight='bold' pb={3}>NFTs</Typography>
                 <Typography variant='h6' color='secondary' pb={1}>
                   Purchase community owned NFTs with $RIBBIT.
@@ -298,6 +302,9 @@ export default function Market() {
                     }
                   </Grid>
                 </Grid>
+              </TabPanel>
+              <TabPanel id='raffles-panel' value={value} index={6}>
+                <Typography variant='h4' color='secondary' fontWeight='bold'>Raffles</Typography>
               </TabPanel>
               <TabPanel id='merch-panel' value={value} index={7}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Merch</Typography>
