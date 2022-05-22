@@ -128,7 +128,7 @@ export default function Market() {
     <Grid id="market" className={classes.market} container direction="column" pb={30}>
       <Grid container direction='column' textAlign='center' pt={10}>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
-          <Typography variant='h2' color='secondary' fontWeight='bold'>$RIBBIT Marketplace</Typography>
+          <Typography variant='h2' color='secondary' fontWeight='bold'>Ribbit Prime</Typography>
         </Grid>
       </Grid>
       <Container maxWidth='xl' disableGutters={isBigScreen}>
