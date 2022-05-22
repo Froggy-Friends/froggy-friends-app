@@ -2,8 +2,23 @@ import { RibbitItem } from './models/RibbitItem';
 import { Friend } from "./models/Friend";
 import { Track } from "./models/Track";
 import emirald from "./tracks/Emirald.mp3";
+import dragon from "./images/dragon.png";
 
 export const stakeUrl = "https://froggyfriends.mypinata.cloud/ipfs/QmWh3P7tFJ3inUWKDC63331Fc9pAjPY7uALQobQG3fNT9H";
+
+export const froggyKingData: RibbitItem[] = [
+  {
+    id: 1,
+    name: "Golden Dragon Friend",
+    description: "",
+    image: dragon,
+    price: 1000000,
+    supply: 1,
+    limit: 1,
+    isActive: true,
+    attributes: []
+  }
+]
 
 export const goldenLilyPadsData: RibbitItem[] = [
   {
@@ -151,7 +166,7 @@ export const raffleData: RibbitItem[] = [
     name: "Froggy Friend #11",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/11.png",
-    price: 1000,
+    price: 500,
     supply: 200,
     limit: 1,
     isActive: true,
@@ -162,10 +177,10 @@ export const raffleData: RibbitItem[] = [
     name: "Froggy Friend #12",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/12.png",
-    price: 1000,
+    price: 500,
     supply: 200,
     limit: 1,
-    isActive: true,
+    isActive: false,
     attributes: []
   },
   {
@@ -173,7 +188,7 @@ export const raffleData: RibbitItem[] = [
     name: "Froggy Friend #21",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/21.png",
-    price: 1000,
+    price: 500,
     supply: 200,
     limit: 1,
     isActive: true,
