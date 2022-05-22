@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Friend } from '../models/Friend';
 import { collabFriendsData, friendsData, goldenLilyPadsData } from '../data';
 import ribbit from '../images/ribbit.gif';
+import biz from '../images/biz.png';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { RibbitItem } from '../models/RibbitItem';
 import { commify } from '@ethersproject/units';
@@ -246,13 +247,23 @@ export default function Market() {
                 </Grid>
               </TabPanel>
               <TabPanel id='froggy-king-panel' value={value} index={2}>
-                <Typography variant='h4' color='secondary' fontWeight='bold'>Froggy King</Typography>
+                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Froggy King Coming Soon</Typography>
+                <Grid container justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <Grid item>
+                      <img src={biz} />
+                    </Grid>
+                </Grid>
               </TabPanel>
               <TabPanel id='vitos-art-panel' value={value} index={3}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Vito's Art</Typography>
               </TabPanel>
               <TabPanel id='allowlists-panel' value={value} index={4}>
-                <Typography variant='h4' color='secondary' fontWeight='bold'>Allowlists</Typography>
+                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Allowlists Coming Soon</Typography>
+                <Grid container justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <Grid item>
+                      <img src={biz} />
+                    </Grid>
+                </Grid>
               </TabPanel>
               <TabPanel id='raffles-panel' value={value} index={5}>
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Raffles</Typography>
@@ -264,7 +275,12 @@ export default function Market() {
                 <Typography variant='h4' color='secondary' fontWeight='bold'>Merch</Typography>
               </TabPanel>
               <TabPanel id='costumes-panel' value={value} index={8}>
-                <Typography variant='h4' color='secondary' fontWeight='bold'>Costumes</Typography>
+                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Costumes Coming Soon</Typography>
+                <Grid container justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <Grid item>
+                      <img src={biz} />
+                    </Grid>
+                </Grid>
               </TabPanel>
             </Box>
             {/* TODO: Horizontal tabs on mobile */}
