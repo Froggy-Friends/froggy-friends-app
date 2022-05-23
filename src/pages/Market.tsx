@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme } from "@mui/material";
+import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme, List, ListItemText, ListItem } from "@mui/material";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { RibbitItem } from '../models/RibbitItem';
 import { commify } from '@ethersproject/units';
@@ -134,7 +134,7 @@ export default function Market() {
             sx={{ borderRight: 5, borderColor: 'divider' }}
           >
             <Tab label="Froggy King" {...a11yProps('froggy-king')} />
-            <Tab label="Golden Lily" {...a11yProps('golden-lily')} />
+            <Tab label="Golden Lily Pad" {...a11yProps('golden-lily')} />
             <Tab label="Friends" {...a11yProps('friends')} />
             <Tab label="Vito's Art" {...a11yProps('vitos-art')} />
             <Tab label="Allowlists" {...a11yProps('allowlists')} />
@@ -150,17 +150,46 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='golden-lily-pad-panel' value={value} index={1}>
-            <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Golden Lily Pad</Typography>
             <Typography variant='h6' color='secondary' pb={1}>
-              There will only be 5 Golden Lily Pads for sale and each one will cost 200,000 $RIBBIT. <br/>
-              Golden Lily Pads are loaded with perks that include: Golden Embroidery Hoodie, Guaranteed WL Spots,
-              Complimentary Bottle Service At IRL Events, Complimentary Bud Service At IRL Events, Complimentary Food At IRL Events.
+              There will only be 5 Golden Lily Pads for sale with each one costing <strong>200,000</strong> $RIBBIT.
             </Typography>
-            <Grid id="golden-lilies" container direction='column' pt={3} pb={3}>
-              <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
+            <Grid id="golden-lilies" container pt={3} pb={3}>
+              <Grid item pr={10} xl={4} lg={3} md={3} sm={12} xs={12}>
+                <Typography variant='h6' color='secondary'>
+                  Golden Lily Pads are loaded with perks that include: 
+                </Typography>
+                <List>
+                  <ListItem>
+                    <ListItemText>
+                      <Typography variant='h6' color='secondary'>&bull; Golden embroidery hoodie</Typography>
+                    </ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText>
+                      <Typography variant='h6' color='secondary'>&bull; Guaranteed WL spots</Typography>
+                    </ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText>
+                      <Typography variant='h6' color='secondary'>&bull; Complimentary bottle service at IRL events</Typography>
+                    </ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText>
+                      <Typography variant='h6' color='secondary'>&bull; Complimentary bud service at IRL events</Typography>
+                    </ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText>
+                      <Typography variant='h6' color='secondary'>&bull; Complimentary food at IRL events</Typography>
+                    </ListItemText>
+                  </ListItem>
+                </List>
+              </Grid>
+              <Grid item xl={8} lg={9} md={9} sm={9} xs={9} ml={-2}>
                 {
                   goldenLilyPads.map((lily, index) => {
-                    return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} p={2} minHeight={300}>
+                    return <Grid key={index} item xl={4} lg={3} md={5} sm={8} xs={12} p={2} minHeight={300}>
                             <Card className={lily.isActive ? "" : "disabled"}>
                               <CardHeader title="Golden Lily Pad"/>
                               <CardMedia component='img' image={lily.image} alt='Froggy'/>
