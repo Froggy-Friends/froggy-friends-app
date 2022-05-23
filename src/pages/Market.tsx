@@ -23,11 +23,11 @@ function TabPanel(props: TabPanelProps) {
   const { children, value, index, id, ...other } = props;
 
   return (
-    <Grid id={id} container p={2} role="tabpanel" hidden={value !== index} aria-labelledby={`vertical-tab-${index}`} {...other}>
+    <Grid id={id} hidden={value !== index} role="tabpanel" aria-labelledby={`vertical-tab-${index}`} {...other}>
       {value === index && (
-        <Box p={5}>
+        <Grid p={3} pt={5}>
           {children}
-        </Box>
+        </Grid>
       )}
     </Grid>
   );
@@ -48,22 +48,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       minHeight: '100%'
-    },
-    friend: {
-      flexBasis: "20%",
-      maxWidth: "20%",
-      [theme.breakpoints.down('lg')]: {
-        flexBasis: "50%",
-        maxWidth: "50%",
-      },
-      [theme.breakpoints.down('md')]: {
-        flexBasis: "50%",
-        maxWidth: "50%",
-      },
-      [theme.breakpoints.down('sm')]: {
-        flexBasis: "100%",
-        maxWidth: "100%",
-      }
     },
     cart: {
       padding: theme.spacing(1),
@@ -128,7 +112,7 @@ export default function Market() {
   return (
     <Grid id="market" className={classes.market} container justifyContent="center" pt={15} pb={30}>
       <Grid container direction="column" item p={2} xl={10} lg={10} md={10} sm={10} xs={10}>
-        <Grid id="filters" container item alignItems="center" pb={1}>
+        <Grid id="filters" item alignItems="center" pb={1}>
           <ToggleButtonGroup
             color="primary"
             value={activeFilter}
@@ -139,7 +123,7 @@ export default function Market() {
             <ToggleButton value={false}>All</ToggleButton>
           </ToggleButtonGroup>
         </Grid>
-        <Grid id="items" container item bgcolor="#00000099" minHeight={800}>
+        <Grid id="items" item bgcolor="#00000099" minHeight={800}>
           <Tabs
             orientation="horizontal"
             variant="scrollable"
@@ -160,11 +144,9 @@ export default function Market() {
             <Tab label="Costumes" {...a11yProps('costumes')} />
           </Tabs>
           <TabPanel id='froggy-king-panel' value={value} index={0}>
-            <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Froggy King Coming Soon</Typography>
-            <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Grid item>
-                  <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-                </Grid>
+            <Grid container direction="column" alignItems="center">
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Froggy King Coming Soon</Typography>
+              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
             </Grid>
           </TabPanel>
           <TabPanel id='golden-lily-pad-panel' value={value} index={1}>
@@ -210,7 +192,7 @@ export default function Market() {
               <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                 {
                   friends.map((friend, index) => { 
-                    return <Grid key={index} className={classes.friend} item p={2} minHeight={300}>
+                    return <Grid key={index} item p={2} minHeight={300}>
                             <Card className={friend.isActive ? "" : "disabled"}>
                               <CardHeader title={`${friend.name}`}/>
                               <CardMedia component='img' image={friend.image} alt='Froggy'/>
@@ -237,7 +219,7 @@ export default function Market() {
                 <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                   {
                     collabFriends.map((friend, index) => { 
-                      return <Grid key={index} className={classes.friend} item p={2} minHeight={300}>
+                      return <Grid key={index} item p={2} minHeight={300}>
                               <Card className={friend.isActive ? "" : "disabled"}>
                                 <CardHeader title={`${friend.name}`}/>
                                 <CardMedia component='img' image={friend.image} alt='Froggy'/>
@@ -259,19 +241,15 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='vitos-art-panel' value={value} index={3}>
-            <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Vito's Art Coming Soon</Typography>
-            <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Grid item>
-                  <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-                </Grid>
+            <Grid container direction="column" alignItems="center">
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Vito's Art Coming Soon</Typography>
+              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
             </Grid>
           </TabPanel>
           <TabPanel id='allowlists-panel' value={value} index={4}>
-            <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Allowlists Coming Soon</Typography>
-            <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Grid item>
-                  <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-                </Grid>
+            <Grid container direction="column" alignItems="center">
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Allowlists Coming Soon</Typography>
+              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
             </Grid>
           </TabPanel>
           <TabPanel id='nfts-panel' value={value} index={5}>
@@ -335,19 +313,15 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='merch-panel' value={value} index={7}>
-            <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Merch Coming Soon</Typography>
-            <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Grid item>
-                  <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-                </Grid>
+            <Grid container direction="column" alignItems="center">
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Merch Coming Soon</Typography>
+              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
             </Grid>
           </TabPanel>
           <TabPanel id='costumes-panel' value={value} index={8}>
-            <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Costumes Coming Soon</Typography>
-            <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Grid item>
-                  <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-                </Grid>
+            <Grid container direction="column" alignItems="center">
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Costumes Coming Soon</Typography>
+              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
             </Grid>
           </TabPanel>
         </Grid>
