@@ -9,8 +9,8 @@ import { collabFriendsData, friendsData, froggyKingData, goldenLilyPadsData, nft
 import market from "../images/market.png";
 import ribbit from '../images/ribbit.gif';
 import biz from '../images/biz.png';
-import { useAppDispatch } from '../redux/hooks';
-import { add } from '../redux/cartSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { add, cartOpen } from '../redux/cartSlice';
 
 interface TabPanelProps {
   id: string;
@@ -89,6 +89,7 @@ export default function Market() {
   const classes = useStyles();
   const theme = useTheme();
   const dispatch = useAppDispatch();
+  const isCartOpen = useAppSelector(cartOpen);
   const isBigScreen = useMediaQuery(theme.breakpoints.up('xl'));
   const [value, setValue] = useState(0);
   const [activeFilter, setActiveFilter] = useState(true);
@@ -99,6 +100,7 @@ export default function Market() {
   const [nfts, setNfts] = useState<RibbitItem[]>(nftData.filter(nft => nft.isActive));
   const [raffles, setRaffles] = useState<RibbitItem[]>(raffleData.filter(raffle => raffle.isActive));
   const [cart, setCart] = useState<RibbitItem[]>([]);
+  console.log("is cart open: ", isCartOpen);
 
   useEffect(() => {
     if (cart) {
@@ -135,104 +137,128 @@ export default function Market() {
   }
 
   return (
-    <Grid id="market" className={classes.market} container direction="column" pt={20} pb={30}>
-      <Container maxWidth='xl' disableGutters={isBigScreen}>
-        <Grid container>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <Grid id="filters" container alignItems="center" pb={1}>
-              <ToggleButtonGroup
-                color="primary"
-                value={activeFilter}
-                exclusive
-                onChange={onFilterToggle}
-              >
-                <ToggleButton value={true}>Avl</ToggleButton>
-                <ToggleButton value={false}>All</ToggleButton>
-              </ToggleButtonGroup>
-            </Grid>
-            <Box id="market-container" sx={{ flexGrow: 1, bgcolor: '#00000099', display: 'flex', minHeight: 800 }}>
-              <Tabs
-                orientation="vertical"
-                variant="scrollable"
-                indicatorColor='primary'
-                value={value}
-                onChange={handleChange}
-                aria-label="$RIBBIT Marketplace"
-                sx={{ borderRight: 5, borderColor: 'divider' }}
-              >
-                <Tab label="Froggy King" {...a11yProps('froggy-king')} />
-                <Tab label="Golden Lily" {...a11yProps('golden-lily')} />
-                <Tab label="Friends" {...a11yProps('friends')} />
-                <Tab label="Vito's Art" {...a11yProps('vitos-art')} />
-                <Tab label="Allowlists" {...a11yProps('allowlists')} />
-                <Tab label="NFTs" {...a11yProps('nfts')} />
-                <Tab label="Raffles" {...a11yProps('raffles')} />
-                <Tab label="Merch" {...a11yProps('merch')} />
-                <Tab label="Costumes" {...a11yProps('costumes')} />
-              </Tabs>
-              <TabPanel id='froggy-king-panel' value={value} index={0}>
-                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Froggy King Coming Soon</Typography>
-                <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Grid item>
-                      <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-                    </Grid>
-                </Grid>
-              </TabPanel>
-              <TabPanel id='golden-lily-pad-panel' value={value} index={1}>
-                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Golden Lily Pad</Typography>
-                <Typography variant='h6' color='secondary' pb={1}>
-                  There will only be 5 Golden Lily Pads for sale and each one will cost 200,000 $RIBBIT. <br/>
-                  Golden Lily Pads are loaded with perks that include: Golden Embroidery Hoodie, Guaranteed WL Spots,
-                  Complimentary Bottle Service At IRL Events, Complimentary Bud Service At IRL Events, Complimentary Food At IRL Events.
-                </Typography>
-                <Grid id="golden-lilies" container direction='column' pt={3} pb={3}>
-                  <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
-                    {
-                      goldenLilyPads.map((lily, index) => {
-                        return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} p={2} minHeight={300}>
-                                <Card className={lily.isActive ? "" : "disabled"}>
-                                  <CardHeader title="Golden Lily Pad"/>
-                                  <CardMedia component='img' image={lily.image} alt='Froggy'/>
-                                  <CardContent>
-                                    <Typography variant='h6' color='secondary' pb={1}>{`5 / ${lily.supply} Available`}</Typography>
-                                    <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                      <Typography>{commify(lily.price)}</Typography>
-                                    </Grid>
-                                    <Button variant='contained' color='success' onClick={() => onBuyItem(lily)} disabled={!lily.isActive}>
-                                      <AddShoppingCartIcon/>
-                                    </Button>
-                                  </CardContent>
-                                </Card>
-                              </Grid> 
-                      })
-                    }
+    <Grid id="market" className={classes.market} container direction="column" pt={15} pb={30}>
+      <Grid container justifyContent="center" pl={2} pr={2}>
+        <Grid container item xl={10} lg={9} md={12} sm={12} xs={12}>
+          <Grid id="filters" container alignItems="center" pb={1}>
+            <ToggleButtonGroup
+              color="primary"
+              value={activeFilter}
+              exclusive
+              onChange={onFilterToggle}
+            >
+              <ToggleButton value={true}>Avl</ToggleButton>
+              <ToggleButton value={false}>All</ToggleButton>
+            </ToggleButtonGroup>
+          </Grid>
+          <Box id="market-container" sx={{ flexGrow: 1, bgcolor: '#00000099', display: 'flex', minHeight: 800 }}>
+            <Tabs
+              orientation="vertical"
+              variant="scrollable"
+              indicatorColor='primary'
+              value={value}
+              onChange={handleChange}
+              aria-label="$RIBBIT Marketplace"
+              sx={{ borderRight: 5, borderColor: 'divider' }}
+            >
+              <Tab label="Froggy King" {...a11yProps('froggy-king')} />
+              <Tab label="Golden Lily" {...a11yProps('golden-lily')} />
+              <Tab label="Friends" {...a11yProps('friends')} />
+              <Tab label="Vito's Art" {...a11yProps('vitos-art')} />
+              <Tab label="Allowlists" {...a11yProps('allowlists')} />
+              <Tab label="NFTs" {...a11yProps('nfts')} />
+              <Tab label="Raffles" {...a11yProps('raffles')} />
+              <Tab label="Merch" {...a11yProps('merch')} />
+              <Tab label="Costumes" {...a11yProps('costumes')} />
+            </Tabs>
+            <TabPanel id='froggy-king-panel' value={value} index={0}>
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Froggy King Coming Soon</Typography>
+              <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <Grid item>
+                    <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
                   </Grid>
+              </Grid>
+            </TabPanel>
+            <TabPanel id='golden-lily-pad-panel' value={value} index={1}>
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Golden Lily Pad</Typography>
+              <Typography variant='h6' color='secondary' pb={1}>
+                There will only be 5 Golden Lily Pads for sale and each one will cost 200,000 $RIBBIT. <br/>
+                Golden Lily Pads are loaded with perks that include: Golden Embroidery Hoodie, Guaranteed WL Spots,
+                Complimentary Bottle Service At IRL Events, Complimentary Bud Service At IRL Events, Complimentary Food At IRL Events.
+              </Typography>
+              <Grid id="golden-lilies" container direction='column' pt={3} pb={3}>
+                <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                  {
+                    goldenLilyPads.map((lily, index) => {
+                      return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} p={2} minHeight={300}>
+                              <Card className={lily.isActive ? "" : "disabled"}>
+                                <CardHeader title="Golden Lily Pad"/>
+                                <CardMedia component='img' image={lily.image} alt='Froggy'/>
+                                <CardContent>
+                                  <Typography variant='h6' color='secondary' pb={1}>{`5 / ${lily.supply} Available`}</Typography>
+                                  <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                    <Typography>{commify(lily.price)}</Typography>
+                                  </Grid>
+                                  <Button variant='contained' color='success' onClick={() => onBuyItem(lily)} disabled={!lily.isActive}>
+                                    <AddShoppingCartIcon/>
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            </Grid> 
+                    })
+                  }
                 </Grid>
-              </TabPanel>
-              <TabPanel id='friends-panel' value={value} index={2}>
-                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Friends</Typography>
-                <Typography variant='h6' color='secondary' pb={5}>
-                  Friends offer $RIBBIT staking boosts and will be pairable with your Froggy. <br/>
-                  Pairing a Friend with your Froggy applies the boost and burns the item.
-                </Typography>
-                <Grid id="friends" container direction='column' pb={3}>
-                  <Typography variant='h5' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
+              </Grid>
+            </TabPanel>
+            <TabPanel id='friends-panel' value={value} index={2}>
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Friends</Typography>
+              <Typography variant='h6' color='secondary' pb={5}>
+                Friends offer $RIBBIT staking boosts and will be pairable with your Froggy. <br/>
+                Pairing a Friend with your Froggy applies the boost and burns the item.
+              </Typography>
+              <Grid id="friends" container direction='column' pb={3}>
+                <Typography variant='h5' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
+                <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                  {
+                    friends.map((friend, index) => { 
+                      return <Grid key={index} className={classes.friend} item p={2} minHeight={300}>
+                              <Card className={friend.isActive ? "" : "disabled"}>
+                                <CardHeader title={`${friend.name}`}/>
+                                <CardMedia component='img' image={friend.image} alt='Froggy'/>
+                                <CardContent>
+                                  <Typography variant='h6' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
+                                  <Typography variant='h6' color='secondary' pb={1}>{friend.boost}% Boost</Typography>
+                                  <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                    <Typography>{commify(friend.price)}</Typography>
+                                  </Grid>
+                                  {/* TODO: Add amount slider with friend.limit max */}
+                                  <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={!friend.isActive}>
+                                    <AddShoppingCartIcon/>
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            </Grid> 
+                    })
+                  }
+                </Grid>
+              </Grid>
+              <Grid id="collab-friends" container direction="column" pt={3} pb={3}>
+                <Typography variant='h5' color='secondary' fontWeight='bold' pb={2}>Collab Friends</Typography>
                   <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                     {
-                      friends.map((friend, index) => { 
+                      collabFriends.map((friend, index) => { 
                         return <Grid key={index} className={classes.friend} item p={2} minHeight={300}>
                                 <Card className={friend.isActive ? "" : "disabled"}>
                                   <CardHeader title={`${friend.name}`}/>
                                   <CardMedia component='img' image={friend.image} alt='Froggy'/>
                                   <CardContent>
                                     <Typography variant='h6' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
-                                    <Typography variant='h6' color='secondary' pb={1}>{friend.boost}% Boost</Typography>
                                     <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                      <Typography>{commify(friend.price)}</Typography>
+                                      <Typography>{friend.price}</Typography>
                                     </Grid>
-                                    {/* TODO: Add amount slider with friend.limit max */}
                                     <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={!friend.isActive}>
                                       <AddShoppingCartIcon/>
                                     </Button>
@@ -242,130 +268,107 @@ export default function Market() {
                       })
                     }
                   </Grid>
-                </Grid>
-                <Grid id="collab-friends" container direction="column" pt={3} pb={3}>
-                  <Typography variant='h5' color='secondary' fontWeight='bold' pb={2}>Collab Friends</Typography>
-                    <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
-                      {
-                        collabFriends.map((friend, index) => { 
-                          return <Grid key={index} className={classes.friend} item p={2} minHeight={300}>
-                                  <Card className={friend.isActive ? "" : "disabled"}>
-                                    <CardHeader title={`${friend.name}`}/>
-                                    <CardMedia component='img' image={friend.image} alt='Froggy'/>
-                                    <CardContent>
-                                      <Typography variant='h6' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
-                                      <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                        <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                        <Typography>{friend.price}</Typography>
-                                      </Grid>
-                                      <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={!friend.isActive}>
-                                        <AddShoppingCartIcon/>
-                                      </Button>
-                                    </CardContent>
-                                  </Card>
-                                </Grid> 
-                        })
-                      }
-                    </Grid>
-                </Grid>
-              </TabPanel>
-              <TabPanel id='vitos-art-panel' value={value} index={3}>
-                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Vito's Art Coming Soon</Typography>
-                <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Grid item>
-                      <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-                    </Grid>
-                </Grid>
-              </TabPanel>
-              <TabPanel id='allowlists-panel' value={value} index={4}>
-                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Allowlists Coming Soon</Typography>
-                <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Grid item>
-                      <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-                    </Grid>
-                </Grid>
-              </TabPanel>
-              <TabPanel id='nfts-panel' value={value} index={5}>
-                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>NFTs</Typography>
-                <Typography variant='h6' color='secondary' pb={1}>
-                  Purchase community owned NFTs with $RIBBIT.
-                </Typography>
-                <Grid id="nfts" container direction='column' pt={3} pb={3}>
-                  <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
-                    {
-                      nfts.map((nft, index) => {
-                        return <Grid key={index} item xl={3} lg={3} md={3} sm={3} xs={3} p={2} minHeight={300}>
-                                <Card className={nft.isActive ? "" : "disabled"}>
-                                  <CardHeader title={nft.name}/>
-                                  <CardMedia component='img' image={nft.image} alt='Froggy'/>
-                                  <CardContent>
-                                    <Typography variant='h6' color='secondary' pb={1}>{`1 / ${nft.supply} Available`}</Typography>
-                                    <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                      <Typography>{commify(nft.price)}</Typography>
-                                    </Grid>
-                                    <Button variant='contained' color='success' onClick={() => onBuyItem(nft)} disabled={!nft.isActive}>
-                                      <AddShoppingCartIcon/>
-                                    </Button>
-                                  </CardContent>
-                                </Card>
-                              </Grid> 
-                      })
-                    }
+              </Grid>
+            </TabPanel>
+            <TabPanel id='vitos-art-panel' value={value} index={3}>
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Vito's Art Coming Soon</Typography>
+              <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <Grid item>
+                    <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
                   </Grid>
-                </Grid>
-              </TabPanel>
-              <TabPanel id='raffles-panel' value={value} index={6}>
-                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Raffles</Typography>
-                <Typography variant='h6' color='secondary' pb={1}>
-                  Purchase raffle tickets for community owned NFTs with $RIBBIT.
-                </Typography>
-                <Grid id="nfts" container direction='column' pt={3} pb={3}>
-                  <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
-                    {
-                      raffles.map((raffle, index) => {
-                        return <Grid key={index} item xl={3} lg={3} md={3} sm={3} xs={3} p={2} minHeight={300}>
-                                <Card className={raffle.isActive ? "" : "disabled"}>
-                                  <CardHeader title={raffle.name}/>
-                                  <CardMedia component='img' image={raffle.image} alt='Froggy'/>
-                                  <CardContent>
-                                    <Typography variant='h6' color='secondary' pb={1}>{`200 / ${raffle.supply} Available`}</Typography>
-                                    <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                      <Typography>{commify(raffle.price)}</Typography>
-                                    </Grid>
-                                    <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={!raffle.isActive}>
-                                      <AddShoppingCartIcon/>
-                                    </Button>
-                                  </CardContent>
-                                </Card>
-                              </Grid> 
-                      })
-                    }
+              </Grid>
+            </TabPanel>
+            <TabPanel id='allowlists-panel' value={value} index={4}>
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Allowlists Coming Soon</Typography>
+              <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <Grid item>
+                    <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
                   </Grid>
+              </Grid>
+            </TabPanel>
+            <TabPanel id='nfts-panel' value={value} index={5}>
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>NFTs</Typography>
+              <Typography variant='h6' color='secondary' pb={1}>
+                Purchase community owned NFTs with $RIBBIT.
+              </Typography>
+              <Grid id="nfts" container direction='column' pt={3} pb={3}>
+                <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                  {
+                    nfts.map((nft, index) => {
+                      return <Grid key={index} item xl={3} lg={3} md={3} sm={3} xs={3} p={2} minHeight={300}>
+                              <Card className={nft.isActive ? "" : "disabled"}>
+                                <CardHeader title={nft.name}/>
+                                <CardMedia component='img' image={nft.image} alt='Froggy'/>
+                                <CardContent>
+                                  <Typography variant='h6' color='secondary' pb={1}>{`1 / ${nft.supply} Available`}</Typography>
+                                  <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                    <Typography>{commify(nft.price)}</Typography>
+                                  </Grid>
+                                  <Button variant='contained' color='success' onClick={() => onBuyItem(nft)} disabled={!nft.isActive}>
+                                    <AddShoppingCartIcon/>
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            </Grid> 
+                    })
+                  }
                 </Grid>
-              </TabPanel>
-              <TabPanel id='merch-panel' value={value} index={7}>
-                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Merch Coming Soon</Typography>
-                <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Grid item>
-                      <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-                    </Grid>
+              </Grid>
+            </TabPanel>
+            <TabPanel id='raffles-panel' value={value} index={6}>
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Raffles</Typography>
+              <Typography variant='h6' color='secondary' pb={1}>
+                Purchase raffle tickets for community owned NFTs with $RIBBIT.
+              </Typography>
+              <Grid id="nfts" container direction='column' pt={3} pb={3}>
+                <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                  {
+                    raffles.map((raffle, index) => {
+                      return <Grid key={index} item xl={3} lg={3} md={3} sm={3} xs={3} p={2} minHeight={300}>
+                              <Card className={raffle.isActive ? "" : "disabled"}>
+                                <CardHeader title={raffle.name}/>
+                                <CardMedia component='img' image={raffle.image} alt='Froggy'/>
+                                <CardContent>
+                                  <Typography variant='h6' color='secondary' pb={1}>{`200 / ${raffle.supply} Available`}</Typography>
+                                  <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                    <Typography>{commify(raffle.price)}</Typography>
+                                  </Grid>
+                                  <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={!raffle.isActive}>
+                                    <AddShoppingCartIcon/>
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            </Grid> 
+                    })
+                  }
                 </Grid>
-              </TabPanel>
-              <TabPanel id='costumes-panel' value={value} index={8}>
-                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Costumes Coming Soon</Typography>
-                <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Grid item>
-                      <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-                    </Grid>
-                </Grid>
-              </TabPanel>
-            </Box>
-            {/* TODO: Horizontal tabs on mobile */}
-          </Grid>
+              </Grid>
+            </TabPanel>
+            <TabPanel id='merch-panel' value={value} index={7}>
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Merch Coming Soon</Typography>
+              <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <Grid item>
+                    <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
+                  </Grid>
+              </Grid>
+            </TabPanel>
+            <TabPanel id='costumes-panel' value={value} index={8}>
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Costumes Coming Soon</Typography>
+              <Grid container item justifyContent="center" xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <Grid item>
+                    <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
+                  </Grid>
+              </Grid>
+            </TabPanel>
+          </Box>
+          {/* TODO: Horizontal tabs on mobile */}
         </Grid>
-      </Container>
+        <Grid display={isCartOpen ? "flex" : "none"} container item xl={2} lg={3} md={12} sm={12} xs={12}>
+
+        </Grid>
+      </Grid>
     </Grid>
   )
 }

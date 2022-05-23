@@ -4,8 +4,8 @@ import { makeStyles } from '@mui/styles';
 import logo from '../images/logo.png';
 import theme from "../theme";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { useAppSelector } from "../redux/hooks";
-import { cartCount } from "../redux/cartSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { cartCount, toggle } from "../redux/cartSlice";
 
 const { REACT_APP_WEBSITE_URL } = process.env;
 
@@ -28,6 +28,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Header() {
   const classes = useStyles();
   const cartItemCount = useAppSelector(cartCount);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
@@ -44,9 +45,8 @@ export default function Header() {
 
   const onCartClick = () => {
     navigate("/market");
-
-    // show items modal
-
+    // toggle items sidebar
+    dispatch(toggle());
   }
 
   return (
