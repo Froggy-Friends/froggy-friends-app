@@ -110,20 +110,20 @@ export default function Market() {
   }
 
   return (
-    <Grid id="market" className={classes.market} container justifyContent="center" pt={15} pb={30}>
-      <Grid container direction="column" item p={2} xl={10} lg={10} md={12} sm={12} xs={12}>
-        <Grid id="filters" item alignItems="center" pb={1}>
-          <ToggleButtonGroup
-            color="primary"
-            value={activeFilter}
-            exclusive
-            onChange={onFilterToggle}
-          >
-            <ToggleButton value={true}>Avl</ToggleButton>
-            <ToggleButton value={false}>All</ToggleButton>
-          </ToggleButtonGroup>
-        </Grid>
-        <Grid id="items" item bgcolor="#00000099" minHeight={800}>
+    <Grid id="market" className={classes.market} container direction="column" justifyContent="center" pt={15} pb={30}>
+      <Grid id="filters" item alignItems="center" p={2}>
+        <ToggleButtonGroup
+          color="primary"
+          value={activeFilter}
+          exclusive
+          onChange={onFilterToggle}
+        >
+          <ToggleButton value={true}>Avl</ToggleButton>
+          <ToggleButton value={false}>All</ToggleButton>
+        </ToggleButtonGroup>
+      </Grid>
+      <Grid id="items-and-cart" container p={2} minHeight={800}>
+        <Grid id="items" item bgcolor="#00000099" xl={10} lg={10} md={12} sm={12} xs={12}>
           <Tabs
             orientation="horizontal"
             variant="scrollable"
@@ -351,21 +351,21 @@ export default function Market() {
             </Grid>
           </TabPanel>
         </Grid>
+        <Fade id='cart' in={isCartOpen}>
+          <Grid container item pl={3} xl={2} lg={2} maxHeight={800}>
+              <Grid id="cart-container" container item bgcolor="#00000099">
+                <Typography variant='h4' color='secondary' p={2}>Ribbit Cart</Typography>
+                {
+                  items.map(item => {
+                    return <Grid container item p={2} xl={12} lg={12} md={12} sm={12} xs={12}>
+                      <Typography variant='h6' color='secondary'>{item.name}</Typography>
+                    </Grid>
+                  })
+                }
+              </Grid>
+          </Grid>
+        </Fade>
       </Grid>
-      <Fade in={isCartOpen}>
-        <Grid container item p={2} xl={2} lg={2}>
-            <Grid id="cart-container" container item bgcolor="#00000099" minHeight={800} mt={7}>
-              <Typography variant='h4' color='secondary' p={2}>Ribbit Cart</Typography>
-              {
-                items.map(item => {
-                  return <Grid container item p={2} xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Typography variant='h6' color='secondary'>{item.name}</Typography>
-                  </Grid>
-                })
-              }
-            </Grid>
-        </Grid>
-      </Fade>
     </Grid>
   )
 }
