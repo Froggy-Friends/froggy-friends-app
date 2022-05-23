@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar } from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import logo from '../images/logo.png';
@@ -29,8 +29,19 @@ export default function Header() {
   const classes = useStyles();
   const cartItemCount = useAppSelector(cartCount);
   const navigate = useNavigate();
+  const location = useLocation();
   const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
-  console.log("cart count: ", cartItemCount);
+
+  const getTitle = () => {
+    if (location.pathname === "/market") {
+      return "Ribbit Prime";
+    } else if (location.pathname === "/staking") {
+      return "Ribbit Staking";
+    } else if (location.pathname === "/admin") {
+      return "Froggy Admin"
+    }
+      
+  }
 
   return (
       <AppBar position="fixed">
@@ -39,7 +50,7 @@ export default function Header() {
             <Link href={REACT_APP_WEBSITE_URL} underline='none'>
               <Avatar className={classes.avatar} alt='Home' src={logo} sx={{width: 75, height: 75}}/>
             </Link>
-            <Typography variant='h4' color='secondary' fontWeight='bold' alignSelf="center" pl={3}>Ribbit Prime</Typography>
+            <Typography variant='h4' color='secondary' fontWeight='bold' alignSelf="center" pl={3}>{getTitle()}</Typography>
           </Grid>
           { isDesktop && 
             <Grid container item justifyContent='center' alignItems="center" textAlign='center' xl={6} lg={6} md={9} sm={9} xs={9}>
