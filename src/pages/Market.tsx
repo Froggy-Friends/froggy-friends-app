@@ -55,6 +55,10 @@ const useStyles: any = makeStyles((theme: Theme) =>
       backgroundSize: 'cover',
       minHeight: '100%'
     },
+    marketContainer: {
+      backgroundColor: '#00000099', 
+      minHeight: 800
+    },
     friend: {
       flexBasis: "20%",
       maxWidth: "20%",
@@ -139,7 +143,7 @@ export default function Market() {
   return (
     <Grid id="market" className={classes.market} container direction="column" pt={15} pb={30}>
       <Grid container justifyContent="center" pl={2} pr={2}>
-        <Grid container item xl={10} lg={9} md={12} sm={12} xs={12}>
+        <Grid container item p={2} xl={10} lg={9} md={12} sm={12} xs={12}>
           <Grid id="filters" container alignItems="center" pb={1}>
             <ToggleButtonGroup
               color="primary"
@@ -151,7 +155,7 @@ export default function Market() {
               <ToggleButton value={false}>All</ToggleButton>
             </ToggleButtonGroup>
           </Grid>
-          <Box id="market-container" sx={{ flexGrow: 1, bgcolor: '#00000099', display: 'flex', minHeight: 800 }}>
+          <Grid id="market-container" className={classes.marketContainer} container>
             <Tabs
               orientation="vertical"
               variant="scrollable"
@@ -362,11 +366,13 @@ export default function Market() {
                   </Grid>
               </Grid>
             </TabPanel>
-          </Box>
+          </Grid>
           {/* TODO: Horizontal tabs on mobile */}
         </Grid>
-        <Grid display={isCartOpen ? "flex" : "none"} container item xl={2} lg={3} md={12} sm={12} xs={12}>
-
+        <Grid display={isCartOpen ? "flex" : "none"} container item p={2} xl={2} lg={3} md={12} sm={12} xs={12}>
+          <Grid id="cart-container" className={classes.marketContainer} container mt={7}>
+            <Typography variant='h4' color='secondary' p={5}>Ribbit Cart</Typography>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>
