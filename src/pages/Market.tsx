@@ -9,6 +9,8 @@ import { collabFriendsData, friendsData, froggyKingData, goldenLilyPadsData, nft
 import market from "../images/market.png";
 import ribbit from '../images/ribbit.gif';
 import biz from '../images/biz.png';
+import { useAppDispatch } from '../redux/hooks';
+import { add } from '../redux/cartSlice';
 
 interface TabPanelProps {
   id: string;
@@ -86,6 +88,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Market() {
   const classes = useStyles();
   const theme = useTheme();
+  const dispatch = useAppDispatch();
   const isBigScreen = useMediaQuery(theme.breakpoints.up('xl'));
   const [value, setValue] = useState(0);
   const [activeFilter, setActiveFilter] = useState(true);
@@ -128,8 +131,7 @@ export default function Market() {
   };
 
   const onBuyItem = (item: RibbitItem) => {
-    const newCart = [...cart, item];
-    setCart(newCart);
+    dispatch(add(item));
   }
 
   return (

@@ -1,5 +1,5 @@
 import { RibbitItem } from './../models/RibbitItem';
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import { RootState } from './store';
 
 interface CartState {
@@ -14,7 +14,9 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     add(state, action) {
-      state.items.push(action.payload);
+      if (state.items.findIndex(item => item.id === action.payload.id) === -1) {
+        state.items.push(action.payload);
+      }
     }
   }
 });
