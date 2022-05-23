@@ -16,4 +16,14 @@ body {
 
 #root {
   height: 100%;
+  overflow-y: scroll;
+}
+
+#root::-webkit-scrollbar {
+  width: 5px;
+  background-color: #181818;
+}
+
+#root::-webkit-scrollbar-thumb {
+  background-color: #5ea14e;
 }
