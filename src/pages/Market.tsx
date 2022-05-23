@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme, List, ListItemText, ListItem } from "@mui/material";
+import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme, List, ListItemText, ListItem, Fade } from "@mui/material";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { RibbitItem } from '../models/RibbitItem';
 import { commify } from '@ethersproject/units';
@@ -111,7 +111,7 @@ export default function Market() {
 
   return (
     <Grid id="market" className={classes.market} container justifyContent="center" pt={15} pb={30}>
-      <Grid container direction="column" item p={2} xl={10} lg={10} md={10} sm={10} xs={10}>
+      <Grid container direction="column" item p={2} xl={10} lg={10} md={12} sm={12} xs={12}>
         <Grid id="filters" item alignItems="center" pb={1}>
           <ToggleButtonGroup
             color="primary"
@@ -186,7 +186,7 @@ export default function Market() {
                   </ListItem>
                 </List>
               </Grid>
-              <Grid item xl={8} lg={9} md={9} sm={9} xs={9} ml={-2}>
+              <Grid item xl={8} lg={9} md={9} sm={9} xs={9}>
                 {
                   goldenLilyPads.map((lily, index) => {
                     return <Grid key={index} item xl={4} lg={3} md={5} sm={8} xs={12} p={2} minHeight={300}>
@@ -211,7 +211,6 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='friends-panel' value={value} index={2}>
-            <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Friends</Typography>
             <Typography variant='h6' color='secondary' pb={5}>
               Friends offer $RIBBIT staking boosts and will be pairable with your Froggy. <br/>
               Pairing a Friend with your Froggy applies the boost and burns the item.
@@ -221,7 +220,7 @@ export default function Market() {
               <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                 {
                   friends.map((friend, index) => { 
-                    return <Grid key={index} item p={2} minHeight={300}>
+                    return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={2} sm={2} xs={2}>
                             <Card className={friend.isActive ? "" : "disabled"}>
                               <CardHeader title={`${friend.name}`}/>
                               <CardMedia component='img' image={friend.image} alt='Froggy'/>
@@ -248,7 +247,7 @@ export default function Market() {
                 <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                   {
                     collabFriends.map((friend, index) => { 
-                      return <Grid key={index} item p={2} minHeight={300}>
+                      return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={2} sm={2} xs={2}>
                               <Card className={friend.isActive ? "" : "disabled"}>
                                 <CardHeader title={`${friend.name}`}/>
                                 <CardMedia component='img' image={friend.image} alt='Froggy'/>
@@ -282,7 +281,6 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='nfts-panel' value={value} index={5}>
-            <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>NFTs</Typography>
             <Typography variant='h6' color='secondary' pb={1}>
               Purchase community owned NFTs with $RIBBIT.
             </Typography>
@@ -290,7 +288,7 @@ export default function Market() {
               <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                 {
                   nfts.map((nft, index) => {
-                    return <Grid key={index} item xl={3} lg={3} md={3} sm={3} xs={3} p={2} minHeight={300}>
+                    return <Grid key={index} item xl={2} lg={2} md={2} sm={2} xs={2} p={2} minHeight={300}>
                             <Card className={nft.isActive ? "" : "disabled"}>
                               <CardHeader title={nft.name}/>
                               <CardMedia component='img' image={nft.image} alt='Froggy'/>
@@ -312,7 +310,6 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='raffles-panel' value={value} index={6}>
-            <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Raffles</Typography>
             <Typography variant='h6' color='secondary' pb={1}>
               Purchase raffle tickets for community owned NFTs with $RIBBIT.
             </Typography>
@@ -355,18 +352,20 @@ export default function Market() {
           </TabPanel>
         </Grid>
       </Grid>
-      <Grid display={isCartOpen ? "flex" : "none"} container item p={2} xl={2} lg={2} md={2} sm={2} xs={2}>
-        <Grid id="cart-container" container item bgcolor="#00000099" minHeight={800} mt={7}>
-          <Typography variant='h4' color='secondary' p={2}>Ribbit Cart</Typography>
-          {
-            items.map(item => {
-              return <Grid container item p={2} xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Typography variant='h6' color='secondary'>{item.name}</Typography>
-              </Grid>
-            })
-          }
+      <Fade in={isCartOpen}>
+        <Grid container item p={2} xl={2} lg={2}>
+            <Grid id="cart-container" container item bgcolor="#00000099" minHeight={800} mt={7}>
+              <Typography variant='h4' color='secondary' p={2}>Ribbit Cart</Typography>
+              {
+                items.map(item => {
+                  return <Grid container item p={2} xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <Typography variant='h6' color='secondary'>{item.name}</Typography>
+                  </Grid>
+                })
+              }
+            </Grid>
         </Grid>
-      </Grid>
+      </Fade>
     </Grid>
   )
 }

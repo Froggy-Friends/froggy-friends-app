@@ -21,6 +21,12 @@ let theme = createTheme({
       color: 'black'
     }
   },
+  transitions: {
+    duration: {
+      enteringScreen: 750,
+      leavingScreen: 750
+    }
+  },
   components: {
     MuiAppBar: {
       styleOverrides: {
@@ -122,7 +128,8 @@ let theme = createTheme({
           alignItems: 'start',
           padding: 24,
           "&.Mui-selected": {
-            color: "#5ea14e"
+            color: "#5ea14e",
+            fontWeight: 'bold'
           },
         },
       }
