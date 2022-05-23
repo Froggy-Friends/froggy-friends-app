@@ -317,7 +317,7 @@ export default function Market() {
               <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                 {
                   raffles.map((raffle, index) => {
-                    return <Grid key={index} item xl={3} lg={3} md={3} sm={3} xs={3} p={2} minHeight={300}>
+                    return <Grid key={index} item xl={2} lg={2} md={2} sm={2} xs={2} p={2} minHeight={300}>
                             <Card className={raffle.isActive ? "" : "disabled"}>
                               <CardHeader title={raffle.name}/>
                               <CardMedia component='img' image={raffle.image} alt='Froggy'/>
