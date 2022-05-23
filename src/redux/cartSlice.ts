@@ -30,5 +30,6 @@ export const { add, toggle } = cartSlice.actions;
 
 export const cartCount = (state: RootState) => state.cart.items.length;
 export const cartOpen = (state: RootState) => state.cart.open;
+export const cartItems = (state: RootState) => state.cart.items;
 
 export default cartSlice.reducer;
