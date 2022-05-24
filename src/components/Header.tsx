@@ -76,13 +76,13 @@ export default function Header() {
                 <Link href={REACT_APP_WEBSITE_URL + '/license'} underline='none' variant="h5" color="secondary">License</Link>
               </Grid> 
             </Grid>
-            <Grid container item justifyContent="center" alignItems="center" xl={1} lg={1} md={1} sm={1} xs={1}>
+            {/* <Grid container item justifyContent="center" alignItems="center" xl={1} lg={1} md={1} sm={1} xs={1}>
               <Fab size='medium' onClick={onCartClick}>
                 <Badge badgeContent={cartItemCount} color="primary">
                   <ShoppingCartIcon fontSize='large'/>
                 </Badge>
               </Fab>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Toolbar>
       </AppBar>

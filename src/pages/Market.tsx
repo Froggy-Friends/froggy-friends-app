@@ -156,7 +156,7 @@ export default function Market() {
             <Grid id="golden-lilies" container pt={3} pb={3}>
               <Grid item pr={10} xl={4} lg={3} md={3} sm={12} xs={12}>
                 <Typography variant='h6' color='secondary'>
-                  Golden Lily Pads are loaded with perks that include: 
+                  Golden Lily Pads are loaded with these perks: 
                 </Typography>
                 <List>
                   <ListItem>
