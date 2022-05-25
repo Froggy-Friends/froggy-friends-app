@@ -75,7 +75,7 @@ export default function Header() {
                 <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/market")}>Market</Typography>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/leaderboard")}>Leaderboard</Typography>
+                <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/leaderboard")}>Board</Typography>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={REACT_APP_WEBSITE_URL + '/license'} underline='none' variant="h5" color="secondary">License</Link>
