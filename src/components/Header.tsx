@@ -55,7 +55,7 @@ export default function Header() {
   return (
       <AppBar position="fixed">
         <Toolbar disableGutters>
-          <Grid id="header" container justifyContent="space-between" alignItems="center" pl={2} pr={2} xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Grid id="header" container item justifyContent="space-between" alignItems="center" pl={2} pr={2} xl={12} lg={12} md={12} sm={12} xs={12}>
             <Grid container item xl={3} lg={4} md={4} sm={10} xs={10}>
               <Link href={REACT_APP_WEBSITE_URL} underline='none'>
                 <Avatar className={classes.avatar} alt='Home' src={logo} sx={{width: 65, height: 65}}/>

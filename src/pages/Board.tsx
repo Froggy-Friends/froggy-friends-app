@@ -24,26 +24,18 @@ export default function Board() {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const [leaders, setLeaders] = useState<Leaderboard[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const getLeaderboard = async () => {
       try {
-        setLoading(true);
         const response = await axios.get<Leaderboard[]>(`${process.env.REACT_APP_API}/leaderboard`);
-        console.log("response: ", response);
         setLeaders(response.data);
-        setLoading(false);
       } catch (error) {
         console.log("leaderboard error: ", error);
-        // setAlertMessage("Issue fetching froggies owned");
-        // setShowAlert(true);
-        setLoading(false);
       }
     };
     
     if (leaders.length === 0) {
-      console.log("get leaderboard...");
       getLeaderboard();
     }
   }, [leaders]);
