@@ -54,18 +54,26 @@ export default function Board() {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Staker</TableCell>
-                <TableCell>Ribbit</TableCell>
+                <TableCell><Typography variant='h5'>Rank</Typography></TableCell>
+                <TableCell><Typography variant='h5'>Staker</Typography></TableCell>
+                <TableCell><Typography variant='h5'>Ribbit</Typography></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {leaders.map((leader) => (
+              {leaders.map((leader, index) => (
                 <TableRow
                   key={leader.account}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row" color='secondary'>{leader.account}</TableCell>
-                  <TableCell>{leader.ribbit}</TableCell>
+                  <TableCell>
+                    <Typography variant='h6' color='secondary'>{index+1}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant='h6' color='secondary'>{leader.account}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant='h6' color='secondary'>{leader.ribbit}</Typography>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

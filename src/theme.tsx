@@ -160,7 +160,7 @@ let theme = createTheme({
           overflowY: 'scroll',
           backgroundColor: "#00000099",
           "::-webkit-scrollbar": {
-            width: 8,
+            width: 7,
             backgroundColor: "#181818"
           },
           "::-webkit-scrollbar-thumb": {
