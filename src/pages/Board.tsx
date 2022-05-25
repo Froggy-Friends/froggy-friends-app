@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import { createStyles, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { createStyles, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
 import skyscrapers from "../images/skyscrapers.png";
 import { useEffect, useState } from 'react';
 import { Leaderboard } from '../models/Leaderboard';
@@ -62,7 +62,7 @@ export default function Board() {
                     <Typography variant='h6' color='secondary'># {index+1}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant='h6' color='secondary'>{leader.account}</Typography>
+                    <Link href={`https://opensea.io/${leader.account}`} variant='h6' color='secondary' underline='none' target='_blank'>{leader.account}</Link>
                   </TableCell>
                   <TableCell>
                     <Grid container alignItems="center" minWidth={200}>
