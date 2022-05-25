@@ -6,6 +6,8 @@ import Market from "./pages/Market";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import MusicPlayer from "./components/MusicPlayer";
+import TempMarket from "./pages/TempMarket";
+import Board from "./pages/Board";
 
 export default function App() {
   return (
@@ -14,11 +16,12 @@ export default function App() {
       <Routes>
         <Route path="/staking" element={<Staking/>} />
         <Route path="/admin" element={<Admin/>} />
-        <Route path="/market" element={<Market/>}/>
+        <Route path="/market" element={<TempMarket/>}/>
+        <Route path="/leaderboard" element={<Board/>} />
         <Route path="*" element={ <Navigate to="/staking" replace />} />
       </Routes>
       <Footer/>
-      <MusicPlayer/>
+      {/* <MusicPlayer/> */}
     </Fragment>
   )
 }

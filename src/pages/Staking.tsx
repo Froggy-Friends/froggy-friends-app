@@ -311,12 +311,9 @@ export default function Staking() {
   }
   
   return (
-    <Grid id='app' className={classes.app} sx={{backgroundSize: getBackgroundSize()}} container direction='column' pb={30}>
+    <Grid id='app' className={classes.app} sx={{backgroundSize: getBackgroundSize()}} container direction='column' pt={20} pb={30}>
       <Container maxWidth='xl'>
         <Grid id='staking' container direction='column' textAlign='center' pt={10}>
-          <Grid item xl={12} lg={12} md={12} sm={12} xs={12} pb={8}>
-            <Typography variant='h2' color='secondary' fontWeight='bold'>Froggy Friends Staking</Typography>
-          </Grid>
           {
             froggiesStaked > 0 && 
             <Grid container item justifyContent='center' xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>

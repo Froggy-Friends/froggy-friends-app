@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useSound from 'use-sound';
 import { makeStyles } from '@mui/styles';
-import { Card, Box, CardContent, Typography, CardMedia, Theme, createStyles } from "@mui/material";
+import { Grid, Card, Box, CardContent, Typography, Theme, createStyles } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -58,7 +58,7 @@ export default function MusicPlayer() {
 
   return (
     <Card className={classes.player}>
-      <Box className={classes.playerBox}>
+      <Grid container>
         <CardContent sx={{ flex: '1 0 auto' }}>
           <Typography component="div" variant="h6" color="secondary">{track.name}</Typography>
           <Typography variant="subtitle1" color="secondary" component="div">{track.producer}</Typography>
@@ -74,13 +74,7 @@ export default function MusicPlayer() {
             <SkipNextIcon />
           </IconButton>
         </Box>
-      </Box>
-      <CardMedia
-        component="img"
-        sx={{ maxWidth: 160 }}
-        image={track.image}
-        alt={track.name}
-      />
+      </Grid>
     </Card>
   )
 }

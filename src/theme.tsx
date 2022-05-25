@@ -21,7 +21,20 @@ let theme = createTheme({
       color: 'black'
     }
   },
+  transitions: {
+    duration: {
+      enteringScreen: 750,
+      leavingScreen: 750
+    }
+  },
   components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#181818",
+        }
+      }
+    },
     MuiContainer: {
       styleOverrides: {
         root: {
@@ -112,11 +125,11 @@ let theme = createTheme({
         root: {
           color: "#ebedf1",
           fontSize: '1.2rem',
-          fontWeight: "bold",
           alignItems: 'start',
           padding: 24,
           "&.Mui-selected": {
-            color: "#5ea14e"
+            color: "#5ea14e",
+            fontWeight: 'bold'
           },
         },
       }
@@ -131,12 +144,45 @@ let theme = createTheme({
     MuiFab: {
       styleOverrides: {
         root: {
-          backgroundColor: "#181818",
-          color: "#ebedf1",
+          backgroundColor: "#ebedf1",
+          color: "#181818",
           ":hover": {
-            backgroundColor: "#181818",
+            backgroundColor: "#ebedf1",
             color: "#5ea14e"
           }
+        }
+      }
+    },
+    MuiTableContainer: {
+      styleOverrides: {
+        root: {
+          overflowY: 'scroll',
+          backgroundColor: "#00000099",
+          "::-webkit-scrollbar": {
+            width: 8,
+            height: 8,
+            backgroundColor: "#181818"
+          },
+          "::-webkit-scrollbar-thumb": {
+            backgroundColor: "#5ea14e",
+            borderRadius: 5,
+            height: 50,
+            width: 50
+          }
+        }
+      }
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          color: "#ebedf1"
+        }
+      }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#181818"
         }
       }
     }

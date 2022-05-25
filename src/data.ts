@@ -94,12 +94,24 @@ export const friendsData: Friend[] = [
     limit: 1,
     isActive: false,
     attributes: []
+  },
+  {
+    id: 8,
+    name: "Golden Dragon",
+    description: "",
+    image: dragon,
+    boost: 30,
+    price: 1000000,
+    supply: 1,
+    limit: 1,
+    isActive: true,
+    attributes: []
   }
 ];
 
 export const collabFriendsData: Friend[] = [
   {
-    id: 8,
+    id: 9,
     name: "Kaiju King",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/8.png",
@@ -111,7 +123,7 @@ export const collabFriendsData: Friend[] = [
     attributes: []
   },
   {
-    id: 9,
+    id: 10,
     name: "Cheetopia",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/9.png",
@@ -126,8 +138,8 @@ export const collabFriendsData: Friend[] = [
 
 export const nftData: RibbitItem[] = [
   {
-    id: 10,
-    name: "Froggy Friend #1424",
+    id: 11,
+    name: "Froggy #1424",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/1424.png",
     price: 5000,
@@ -137,8 +149,8 @@ export const nftData: RibbitItem[] = [
     attributes: []
   },
   {
-    id: 11,
-    name: "Froggy Friend #1673",
+    id: 12,
+    name: "Froggy #1673",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/1673.png",
     price: 5000,
@@ -148,8 +160,8 @@ export const nftData: RibbitItem[] = [
     attributes: []
   },
   {
-    id: 12,
-    name: "Froggy Friend #800",
+    id: 13,
+    name: "Froggy #800",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/800.png",
     price: 5000,
@@ -162,8 +174,8 @@ export const nftData: RibbitItem[] = [
 
 export const raffleData: RibbitItem[] = [
   {
-    id: 13,
-    name: "Froggy Friend #11",
+    id: 14,
+    name: "Froggy #11",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/11.png",
     price: 500,
@@ -173,8 +185,8 @@ export const raffleData: RibbitItem[] = [
     attributes: []
   },
   {
-    id: 14,
-    name: "Froggy Friend #12",
+    id: 15,
+    name: "Froggy #12",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/12.png",
     price: 500,
@@ -184,8 +196,8 @@ export const raffleData: RibbitItem[] = [
     attributes: []
   },
   {
-    id: 15,
-    name: "Froggy Friend #21",
+    id: 16,
+    name: "Froggy #21",
     description: "",
     image: "https://froggyfriends.mypinata.cloud/ipfs/QmNqUXJJNgJRqC9hDcjJQr4v6P8jWX49VqoQ4gb1KA7Z7k/21.png",
     price: 500,
