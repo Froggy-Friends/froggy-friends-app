@@ -19,12 +19,14 @@ body {
   overflow-y: scroll;
 }
 
-#root::-webkit-scrollbar {
-  width: 5px;
-  background-color: #181818;
-}
+@media only screen and (min-width: 1025px) {
+ #root::-webkit-scrollbar {
+    width: 5px;
+    background-color: #181818;
+  }
 
-#root::-webkit-scrollbar-thumb {
-  background-color: #5ea14e;
-  border-radius: 5px;
+  #root::-webkit-scrollbar-thumb {
+    background-color: #5ea14e;
+    border-radius: 5px;
+  } 
 }
