@@ -27,7 +27,7 @@ export default function Admin() {
   }
 
   return (
-    <Grid id="admin" container alignItems="center" direction="column" pt={10} pb={30}>
+    <Grid id="admin" container alignItems="center" direction="column" pt={20} pb={30}>
       <Typography variant="h3" pb={10}>Staking Deposits Checker </Typography>
 
       <Grid id="wallet" justifyContent="center" container pb={5}>
