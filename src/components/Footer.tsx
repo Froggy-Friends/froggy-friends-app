@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Avatar, Grid, Link, Typography, Theme, createStyles } from "@mui/material";
+import { Avatar, Grid, Link, Typography, Theme, createStyles, useTheme, useMediaQuery } from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import logo from '../images/logo.png';
 import twitter from '../images/twitter.png';
@@ -30,6 +30,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Footer() {
   const classes = useStyles();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTinyMobile = useMediaQuery(theme.breakpoints.down(400));
 
   return (
     <Grid id='footer' className={classes.footer} container justifyContent='center' textAlign='center'>
@@ -69,32 +72,39 @@ export default function Footer() {
               </Link>
             </Grid>
         </Grid>
-        <Grid container justifyContent='center' pt={2} maxWidth={500}>
-          <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+        <Grid container direction={isTinyMobile ? "column" : "row"} justifyContent='center' pt={2} maxWidth={500}>
+          <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
             <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none' color='secondary' variant="h6">Team</Link>
           </Grid>
-          <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+          <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
             <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none' color='secondary' variant="h6">Collabs</Link>
           </Grid>
-          <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+          <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
             <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/staking")}>Staking</Typography>
           </Grid>
-          <Grid item xl={2} lg={2} md={2} sm={2} xs={3}>
+          <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
             <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/market")}>Market</Typography>
           </Grid>
+          <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+            <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/leaderboard")}>Board</Typography>
+          </Grid>
         </Grid>
-        <Grid container justifyContent='space-between' mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '1px solid #b3b6bb'}}>
+        <Grid container justifyContent={isMobile ? 'center' : 'space-between'} mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '1px solid #b3b6bb'}}>
           <Grid item>
             <Typography color='secondary' pt={3}>&copy;	Froggy Friends NFT</Typography>
           </Grid>
           <Grid item>
-            <Grid container>
+            <Grid container alignItems='center'>
               <Link href={process.env.REACT_APP_WEBSITE_URL + '/terms-of-use'} underline='none'>
-                <Typography color='secondary' pt={3} pr={1}>Terms</Typography>
+                <Typography variant='body2' color='secondary' pt={3} pr={1}>Terms</Typography>
               </Link>
               <Typography color='secondary' pt={3}>•</Typography>
               <Link href={process.env.REACT_APP_WEBSITE_URL + '/privacy-policy'} underline='none'>
-                <Typography color='secondary' pt={3} pl={1}>Privacy</Typography>
+                <Typography variant='body2' color='secondary' pt={3} pl={1} pr={1}>Privacy</Typography>
+              </Link>
+              <Typography color='secondary' pt={3}>•</Typography>
+              <Link href={process.env.REACT_APP_WEBSITE_URL + '/license'} underline='none'>
+                <Typography variant='body2' color='secondary' pt={3} pl={1}>License</Typography>
               </Link>
             </Grid>
           </Grid>
