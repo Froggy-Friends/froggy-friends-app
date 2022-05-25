@@ -59,7 +59,7 @@ export default function Board() {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell>
-                    <Typography variant='h6' color='secondary'>{index+1}</Typography>
+                    <Typography variant='h6' color='secondary'># {index+1}</Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant='h6' color='secondary'>{leader.account}</Typography>
