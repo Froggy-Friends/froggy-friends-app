@@ -156,17 +156,18 @@ let theme = createTheme({
     MuiTableContainer: {
       styleOverrides: {
         root: {
-          maxHeight: 550,
           overflowY: 'scroll',
           backgroundColor: "#00000099",
           "::-webkit-scrollbar": {
-            width: 7,
+            width: 8,
+            height: 8,
             backgroundColor: "#181818"
           },
           "::-webkit-scrollbar-thumb": {
             backgroundColor: "#5ea14e",
             borderRadius: 5,
-            height: 50
+            height: 50,
+            width: 50
           }
         }
       }

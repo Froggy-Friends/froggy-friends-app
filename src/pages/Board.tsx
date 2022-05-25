@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import { createStyles, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography } from "@mui/material";
+import { createStyles, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
 import skyscrapers from "../images/skyscrapers.png";
 import { useEffect, useState } from 'react';
 import { Leaderboard } from '../models/Leaderboard';
@@ -22,6 +22,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 export default function Board() {
   const classes = useStyles();
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const [leaders, setLeaders] = useState<Leaderboard[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -50,7 +52,7 @@ export default function Board() {
   return (
     <Grid id="leaderboard" container className={classes.leaderboard} pt={10}>
       <Grid id="items" container item m={5} xl={6} lg={10} md={12} sm={12} xs={12}>
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{maxHeight: isDesktop ? 550 : 850}}>
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
