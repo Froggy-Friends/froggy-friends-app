@@ -102,7 +102,7 @@ export default function Header() {
           </Toolbar>
         </AppBar>
         <Drawer id="drawer" anchor="right" variant="persistent" open={sidemenuOpen}>
-          <Grid container direction="column" minWidth={300} p={3}>
+          <Grid container direction="column" minWidth={320} p={3}>
             <Grid id="title" container justifyContent="space-between" alignItems="center" pb={5}>
               <Grid item><Typography variant='h5' color='secondary'>Froggy Friends</Typography></Grid>
               <Grid item>
