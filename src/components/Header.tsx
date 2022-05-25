@@ -35,10 +35,12 @@ export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
+  const isMarket = location.pathname === "/market";
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
 
   const getTitle = () => {
-    if (location.pathname === "/market") {
+    if (isMarket) {
       return "Ribbit Prime";
     } else if (location.pathname === "/staking") {
       return "Ribbit Staking";
@@ -59,14 +61,14 @@ export default function Header() {
       <Fragment>
         <AppBar position="fixed">
           <Toolbar disableGutters>
-            <Grid id="header" container item justifyContent="space-between" alignItems="center" pl={4} pr={4} xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid container item xl={3} lg={4} md={4} sm={10} xs={10}>
-                <Link href={REACT_APP_WEBSITE_URL} underline='none'>
+            <Grid id="header" container item justifyContent="space-between" alignItems="center" pl={isMobile ? 2 : 4} pr={isMobile ? 2 : 4} xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid container item justifyContent="start" xl={3} lg={4} md={4} sm={10} xs={8}>
+                <Link display={isTinyMobile ? "none" : "flex"} href={REACT_APP_WEBSITE_URL} underline='none'>
                   <Avatar className={classes.avatar} alt='Home' src={logo} sx={{width: 65, height: 65}}/>
                 </Link>
                 <Typography variant='h5' color='secondary' fontWeight='bold' alignSelf="center" pl={3}>{getTitle()}</Typography>
               </Grid>
-              <Grid container item display={isMobile ? "none" : "flex"} xl={6} lg={6} mx={8} sm={12} xs={12}>
+              <Grid container item display={isMobile ? "none" : "flex"} xl={6} lg={5} mx={8} sm={12} xs={12}>
                 <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                   <Link href={REACT_APP_WEBSITE_URL + '/team'} underline='none' variant="h5" color="secondary">Team</Link>
                 </Grid>
@@ -86,18 +88,20 @@ export default function Header() {
                   <Link href={REACT_APP_WEBSITE_URL + '/license'} underline='none' variant="h5" color="secondary">License</Link>
                 </Grid> 
               </Grid>
-              <Grid item display={isMobile ? "flex" : "none"} justifyContent="end" sm={2} xs={2}>
-                <IconButton size="large" color="inherit" aria-label="menu" onClick={() => setSidemenuOpen(!sidemenuOpen)}>
-                  <MenuIcon/>
-                </IconButton>
+              <Grid container item justifyContent="end" xl={1} lg={1} md={2} sm={2} xs={4}>
+                <Grid item display={isMarket ? "flex" : "none"} pr={1}>
+                  <Fab size='small' onClick={onCartClick}>
+                    <Badge badgeContent={cartItemCount} color="primary">
+                      <ShoppingCartIcon fontSize='medium'/>
+                    </Badge>
+                  </Fab>
+                </Grid>
+                <Grid item display={isMobile ? "flex" : "none"} justifyContent="end">
+                  <IconButton size="large" color="inherit" aria-label="menu" onClick={() => setSidemenuOpen(!sidemenuOpen)}>
+                    <MenuIcon/>
+                  </IconButton>
+                </Grid>
               </Grid>
-              {/* <Grid container item justifyContent="center" alignItems="center" xl={1} lg={1} md={1} sm={1} xs={1}>
-                <Fab size='medium' onClick={onCartClick}>
-                  <Badge badgeContent={cartItemCount} color="primary">
-                    <ShoppingCartIcon fontSize='large'/>
-                  </Badge>
-                </Fab>
-              </Grid> */}
             </Grid>
           </Toolbar>
         </AppBar>
