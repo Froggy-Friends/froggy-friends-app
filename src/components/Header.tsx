@@ -40,6 +40,8 @@ export default function Header() {
       return "Ribbit Staking";
     } else if (location.pathname === "/admin") {
       return "Froggy Admin"
+    } else if (location.pathname === "/leaderboard") {
+      return "Ribbit Leaderboard";
     }
   }
 
@@ -59,7 +61,7 @@ export default function Header() {
               </Link>
               <Typography variant='h5' color='secondary' fontWeight='bold' alignSelf="center" pl={3}>{getTitle()}</Typography>
             </Grid>
-            <Grid container item justifyContent='center' alignItems="center" textAlign='center' xl={6} lg={6} md={6} sm={6} xs={9}>
+            <Grid container item justifyContent='center' alignItems="center" textAlign='center' pr={3} xl={6} lg={6} md={6} sm={6} xs={9}>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={REACT_APP_WEBSITE_URL + '/team'} underline='none' variant="h5" color="secondary">Team</Link>
               </Grid>
@@ -71,6 +73,9 @@ export default function Header() {
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/market")}>Market</Typography>
+              </Grid>
+              <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/leaderboard")}>Leaderboard</Typography>
               </Grid>
               <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                 <Link href={REACT_APP_WEBSITE_URL + '/license'} underline='none' variant="h5" color="secondary">License</Link>
