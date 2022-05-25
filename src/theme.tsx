@@ -178,6 +178,13 @@ let theme = createTheme({
           color: "#ebedf1"
         }
       }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#181818"
+        }
+      }
     }
   }
 });
