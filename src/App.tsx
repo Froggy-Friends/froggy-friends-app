@@ -7,7 +7,7 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import MusicPlayer from "./components/MusicPlayer";
 import TempMarket from "./pages/TempMarket";
-import Leaderboard from "./pages/Leaderboard";
+import Board from "./pages/Board";
 
 export default function App() {
   return (
@@ -17,7 +17,7 @@ export default function App() {
         <Route path="/staking" element={<Staking/>} />
         <Route path="/admin" element={<Admin/>} />
         <Route path="/market" element={<TempMarket/>}/>
-        <Route path="/leaderboard" element={<Leaderboard/>} />
+        <Route path="/leaderboard" element={<Board/>} />
         <Route path="*" element={ <Navigate to="/staking" replace />} />
       </Routes>
       <Footer/>
