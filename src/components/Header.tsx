@@ -5,6 +5,7 @@ import logo from '../images/logo.png';
 import theme from "../theme";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MenuIcon from '@mui/icons-material/Menu';
+import HeadphonesIcon from '@mui/icons-material/Headphones';
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { cartCount, toggle } from "../redux/cartSlice";
 import { Fragment, useState } from "react";
@@ -34,6 +35,7 @@ export default function Header() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
   const isMarket = location.pathname === "/market";
@@ -62,13 +64,13 @@ export default function Header() {
         <AppBar position="fixed">
           <Toolbar disableGutters>
             <Grid id="header" container item justifyContent="space-between" alignItems="center" pl={isMobile ? 2 : 4} pr={isMobile ? 2 : 4} xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid container item justifyContent="start" xl={3} lg={4} md={4} sm={10} xs={8}>
+              <Grid container item justifyContent="start" xl={3} lg={4} md={4} sm={9} xs={7}>
                 <Link display={isTinyMobile ? "none" : "flex"} href={REACT_APP_WEBSITE_URL} underline='none'>
                   <Avatar className={classes.avatar} alt='Home' src={logo} sx={{width: 65, height: 65}}/>
                 </Link>
                 <Typography variant='h5' color='secondary' fontWeight='bold' alignSelf="center" pl={3}>{getTitle()}</Typography>
               </Grid>
-              <Grid container item display={isMobile ? "none" : "flex"} xl={6} lg={5} mx={8} sm={12} xs={12}>
+              <Grid container item display={isMobile ? "none" : "flex"} xl={6} lg={5}>
                 <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                   <Link href={REACT_APP_WEBSITE_URL + '/team'} underline='none' variant="h5" color="secondary">Team</Link>
                 </Grid>
@@ -85,7 +87,14 @@ export default function Header() {
                   <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/leaderboard")}>Board</Typography>
                 </Grid> 
               </Grid>
-              <Grid container item justifyContent="end" xl={1} lg={1} md={2} sm={2} xs={4}>
+              <Grid container item justifyContent="end" xl={1} lg={1} md={2} sm={3} xs={5}>
+                <Grid item display={isMarket && !isSmallMobile ? "flex" : "none"} pr={3}>
+                  <Fab size='small' onClick={onCartClick}>
+                    <Badge badgeContent={cartItemCount} color="primary">
+                      <HeadphonesIcon fontSize='medium'/>
+                    </Badge>
+                  </Fab>
+                </Grid>
                 <Grid item display={isMarket ? "flex" : "none"} pr={1}>
                   <Fab size='small' onClick={onCartClick}>
                     <Badge badgeContent={cartItemCount} color="primary">
@@ -129,6 +138,13 @@ export default function Header() {
             </Grid>
             <Grid item pb={3}>
               <Link href={REACT_APP_WEBSITE_URL + '/license'} underline='none' variant="h5" color="secondary">License</Link>
+            </Grid>
+            <Grid id='music' item>
+              <Fab size='small' onClick={onCartClick}>
+                <Badge badgeContent={cartItemCount} color="primary">
+                  <HeadphonesIcon fontSize='medium'/>
+                </Badge>
+              </Fab>
             </Grid>
           </Grid>
         </Drawer>
