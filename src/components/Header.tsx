@@ -1,15 +1,13 @@
+import { forwardRef, Fragment, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { makeStyles } from '@mui/styles';
+import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Tooltip, Box } from "@mui/material";
+import { Close, ShoppingCart, Menu, Headphones } from "@mui/icons-material";
+import { cartCount, toggle } from "../redux/cartSlice";
 import logo from '../images/logo.png';
 import theme from "../theme";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import MenuIcon from '@mui/icons-material/Menu';
-import HeadphonesIcon from '@mui/icons-material/Headphones';
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { cartCount, toggle } from "../redux/cartSlice";
-import { Fragment, useState } from "react";
-import { Close } from "@mui/icons-material";
+import MusicPlayer from "./MusicPlayer";
 
 const { REACT_APP_WEBSITE_URL } = process.env;
 
@@ -40,6 +38,7 @@ export default function Header() {
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
   const isMarket = location.pathname === "/market";
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
+  const [musicOpen, setMusicOpen] = useState<boolean>(false);
 
   const getTitle = () => {
     if (isMarket) {
@@ -51,6 +50,10 @@ export default function Header() {
     } else if (location.pathname === "/leaderboard") {
       return "Leaderboard";
     }
+  }
+
+  const onMusicClick = () => {
+    setMusicOpen(!musicOpen);
   }
 
   const onCartClick = () => {
@@ -88,23 +91,27 @@ export default function Header() {
                 </Grid> 
               </Grid>
               <Grid container item justifyContent="end" xl={1} lg={1} md={2} sm={3} xs={5}>
-                <Grid item display={isMarket && !isSmallMobile ? "flex" : "none"} pr={3}>
-                  <Fab size='small' onClick={onCartClick}>
-                    <Badge badgeContent={cartItemCount} color="primary">
-                      <HeadphonesIcon fontSize='medium'/>
-                    </Badge>
-                  </Fab>
+                <Grid item display={isMarket && !isMobile ? "flex" : "none"} pr={3}>
+                  <Tooltip arrow leaveDelay={300} placement='bottom-start' title={
+                    <Fragment>
+                      <MusicPlayer/>
+                    </Fragment>
+                    }>
+                    <Fab size='small'>
+                      <Headphones fontSize='medium'/>
+                    </Fab>
+                  </Tooltip>
                 </Grid>
                 <Grid item display={isMarket ? "flex" : "none"} pr={1}>
                   <Fab size='small' onClick={onCartClick}>
                     <Badge badgeContent={cartItemCount} color="primary">
-                      <ShoppingCartIcon fontSize='medium'/>
+                      <ShoppingCart fontSize='medium'/>
                     </Badge>
                   </Fab>
                 </Grid>
                 <Grid item display={isMobile ? "flex" : "none"} justifyContent="end">
                   <IconButton size="large" color="inherit" aria-label="menu" onClick={() => setSidemenuOpen(!sidemenuOpen)}>
-                    <MenuIcon/>
+                    <Menu/>
                   </IconButton>
                 </Grid>
               </Grid>
@@ -140,11 +147,12 @@ export default function Header() {
               <Link href={REACT_APP_WEBSITE_URL + '/license'} underline='none' variant="h5" color="secondary">License</Link>
             </Grid>
             <Grid id='music' item>
-              <Fab size='small' onClick={onCartClick}>
-                <Badge badgeContent={cartItemCount} color="primary">
-                  <HeadphonesIcon fontSize='medium'/>
-                </Badge>
+              <Fab size='small' onClick={onMusicClick} sx={{marginBottom: 2}}>
+                <Headphones fontSize='medium'/>
               </Fab>
+              {
+                musicOpen && <MusicPlayer/>
+              }
             </Grid>
           </Grid>
         </Drawer>

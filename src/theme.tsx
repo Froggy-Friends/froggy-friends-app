@@ -13,6 +13,9 @@ let theme = createTheme({
     },
     success: {
       main: '#cfdcae'
+    },
+    info: {
+      main: '#181818'
     }
   },
   typography: {
@@ -77,6 +80,11 @@ let theme = createTheme({
           textAlign: 'center',
           "&.disabled": {
             backgroundColor: "#ebedf145"
+          },
+          "&.inverted": {
+            border: 'none',
+            backgroundColor: "#ebedf1",
+            color: "#181818"
           }
         }
       }
@@ -183,6 +191,13 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: "#181818"
+        }
+      }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltipPlacementBottom: {
+          backgroundColor: 'transparent'
         }
       }
     }
