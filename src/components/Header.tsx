@@ -23,6 +23,10 @@ const useStyles: any = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('lg')]: {
         marginTop: '10px'
       }
+    },
+    musicPlayer: {
+      position: 'absolute',
+      inset: '80px 10px auto auto'
     }
   })
 );
@@ -92,15 +96,9 @@ export default function Header() {
               </Grid>
               <Grid container item justifyContent="end" xl={1} lg={1} md={2} sm={3} xs={5}>
                 <Grid item display={isMarket && !isMobile ? "flex" : "none"} pr={3}>
-                  <Tooltip arrow leaveDelay={300} placement='bottom-start' title={
-                    <Fragment>
-                      <MusicPlayer/>
-                    </Fragment>
-                    }>
-                    <Fab size='small'>
+                    <Fab size='small' onClick={onMusicClick}>
                       <Headphones fontSize='medium'/>
                     </Fab>
-                  </Tooltip>
                 </Grid>
                 <Grid item display={isMarket ? "flex" : "none"} pr={1}>
                   <Fab size='small' onClick={onCartClick}>
@@ -156,6 +154,9 @@ export default function Header() {
             </Grid>
           </Grid>
         </Drawer>
+        <div className={classes.musicPlayer} hidden={!musicOpen}>
+          <MusicPlayer/>
+        </div>
       </Fragment>
   )
 }

@@ -110,7 +110,7 @@ export default function Market() {
   }
 
   return (
-    <Grid id="market" className={classes.market} container direction="column" justifyContent="center" pt={15} pb={30}>
+    <Grid id="market" className={classes.market} container direction="column" justifyContent="center" pt={20} pb={30}>
       <Grid id="filters" item alignItems="center" p={2}>
         <ToggleButtonGroup
           color="primary"
