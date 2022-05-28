@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Card, Box, CardContent, Typography, CardMedia } from "@mui/material";
 import { tracks, sprite } from "../data";
 import { Track } from "../models/Track";
+import { useAppDispatch } from "../redux/hooks";
+import { togglePlay } from "../redux/musicSlice";
 import useSound from 'use-sound';
 import IconButton from '@mui/material/IconButton';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
@@ -16,6 +18,7 @@ interface MusicPlayerProps {
 
 export default function MusicPlayer(props: MusicPlayerProps) {
   const { inverted } = props;
+  const dispatch = useAppDispatch();
   const [current, setCurrent] = useState(0);
   const [track, setTrack] = useState<Track>(tracks[current]);
   const [play, {pause}] = useSound(mix, { id: tracks[current].id, sprite: sprite});
@@ -25,9 +28,11 @@ export default function MusicPlayer(props: MusicPlayerProps) {
     if (playToggle) {
       play({id: track.id});
       setPlaying(playToggle);
+      dispatch(togglePlay({isPlaying: true}));
     } else {
       pause();
       setPlaying(playToggle);
+      dispatch(togglePlay({isPlaying: false}));
     }
   }
 

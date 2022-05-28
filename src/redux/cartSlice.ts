@@ -1,5 +1,5 @@
 import { RibbitItem } from './../models/RibbitItem';
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from './store';
 
 interface CartState {

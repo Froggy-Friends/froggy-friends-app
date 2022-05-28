@@ -1,10 +1,11 @@
-import { forwardRef, Fragment, useState } from "react";
+import { Fragment, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { makeStyles } from '@mui/styles';
 import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Tooltip, Box, Fade } from "@mui/material";
 import { Close, ShoppingCart, Menu, Headphones } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
+import { isPlaying } from "../redux/musicSlice";
 import logo from '../images/logo.png';
 import theme from "../theme";
 import MusicPlayer from "./MusicPlayer";
@@ -34,11 +35,11 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 export default function Header() {
   const classes = useStyles();
-  const cartItemCount = useAppSelector(cartCount);
   const dispatch = useAppDispatch();
+  const cartItemCount = useAppSelector(cartCount);
+  const playing = useAppSelector(isPlaying);
   const navigate = useNavigate();
   const location = useLocation();
-  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
   const isMarket = location.pathname === "/market";
@@ -97,9 +98,11 @@ export default function Header() {
               </Grid>
               <Grid container item justifyContent="end" xl={1} lg={1} md={2} sm={3} xs={5}>
                 <Grid item display={!isMobile ? "flex" : "none"} pr={3}>
-                    <Fab size='small' onClick={onMusicClick}>
+                  <Fab size='small' onClick={onMusicClick}>
+                    <Badge invisible={!playing} badgeContent=" " color="primary">
                       <Headphones fontSize='medium'/>
-                    </Fab>
+                    </Badge>
+                  </Fab>
                 </Grid>
                 <Grid item display={isMarket ? "flex" : "none"} pr={1}>
                   <Fab size='small' onClick={onCartClick}>
