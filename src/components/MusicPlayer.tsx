@@ -6,7 +6,7 @@ import useSound from 'use-sound';
 import IconButton from '@mui/material/IconButton';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import StopCircleIcon from '@mui/icons-material/StopCircle';
+import StopIcon from '@mui/icons-material/Stop';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import mix from "../tracks/mix.mp3";
 
@@ -95,7 +95,7 @@ export default function MusicPlayer(props: MusicPlayerProps) {
             <SkipPreviousIcon />
           </IconButton>
           <IconButton aria-label="play/pause" color={inverted ? "info" : "secondary"} onClick={() => onPlayToggle(!playing)}>
-            { playing ? <StopCircleIcon sx={{ height: 38, width: 38 }}/> : <PlayArrowIcon sx={{ height: 38, width: 38 }} /> }
+            { playing ? <StopIcon sx={{ height: 38, width: 38 }}/> : <PlayArrowIcon sx={{ height: 38, width: 38 }} /> }
           </IconButton>
           <IconButton aria-label="next" color={inverted ? "info" : "secondary"} onClick={onNext}>
             <SkipNextIcon />

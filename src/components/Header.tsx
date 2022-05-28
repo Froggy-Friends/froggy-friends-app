@@ -96,7 +96,7 @@ export default function Header() {
                 </Grid> 
               </Grid>
               <Grid container item justifyContent="end" xl={1} lg={1} md={2} sm={3} xs={5}>
-                <Grid item display={isMarket && !isMobile ? "flex" : "none"} pr={3}>
+                <Grid item display={!isMobile ? "flex" : "none"} pr={3}>
                     <Fab size='small' onClick={onMusicClick}>
                       <Headphones fontSize='medium'/>
                     </Fab>
