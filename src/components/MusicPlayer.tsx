@@ -32,15 +32,28 @@ export default function MusicPlayer(props: MusicPlayerProps) {
   }
 
   const onPrevious = () => {
-    // end of playlist, start from beginning
-    let newCurrent;
+    // pause previuos track
+    if (playing) {
+      pause();
+    }
+
     let newTrack;
+    // skip to end of playlist
     if (current === 0) {
-      newCurrent = tracks.length-1;
-      newTrack = tracks[newCurrent];
-      setCurrent(newCurrent);
-      setTrack(tracks[newCurrent]);
-      play({id: track.id})
+      newTrack = tracks[tracks.length - 1];
+      setCurrent(tracks.length - 1);
+      setTrack(newTrack);
+    }
+    // skip to previous track of playlist
+    else {
+      newTrack = tracks[current - 1];
+      setCurrent(current - 1);
+      setTrack(newTrack);
+    }
+
+    // auto play previous track if user is listenting to music
+    if (playing) {
+      play({id: newTrack.id});
     }
   }
 
@@ -51,7 +64,7 @@ export default function MusicPlayer(props: MusicPlayerProps) {
     }
 
     let newTrack;
-    // start from beginning of playlist
+    // skip to beginning of playlist
     if (current === tracks.length -1) {
       newTrack = tracks[0];
       setCurrent(0);
