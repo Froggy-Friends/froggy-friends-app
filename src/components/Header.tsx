@@ -2,7 +2,7 @@ import { forwardRef, Fragment, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { makeStyles } from '@mui/styles';
-import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Tooltip, Box } from "@mui/material";
+import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Tooltip, Box, Fade } from "@mui/material";
 import { Close, ShoppingCart, Menu, Headphones } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
 import logo from '../images/logo.png';
@@ -26,7 +26,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
     },
     musicPlayer: {
       position: 'absolute',
-      inset: '80px 10px auto auto'
+      inset: '80px 10px auto auto',
+      maxWidth: 300
     }
   })
 );
@@ -149,14 +150,16 @@ export default function Header() {
                 <Headphones fontSize='medium'/>
               </Fab>
               {
-                musicOpen && <MusicPlayer/>
+                musicOpen && <MusicPlayer inverted/>
               }
             </Grid>
           </Grid>
         </Drawer>
-        <div className={classes.musicPlayer} hidden={!musicOpen}>
-          <MusicPlayer/>
-        </div>
+        <Fade in={musicOpen}>
+          <Grid id='player' className={classes.musicPlayer} container>
+            <MusicPlayer inverted={false}/>
+          </Grid>
+        </Fade>
       </Fragment>
   )
 }
