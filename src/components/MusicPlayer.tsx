@@ -6,7 +6,7 @@ import useSound from 'use-sound';
 import IconButton from '@mui/material/IconButton';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from "@mui/icons-material/Pause";
+import StopCircleIcon from '@mui/icons-material/StopCircle';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import mix from "../tracks/mix.mp3";
 
@@ -45,22 +45,27 @@ export default function MusicPlayer(props: MusicPlayerProps) {
   }
 
   const onNext = () => {
-    pause();
-    let newCurrent;
+    // pause previous track
+    if (playing) {
+      pause();
+    }
+
     let newTrack;
+    // start from beginning of playlist
     if (current === tracks.length -1) {
-      console.log("skip next song end of playliist: ", current, track);
-      newCurrent = 0;
       newTrack = tracks[0];
-      setCurrent(newCurrent);
+      setCurrent(0);
       setTrack(newTrack);
-      play({id: newTrack.id});
-    } else {
-      console.log("skip next song: ", current, track);
-      newCurrent = current + 1;
-      newTrack = tracks[newCurrent];
-      setCurrent(newCurrent);
+    }
+    // skip to next track of playlist
+    else {
+      newTrack = tracks[current + 1];
+      setCurrent(current + 1);
       setTrack(newTrack);
+    }
+
+    // auto play next track if user is listening to music
+    if (playing) {
       play({id: newTrack.id});
     }
   }
@@ -77,7 +82,7 @@ export default function MusicPlayer(props: MusicPlayerProps) {
             <SkipPreviousIcon />
           </IconButton>
           <IconButton aria-label="play/pause" color={inverted ? "info" : "secondary"} onClick={() => onPlayToggle(!playing)}>
-            { playing ? <PauseIcon sx={{ height: 38, width: 38 }}/> : <PlayArrowIcon sx={{ height: 38, width: 38 }} /> }
+            { playing ? <StopCircleIcon sx={{ height: 38, width: 38 }}/> : <PlayArrowIcon sx={{ height: 38, width: 38 }} /> }
           </IconButton>
           <IconButton aria-label="next" color={inverted ? "info" : "secondary"} onClick={onNext}>
             <SkipNextIcon />
