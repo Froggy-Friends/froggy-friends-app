@@ -1,8 +1,7 @@
 import { RibbitItem } from './models/RibbitItem';
 import { Friend } from "./models/Friend";
 import { Track } from "./models/Track";
-import emirald from "./tracks/Emirald.mp3";
-import dragon from "./images/dragon.png";
+import { SpriteMap } from 'use-sound/dist/types';
 
 export const stakeUrl = "https://froggyfriends.mypinata.cloud/ipfs/QmWh3P7tFJ3inUWKDC63331Fc9pAjPY7uALQobQG3fNT9H";
 
@@ -11,7 +10,7 @@ export const froggyKingData: RibbitItem[] = [
     id: 1,
     name: "Golden Dragon Friend",
     description: "",
-    image: dragon,
+    image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/2.png",
     price: 1000000,
     supply: 1,
     limit: 1,
@@ -97,9 +96,9 @@ export const friendsData: Friend[] = [
   },
   {
     id: 8,
-    name: "Golden Dragon",
+    name: "Golden Tiger",
     description: "",
-    image: dragon,
+    image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/2.png",
     boost: 30,
     price: 1000000,
     supply: 1,
@@ -210,9 +209,20 @@ export const raffleData: RibbitItem[] = [
 
 export const tracks: Track[] = [
   {
+    id: 'lily',
     name: "Chocolate Lily",
     producer: "Lidly",
-    sound: emirald,
+    image: stakeUrl
+  },
+  {
+    id: 'bento',
+    name: 'Bento',
+    producer: 'Bakcward',
     image: stakeUrl
   }
 ]
+
+export const sprite: SpriteMap = {
+  lily: [0, 127000],
+  bento: [138000, 120000]
+}
