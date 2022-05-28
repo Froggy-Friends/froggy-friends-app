@@ -1,31 +1,24 @@
 import { useState } from "react";
+import { Card, Box, CardContent, Typography, CardMedia } from "@mui/material";
+import { tracks } from "../data";
+import { Track } from "../models/Track";
 import useSound from 'use-sound';
-import { makeStyles } from '@mui/styles';
-import { Card, Box, CardContent, Typography, Theme, createStyles, CardMedia } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from "@mui/icons-material/Pause";
 import SkipNextIcon from '@mui/icons-material/SkipNext';
-import { tracks } from "../data";
-import { Track } from "../models/Track";
 
-const useStyles: any = makeStyles((theme: Theme) => 
-  createStyles({
-
-  })
-);
 
 export default function MusicPlayer() {
-  const classes = useStyles();
   const [current, setCurrent] = useState(0);
   const [track, setTrack] = useState<Track>(tracks[current]);
   const [play, {pause}] = useSound(track.sound);
   const [playing, setPlaying] = useState(false);
 
-  const onToggle = (isPlaying: boolean) => {
-    isPlaying ? play() : pause();
-    setPlaying(isPlaying);
+  const onPlayToggle = () => {
+    playing ? pause() : play();
+    setPlaying(!playing);
   }
 
   const onPrevious = () => {
@@ -56,7 +49,7 @@ export default function MusicPlayer() {
           <IconButton aria-label="previous" color="info" onClick={onPrevious}>
             <SkipPreviousIcon />
           </IconButton>
-          <IconButton aria-label="play/pause" color="info" onClick={() => onToggle(!playing)}>
+          <IconButton aria-label="play/pause" color="info" onClick={() => onPlayToggle()}>
             { playing ? <PauseIcon sx={{ height: 38, width: 38 }}/> : <PlayArrowIcon sx={{ height: 38, width: 38 }} /> }
           </IconButton>
           <IconButton aria-label="next" color="info" onClick={onNext}>
