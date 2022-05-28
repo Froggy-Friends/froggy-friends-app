@@ -90,7 +90,7 @@ export default function MusicPlayer(props: MusicPlayerProps) {
 
   return (
     <Card className={inverted ? "inverted" : ""} sx={{ display: 'flex', minWidth: 250 }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 150 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 200 }}>
         <CardContent sx={{ flex: '1 0 auto' }}>
           <Typography component="div" variant="h6" color={inverted ? "info" : "secondary"}>{track.name}</Typography>
           <Typography variant="subtitle1" color={inverted ? "info" : "secondary"} component="div">{track.producer}</Typography>
@@ -107,7 +107,7 @@ export default function MusicPlayer(props: MusicPlayerProps) {
           </IconButton>
         </Box>
       </Box>
-      <CardMedia component="img" sx={{ width: 130 }} image={track.image} alt={track.name}/>
+      <CardMedia component="img" sx={{ width: 200, height: 150 }} image={track.image} alt={track.name}/>
     </Card>
   )
 }

@@ -28,7 +28,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
     musicPlayer: {
       position: 'absolute',
       inset: '80px 10px auto auto',
-      maxWidth: 300
+      maxWidth: 350
     }
   })
 );
@@ -96,7 +96,7 @@ export default function Header() {
                   <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/leaderboard")}>Board</Typography>
                 </Grid> 
               </Grid>
-              <Grid container item justifyContent="end" xl={1} lg={1} md={2} sm={3} xs={5}>
+              <Grid container item justifyContent="end" xl={1} lg={2} md={2} sm={3} xs={5}>
                 <Grid item display={!isMobile ? "flex" : "none"} pr={3}>
                   <Fab size='small' onClick={onMusicClick}>
                     <Badge invisible={!playing} badgeContent=" " color="primary">
