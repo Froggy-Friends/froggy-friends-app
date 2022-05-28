@@ -225,11 +225,18 @@ export const tracks: Track[] = [
     name: 'Meganebashi',
     producer: 'Lidly',
     image: 'https://froggyfriends.mypinata.cloud/ipfs/QmYnqum74kfCWpyN52Rqscqwbt5iqa3aS8FbsvWuasLM5d'
+  },
+  {
+    id: 'cafe',
+    name: 'Pancake Cafe',
+    producer: 'Bakcward',
+    image: 'https://froggyfriends.mypinata.cloud/ipfs/Qme3MSvme4rzhhFFRbbuPwmGwooUqBAB8u5Lz6uAmM4YB5'
   }
 ]
 
 export const sprite: SpriteMap = {
   lily: [0, 127000],
   bento: [138000, 120000],
-  meganebashi: [270000, 150000]
+  meganebashi: [270000, 150000],
+  cafe: [430000, 150000]
 }
