@@ -237,6 +237,12 @@ export const tracks: Track[] = [
     name: 'Meteor Station',
     producer: 'Bakcward',
     image: 'https://froggyfriends.mypinata.cloud/ipfs/QmW5agbxds8YkC3fSDbbSz1zqW2c687QdxcTcmgAW7s6aG'
+  },
+  {
+    id: 'district',
+    name: 'Onryō District',
+    producer: 'Bakcward',
+    image: 'https://froggyfriends.mypinata.cloud/ipfs/QmXoQJ8dtX4SmtaZX9jGcSqSWaTFwBhr2m9WcfCEPZx9xq'
   }
 ]
 
@@ -245,5 +251,6 @@ export const sprite: SpriteMap = {
   bento: [138000, 120000],
   meganebashi: [270000, 150000],
   cafe: [430000, 150000],
-  meteor: [588000, 106000]
+  meteor: [588000, 106000],
+  district: [706000, 116000]
 }

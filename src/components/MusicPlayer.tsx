@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Box, CardContent, Typography, CardMedia } from "@mui/material";
 import { tracks, sprite } from "../data";
 import { Track } from "../models/Track";
@@ -21,8 +21,24 @@ export default function MusicPlayer(props: MusicPlayerProps) {
   const dispatch = useAppDispatch();
   const [current, setCurrent] = useState(0);
   const [track, setTrack] = useState<Track>(tracks[current]);
-  const [play, {pause}] = useSound(mix, { id: tracks[current].id, sprite: sprite});
   const [playing, setPlaying] = useState(false);
+  const [songEnded, setSongEnded] = useState(false);
+  const [play, {pause}] = useSound(mix, 
+    { 
+      id: tracks[current].id, 
+      sprite: sprite,
+      autoplay: true,
+      onend: () => setSongEnded(true)
+    }
+  );
+
+  useEffect(() => {
+    if (songEnded) {
+      setSongEnded(false);
+      setPlaying(true);
+      onNext();
+    }
+  }, [songEnded]);
 
   const onPlayToggle = (playToggle: boolean) => {
     if (playToggle) {
