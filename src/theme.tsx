@@ -145,7 +145,8 @@ let theme = createTheme({
     MuiTabs: {
       styleOverrides: {
         root: {
-          minWidth: 200
+          minWidth: 200,
+          color: '#5ea14e'
         }
       }
     },
@@ -200,7 +201,25 @@ let theme = createTheme({
           backgroundColor: 'transparent'
         }
       }
-    }
+    },
+    MuiGrid: {
+      styleOverrides: {
+        root: {
+          "::-webkit-scrollbar": {
+            width: 8,
+            height: 8,
+            backgroundColor: "#181818"
+          },
+          "::-webkit-scrollbar-thumb": {
+            backgroundColor: "#5ea14e",
+            borderRadius: 5,
+            height: 50,
+            width: 50
+          }
+        }
+      }
+    },
+    
   }
 });
 

@@ -5,12 +5,11 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { RibbitItem } from '../models/RibbitItem';
 import { commify } from '@ethersproject/units';
 import { Friend } from '../models/Friend';
-import { collabFriendsData, friendsData, froggyKingData, goldenLilyPadsData, nftData, raffleData } from '../data';
-import market from "../images/market.png";
-import ribbit from '../images/ribbit.gif';
-import biz from '../images/biz.png';
+import { collabFriendsData, friendsData, froggyKingData, goldenLilyPadsData, nftData, raffleData, marketplaceUrl } from '../data';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { add, cartItems, cartOpen } from '../redux/cartSlice';
+import ribbit from '../images/ribbit.gif';
+import biz from '../images/biz.png';
 
 interface TabPanelProps {
   id: string;
@@ -23,7 +22,7 @@ function TabPanel(props: TabPanelProps) {
   const { children, value, index, id, ...other } = props;
 
   return (
-    <Grid id={id} hidden={value !== index} role="tabpanel" aria-labelledby={`vertical-tab-${index}`} {...other}>
+    <Grid id={id} hidden={value !== index} role="tabpanel" aria-labelledby={`vertical-tab-${index}`} sx={{maxHeight: 750, overflowY: 'scroll'}} {...other}>
       {value === index && (
         <Grid p={3} pt={5}>
           {children}
@@ -43,11 +42,18 @@ function a11yProps(id: string) {
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     market: {
-      backgroundImage: `linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0)), url(${market})`,
+      backgroundImage: `linear-gradient(rgba(0,0,0,0), rgba(0, 0, 0, 0)), url(${marketplaceUrl})`,
       backgroundColor: '#000000',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
-      minHeight: '100%'
+      minHeight: '130%'
+    },
+    tabs: {
+      backgroundColor: '#000000d1'
+    },
+    panel: {
+      maxHeight: 800, 
+      overflowY: 'scroll'
     },
     cart: {
       padding: theme.spacing(1),
@@ -110,20 +116,21 @@ export default function Market() {
   }
 
   return (
-    <Grid id="market" className={classes.market} container direction="column" justifyContent="center" pt={20} pb={30}>
+    <Grid id="market" className={classes.market} container direction="column" justifyContent="start" pt={15}>
       <Grid id="filters" item alignItems="center" p={2}>
         <ToggleButtonGroup
           color="primary"
           value={activeFilter}
           exclusive
           onChange={onFilterToggle}
+          sx={{bgcolor: "#000000d1"}}
         >
           <ToggleButton value={true}>Avl</ToggleButton>
           <ToggleButton value={false}>All</ToggleButton>
         </ToggleButtonGroup>
       </Grid>
-      <Grid id="items-and-cart" container p={2} minHeight={800}>
-        <Grid id="items" item bgcolor="#00000099" xl={10} lg={10} md={12} sm={12} xs={12}>
+      <Grid id="items-and-cart" container p={2} minHeight={855}>
+        <Grid id="items" className={classes.tabs} item xl={10} lg={10} md={12} sm={12} xs={12}>
           <Tabs
             orientation="horizontal"
             variant="scrollable"
@@ -352,8 +359,8 @@ export default function Market() {
           </TabPanel>
         </Grid>
         <Fade id='cart' in={isCartOpen}>
-          <Grid container item pl={3} xl={2} lg={2} maxHeight={800}>
-              <Grid id="cart-container" container item bgcolor="#00000099">
+          <Grid container item pl={3} xl={2} lg={2}>
+              <Grid id="cart-container" container item bgcolor="#000000d1">
                 <Typography variant='h4' color='secondary' p={2}>Ribbit Cart</Typography>
                 {
                   items.map(item => {

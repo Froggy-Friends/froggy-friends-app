@@ -4,6 +4,7 @@ import { Track } from "./models/Track";
 import { SpriteMap } from 'use-sound/dist/types';
 
 export const stakeUrl = "https://froggyfriends.mypinata.cloud/ipfs/QmWh3P7tFJ3inUWKDC63331Fc9pAjPY7uALQobQG3fNT9H";
+export const marketplaceUrl = 'https://froggyfriends.mypinata.cloud/ipfs/QmdeDd4KWirXgxQBpVq1MaDhowQwsf3tjRqQUreCXYpG6z';
 
 export const froggyKingData: RibbitItem[] = [
   {
@@ -260,7 +261,7 @@ export const tracks: Track[] = [
     id: 'marketplace',
     name: 'Marketplace',
     producer: 'Bakcward',
-    image: 'https://froggyfriends.mypinata.cloud/ipfs/QmdeDd4KWirXgxQBpVq1MaDhowQwsf3tjRqQUreCXYpG6z'
+    image: marketplaceUrl
   },
   {
     id: 'noodle',
@@ -276,6 +277,8 @@ export const tracks: Track[] = [
   }
 ]
 
+// first number is start time in milliseconds
+// second number is duration of track in milliseconds
 export const sprite: SpriteMap = {
   lily: [0, 127000],
   bento: [138000, 120000],
