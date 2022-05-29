@@ -243,6 +243,36 @@ export const tracks: Track[] = [
     name: 'Onryō District',
     producer: 'Bakcward',
     image: 'https://froggyfriends.mypinata.cloud/ipfs/QmXoQJ8dtX4SmtaZX9jGcSqSWaTFwBhr2m9WcfCEPZx9xq'
+  },
+  {
+    id: 'emirald',
+    name: 'Mt. Emirald',
+    producer: 'Bakcward',
+    image: 'https://froggyfriends.mypinata.cloud/ipfs/QmYwGKmSgrNLjiCfz62WBTZHgDuGzMsT8o3xo874Mr3r9J'
+  },
+  {
+    id: 'highrise',
+    name: 'Highrise',
+    producer: 'Bakcward',
+    image: 'https://froggyfriends.mypinata.cloud/ipfs/QmSARgYs31JXssoicMNcW5mZEVdUQUmCeu1hnvJTHXQpVQ'
+  },
+  {
+    id: 'marketplace',
+    name: 'Marketplace',
+    producer: 'Bakcward',
+    image: 'https://froggyfriends.mypinata.cloud/ipfs/QmdeDd4KWirXgxQBpVq1MaDhowQwsf3tjRqQUreCXYpG6z'
+  },
+  {
+    id: 'noodle',
+    name: 'Noodle House',
+    producer: 'Bakcward',
+    image: 'https://froggyfriends.mypinata.cloud/ipfs/QmS9bwxXkHqhia6jzq84cB1khYsGppUfhGFumkK6qZuojJ'
+  },
+  {
+    id: 'dreamer',
+    name: 'Dreamer',
+    producer: 'Bakcward',
+    image: 'https://froggyfriends.mypinata.cloud/ipfs/QmZgVtvJMwDCyXH8r58guPLuBz2vAqEPd8wuSTfSEytbBR'
   }
 ]
 
@@ -252,5 +282,10 @@ export const sprite: SpriteMap = {
   meganebashi: [270000, 150000],
   cafe: [430000, 150000],
   meteor: [588000, 106000],
-  district: [706000, 116000]
+  district: [706000, 116000],
+  emirald: [834000, 158000],
+  highrise: [1002000, 112000],
+  marketplace: [1124000, 148000],
+  noodle: [1282000, 168000],
+  dreamer: [1459000, 111000]
 }
