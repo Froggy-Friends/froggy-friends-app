@@ -43,7 +43,7 @@ export default function Header() {
   const location = useLocation();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
-  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSmallMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
   const isMarket = location.pathname === "/market";
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
@@ -121,7 +121,7 @@ export default function Header() {
                     <Typography variant='h5'>Log</Typography>  
                   </Button>
                 </Grid>
-                <Grid item display={isMobile ? "flex" : "none"} justifyContent="end" pl={1}>
+                <Grid item display={isSmallMobile ? "flex" : "none"} justifyContent="end" pl={1}>
                   <IconButton size="large" color="inherit" aria-label="menu" onClick={() => setSidemenuOpen(!sidemenuOpen)}>
                     <Menu/>
                   </IconButton>
@@ -169,12 +169,12 @@ export default function Header() {
               <Fab size='small' onClick={() => setDrawerMusicOpen(!drawerMusicOpen)} sx={{marginBottom: 2}}>
                 <Headphones fontSize='medium'/>
               </Fab>
-              <Fade in={drawerMusicOpen}>
-                <Grid id='drawerPlayer' container>
-                  <MusicPlayer inverted/>
-                </Grid>
-              </Fade>
             </Grid>
+            <Fade in={drawerMusicOpen}>
+              <Grid id='drawerPlayer' container>
+                <MusicPlayer inverted/>
+              </Grid>
+            </Fade>
           </Grid>
         </Drawer>
         <Fade in={musicOpen}>
