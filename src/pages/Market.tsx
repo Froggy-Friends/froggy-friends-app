@@ -130,7 +130,7 @@ export default function Market() {
         </ToggleButtonGroup>
       </Grid>
       <Grid id="items-and-cart" container p={2} minHeight={855}>
-        <Grid id="items" className={classes.tabs} item xl={10} lg={10} md={12} sm={12} xs={12}>
+        <Grid id="items" className={classes.tabs} item xl={10} lg={9} md={12} sm={12} xs={12}>
           <Tabs
             orientation="horizontal"
             variant="scrollable"
@@ -359,7 +359,7 @@ export default function Market() {
           </TabPanel>
         </Grid>
         <Fade id='cart' in={isCartOpen}>
-          <Grid container item pl={3} xl={2} lg={2}>
+          <Grid container item pl={3} xl={2} lg={3}>
               <Grid id="cart-container" container item bgcolor="#000000d1">
                 <Typography variant='h4' color='secondary' p={2}>Ribbit Cart</Typography>
                 {
