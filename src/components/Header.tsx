@@ -169,9 +169,11 @@ export default function Header() {
               <Fab size='small' onClick={() => setDrawerMusicOpen(!drawerMusicOpen)} sx={{marginBottom: 2}}>
                 <Headphones fontSize='medium'/>
               </Fab>
-              {
-                drawerMusicOpen && <MusicPlayer inverted/>
-              }
+              <Fade in={drawerMusicOpen}>
+                <Grid id='drawerPlayer' container>
+                  <MusicPlayer inverted/>
+                </Grid>
+              </Fade>
             </Grid>
           </Grid>
         </Drawer>
