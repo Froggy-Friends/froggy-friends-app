@@ -84,7 +84,8 @@ let theme = createTheme({
           "&.inverted": {
             border: 'none',
             backgroundColor: "#ebedf1",
-            color: "#181818"
+            color: "#181818",
+            width: 350
           }
         }
       }
@@ -191,7 +192,11 @@ let theme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundColor: "#181818"
+          backgroundColor: "#181818",
+          "&.MuiDrawer-paper": {
+            width: '100%',
+            maxWidth: 425
+          } 
         }
       }
     },
@@ -218,8 +223,7 @@ let theme = createTheme({
           }
         }
       }
-    },
-    
+    }
   }
 });
 

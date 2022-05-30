@@ -166,9 +166,16 @@ export default function Header() {
                   </Badge>
                 </Fab>
               </Grid>
-              <Fab size='small' onClick={() => setDrawerMusicOpen(!drawerMusicOpen)} sx={{marginBottom: 2}}>
-                <Headphones fontSize='medium'/>
-              </Fab>
+              <Grid item pr={2}>
+                <Fab size='small' onClick={() => setDrawerMusicOpen(!drawerMusicOpen)} sx={{marginBottom: 2}}>
+                  <Headphones fontSize='medium'/>
+                </Fab>
+              </Grid>
+              <Grid item pr={2}>
+                <Button variant='contained' onClick={() => activateBrowserWallet()}>
+                  <Typography variant='h5'>Log</Typography>  
+                </Button>
+              </Grid>
             </Grid>
             <Fade in={drawerMusicOpen}>
               <Grid id='drawerPlayer' container>
