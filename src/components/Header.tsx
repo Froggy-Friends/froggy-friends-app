@@ -1,7 +1,7 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { useEthers } from "@usedapp/core";
+import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { makeStyles } from '@mui/styles';
 import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Tooltip, Box, Fade, Button } from "@mui/material";
 import { Close, ShoppingCart, Menu, Headphones } from "@mui/icons-material";
@@ -50,6 +50,16 @@ export default function Header() {
   const [musicOpen, setMusicOpen] = useState<boolean>(false);
   const [drawerMusicOpen, setDrawerMusicOpen] = useState<boolean>(false);
   const { activateBrowserWallet, account } = useEthers();
+  const ens = useLookupAddress();
+  const [displayName, setDisplayName] = useState<string>("");
+
+  useEffect(() => {
+    if (ens) {
+      setDisplayName(ens);
+    } else if (account && account.length > 0) {
+      setDisplayName(shortenAddress(account));
+    }
+  }, [account, ens]);
 
   const getTitle = () => {
     if (isMarket) {
@@ -116,10 +126,13 @@ export default function Header() {
                     </Badge>
                   </Fab>
                 </Grid>
-                <Grid item display={isDesktop ? "flex" : "none"}>
+                <Grid item display={isDesktop && !account ? "flex" : "none"}>
                   <Button variant='contained' onClick={() => activateBrowserWallet()}>
                     <Typography variant='h5'>Log</Typography>  
                   </Button>
+                </Grid>
+                <Grid item display={isDesktop && account ? "flex" : "none"}>
+                  <Typography variant='h5'>{displayName}</Typography>
                 </Grid>
                 <Grid item display={isSmallMobile ? "flex" : "none"} justifyContent="end" pl={1}>
                   <IconButton size="large" color="inherit" aria-label="menu" onClick={() => setSidemenuOpen(!sidemenuOpen)}>
