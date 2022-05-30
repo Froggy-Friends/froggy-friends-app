@@ -41,10 +41,9 @@ export default function Header() {
   const playing = useAppSelector(isPlaying);
   const navigate = useNavigate();
   const location = useLocation();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const isTinyMobile = useMediaQuery(theme.breakpoints.down(375));
   const isMarket = location.pathname === "/market";
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
   const [musicOpen, setMusicOpen] = useState<boolean>(false);
@@ -111,7 +110,7 @@ export default function Header() {
                   <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/leaderboard")}>Board</Typography>
                 </Grid> 
               </Grid>
-              <Grid id='buttons' container item justifyContent="end" alignItems='center' xl={3} lg={3} md={3} sm={6} xs={1}>
+              <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={3} lg={3} md={3} sm={6} xs={1}>
                 <Grid item display={isDesktop ? "flex" : "none"} pr={2}>
                   <Fab size='small' onClick={onMusicClick}>
                     <Badge invisible={!playing} badgeContent=" " color="primary">
@@ -134,7 +133,7 @@ export default function Header() {
                 <Grid item display={isDesktop && account ? "flex" : "none"}>
                   <Typography variant='h5'>{displayName}</Typography>
                 </Grid>
-                <Grid item display={isSmallMobile ? "flex" : "none"} justifyContent="end" pl={1}>
+                <Grid item display={isMobile ? "flex" : "none"} justifyContent="end" pl={1}>
                   <IconButton size="large" color="inherit" aria-label="menu" onClick={() => setSidemenuOpen(!sidemenuOpen)}>
                     <Menu/>
                   </IconButton>
@@ -171,7 +170,7 @@ export default function Header() {
             <Grid item pb={3}>
               <Link href={REACT_APP_WEBSITE_URL + '/license'} underline='none' variant="h5" color="secondary">License</Link>
             </Grid>
-            <Grid id='music' container item>
+            <Grid id='music' container item alignItems='center'>
               <Grid item pr={2}>
                 <Fab size='small' onClick={onCartClick}>
                   <Badge badgeContent={cartItemCount} color="primary">
@@ -180,18 +179,21 @@ export default function Header() {
                 </Fab>
               </Grid>
               <Grid item pr={2}>
-                <Fab size='small' onClick={() => setDrawerMusicOpen(!drawerMusicOpen)} sx={{marginBottom: 2}}>
+                <Fab size='small' onClick={() => setDrawerMusicOpen(!drawerMusicOpen)}>
                   <Headphones fontSize='medium'/>
                 </Fab>
               </Grid>
-              <Grid item pr={2}>
+              <Grid item display={!account ? "flex" : "none"} pr={2}>
                 <Button variant='contained' onClick={() => activateBrowserWallet()}>
                   <Typography variant='h5'>Log</Typography>  
                 </Button>
               </Grid>
             </Grid>
+            <Grid item display={account ? "flex" : "none"} pt={3}>
+              <Typography variant='h5' color='secondary'>{displayName}</Typography>
+            </Grid>
             <Fade in={drawerMusicOpen}>
-              <Grid id='drawerPlayer' container>
+              <Grid id='drawerPlayer' container pt={3}>
                 <MusicPlayer inverted/>
               </Grid>
             </Fade>
