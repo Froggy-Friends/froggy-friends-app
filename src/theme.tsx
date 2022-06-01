@@ -73,7 +73,6 @@ let theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          border: '5px solid #1a1b1c',
           backgroundColor: '#181818',
           color: '#ebedf1',
           width: '100%',
@@ -82,7 +81,6 @@ let theme = createTheme({
             backgroundColor: "#ebedf145"
           },
           "&.inverted": {
-            border: 'none',
             backgroundColor: "#ebedf1",
             color: "#181818",
             width: 350

@@ -373,7 +373,7 @@ export default function Market() {
                 })
               }
             </Grid>
-            <Grid id='total' container item xl={2} alignItems='end'>
+            <Grid id='total' container item xl={1} alignItems='end'>
               <Grid id="cart-total" item xl={12} lg={12}>
                 <Card sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                   <Typography variant='h5' color='secondary' p={1}>Total</Typography>
@@ -383,6 +383,11 @@ export default function Market() {
                   </Grid>
                 </Card>
               </Grid>
+            </Grid>
+            <Grid id='checkout' container item justifyContent='center' p={1} xl={1}>
+              <Button variant='contained' color='success' fullWidth disabled={total === 0}>
+                <Typography variant='h6' color='secondary'>Checkout</Typography>
+              </Button>
             </Grid>
           </Grid>
         </Fade>
