@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useTheme, List, ListItemText, ListItem, Fade } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useTheme, List, ListItemText, ListItem, Fade, IconButton } from "@mui/material";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { RibbitItem } from '../models/RibbitItem';
@@ -350,16 +350,16 @@ export default function Market() {
               {
                 items.map((item, index) => {
                   return <Grid key={index} item p={2} xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Card sx={{display: 'flex'}}>
-                      <CardMedia component="img" sx={{width: 50}} image={item.image} alt={item.name}/>
-                        <Typography variant='h6' color='secondary' p={1}>{item.name}</Typography>
-                        <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                          <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                          <Typography>{commify(item.price)}</Typography>
-                        </Grid>
-                        <Button variant='contained' color='success' onClick={() => onRemoveItem(item)} disabled={!item.isActive}>
-                          <CancelIcon/>
-                        </Button>
+                    <Card sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                      <CardMedia component="img" sx={{width: 50, p: theme.spacing(1)}} image={item.image} alt={item.name}/>
+                      <Typography variant='h6' color='secondary' p={1}>{item.name}</Typography>
+                      <Grid item display='flex' justifyContent='center' p={1}>
+                        <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                        <Typography>{commify(item.price)}</Typography>
+                      </Grid>
+                      <IconButton size='small' color='primary' sx={{p: theme.spacing(1)}} onClick={() => onRemoveItem(item)} disabled={!item.isActive}>
+                        <CancelIcon/>
+                      </IconButton>
                     </Card>  
                   </Grid>
                 })
