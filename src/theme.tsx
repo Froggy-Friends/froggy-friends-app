@@ -210,16 +210,18 @@ let theme = createTheme({
     MuiGrid: {
       styleOverrides: {
         root: {
-          "::-webkit-scrollbar": {
-            width: 8,
-            height: 8,
-            backgroundColor: "#181818"
-          },
-          "::-webkit-scrollbar-thumb": {
-            backgroundColor: "#5ea14e",
-            borderRadius: 5,
-            height: 50,
-            width: 50
+          "&.scrollable": {
+            "::-webkit-scrollbar": {
+              width: 5,
+              height: 5,
+              backgroundColor: "#181818"
+            },
+            "::-webkit-scrollbar-thumb": {
+              backgroundColor: "#5ea14e",
+              borderRadius: 5,
+              height: 50,
+              width: 50
+            }
           }
         }
       }

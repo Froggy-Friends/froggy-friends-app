@@ -22,7 +22,7 @@ function TabPanel(props: TabPanelProps) {
   const { children, value, index, id, ...other } = props;
 
   return (
-    <Grid id={id} hidden={value !== index} role="tabpanel" aria-labelledby={`vertical-tab-${index}`} sx={{maxHeight: 750, overflowY: 'scroll'}} {...other}>
+    <Grid className="scrollable" id={id} hidden={value !== index} role="tabpanel" aria-labelledby={`vertical-tab-${index}`} sx={{maxHeight: 750, overflowY: 'scroll'}} {...other}>
       {value === index && (
         <Grid p={3} pt={5}>
           {children}
@@ -47,9 +47,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       minHeight: '130%'
-    },
-    tabs: {
-      backgroundColor: '#000000d1'
     },
     panel: {
       maxHeight: 800, 
@@ -84,7 +81,6 @@ export default function Market() {
   const [froggyKing, setFroggyKing] = useState<RibbitItem[]>(froggyKingData.filter(king => king.isActive));
   const [nfts, setNfts] = useState<RibbitItem[]>(nftData.filter(nft => nft.isActive));
   const [raffles, setRaffles] = useState<RibbitItem[]>(raffleData.filter(raffle => raffle.isActive));
-  console.log("is cart open: ", isCartOpen);
 
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, isActiveFilter: boolean) => {
     if (isActiveFilter === null) return;
@@ -129,8 +125,8 @@ export default function Market() {
           <ToggleButton value={false}>All</ToggleButton>
         </ToggleButtonGroup>
       </Grid>
-      <Grid id="items-and-cart" container justifyContent='space-between' pl={2} pr={2} minHeight={855}>
-        <Grid id="items" className={classes.tabs} item xl={10} lg={9} md={12} sm={12} xs={12}>
+      <Grid id="items-and-cart" container item justifyContent='space-between' p={2} minHeight={855}>
+        <Grid id="items" bgcolor="#000000d1" item xl={9} lg={9} md={12} sm={12} xs={12}>
           <Tabs
             orientation="horizontal"
             variant="scrollable"
@@ -344,21 +340,28 @@ export default function Market() {
             </Grid>
           </TabPanel>
         </Grid>
-        <Fade id='cart' className={classes.tabs} in={isCartOpen}>
-          <Grid item p={2} xl={2}>
-            <Grid id="cart-title" item xl={12} lg={12}>
+        <Fade id='cart' in={isCartOpen}>
+          <Grid container item direction="column" bgcolor="#000000d1" p={2} xl={3}>
+            <Grid id='title' container item xl={1}>
               <Typography variant='h4' color='secondary' pb={2} pl={2}>Ribbit Cart</Typography>
             </Grid>
-            {
-              items.map(item => {
-                return <Grid item p={2} xl={12} lg={12} md={12} sm={12} xs={12}>
-                  <Card sx={{display: 'flex'}}>
-                    <CardMedia component="img" sx={{width: 50}} image={item.image} alt={item.name}/>
-                    <Typography variant='h6' color='secondary' p={1}>{item.name}</Typography>
-                  </Card>  
-                </Grid>
-              })
-            }
+            <Grid id='cart-items' item xl={9} maxHeight={600} sx={{overflowY: 'scroll', "::-webkit-scrollbar": { backgroundColor: 'transparent'}}}>
+              {
+                items.map(item => {
+                  return <Grid item p={2} xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <Card sx={{display: 'flex'}}>
+                      <CardMedia component="img" sx={{width: 50}} image={item.image} alt={item.name}/>
+                      <Typography variant='h6' color='secondary' p={1}>{item.name}</Typography>
+                    </Card>  
+                  </Grid>
+                })
+              }
+            </Grid>
+            <Grid id='total' container item xl={2} alignItems='end'>
+              <Grid id="cart-total" item xl={12} lg={12}>
+                <Typography variant='h6' color='secondary' pb={2} pl={2}>Total</Typography>
+              </Grid>
+            </Grid>
           </Grid>
         </Fade>
       </Grid>
