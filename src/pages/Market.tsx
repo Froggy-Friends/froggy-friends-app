@@ -129,7 +129,7 @@ export default function Market() {
           <ToggleButton value={false}>All</ToggleButton>
         </ToggleButtonGroup>
       </Grid>
-      <Grid id="items-and-cart" container p={2} minHeight={855}>
+      <Grid id="items-and-cart" container justifyContent='space-between' pl={2} pr={2} minHeight={855}>
         <Grid id="items" className={classes.tabs} item xl={10} lg={9} md={12} sm={12} xs={12}>
           <Tabs
             orientation="horizontal"
@@ -140,23 +140,15 @@ export default function Market() {
             aria-label="$RIBBIT Marketplace"
             sx={{ borderRight: 5, borderColor: 'divider' }}
           >
-            <Tab label="Froggy King" {...a11yProps('froggy-king')} />
             <Tab label="Golden Lily Pad" {...a11yProps('golden-lily')} />
             <Tab label="Friends" {...a11yProps('friends')} />
-            <Tab label="Vito's Art" {...a11yProps('vitos-art')} />
             <Tab label="Allowlists" {...a11yProps('allowlists')} />
             <Tab label="NFTs" {...a11yProps('nfts')} />
             <Tab label="Raffles" {...a11yProps('raffles')} />
             <Tab label="Merch" {...a11yProps('merch')} />
             <Tab label="Costumes" {...a11yProps('costumes')} />
           </Tabs>
-          <TabPanel id='froggy-king-panel' value={value} index={0}>
-            <Grid container direction="column" alignItems="center">
-              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Froggy King Coming Soon</Typography>
-              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-            </Grid>
-          </TabPanel>
-          <TabPanel id='golden-lily-pad-panel' value={value} index={1}>
+          <TabPanel id='golden-lily-pad-panel' value={value} index={0}>
             <Typography variant='h6' color='secondary' pb={1}>
               There will only be 5 Golden Lily Pads for sale with each one costing <strong>200,000</strong> $RIBBIT.
             </Typography>
@@ -217,7 +209,7 @@ export default function Market() {
               </Grid>
             </Grid>
           </TabPanel>
-          <TabPanel id='friends-panel' value={value} index={2}>
+          <TabPanel id='friends-panel' value={value} index={1}>
             <Typography variant='h6' color='secondary' pb={5}>
               Friends offer $RIBBIT staking boosts and will be pairable with your Froggy. <br/>
               Pairing a Friend with your Froggy applies the boost and burns the item.
@@ -275,19 +267,13 @@ export default function Market() {
                 </Grid>
             </Grid>
           </TabPanel>
-          <TabPanel id='vitos-art-panel' value={value} index={3}>
-            <Grid container direction="column" alignItems="center">
-              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Vito's Art Coming Soon</Typography>
-              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-            </Grid>
-          </TabPanel>
-          <TabPanel id='allowlists-panel' value={value} index={4}>
+          <TabPanel id='allowlists-panel' value={value} index={2}>
             <Grid container direction="column" alignItems="center">
               <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Allowlists Coming Soon</Typography>
               <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
             </Grid>
           </TabPanel>
-          <TabPanel id='nfts-panel' value={value} index={5}>
+          <TabPanel id='nfts-panel' value={value} index={3}>
             <Typography variant='h6' color='secondary' pb={1}>
               Purchase community owned NFTs with $RIBBIT.
             </Typography>
@@ -316,7 +302,7 @@ export default function Market() {
               </Grid>
             </Grid>
           </TabPanel>
-          <TabPanel id='raffles-panel' value={value} index={6}>
+          <TabPanel id='raffles-panel' value={value} index={4}>
             <Typography variant='h6' color='secondary' pb={1}>
               Purchase raffle tickets for community owned NFTs with $RIBBIT.
             </Typography>
@@ -345,31 +331,34 @@ export default function Market() {
               </Grid>
             </Grid>
           </TabPanel>
-          <TabPanel id='merch-panel' value={value} index={7}>
+          <TabPanel id='merch-panel' value={value} index={5}>
             <Grid container direction="column" alignItems="center">
               <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Merch Coming Soon</Typography>
               <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
             </Grid>
           </TabPanel>
-          <TabPanel id='costumes-panel' value={value} index={8}>
+          <TabPanel id='costumes-panel' value={value} index={6}>
             <Grid container direction="column" alignItems="center">
               <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Costumes Coming Soon</Typography>
               <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
             </Grid>
           </TabPanel>
         </Grid>
-        <Fade id='cart' in={isCartOpen}>
-          <Grid container item pl={3} xl={2} lg={3}>
-              <Grid id="cart-container" container item bgcolor="#000000d1">
-                <Typography variant='h4' color='secondary' p={2}>Ribbit Cart</Typography>
-                {
-                  items.map(item => {
-                    return <Grid container item p={2} xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <Typography variant='h6' color='secondary'>{item.name}</Typography>
-                    </Grid>
-                  })
-                }
-              </Grid>
+        <Fade id='cart' className={classes.tabs} in={isCartOpen}>
+          <Grid item p={2} xl={2}>
+            <Grid id="cart-title" item xl={12} lg={12}>
+              <Typography variant='h4' color='secondary' pb={2} pl={2}>Ribbit Cart</Typography>
+            </Grid>
+            {
+              items.map(item => {
+                return <Grid item p={2} xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <Card sx={{display: 'flex'}}>
+                    <CardMedia component="img" sx={{width: 50}} image={item.image} alt={item.name}/>
+                    <Typography variant='h6' color='secondary' p={1}>{item.name}</Typography>
+                  </Card>  
+                </Grid>
+              })
+            }
           </Grid>
         </Fade>
       </Grid>
