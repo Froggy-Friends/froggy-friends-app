@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useTheme, List, ListItemText, ListItem, Fade, IconButton } from "@mui/material";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -80,6 +80,14 @@ export default function Market() {
   const [goldenLilyPads, setGoldenLilyPads] = useState<RibbitItem[]>(goldenLilyPadsData.filter(lily => lily.isActive));
   const [nfts, setNfts] = useState<RibbitItem[]>(nftData.filter(nft => nft.isActive));
   const [raffles, setRaffles] = useState<RibbitItem[]>(raffleData.filter(raffle => raffle.isActive));
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    if (items) {
+      const total = items.reduce((acc, item) => { return acc + item.price}, 0);
+      setTotal(total);
+    }
+  }, [items]);
 
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, isActiveFilter: boolean) => {
     if (isActiveFilter === null) return;
@@ -367,7 +375,13 @@ export default function Market() {
             </Grid>
             <Grid id='total' container item xl={2} alignItems='end'>
               <Grid id="cart-total" item xl={12} lg={12}>
-                <Typography variant='h6' color='secondary' pb={2} pl={2}>Total</Typography>
+                <Card sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <Typography variant='h5' color='secondary' p={1}>Total</Typography>
+                  <Grid item display='flex' justifyContent='center' alignItems='center' p={1}>
+                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                    <Typography>{commify(total)}</Typography>
+                  </Grid>
+                </Card>
               </Grid>
             </Grid>
           </Grid>
