@@ -20,13 +20,16 @@ const cartSlice = createSlice({
         state.items.push(action.payload);
       }
     },
+    remove(state, action) {
+      state.items.splice(state.items.findIndex(item => item.id === action.payload.id), 1);
+    },
     toggle(state) {
       state.open = !state.open;
     }
   }
 });
 
-export const { add, toggle } = cartSlice.actions;
+export const { add, remove, toggle } = cartSlice.actions;
 
 export const cartCount = (state: RootState) => state.cart.items.length;
 export const cartOpen = (state: RootState) => state.cart.open;

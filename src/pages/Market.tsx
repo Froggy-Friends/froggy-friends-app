@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Container, Typography, Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useMediaQuery, useTheme, List, ListItemText, ListItem, Fade } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useTheme, List, ListItemText, ListItem, Fade } from "@mui/material";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { RibbitItem } from '../models/RibbitItem';
 import { commify } from '@ethersproject/units';
 import { Friend } from '../models/Friend';
-import { collabFriendsData, friendsData, froggyKingData, goldenLilyPadsData, nftData, raffleData, marketplaceUrl } from '../data';
+import { collabFriendsData, friendsData, goldenLilyPadsData, nftData, raffleData, marketplaceUrl } from '../data';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { add, cartItems, cartOpen } from '../redux/cartSlice';
+import { add, remove, cartItems, cartOpen } from '../redux/cartSlice';
 import ribbit from '../images/ribbit.gif';
 import biz from '../images/biz.png';
 
@@ -72,13 +73,11 @@ export default function Market() {
   const dispatch = useAppDispatch();
   const isCartOpen = useAppSelector(cartOpen);
   const items = useAppSelector(cartItems);
-  const isBigScreen = useMediaQuery(theme.breakpoints.up('xl'));
   const [value, setValue] = useState(0);
   const [activeFilter, setActiveFilter] = useState(true);
   const [friends, setFriends] = useState<Friend[]>(friendsData.filter(friend => friend.isActive));
   const [collabFriends, setCollabFriends] = useState<Friend[]>(collabFriendsData.filter(friend => friend.isActive));
   const [goldenLilyPads, setGoldenLilyPads] = useState<RibbitItem[]>(goldenLilyPadsData.filter(lily => lily.isActive));
-  const [froggyKing, setFroggyKing] = useState<RibbitItem[]>(froggyKingData.filter(king => king.isActive));
   const [nfts, setNfts] = useState<RibbitItem[]>(nftData.filter(nft => nft.isActive));
   const [raffles, setRaffles] = useState<RibbitItem[]>(raffleData.filter(raffle => raffle.isActive));
 
@@ -86,20 +85,18 @@ export default function Market() {
     if (isActiveFilter === null) return;
     setActiveFilter(isActiveFilter);
     if (isActiveFilter) {
-      setFroggyKing(froggyKingData.filter(king => king.isActive));
       setFriends(friendsData.filter(friend => friend.isActive));
       setCollabFriends(collabFriendsData.filter(friend => friend.isActive));
       setGoldenLilyPads(goldenLilyPadsData.filter(lily => lily.isActive));
       setNfts(nftData.filter(nft => nft.isActive));
       setRaffles(raffleData.filter(raffle => raffle.isActive));
     } else {
-      setFroggyKing(froggyKingData);
       setGoldenLilyPads(goldenLilyPadsData);
       setFriends(friendsData);
       setCollabFriends(collabFriendsData);
       setNfts(nftData);
       setRaffles(raffleData);
-      // TODO: add vitos art, allowlists, merch and costumes
+      // TODO: allowlists, merch and costumes
     }
   };
 
@@ -109,6 +106,10 @@ export default function Market() {
 
   const onBuyItem = (item: RibbitItem) => {
     dispatch(add(item));
+  }
+
+  const onRemoveItem = (item: RibbitItem) => {
+    dispatch(remove(item));
   }
 
   return (
@@ -347,11 +348,18 @@ export default function Market() {
             </Grid>
             <Grid id='cart-items' item xl={9} maxHeight={600} sx={{overflowY: 'scroll', "::-webkit-scrollbar": { backgroundColor: 'transparent'}}}>
               {
-                items.map(item => {
-                  return <Grid item p={2} xl={12} lg={12} md={12} sm={12} xs={12}>
+                items.map((item, index) => {
+                  return <Grid key={index} item p={2} xl={12} lg={12} md={12} sm={12} xs={12}>
                     <Card sx={{display: 'flex'}}>
                       <CardMedia component="img" sx={{width: 50}} image={item.image} alt={item.name}/>
-                      <Typography variant='h6' color='secondary' p={1}>{item.name}</Typography>
+                        <Typography variant='h6' color='secondary' p={1}>{item.name}</Typography>
+                        <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                          <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                          <Typography>{commify(item.price)}</Typography>
+                        </Grid>
+                        <Button variant='contained' color='success' onClick={() => onRemoveItem(item)} disabled={!item.isActive}>
+                          <CancelIcon/>
+                        </Button>
                     </Card>  
                   </Grid>
                 })

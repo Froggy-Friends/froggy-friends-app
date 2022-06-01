@@ -6,19 +6,7 @@ import { SpriteMap } from 'use-sound/dist/types';
 export const stakeUrl = "https://froggyfriends.mypinata.cloud/ipfs/QmWh3P7tFJ3inUWKDC63331Fc9pAjPY7uALQobQG3fNT9H";
 export const marketplaceUrl = 'https://froggyfriends.mypinata.cloud/ipfs/QmdeDd4KWirXgxQBpVq1MaDhowQwsf3tjRqQUreCXYpG6z';
 
-export const froggyKingData: RibbitItem[] = [
-  {
-    id: 1,
-    name: "Golden Dragon Friend",
-    description: "",
-    image: "https://froggyfriends.mypinata.cloud/ipfs/QmSSuUG6pF7HCEMqK7qWzFewYJgS7aJcUGxDGRW9dr7Kfh/2.png",
-    price: 1000000,
-    supply: 1,
-    limit: 1,
-    isActive: true,
-    attributes: []
-  }
-]
+
 
 export const goldenLilyPadsData: RibbitItem[] = [
   {
