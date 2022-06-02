@@ -8,6 +8,7 @@ import { RibbitItem } from '../models/RibbitItem';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ribbit from '../images/ribbit.gif';
 import { Close } from '@mui/icons-material';
+import useWindowDimensions from '../hooks/useWindowDimensions';
 
 
 const useStyles: any = makeStyles((theme: Theme) => 
@@ -46,6 +47,7 @@ export default function Cart() {
   const isCartOpen = useAppSelector(cartOpen);
   const items = useAppSelector(cartItems);
   const [total, setTotal] = useState(0);
+  const { height } = useWindowDimensions();
 
   useEffect(() => {
     if (items) {
@@ -53,6 +55,18 @@ export default function Cart() {
       setTotal(total);
     }
   }, [items]);
+
+  const getItemsMaxHeight = () => {
+    if (height < 500) {
+      return 200;
+    } else if (height < 800) {
+      return 400;
+    } else if (height < 1000) {
+      return 500;
+    } else {
+      return 600;
+    }
+  }
 
   const onRemoveItem = (item: RibbitItem) => {
     dispatch(remove(item));
@@ -76,7 +90,7 @@ export default function Cart() {
       >
       <Fade id='cart' in={isCartOpen}>
         <Grid className={classes.cart} container item direction="column" justifyContent='space-between' p={2} xl={3} lg={4} md={5} sm={12} xs={12}>
-          <Grid item id='title-and-items'>
+          <Grid item id='title-and-items' xs={height < 500 ? 8 : 9}>
             <Grid id='title' container item justifyContent='space-between' alignItems="center" pb={3}>
               <Grid item>
                 <Typography variant='h4' color='info' fontWeight='bold'>Ribbit Cart</Typography>
@@ -87,7 +101,7 @@ export default function Cart() {
                 </IconButton>
               </Grid>
             </Grid>
-            <Grid id='cart-items' item maxHeight={500} sx={{overflowY: 'scroll', "::-webkit-scrollbar": { backgroundColor: 'transparent'}}}>
+            <Grid id='cart-items' item maxHeight={getItemsMaxHeight} sx={{overflowY: 'scroll', "::-webkit-scrollbar": { backgroundColor: 'transparent'}}}>
               {
                 items.map((item, index) => {
                   return <Grid className={classes.cartItem} key={index} container item mb={1} xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -111,7 +125,7 @@ export default function Cart() {
               }
             </Grid>
           </Grid>
-          <Grid item id='total-and-checkout'>
+          <Grid item id='total-and-checkout' xs={height < 500 ? 4 : 3}>
             <Grid id="total" item mr={1} p={1}>
               <Grid className={classes.cartItem} container justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Typography variant='h6' color='secondary' p={1} pl={2}>Total</Typography>
