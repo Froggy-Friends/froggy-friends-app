@@ -18,7 +18,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: 400,
-      backgroundColor: theme.palette.secondary.main,
+      backgroundColor: theme.palette.common.white,
       border: '2px solid #000',
       boxShadow: 24,
       p: 4,
@@ -27,7 +27,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
         top: '0%',
         left: '0%',
         transform: 'none',
-        height: '100%'
+        height: '100%',
+        width: '100%'
       }
     },
     cartItem: {
@@ -76,31 +77,31 @@ export default function Cart() {
       <Fade id='cart' in={isCartOpen}>
         <Grid className={classes.cart} container item direction="column" justifyContent='space-between' p={2} xl={3} lg={4} md={5} sm={12} xs={12}>
           <Grid item id='title-and-items'>
-            <Grid id='title' container item justifyContent='space-between' xl={1} lg={1} md={1}>
+            <Grid id='title' container item justifyContent='space-between' alignItems="center" pb={3}>
               <Grid item>
-                <Typography variant='h3' color='info' fontWeight='bold' pb={2} pl={2}>Ribbit Cart</Typography>
+                <Typography variant='h4' color='info' fontWeight='bold'>Ribbit Cart</Typography>
               </Grid>
               <Grid item>
-                <IconButton size='medium' color='info' onClick={handleClose}>
+                <IconButton size='large' color='info' onClick={handleClose}>
                   <Close/>
                 </IconButton>
               </Grid>
             </Grid>
-            <Grid id='cart-items' item maxHeight={600} sx={{overflowY: 'scroll', "::-webkit-scrollbar": { backgroundColor: 'transparent'}}}>
+            <Grid id='cart-items' item maxHeight={500} sx={{overflowY: 'scroll', "::-webkit-scrollbar": { backgroundColor: 'transparent'}}}>
               {
                 items.map((item, index) => {
-                  return <Grid className={classes.cartItem} key={index} container item m={1} p={1} xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <Grid id='item-image' item xl={2} lg={2} md={1}>
+                  return <Grid className={classes.cartItem} key={index} container item mb={1} xl={12} lg={12} md={12} sm={12} xs={12}>
+                      <Grid id='item-image' item p={1} xl={2} lg={2} md={1} sm={1} xs={2}>
                         <CardMedia component="img" image={item.image} alt={item.name}/>
                       </Grid>
-                      <Grid id='item-title' item justifySelf="start" xl={5} lg={5} md={5}>
+                      <Grid id='item-title' item justifySelf="start" xl={5} lg={5} md={5} sm={5} xs={4}>
                         <Typography variant='subtitle1' color='secondary' pl={2}>{item.name}</Typography>
                       </Grid>
-                      <Grid item display='flex' p={1} xl={3} lg={3} md={4}>
+                      <Grid item display='flex' p={1} xl={3} lg={3} md={4} sm={4} xs={4}>
                         <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                         <Typography variant='subtitle1'>{commify(item.price)}</Typography>
                       </Grid>
-                      <Grid item textAlign='right' pr={1} xl={2} lg={2} md={2}>
+                      <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                         <IconButton size='small' color='primary' onClick={() => onRemoveItem(item)} disabled={!item.isActive}>
                           <CancelIcon/>
                         </IconButton>
