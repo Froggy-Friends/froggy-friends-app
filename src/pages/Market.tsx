@@ -62,6 +62,10 @@ const useStyles: any = makeStyles((theme: Theme) =>
     cartIcon: {
       height: 80,
       width: 80
+    },
+    cartItem: {
+      backgroundColor: '#181818',
+      color: '#ebedf1'
     }
   })
 );
@@ -357,18 +361,22 @@ export default function Market() {
             <Grid id='cart-items' item xl={9} maxHeight={600} sx={{overflowY: 'scroll', "::-webkit-scrollbar": { backgroundColor: 'transparent'}}}>
               {
                 items.map((item, index) => {
-                  return <Grid key={index} item p={2} xl={12} lg={12} md={12} sm={12} xs={12}>
-                    <Card sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                      <CardMedia component="img" sx={{width: 50, p: theme.spacing(1)}} image={item.image} alt={item.name}/>
-                      <Typography variant='h6' color='secondary' p={1}>{item.name}</Typography>
-                      <Grid item display='flex' justifyContent='center' p={1}>
+                  return <Grid className={classes.cartItem} key={index} container item alignItems='center' m={1} p={1} xl={12} lg={12} md={12} sm={12} xs={12}>
+                      <Grid id='item-image' item xl={2}>
+                        <CardMedia component="img" image={item.image} alt={item.name}/>
+                      </Grid>
+                      <Grid id='item-title' item justifySelf="start" xl={5}>
+                        <Typography variant='h6' color='secondary' pl={2}>{item.name}</Typography>
+                      </Grid>
+                      <Grid item display='flex' p={1} xl={3}>
                         <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                         <Typography>{commify(item.price)}</Typography>
                       </Grid>
-                      <IconButton size='small' color='primary' sx={{p: theme.spacing(1)}} onClick={() => onRemoveItem(item)} disabled={!item.isActive}>
-                        <CancelIcon/>
-                      </IconButton>
-                    </Card>  
+                      <Grid item textAlign='right' pr={1} xl={2}>
+                        <IconButton size='small' color='primary' sx={{p: theme.spacing(1)}} onClick={() => onRemoveItem(item)} disabled={!item.isActive}>
+                          <CancelIcon/>
+                        </IconButton>
+                      </Grid>
                   </Grid>
                 })
               }
