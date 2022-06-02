@@ -23,9 +23,20 @@ function TabPanel(props: TabPanelProps) {
   const { children, value, index, id, ...other } = props;
 
   return (
-    <Grid className="scrollable" id={id} hidden={value !== index} role="tabpanel" aria-labelledby={`vertical-tab-${index}`} sx={{maxHeight: 750, overflowY: 'scroll'}} {...other}>
+    <Grid 
+      className="scrollable" 
+      id={id} 
+      container
+      flexDirection="column"
+      p={value === index ? 3 : 0}
+      hidden={value !== index} 
+      role="tabpanel" 
+      aria-labelledby={`vertical-tab-${index}`} 
+      sx={{maxHeight: 750, overflowY: 'scroll'}} 
+      {...other}
+    >
       {value === index && (
-        <Grid p={3} pt={5}>
+        <Grid item>
           {children}
         </Grid>
       )}
@@ -198,7 +209,7 @@ export default function Market() {
               <Grid item xl={8} lg={9} md={9} sm={9} xs={9}>
                 {
                   goldenLilyPads.map((lily, index) => {
-                    return <Grid key={index} item xl={4} lg={3} md={5} sm={8} xs={12} p={2} minHeight={300}>
+                    return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} p={2} minHeight={300}>
                             <Card className={lily.isActive ? "" : "disabled"}>
                               <CardHeader title="Golden Lily Pad"/>
                               <CardMedia component='img' image={lily.image} alt='Froggy'/>
@@ -220,61 +231,63 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='friends-panel' value={value} index={1}>
-            <Typography variant='subtitle1' color='secondary' pb={5}>
-              Friends offer $RIBBIT staking boosts and will be pairable with your Froggy. <br/>
-              Pairing a Friend with your Froggy applies the boost and burns the item.
-            </Typography>
-            <Grid id="friends" container direction='column' pb={3}>
-              <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
-              <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
-                {
-                  friends.map((friend, index) => { 
-                    return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={2} sm={2} xs={2}>
-                            <Card className={friend.isActive ? "" : "disabled"}>
-                              <CardHeader title={`${friend.name}`}/>
-                              <CardMedia component='img' image={friend.image} alt='Froggy'/>
-                              <CardContent>
-                                <Typography variant='subtitle1' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
-                                <Typography variant='subtitle1' color='secondary' pb={1}>{friend.boost}% Boost</Typography>
-                                <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                  <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                  <Typography>{commify(friend.price)}</Typography>
-                                </Grid>
-                                {/* TODO: Add amount slider with friend.limit max */}
-                                <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={!friend.isActive}>
-                                  <AddShoppingCartIcon/>
-                                </Button>
-                              </CardContent>
-                            </Card>
-                          </Grid> 
-                  })
-                }
-              </Grid>
+            <Grid id='friends-description' item xl={12}>
+              <Typography variant='subtitle1' color='secondary' pb={5}>
+                Friends offer $RIBBIT staking boosts and will be pairable with your Froggy. <br/>
+                Pairing a Friend with your Froggy applies the boost and burns the item.
+              </Typography>
             </Grid>
-            <Grid id="collab-friends" container direction="column" pt={3} pb={3}>
+            <Grid id='genesis-friends-title' item xl={12}>
+              <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
+            </Grid>
+            <Grid id='genesis-friends' container item pb={3} xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+              {
+                friends.map((friend, index) => { 
+                  return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={3} sm={4} xs={12}>
+                          <Card className={friend.isActive ? "" : "disabled"}>
+                            <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
+                            <CardMedia component='img' image={friend.image} alt='Froggy'/>
+                            <CardContent>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{friend.boost}% Boost</Typography>
+                              <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                <Typography>{commify(friend.price)}</Typography>
+                              </Grid>
+                              {/* TODO: Add amount slider with friend.limit max */}
+                              <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={!friend.isActive}>
+                                <AddShoppingCartIcon/>
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        </Grid> 
+                })
+              }
+            </Grid>
+            <Grid id='collab-friends-title' item xl={12}>
               <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Collab Friends</Typography>
-                <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
-                  {
-                    collabFriends.map((friend, index) => { 
-                      return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={2} sm={2} xs={2}>
-                              <Card className={friend.isActive ? "" : "disabled"}>
-                                <CardHeader title={`${friend.name}`}/>
-                                <CardMedia component='img' image={friend.image} alt='Froggy'/>
-                                <CardContent>
-                                  <Typography variant='subtitle1' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
-                                  <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                    <Typography>{friend.price}</Typography>
-                                  </Grid>
-                                  <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={!friend.isActive}>
-                                    <AddShoppingCartIcon/>
-                                  </Button>
-                                </CardContent>
-                              </Card>
-                            </Grid> 
-                    })
-                  }
-                </Grid>
+            </Grid>
+            <Grid id="collab-friends" container item pb={3} xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+              {
+                collabFriends.map((friend, index) => { 
+                  return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={3} sm={4} xs={12}>
+                          <Card className={friend.isActive ? "" : "disabled"}>
+                            <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
+                            <CardMedia component='img' image={friend.image} alt='Froggy'/>
+                            <CardContent>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
+                              <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                <Typography>{friend.price}</Typography>
+                              </Grid>
+                              <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={!friend.isActive}>
+                                <AddShoppingCartIcon/>
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        </Grid> 
+                })
+              }
             </Grid>
           </TabPanel>
           <TabPanel id='allowlists-panel' value={value} index={2}>
