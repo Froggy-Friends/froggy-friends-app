@@ -115,7 +115,7 @@ export default function Cart() {
                         <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                         <Typography variant='subtitle1'>{commify(item.price)}</Typography>
                       </Grid>
-                      <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                      <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={2}>
                         <IconButton size='small' color='primary' onClick={() => onRemoveItem(item)} disabled={!item.isActive}>
                           <CancelIcon/>
                         </IconButton>
