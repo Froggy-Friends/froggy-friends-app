@@ -65,7 +65,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
     },
     cartItem: {
       backgroundColor: '#181818',
-      color: '#ebedf1'
+      color: '#ebedf1',
+      alignItems: 'center'
     }
   })
 );
@@ -139,7 +140,7 @@ export default function Market() {
         </ToggleButtonGroup>
       </Grid>
       <Grid id="items-and-cart" container item justifyContent='space-between' p={2} minHeight={855}>
-        <Grid id="items" bgcolor="#000000d1" item xl={9} lg={9} md={12} sm={12} xs={12}>
+        <Grid id="items" bgcolor="#000000d1" item xl={9} lg={8} md={7} sm={12} xs={12}>
           <Tabs
             orientation="horizontal"
             variant="scrollable"
@@ -354,26 +355,26 @@ export default function Market() {
           </TabPanel>
         </Grid>
         <Fade id='cart' in={isCartOpen}>
-          <Grid container item direction="column" bgcolor="#000000d1" p={2} xl={3}>
-            <Grid id='title' container item xl={1}>
+          <Grid container item direction="column" bgcolor="#000000d1" p={2} xl={3} lg={4} md={5}>
+            <Grid id='title' container item xl={1} lg={1} md={1}>
               <Typography variant='h4' color='secondary' pb={2} pl={2}>Ribbit Cart</Typography>
             </Grid>
-            <Grid id='cart-items' item xl={9} maxHeight={600} sx={{overflowY: 'scroll', "::-webkit-scrollbar": { backgroundColor: 'transparent'}}}>
+            <Grid id='cart-items' item xl={9} lg={9} md={9} maxHeight={600} sx={{overflowY: 'scroll', "::-webkit-scrollbar": { backgroundColor: 'transparent'}}}>
               {
                 items.map((item, index) => {
-                  return <Grid className={classes.cartItem} key={index} container item alignItems='center' m={1} p={1} xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <Grid id='item-image' item xl={2}>
+                  return <Grid className={classes.cartItem} key={index} container item m={1} p={1} xl={12} lg={12} md={12} sm={12} xs={12}>
+                      <Grid id='item-image' item xl={2} lg={2} md={1}>
                         <CardMedia component="img" image={item.image} alt={item.name}/>
                       </Grid>
-                      <Grid id='item-title' item justifySelf="start" xl={5}>
-                        <Typography variant='h6' color='secondary' pl={2}>{item.name}</Typography>
+                      <Grid id='item-title' item justifySelf="start" xl={5} lg={5} md={5}>
+                        <Typography variant='subtitle1' color='secondary' pl={2}>{item.name}</Typography>
                       </Grid>
-                      <Grid item display='flex' p={1} xl={3}>
+                      <Grid item display='flex' p={1} xl={3} lg={3} md={4}>
                         <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                        <Typography>{commify(item.price)}</Typography>
+                        <Typography variant='subtitle1'>{commify(item.price)}</Typography>
                       </Grid>
-                      <Grid item textAlign='right' pr={1} xl={2}>
-                        <IconButton size='small' color='primary' sx={{p: theme.spacing(1)}} onClick={() => onRemoveItem(item)} disabled={!item.isActive}>
+                      <Grid item textAlign='right' pr={1} xl={2} lg={2} md={2}>
+                        <IconButton size='small' color='primary' onClick={() => onRemoveItem(item)} disabled={!item.isActive}>
                           <CancelIcon/>
                         </IconButton>
                       </Grid>
@@ -381,8 +382,8 @@ export default function Market() {
                 })
               }
             </Grid>
-            <Grid id='total' container item xl={1} alignItems='end'>
-              <Grid id="cart-total" item xl={12} lg={12}>
+            <Grid id='total' container item xl={1} lg={1} md={1} alignItems='end'>
+              <Grid id="cart-total" item mr={1} p={1} xl={12} lg={12} md={12}>
                 <Card sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                   <Typography variant='h5' color='secondary' p={1}>Total</Typography>
                   <Grid item display='flex' justifyContent='center' alignItems='center' p={1}>
@@ -392,7 +393,7 @@ export default function Market() {
                 </Card>
               </Grid>
             </Grid>
-            <Grid id='checkout' container item justifyContent='center' p={1} xl={1}>
+            <Grid id='checkout' container item justifyContent='center' p={1} xl={1} lg={1} md={1}>
               <Button variant='contained' color='success' fullWidth disabled={total === 0}>
                 <Typography variant='h6' color='secondary'>Checkout</Typography>
               </Button>
