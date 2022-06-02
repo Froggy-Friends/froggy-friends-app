@@ -297,61 +297,61 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='nfts-panel' value={value} index={3}>
-            <Typography variant='subtitle1' color='secondary' pb={1}>
-              Purchase community owned NFTs with $RIBBIT.
-            </Typography>
-            <Grid id="nfts" container direction='column' pt={3} pb={3}>
-              <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
-                {
-                  nfts.map((nft, index) => {
-                    return <Grid key={index} item xl={2} lg={2} md={2} sm={2} xs={2} p={2} minHeight={300}>
-                            <Card className={nft.isActive ? "" : "disabled"}>
-                              <CardHeader title={nft.name}/>
-                              <CardMedia component='img' image={nft.image} alt='Froggy'/>
-                              <CardContent>
-                                <Typography variant='subtitle1' color='secondary' pb={1}>{`1 / ${nft.supply} Available`}</Typography>
-                                <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                  <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                  <Typography>{commify(nft.price)}</Typography>
-                                </Grid>
-                                <Button variant='contained' color='success' onClick={() => onBuyItem(nft)} disabled={!nft.isActive}>
-                                  <AddShoppingCartIcon/>
-                                </Button>
-                              </CardContent>
-                            </Card>
-                          </Grid> 
-                  })
-                }
-              </Grid>
+            <Grid item xl={12}>
+              <Typography variant='subtitle1' color='secondary' pb={1}>
+                Purchase community owned NFTs with $RIBBIT.
+              </Typography>
+            </Grid>
+            <Grid id='nfts' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+              {
+                nfts.map((nft, index) => {
+                  return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
+                          <Card className={nft.isActive ? "" : "disabled"}>
+                            <CardHeader title={nft.name}/>
+                            <CardMedia component='img' image={nft.image} alt='Froggy'/>
+                            <CardContent>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{`1 / ${nft.supply} Available`}</Typography>
+                              <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                <Typography>{commify(nft.price)}</Typography>
+                              </Grid>
+                              <Button variant='contained' color='success' onClick={() => onBuyItem(nft)} disabled={!nft.isActive}>
+                                <AddShoppingCartIcon/>
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        </Grid> 
+                })
+              }
             </Grid>
           </TabPanel>
           <TabPanel id='raffles-panel' value={value} index={4}>
-            <Typography variant='subtitle1' color='secondary' pb={1}>
-              Purchase raffle tickets for community owned NFTs with $RIBBIT.
-            </Typography>
-            <Grid id="nfts" container direction='column' pt={3} pb={3}>
-              <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
-                {
-                  raffles.map((raffle, index) => {
-                    return <Grid key={index} item xl={2} lg={2} md={2} sm={2} xs={2} p={2} minHeight={300}>
-                            <Card className={raffle.isActive ? "" : "disabled"}>
-                              <CardHeader title={raffle.name}/>
-                              <CardMedia component='img' image={raffle.image} alt='Froggy'/>
-                              <CardContent>
-                                <Typography variant='subtitle1' color='secondary' pb={1}>{`200 / ${raffle.supply} Available`}</Typography>
-                                <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                  <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                  <Typography>{commify(raffle.price)}</Typography>
-                                </Grid>
-                                <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={!raffle.isActive}>
-                                  <AddShoppingCartIcon/>
-                                </Button>
-                              </CardContent>
-                            </Card>
-                          </Grid> 
-                  })
-                }
-              </Grid>
+            <Grid item xl={12}>
+              <Typography variant='subtitle1' color='secondary' pb={1}>
+                Purchase raffle tickets for community owned NFTs with $RIBBIT.
+              </Typography>
+            </Grid>
+            <Grid id='raffles' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+              {
+                raffles.map((raffle, index) => {
+                  return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
+                          <Card className={raffle.isActive ? "" : "disabled"}>
+                            <CardHeader title={raffle.name}/>
+                            <CardMedia component='img' image={raffle.image} alt='Froggy'/>
+                            <CardContent>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{`200 / ${raffle.supply} Available`}</Typography>
+                              <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                <Typography>{commify(raffle.price)}</Typography>
+                              </Grid>
+                              <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={!raffle.isActive}>
+                                <AddShoppingCartIcon/>
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        </Grid> 
+                })
+              }
             </Grid>
           </TabPanel>
           <TabPanel id='merch-panel' value={value} index={5}>
