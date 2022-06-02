@@ -56,7 +56,7 @@ export default function Cart() {
     }
   }, [items]);
 
-  const getItemsMaxHeight = () => {
+  const getItemsHeight = () => {
     if (height < 500) {
       return 200;
     } else if (height < 800) {
@@ -101,7 +101,7 @@ export default function Cart() {
                 </IconButton>
               </Grid>
             </Grid>
-            <Grid id='cart-items' item maxHeight={getItemsMaxHeight} sx={{overflowY: 'scroll', "::-webkit-scrollbar": { backgroundColor: 'transparent'}}}>
+            <Grid id='cart-items' item minHeight={getItemsHeight} maxHeight={getItemsHeight} sx={{overflowY: 'scroll', "::-webkit-scrollbar": { backgroundColor: 'transparent'}}}>
               {
                 items.map((item, index) => {
                   return <Grid className={classes.cartItem} key={index} container item mb={1} xl={12} lg={12} md={12} sm={12} xs={12}>
