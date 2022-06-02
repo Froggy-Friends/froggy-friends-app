@@ -140,7 +140,7 @@ export default function Market() {
         </ToggleButtonGroup>
       </Grid>
       <Grid id="items-and-cart" container item justifyContent='space-between' p={2} minHeight={855}>
-        <Grid id="items" bgcolor="#000000d1" item xl={9} lg={8} md={7} sm={12} xs={12}>
+        <Grid id="items" bgcolor="#000000d1" item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Tabs
             orientation="horizontal"
             variant="scrollable"
@@ -159,38 +159,38 @@ export default function Market() {
             <Tab label="Costumes" {...a11yProps('costumes')} />
           </Tabs>
           <TabPanel id='golden-lily-pad-panel' value={value} index={0}>
-            <Typography variant='h6' color='secondary' pb={1}>
+            <Typography variant='subtitle1' color='secondary' pb={1}>
               There will only be 5 Golden Lily Pads for sale with each one costing <strong>200,000</strong> $RIBBIT.
             </Typography>
             <Grid id="golden-lilies" container pt={3} pb={3}>
               <Grid item pr={10} xl={4} lg={3} md={3} sm={12} xs={12}>
-                <Typography variant='h6' color='secondary'>
+                <Typography variant='subtitle1' color='secondary'>
                   Golden Lily Pads are loaded with these perks: 
                 </Typography>
                 <List>
                   <ListItem>
                     <ListItemText>
-                      <Typography variant='h6' color='secondary'>&bull; Golden embroidery hoodie</Typography>
+                      <Typography variant='subtitle1' color='secondary'>&bull; Golden embroidery hoodie</Typography>
                     </ListItemText>
                   </ListItem>
                   <ListItem>
                     <ListItemText>
-                      <Typography variant='h6' color='secondary'>&bull; Guaranteed WL spots</Typography>
+                      <Typography variant='subtitle1' color='secondary'>&bull; Guaranteed WL spots</Typography>
                     </ListItemText>
                   </ListItem>
                   <ListItem>
                     <ListItemText>
-                      <Typography variant='h6' color='secondary'>&bull; Complimentary bottle service at IRL events</Typography>
+                      <Typography variant='subtitle1' color='secondary'>&bull; Complimentary bottle service at IRL events</Typography>
                     </ListItemText>
                   </ListItem>
                   <ListItem>
                     <ListItemText>
-                      <Typography variant='h6' color='secondary'>&bull; Complimentary bud service at IRL events</Typography>
+                      <Typography variant='subtitle1' color='secondary'>&bull; Complimentary bud service at IRL events</Typography>
                     </ListItemText>
                   </ListItem>
                   <ListItem>
                     <ListItemText>
-                      <Typography variant='h6' color='secondary'>&bull; Complimentary food at IRL events</Typography>
+                      <Typography variant='subtitle1' color='secondary'>&bull; Complimentary food at IRL events</Typography>
                     </ListItemText>
                   </ListItem>
                 </List>
@@ -203,7 +203,7 @@ export default function Market() {
                               <CardHeader title="Golden Lily Pad"/>
                               <CardMedia component='img' image={lily.image} alt='Froggy'/>
                               <CardContent>
-                                <Typography variant='h6' color='secondary' pb={1}>{`5 / ${lily.supply} Available`}</Typography>
+                                <Typography variant='subtitle1' color='secondary' pb={1}>{`5 / ${lily.supply} Available`}</Typography>
                                 <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                   <Typography>{commify(lily.price)}</Typography>
@@ -220,12 +220,12 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='friends-panel' value={value} index={1}>
-            <Typography variant='h6' color='secondary' pb={5}>
+            <Typography variant='subtitle1' color='secondary' pb={5}>
               Friends offer $RIBBIT staking boosts and will be pairable with your Froggy. <br/>
               Pairing a Friend with your Froggy applies the boost and burns the item.
             </Typography>
             <Grid id="friends" container direction='column' pb={3}>
-              <Typography variant='h5' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
+              <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
               <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                 {
                   friends.map((friend, index) => { 
@@ -234,8 +234,8 @@ export default function Market() {
                               <CardHeader title={`${friend.name}`}/>
                               <CardMedia component='img' image={friend.image} alt='Froggy'/>
                               <CardContent>
-                                <Typography variant='h6' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
-                                <Typography variant='h6' color='secondary' pb={1}>{friend.boost}% Boost</Typography>
+                                <Typography variant='subtitle1' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
+                                <Typography variant='subtitle1' color='secondary' pb={1}>{friend.boost}% Boost</Typography>
                                 <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                   <Typography>{commify(friend.price)}</Typography>
@@ -252,7 +252,7 @@ export default function Market() {
               </Grid>
             </Grid>
             <Grid id="collab-friends" container direction="column" pt={3} pb={3}>
-              <Typography variant='h5' color='secondary' fontWeight='bold' pb={2}>Collab Friends</Typography>
+              <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Collab Friends</Typography>
                 <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                   {
                     collabFriends.map((friend, index) => { 
@@ -261,7 +261,7 @@ export default function Market() {
                                 <CardHeader title={`${friend.name}`}/>
                                 <CardMedia component='img' image={friend.image} alt='Froggy'/>
                                 <CardContent>
-                                  <Typography variant='h6' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
+                                  <Typography variant='subtitle1' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
                                   <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                     <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                     <Typography>{friend.price}</Typography>
@@ -284,7 +284,7 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='nfts-panel' value={value} index={3}>
-            <Typography variant='h6' color='secondary' pb={1}>
+            <Typography variant='subtitle1' color='secondary' pb={1}>
               Purchase community owned NFTs with $RIBBIT.
             </Typography>
             <Grid id="nfts" container direction='column' pt={3} pb={3}>
@@ -296,7 +296,7 @@ export default function Market() {
                               <CardHeader title={nft.name}/>
                               <CardMedia component='img' image={nft.image} alt='Froggy'/>
                               <CardContent>
-                                <Typography variant='h6' color='secondary' pb={1}>{`1 / ${nft.supply} Available`}</Typography>
+                                <Typography variant='subtitle1' color='secondary' pb={1}>{`1 / ${nft.supply} Available`}</Typography>
                                 <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                   <Typography>{commify(nft.price)}</Typography>
@@ -313,7 +313,7 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='raffles-panel' value={value} index={4}>
-            <Typography variant='h6' color='secondary' pb={1}>
+            <Typography variant='subtitle1' color='secondary' pb={1}>
               Purchase raffle tickets for community owned NFTs with $RIBBIT.
             </Typography>
             <Grid id="nfts" container direction='column' pt={3} pb={3}>
@@ -325,7 +325,7 @@ export default function Market() {
                               <CardHeader title={raffle.name}/>
                               <CardMedia component='img' image={raffle.image} alt='Froggy'/>
                               <CardContent>
-                                <Typography variant='h6' color='secondary' pb={1}>{`200 / ${raffle.supply} Available`}</Typography>
+                                <Typography variant='subtitle1' color='secondary' pb={1}>{`200 / ${raffle.supply} Available`}</Typography>
                                 <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                   <Typography>{commify(raffle.price)}</Typography>
@@ -354,7 +354,7 @@ export default function Market() {
             </Grid>
           </TabPanel>
         </Grid>
-        <Fade id='cart' in={isCartOpen}>
+        {/* <Fade id='cart' in={isCartOpen}>
           <Grid container item direction="column" bgcolor="#000000d1" p={2} xl={3} lg={4} md={5}>
             <Grid id='title' container item xl={1} lg={1} md={1}>
               <Typography variant='h4' color='secondary' pb={2} pl={2}>Ribbit Cart</Typography>
@@ -385,7 +385,7 @@ export default function Market() {
             <Grid id='total' container item xl={1} lg={1} md={1} alignItems='end'>
               <Grid id="cart-total" item mr={1} p={1} xl={12} lg={12} md={12}>
                 <Card sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <Typography variant='h5' color='secondary' p={1}>Total</Typography>
+                  <Typography variant='h6' color='secondary' p={1}>Total</Typography>
                   <Grid item display='flex' justifyContent='center' alignItems='center' p={1}>
                     <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                     <Typography>{commify(total)}</Typography>
@@ -395,11 +395,11 @@ export default function Market() {
             </Grid>
             <Grid id='checkout' container item justifyContent='center' p={1} xl={1} lg={1} md={1}>
               <Button variant='contained' color='success' fullWidth disabled={total === 0}>
-                <Typography variant='h6' color='secondary'>Checkout</Typography>
+                <Typography variant='subtitle1' color='secondary'>Checkout</Typography>
               </Button>
             </Grid>
           </Grid>
-        </Fade>
+        </Fade> */}
       </Grid>
     </Grid>
   )

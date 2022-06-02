@@ -131,7 +131,7 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           color: "#ebedf1",
-          fontSize: '1.2rem',
+          fontSize: '1rem',
           alignItems: 'start',
           padding: 24,
           "&.Mui-selected": {
