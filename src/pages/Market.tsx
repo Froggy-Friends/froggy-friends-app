@@ -85,12 +85,13 @@ export default function Market() {
   }, [])
 
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, filter: boolean) => {
-    console.log("filter: ", filter);
     if (filter === null) return;
     setShowAll(filter);
   };
 
   const filterItems = (category: string) => {
+    // category must match 
+    // item must be on sale if show available filter is on (when showAll is false)
     return items.filter(item => item.category === category && (showAll || item.isOnSale));
   }
 
@@ -149,45 +150,18 @@ export default function Market() {
           </Tabs>
           <TabPanel id='golden-lily-pad-panel' value={value} index={0}>
             <Typography variant='subtitle1' color='secondary' pb={1}>
-              There will only be 5 Golden Lily Pads for sale with each one costing <strong>200,000</strong> $RIBBIT.
+              There will only be 5 Golden Lily Pads for sale with each one costing <strong>200,000 $RIBBIT</strong>.
+            </Typography>
+            <Typography variant='subtitle1' color='secondary'>
+                  Golden Lily Pads are loaded with perks: Golden embroidery hoodie, Guaranteed WL spots, 
+                  Complimentary food at IRL events, <br/> Complimentary bottle service at IRL events,
+                  Complimentary bud service at IRL events and more to come.
             </Typography>
             <Grid id="golden-lilies" container pt={3} pb={3}>
-              <Grid item pr={10} xl={4} lg={3} md={3} sm={12} xs={12}>
-                <Typography variant='subtitle1' color='secondary'>
-                  Golden Lily Pads are loaded with these perks: 
-                </Typography>
-                <List>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant='subtitle1' color='secondary'>&bull; Golden embroidery hoodie</Typography>
-                    </ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant='subtitle1' color='secondary'>&bull; Guaranteed WL spots</Typography>
-                    </ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant='subtitle1' color='secondary'>&bull; Complimentary bottle service at IRL events</Typography>
-                    </ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant='subtitle1' color='secondary'>&bull; Complimentary bud service at IRL events</Typography>
-                    </ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemText>
-                      <Typography variant='subtitle1' color='secondary'>&bull; Complimentary food at IRL events</Typography>
-                    </ListItemText>
-                  </ListItem>
-                </List>
-              </Grid>
-              <Grid item xl={8} lg={9} md={9} sm={9} xs={9}>
+              <Grid item xl={9} lg={12} md={12} sm={12} xs={12}>
                 {
                   filterItems('lilies').map((lily, index) => {
-                    return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} p={2} minHeight={300}>
+                    return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} minHeight={300}>
                             <Card className={isItemDisabled(lily) ? "disabled" : ""}>
                               <CardHeader title="Golden Lily Pad"/>
                               <CardMedia component='img' image={lily.image} alt='Froggy'/>
@@ -204,6 +178,9 @@ export default function Market() {
                             </Card>
                           </Grid> 
                   })
+                }
+                {
+                  filterItems('lilies').length === 0 && <Typography variant='h4' color='secondary'>No items available</Typography>
                 }
               </Grid>
             </Grid>
@@ -222,7 +199,7 @@ export default function Market() {
               {
                 filterItems('friends').map((friend, index) => { 
                   return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={3} sm={4} xs={12}>
-                          <Card className={friend.isOnSale ? "" : "disabled"}>
+                          <Card className={isItemDisabled(friend) ? "disabled" : ""}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
                             <CardMedia component='img' image={friend.previewImage} alt='Froggy'/>
                             <CardContent>
@@ -241,6 +218,9 @@ export default function Market() {
                         </Grid> 
                 })
               }
+              {
+                filterItems('friends').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
+              }
             </Grid>
             <Grid id='collab-friends-title' item xl={12}>
               <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Collab Friends</Typography>
@@ -249,7 +229,7 @@ export default function Market() {
               {
                 filterItems('collabs').map((friend, index) => { 
                   return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={3} sm={4} xs={12}>
-                          <Card className={friend.isOnSale ? "" : "disabled"}>
+                          <Card className={isItemDisabled(friend) ? "disabled" : ""}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
                             <CardMedia component='img' image={friend.previewImage} alt='Froggy'/>
                             <CardContent>
@@ -265,6 +245,9 @@ export default function Market() {
                           </Card>
                         </Grid> 
                 })
+              },
+              {
+                filterItems('collabs').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
               }
             </Grid>
           </TabPanel>
@@ -284,7 +267,7 @@ export default function Market() {
               {
                 filterItems('nfts').map((nft, index) => {
                   return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
-                          <Card className={nft.isOnSale ? "" : "disabled"}>
+                          <Card className={isItemDisabled(nft) ? "disabled" : ""}>
                             <CardHeader title={nft.name}/>
                             <CardMedia component='img' image={nft.image} alt='Froggy'/>
                             <CardContent>
@@ -301,6 +284,9 @@ export default function Market() {
                         </Grid> 
                 })
               }
+              {
+                filterItems('nfts').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
+              }
             </Grid>
           </TabPanel>
           <TabPanel id='raffles-panel' value={value} index={4}>
@@ -314,7 +300,7 @@ export default function Market() {
               {
                 filterItems('raffles').map((raffle, index) => {
                   return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
-                          <Card className={raffle.isOnSale ? "" : "disabled"}>
+                          <Card className={isItemDisabled(raffle) ? "disabled" : ""}>
                             <CardHeader title={raffle.name}/>
                             <CardMedia component='img' image={raffle.image} alt='Froggy'/>
                             <CardContent>
@@ -330,6 +316,9 @@ export default function Market() {
                           </Card>
                         </Grid> 
                 })
+              }
+              {
+                filterItems('raffles').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
               }
             </Grid>
           </TabPanel>
