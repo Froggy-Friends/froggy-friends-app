@@ -92,7 +92,17 @@ export default function Market() {
   const filterItems = (category: string) => {
     // category must match 
     // item must be on sale if show available filter is on (when showAll is false)
-    return items.filter(item => item.category === category && (showAll || item.isOnSale));
+    return items.filter(item => {
+      if (item.category !== category) {
+        return false;
+      }
+
+      if (!showAll && (!item.isOnSale || item.minted === item.supply)) {
+        return false;
+      }
+
+      return true;
+    });
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
