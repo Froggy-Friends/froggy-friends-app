@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useEthers, useTokenBalance } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
 import { Fade, Grid, Typography, CardMedia, IconButton, Button, createStyles, Theme, Modal, Backdrop } from "@mui/material";
-import { commify } from "ethers/lib/utils";
+import { BigNumber } from 'ethers';
+import { commify, formatEther } from "ethers/lib/utils";
 import { cartItems, cartOpen, remove, toggle } from '../redux/cartSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { RibbitItem } from '../models/RibbitItem';
@@ -44,15 +46,23 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Cart() {
   const classes = useStyles();
   const dispatch = useAppDispatch();
+  const { account } = useEthers();
+  const ribbitBalance: BigNumber = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || BigNumber.from(0);
   const isCartOpen = useAppSelector(cartOpen);
   const items = useAppSelector(cartItems);
   const [total, setTotal] = useState(0);
+  const [remaining, setRemaining] = useState(0);
   const { height } = useWindowDimensions();
 
   useEffect(() => {
     if (items) {
       const total = items.reduce((acc, item) => { return acc + item.price}, 0);
       setTotal(total);
+
+      const etherFormat = formatEther(ribbitBalance);
+      const number = +etherFormat;
+      const remaining = number - total;
+      setRemaining(remaining);
     }
   }, [items]);
 
@@ -74,6 +84,12 @@ export default function Cart() {
 
   const handleClose = () => {
     dispatch(toggle());
+  }
+
+  const formatBalance = (balance: BigNumber) => {
+    const etherFormat = formatEther(balance);
+    const number = +etherFormat;
+    return commify(number.toFixed(2));
   }
 
   return (
@@ -128,15 +144,29 @@ export default function Cart() {
           <Grid item id='total-and-checkout' xs={height < 500 ? 4 : 3}>
             <Grid id="total" item mr={1} p={1}>
               <Grid className={classes.cartItem} container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
+                <Typography variant='h6' color='secondary' p={1} pl={2}>Ribbit balance</Typography>
+                <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
+                  <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                  <Typography>{formatBalance(ribbitBalance)}</Typography>
+                </Grid>
+              </Grid>
+              <Grid className={classes.cartItem} container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Typography variant='h6' color='secondary' p={1} pl={2}>Total</Typography>
                 <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                  <Typography>{commify(total)}</Typography>
+                  <Typography>{commify(total.toFixed(2))}</Typography>
+                </Grid>
+              </Grid>
+              <Grid className={classes.cartItem} container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
+                <Typography variant='h6' color='secondary' p={1} pl={2}>Remaining balance</Typography>
+                <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
+                  <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                  <Typography>{commify(remaining.toFixed(2))}</Typography>
                 </Grid>
               </Grid>
             </Grid>
             <Grid id='checkout' container item justifyContent='center' p={1}>
-              <Button variant='contained' color='success' fullWidth disabled={total === 0}>
+              <Button variant='contained' color='success' fullWidth disabled={total === 0 || remaining < 0}>
                 <Typography variant='subtitle1' color='secondary'>Checkout</Typography>
               </Button>
             </Grid>
