@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, useTheme, List, ListItemText, ListItem } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, List, ListItemText, ListItem } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { commify } from '@ethersproject/units';
-import { Friend } from '../models/Friend';
-import { collabFriendsData, friendsData, goldenLilyPadsData, nftData, raffleData, marketplaceUrl } from '../data';
+import { marketplaceUrl } from '../data';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
+import axios from 'axios';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ribbit from '../images/ribbit.gif';
 import biz from '../images/biz.png';
@@ -67,31 +67,32 @@ export default function Market() {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const [value, setValue] = useState(0);
-  const [activeFilter, setActiveFilter] = useState(true);
-  const [friends, setFriends] = useState<Friend[]>(friendsData.filter(friend => friend.isActive));
-  const [collabFriends, setCollabFriends] = useState<Friend[]>(collabFriendsData.filter(friend => friend.isActive));
-  const [goldenLilyPads, setGoldenLilyPads] = useState<RibbitItem[]>(goldenLilyPadsData.filter(lily => lily.isActive));
-  const [nfts, setNfts] = useState<RibbitItem[]>(nftData.filter(nft => nft.isActive));
-  const [raffles, setRaffles] = useState<RibbitItem[]>(raffleData.filter(raffle => raffle.isActive));
+  const [showAll, setShowAll] = useState(false);
+  const [items, setItems] = useState<RibbitItem[]>([]);
 
-  const onFilterToggle = (event: React.MouseEvent<HTMLElement>, isActiveFilter: boolean) => {
-    if (isActiveFilter === null) return;
-    setActiveFilter(isActiveFilter);
-    if (isActiveFilter) {
-      setFriends(friendsData.filter(friend => friend.isActive));
-      setCollabFriends(collabFriendsData.filter(friend => friend.isActive));
-      setGoldenLilyPads(goldenLilyPadsData.filter(lily => lily.isActive));
-      setNfts(nftData.filter(nft => nft.isActive));
-      setRaffles(raffleData.filter(raffle => raffle.isActive));
-    } else {
-      setGoldenLilyPads(goldenLilyPadsData);
-      setFriends(friendsData);
-      setCollabFriends(collabFriendsData);
-      setNfts(nftData);
-      setRaffles(raffleData);
-      // TODO: allowlists, merch and costumes
+  useEffect(() => {
+    async function getItems() {
+      try {
+        const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
+        let items = response.data;
+        setItems(items);
+      } catch (error) {
+        console.log("fetch items error: ", error);
+      }
     }
+
+    getItems();
+  }, [])
+
+  const onFilterToggle = (event: React.MouseEvent<HTMLElement>, filter: boolean) => {
+    console.log("filter: ", filter);
+    if (filter === null) return;
+    setShowAll(filter);
   };
+
+  const filterItems = (category: string) => {
+    return items.filter(item => item.category === category && (showAll || item.isOnSale));
+  }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -101,18 +102,30 @@ export default function Market() {
     dispatch(add(item));
   }
 
+  const isItemDisabled = (item: RibbitItem) => {
+    if (!item.isOnSale) {
+      return true;
+    }
+
+    if (item.minted === item.supply) {
+      return true;
+    }
+
+    return false;
+  }
+
   return (
     <Grid id="market" className={classes.market} container direction="column" justifyContent="start" pt={15}>
       <Grid id="filters" item alignItems="center" p={2}>
         <ToggleButtonGroup
           color="primary"
-          value={activeFilter}
+          value={showAll}
           exclusive
           onChange={onFilterToggle}
           sx={{bgcolor: "#000000d1"}}
         >
-          <ToggleButton value={true}>Avl</ToggleButton>
-          <ToggleButton value={false}>All</ToggleButton>
+          <ToggleButton value={false}>Avl</ToggleButton>
+          <ToggleButton value={true}>All</ToggleButton>
         </ToggleButtonGroup>
       </Grid>
       <Grid id="items-and-cart" container item justifyContent='space-between' p={2} minHeight={855}>
@@ -173,18 +186,18 @@ export default function Market() {
               </Grid>
               <Grid item xl={8} lg={9} md={9} sm={9} xs={9}>
                 {
-                  goldenLilyPads.map((lily, index) => {
+                  filterItems('lilies').map((lily, index) => {
                     return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} p={2} minHeight={300}>
-                            <Card className={lily.isActive ? "" : "disabled"}>
+                            <Card className={isItemDisabled(lily) ? "disabled" : ""}>
                               <CardHeader title="Golden Lily Pad"/>
                               <CardMedia component='img' image={lily.image} alt='Froggy'/>
                               <CardContent>
-                                <Typography variant='subtitle1' color='secondary' pb={1}>{`5 / ${lily.supply} Available`}</Typography>
+                                <Typography variant='subtitle1' color='secondary' pb={1}>{`${lily.supply - lily.minted} / ${lily.supply} Available`}</Typography>
                                 <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                   <Typography>{commify(lily.price)}</Typography>
                                 </Grid>
-                                <Button variant='contained' color='success' onClick={() => onBuyItem(lily)} disabled={!lily.isActive}>
+                                <Button variant='contained' color='success' onClick={() => onBuyItem(lily)} disabled={isItemDisabled(lily)}>
                                   <AddShoppingCartIcon/>
                                 </Button>
                               </CardContent>
@@ -207,20 +220,20 @@ export default function Market() {
             </Grid>
             <Grid id='genesis-friends' container item pb={3} xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
-                friends.map((friend, index) => { 
+                filterItems('friends').map((friend, index) => { 
                   return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={3} sm={4} xs={12}>
-                          <Card className={friend.isActive ? "" : "disabled"}>
+                          <Card className={friend.isOnSale ? "" : "disabled"}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
-                            <CardMedia component='img' image={friend.image} alt='Froggy'/>
+                            <CardMedia component='img' image={friend.previewImage} alt='Froggy'/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{friend.boost}% Boost</Typography>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{`${friend.supply - friend.minted} / ${friend.supply} Available`}</Typography>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{friend.percentage}% Boost</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(friend.price)}</Typography>
                               </Grid>
                               {/* TODO: Add amount slider with friend.limit max */}
-                              <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={!friend.isActive}>
+                              <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={isItemDisabled(friend)}>
                                 <AddShoppingCartIcon/>
                               </Button>
                             </CardContent>
@@ -234,18 +247,18 @@ export default function Market() {
             </Grid>
             <Grid id="collab-friends" container item pb={3} xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
-                collabFriends.map((friend, index) => { 
+                filterItems('collabs').map((friend, index) => { 
                   return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={3} sm={4} xs={12}>
-                          <Card className={friend.isActive ? "" : "disabled"}>
+                          <Card className={friend.isOnSale ? "" : "disabled"}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
-                            <CardMedia component='img' image={friend.image} alt='Froggy'/>
+                            <CardMedia component='img' image={friend.previewImage} alt='Froggy'/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{`1 / ${friend.supply} Avl`}</Typography>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{`${friend.supply - friend.minted} / ${friend.supply} Available`}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                <Typography>{friend.price}</Typography>
+                                <Typography>{commify(friend.price)}</Typography>
                               </Grid>
-                              <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={!friend.isActive}>
+                              <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={isItemDisabled(friend)}>
                                 <AddShoppingCartIcon/>
                               </Button>
                             </CardContent>
@@ -269,18 +282,18 @@ export default function Market() {
             </Grid>
             <Grid id='nfts' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
-                nfts.map((nft, index) => {
+                filterItems('nfts').map((nft, index) => {
                   return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
-                          <Card className={nft.isActive ? "" : "disabled"}>
+                          <Card className={nft.isOnSale ? "" : "disabled"}>
                             <CardHeader title={nft.name}/>
                             <CardMedia component='img' image={nft.image} alt='Froggy'/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{`1 / ${nft.supply} Available`}</Typography>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{`${nft.supply - nft.minted} / ${nft.supply} Available`}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(nft.price)}</Typography>
                               </Grid>
-                              <Button variant='contained' color='success' onClick={() => onBuyItem(nft)} disabled={!nft.isActive}>
+                              <Button variant='contained' color='success' onClick={() => onBuyItem(nft)} disabled={isItemDisabled(nft)}>
                                 <AddShoppingCartIcon/>
                               </Button>
                             </CardContent>
@@ -294,22 +307,23 @@ export default function Market() {
             <Grid item xl={12}>
               <Typography variant='subtitle1' color='secondary' pb={1}>
                 Purchase raffle tickets for community owned NFTs with $RIBBIT.
+                <br/>Each ticket is a 10% chance of winning a random community owned NFT.
               </Typography>
             </Grid>
             <Grid id='raffles' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
-                raffles.map((raffle, index) => {
+                filterItems('raffles').map((raffle, index) => {
                   return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
-                          <Card className={raffle.isActive ? "" : "disabled"}>
+                          <Card className={raffle.isOnSale ? "" : "disabled"}>
                             <CardHeader title={raffle.name}/>
                             <CardMedia component='img' image={raffle.image} alt='Froggy'/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{`200 / ${raffle.supply} Available`}</Typography>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{`${raffle.supply - raffle.minted} / ${raffle.supply} Available`}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(raffle.price)}</Typography>
                               </Grid>
-                              <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={!raffle.isActive}>
+                              <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={isItemDisabled(raffle)}>
                                 <AddShoppingCartIcon/>
                               </Button>
                             </CardContent>

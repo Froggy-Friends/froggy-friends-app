@@ -3,10 +3,15 @@ export interface RibbitItem {
   id: number;
   name: string;
   description: string;
+  category: string;
   image: string;
+  previewImage: string;
   price: number;
+  percentage: number;
+  minted: number;
   supply: number;
-  limit: number;
-  isActive: boolean;
+  walletLimit: number;
+  isBoost: boolean;
+  isOnSale: boolean;
   attributes: Attribute[];
 }

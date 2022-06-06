@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Fade, Grid, Typography, CardMedia, IconButton, Card, Button, createStyles, Theme, Modal, Backdrop } from "@mui/material";
+import { Fade, Grid, Typography, CardMedia, IconButton, Button, createStyles, Theme, Modal, Backdrop } from "@mui/material";
 import { commify } from "ethers/lib/utils";
 import { cartItems, cartOpen, remove, toggle } from '../redux/cartSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -116,7 +116,7 @@ export default function Cart() {
                         <Typography variant='subtitle1'>{commify(item.price)}</Typography>
                       </Grid>
                       <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={2}>
-                        <IconButton size='small' color='primary' onClick={() => onRemoveItem(item)} disabled={!item.isActive}>
+                        <IconButton size='small' color='primary' onClick={() => onRemoveItem(item)}>
                           <CancelIcon/>
                         </IconButton>
                       </Grid>
@@ -127,7 +127,7 @@ export default function Cart() {
           </Grid>
           <Grid item id='total-and-checkout' xs={height < 500 ? 4 : 3}>
             <Grid id="total" item mr={1} p={1}>
-              <Grid className={classes.cartItem} container justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid className={classes.cartItem} container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Typography variant='h6' color='secondary' p={1} pl={2}>Total</Typography>
                 <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
