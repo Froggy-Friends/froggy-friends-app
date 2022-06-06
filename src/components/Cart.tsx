@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 import { Fade, Grid, Typography, CardMedia, IconButton, Button, createStyles, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar } from "@mui/material";
 import { BigNumber } from 'ethers';
 import { commify, formatEther } from "ethers/lib/utils";
-import { cartItems, cartOpen, remove, toggle } from '../redux/cartSlice';
+import { cartItems, cartOpen, empty, remove, toggle } from '../redux/cartSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { RibbitItem } from '../models/RibbitItem';
 import { useSpendingApproved, useApproveSpender, useBundleBuy } from '../client';
@@ -80,15 +80,17 @@ export default function Cart() {
   
   
   useEffect(() => {
-    if (approveSpenderState.status === "Exception") {
+    if (approveSpenderState.status === "Exception" || approveSpenderState.status === "Fail") {
       console.log("approve spender error: ", approveSpenderState.errorMessage);
+      if (approveSpenderState.errorMessage?.includes("execution reverted")) {
+        setAlertMessage(approveSpenderState.errorMessage.replace(/^execution reverted:/i, ''));
+      } else {
+        setAlertMessage(approveSpenderState.errorMessage);
+      }
+
+      setShowAlert(true);
     } else if (approveSpenderState.status === "Mining") {
-      console.log("approve spender mining...", approveSpenderState);
       setShowPurchaseModal(true);
-    } else if (approveSpenderState.status === "Success") {
-      console.log("approve spender success: ", approveSpenderState);
-    } else if (approveSpenderState.status === "Fail") {
-      console.log("approve spender error: ", approveSpenderState.errorMessage);
     }
   }, [approveSpenderState])
 
@@ -97,14 +99,16 @@ export default function Cart() {
       console.log("approve spender error: ", bundleBuyState.errorMessage);
       if (bundleBuyState.errorMessage?.includes("execution reverted")) {
         setAlertMessage(bundleBuyState.errorMessage.replace(/^execution reverted:/i, ''));
-        setShowAlert(true);
+      } else {
+        setAlertMessage(bundleBuyState.errorMessage);
       }
 
+      setShowAlert(true);
     } else if (bundleBuyState.status === "Mining") {
-      console.log("approve spender mining...", bundleBuyState);
+      setShowPurchaseModal(true);
     } else if (bundleBuyState.status === "Success") {
-      console.log("approve spender success: ", bundleBuyState);
-    } 
+      dispatch(empty());
+    }
   }, [bundleBuyState])
 
   useEffect(() => {
@@ -266,13 +270,14 @@ export default function Cart() {
             {
               !isSpendingApproved && 
               <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
-                <Typography id='modal-title' variant="h4" p={3}>Granting Ribbit Prime Permissions</Typography>
+                <Typography id='modal-title' variant="h4" p={3}>Granting Permissions...</Typography>
               </Grid>
             }
             {
               isSpendingApproved && 
               <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
-                { bundleBuyState.status === "Mining" && <Typography id='modal-title' variant="h4" p={3}>Purchasing Ribbit Items</Typography>}
+                { bundleBuyState.status === "PendingSignature" && <Typography id='modal-title' variant="h4" p={3}>Purchasing Signature Pending...</Typography>}
+                { bundleBuyState.status === "Mining" && <Typography id='modal-title' variant="h4" p={3}>Purchasing Pending...</Typography>}
                 { bundleBuyState.status === "Success" && <Typography id='modal-title' variant="h4" p={3}>Ribbit Items Purchased!</Typography>}
                 { bundleBuyState.status === "Fail" && <Typography id='modal-title' variant="h4" p={3}>Purchased Failed</Typography>}
                 { bundleBuyState.status === "Exception" && <Typography id='modal-title' variant="h4" p={3}>Purchased Failed</Typography>}
@@ -301,7 +306,7 @@ export default function Cart() {
           }
           <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${bundleBuyState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
             <Typography id='modal-description' variant="h6" p={3}>
-              Purchase Ribbit Items {bundleBuyState.status === "Success" && <Check/>} {bundleBuyState.status === "Fail" && <Warning/>}
+              Purchase transaction {bundleBuyState.status === "Success" && <Check/>} {bundleBuyState.status === "Fail" && <Warning/>}
             </Typography>
           </Link>
           { (approveSpenderState.status === "Mining" || bundleBuyState.status === "Mining") && <LinearProgress  sx={{margin: 2}}/>}

@@ -25,11 +25,14 @@ const cartSlice = createSlice({
     },
     toggle(state) {
       state.open = !state.open;
+    },
+    empty(state) {
+      state.items = [];
     }
   }
 });
 
-export const { add, remove, toggle } = cartSlice.actions;
+export const { add, remove, toggle, empty } = cartSlice.actions;
 
 export const cartCount = (state: RootState) => state.cart.items.length;
 export const cartOpen = (state: RootState) => state.cart.open;
