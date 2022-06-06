@@ -151,14 +151,14 @@ export default function Cart() {
                 </Grid>
               </Grid>
               <Grid className={classes.cartItem} container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Typography variant='h6' color='secondary' p={1} pl={2}>Total</Typography>
+                <Typography variant='h6' color='secondary' p={1} pl={2}>Cart total</Typography>
                 <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                   <Typography>{commify(total.toFixed(2))}</Typography>
                 </Grid>
               </Grid>
               <Grid className={classes.cartItem} container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Typography variant='h6' color='secondary' p={1} pl={2}>Remaining balance</Typography>
+                <Typography variant='h6' color='secondary' p={1} pl={2}>Remaining</Typography>
                 <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                   <Typography>{commify(remaining.toFixed(2))}</Typography>
