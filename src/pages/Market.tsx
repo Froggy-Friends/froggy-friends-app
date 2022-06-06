@@ -90,19 +90,31 @@ export default function Market() {
   };
 
   const filterItems = (category: string) => {
-    // category must match 
-    // item must be on sale if show available filter is on (when showAll is false)
     return items.filter(item => {
+      // category must match
       if (item.category !== category) {
         return false;
       }
 
+      // if show available filter on check if item is not for sale or sold out
       if (!showAll && (!item.isOnSale || item.minted === item.supply)) {
         return false;
       }
 
       return true;
     });
+  }
+
+  const getItemTitle = (item: RibbitItem) => {
+    if (item.minted === item.supply) {
+      return "Sold Out!";
+    }
+
+    if (!item.isOnSale) {
+      return "Off Market";
+    }
+
+    return `${item.supply - item.minted} / ${item.supply} Available`;
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -152,9 +164,9 @@ export default function Market() {
           >
             <Tab label="Golden Lily Pad" {...a11yProps('golden-lily')} />
             <Tab label="Friends" {...a11yProps('friends')} />
-            <Tab label="Allowlists" {...a11yProps('allowlists')} />
             <Tab label="NFTs" {...a11yProps('nfts')} />
             <Tab label="Raffles" {...a11yProps('raffles')} />
+            <Tab label="Allowlists" {...a11yProps('allowlists')} />
             <Tab label="Merch" {...a11yProps('merch')} />
             <Tab label="Costumes" {...a11yProps('costumes')} />
           </Tabs>
@@ -176,7 +188,7 @@ export default function Market() {
                               <CardHeader title="Golden Lily Pad"/>
                               <CardMedia component='img' image={lily.image} alt='Froggy'/>
                               <CardContent>
-                                <Typography variant='subtitle1' color='secondary' pb={1}>{`${lily.supply - lily.minted} / ${lily.supply} Available`}</Typography>
+                                <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(lily)}</Typography>
                                 <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                   <Typography>{commify(lily.price)}</Typography>
@@ -213,7 +225,7 @@ export default function Market() {
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
                             <CardMedia component='img' image={friend.previewImage} alt='Froggy'/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{`${friend.supply - friend.minted} / ${friend.supply} Available`}</Typography>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(friend)}</Typography>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{friend.percentage}% Boost</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
@@ -243,7 +255,7 @@ export default function Market() {
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
                             <CardMedia component='img' image={friend.previewImage} alt='Froggy'/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{`${friend.supply - friend.minted} / ${friend.supply} Available`}</Typography>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(friend)}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(friend.price)}</Typography>
@@ -261,13 +273,7 @@ export default function Market() {
               }
             </Grid>
           </TabPanel>
-          <TabPanel id='allowlists-panel' value={value} index={2}>
-            <Grid container direction="column" alignItems="center">
-              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Allowlists Coming Soon</Typography>
-              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-            </Grid>
-          </TabPanel>
-          <TabPanel id='nfts-panel' value={value} index={3}>
+          <TabPanel id='nfts-panel' value={value} index={2}>
             <Grid item xl={12}>
               <Typography variant='subtitle1' color='secondary' pb={1}>
                 Purchase community owned NFTs with $RIBBIT.
@@ -281,7 +287,7 @@ export default function Market() {
                             <CardHeader title={nft.name}/>
                             <CardMedia component='img' image={nft.image} alt='Froggy'/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{`${nft.supply - nft.minted} / ${nft.supply} Available`}</Typography>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(nft)}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(nft.price)}</Typography>
@@ -299,7 +305,7 @@ export default function Market() {
               }
             </Grid>
           </TabPanel>
-          <TabPanel id='raffles-panel' value={value} index={4}>
+          <TabPanel id='raffles-panel' value={value} index={3}>
             <Grid item xl={12}>
               <Typography variant='subtitle1' color='secondary' pb={1}>
                 Purchase raffle tickets for community owned NFTs with $RIBBIT.
@@ -314,7 +320,7 @@ export default function Market() {
                             <CardHeader title={raffle.name}/>
                             <CardMedia component='img' image={raffle.image} alt='Froggy'/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{`${raffle.supply - raffle.minted} / ${raffle.supply} Available`}</Typography>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(raffle.price)}</Typography>
@@ -330,6 +336,12 @@ export default function Market() {
               {
                 filterItems('raffles').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
               }
+            </Grid>
+          </TabPanel>
+          <TabPanel id='allowlists-panel' value={value} index={4}>
+            <Grid container direction="column" alignItems="center">
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Allowlists Coming Soon</Typography>
+              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
             </Grid>
           </TabPanel>
           <TabPanel id='merch-panel' value={value} index={5}>
