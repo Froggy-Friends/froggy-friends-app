@@ -260,7 +260,7 @@ export default function Market() {
           </ToggleButtonGroup>
         </Grid>
         <Grid id='item-link' pr={2}>
-          <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{paddingRight: 1}}/>} onClick={() => window.open('https://testnets.opensea.io/account/ribbit-items-v3', '_blank')}>
+          <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{paddingRight: 1}}/>} onClick={() => window.open('https://opensea.io/account/ribbit-items', '_blank')}>
             <Typography variant='subtitle1' color='secondary' p={1}>Purchased Items</Typography>
           </Button>
         </Grid>
