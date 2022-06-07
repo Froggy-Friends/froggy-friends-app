@@ -163,6 +163,16 @@ export default function Cart() {
     setShowAlert(false);
   };
 
+  const isCheckoutDisabled = () => {
+    if (total === 0 || remaining < 0) {
+      return true;
+    } else if (!account) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   const checkout = async () => {
     dispatch(toggle());
     try {
@@ -256,7 +266,7 @@ export default function Cart() {
                 </Grid>
               </Grid>
               <Grid id='checkout' container item justifyContent='center' p={1}>
-                <Button variant='contained' color='success' fullWidth disabled={total === 0 || remaining < 0} onClick={checkout}>
+                <Button variant='contained' color='success' fullWidth disabled={isCheckoutDisabled()} onClick={checkout}>
                   <Typography variant='subtitle1' color='secondary'>Checkout</Typography>
                 </Button>
               </Grid>
