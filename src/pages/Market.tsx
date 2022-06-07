@@ -8,7 +8,7 @@ import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client'
 import { marketplaceUrl } from '../data';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { Check, Close, Warning } from '@mui/icons-material';
+import { Check, Close, OpenInNew, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ribbit from '../images/ribbit.gif';
@@ -246,17 +246,24 @@ export default function Market() {
 
   return (
     <Grid id="market" className={classes.market} container direction="column" justifyContent="start" pt={15}>
-      <Grid id="filters" item alignItems="center" p={2}>
-        <ToggleButtonGroup
-          color="primary"
-          value={showAll}
-          exclusive
-          onChange={onFilterToggle}
-          sx={{bgcolor: "#000000d1"}}
-        >
-          <ToggleButton value={false}>Avl</ToggleButton>
-          <ToggleButton value={true}>All</ToggleButton>
-        </ToggleButtonGroup>
+      <Grid id='filters-and-items-link' container justifyContent='space-between' alignItems='center'>
+        <Grid id="filters" item alignItems="center" p={2}>
+          <ToggleButtonGroup
+            color="primary"
+            value={showAll}
+            exclusive
+            onChange={onFilterToggle}
+            sx={{bgcolor: "#000000d1"}}
+          >
+            <ToggleButton value={false}>Avl</ToggleButton>
+            <ToggleButton value={true}>All</ToggleButton>
+          </ToggleButtonGroup>
+        </Grid>
+        <Grid id='item-link' pr={2}>
+          <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{paddingRight: 1}}/>} onClick={() => window.open('https://testnets.opensea.io/account/ribbit-items-v3', '_blank')}>
+            <Typography variant='subtitle1' color='secondary' p={1}>Purchased Items</Typography>
+          </Button>
+        </Grid>
       </Grid>
       <Grid id="items-and-cart" container item justifyContent='space-between' p={2} minHeight={855}>
         <Grid id="items" bgcolor="#000000d1" item xl={12} lg={12} md={12} sm={12} xs={12}>

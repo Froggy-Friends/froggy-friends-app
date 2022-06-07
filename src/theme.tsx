@@ -62,6 +62,14 @@ let theme = createTheme({
             backgroundColor: "#b3b6bb",
             cursor: "not-allowed",
             pointerEvents: "auto"
+          },
+          "&.transparent": {
+            backgroundColor: "#000000d1",
+            borderRadius: 5,
+            textTransform: 'capitalize',
+            ":hover": {
+              color: "#5ea14e"
+            }
           }
         }
       }
