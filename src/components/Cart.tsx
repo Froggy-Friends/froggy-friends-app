@@ -91,6 +91,7 @@ export default function Cart() {
       setShowAlert(true);
     } else if (approveSpenderState.status === "Mining") {
       setShowPurchaseModal(true);
+      dispatch(toggle(false));
     }
   }, [approveSpenderState])
 
@@ -104,10 +105,13 @@ export default function Cart() {
       }
 
       setShowAlert(true);
+      dispatch(toggle(true));
     } else if (bundleBuyState.status === "Mining") {
+      dispatch(toggle(false));
       setShowPurchaseModal(true);
     } else if (bundleBuyState.status === "Success") {
       dispatch(empty());
+      dispatch(toggle(false));
     }
   }, [bundleBuyState])
 
@@ -140,7 +144,7 @@ export default function Cart() {
   }
 
   const handleClose = () => {
-    dispatch(toggle());
+    dispatch(toggle(false));
   }
 
   const formatBalance = (balance: BigNumber) => {
@@ -174,7 +178,6 @@ export default function Cart() {
   }
 
   const checkout = async () => {
-    dispatch(toggle());
     try {
       // check ribbit item is granted approval to spend ribbit
       if (!isSpendingApproved) {
@@ -282,17 +285,18 @@ export default function Cart() {
             {
               !isSpendingApproved && 
               <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
-                <Typography id='modal-title' variant="h4" p={3}>Granting Permissions...</Typography>
+                <Typography id='modal-title' variant="h4" p={3}>Granting Permissions</Typography>
               </Grid>
             }
             {
               isSpendingApproved && 
               <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
-                { bundleBuyState.status === "PendingSignature" && <Typography id='modal-title' variant="h4" p={3}>Purchasing Signature Pending...</Typography>}
-                { bundleBuyState.status === "Mining" && <Typography id='modal-title' variant="h4" p={3}>Purchasing Pending...</Typography>}
+                { bundleBuyState.status === "None" && <Typography id='modal-title' variant="h4" p={3}>Sign Purchase</Typography>}
+                { bundleBuyState.status === "PendingSignature" && <Typography id='modal-title' variant="h4" p={3}>Sign Purchase</Typography>}
+                { bundleBuyState.status === "Mining" && <Typography id='modal-title' variant="h4" p={3}>Purchasing Pending</Typography>}
                 { bundleBuyState.status === "Success" && <Typography id='modal-title' variant="h4" p={3}>Ribbit Items Purchased!</Typography>}
-                { bundleBuyState.status === "Fail" && <Typography id='modal-title' variant="h4" p={3}>Purchased Failed</Typography>}
-                { bundleBuyState.status === "Exception" && <Typography id='modal-title' variant="h4" p={3}>Purchased Failed</Typography>}
+                { bundleBuyState.status === "Fail" && <Typography id='modal-title' variant="h4" p={3}>Purchase Failed</Typography>}
+                { bundleBuyState.status === "Exception" && <Typography id='modal-title' variant="h4" p={3}>Purchase Failed</Typography>}
               </Grid>
             }
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
@@ -316,11 +320,14 @@ export default function Cart() {
               </Typography>
             </Link>
           }
-          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${bundleBuyState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
-            <Typography id='modal-description' variant="h6" p={3}>
-              Purchase transaction {bundleBuyState.status === "Success" && <Check/>} {bundleBuyState.status === "Fail" && <Warning/>}
-            </Typography>
-          </Link>
+          {
+            isSpendingApproved && 
+            <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${bundleBuyState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+              <Typography id='modal-description' variant="h6" p={3}>
+                Purchase transaction {bundleBuyState.status === "Success" && <Check/>} {bundleBuyState.status === "Fail" && <Warning/>}
+              </Typography>
+            </Link>
+          }
           { (approveSpenderState.status === "Mining" || bundleBuyState.status === "Mining") && <LinearProgress  sx={{margin: 2}}/>}
         </Box>
       </Modal>

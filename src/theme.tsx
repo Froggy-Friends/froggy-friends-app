@@ -16,6 +16,9 @@ let theme = createTheme({
     },
     info: {
       main: '#181818'
+    },
+    warning: {
+      main: '#BFB85D'
     }
   },
   typography: {
@@ -67,6 +70,8 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           fontSize: '1.3rem',
+          backgroundColor: '#BFB85D',
+          color: '#181818'
         }
       }
     },

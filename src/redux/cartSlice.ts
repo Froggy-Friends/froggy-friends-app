@@ -23,8 +23,8 @@ const cartSlice = createSlice({
     remove(state, action) {
       state.items.splice(state.items.findIndex(item => item.id === action.payload.id), 1);
     },
-    toggle(state) {
-      state.open = !state.open;
+    toggle(state, action?) {
+      state.open = action.payload;
     },
     empty(state) {
       state.items = [];

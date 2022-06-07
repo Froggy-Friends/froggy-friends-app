@@ -118,7 +118,7 @@ export default function Market() {
   useEffect(() => {
     console.log("collab buy state: ", collabBuyState);
     if (collabBuyState.status === "Exception" || collabBuyState.status === "Fail") {
-      console.log("approve spender error: ", collabBuyState.errorMessage);
+      console.log("collab buy error: ", collabBuyState.errorMessage);
       if (collabBuyState.errorMessage?.includes("execution reverted")) {
         setAlertMessage(collabBuyState.errorMessage.replace(/^execution reverted:/i, ''));
       } else {

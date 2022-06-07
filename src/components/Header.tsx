@@ -80,7 +80,7 @@ export default function Header() {
   const onCartClick = () => {
     navigate("/market");
     // toggle items sidebar
-    dispatch(toggle());
+    dispatch(toggle(true));
   }
 
   return (
