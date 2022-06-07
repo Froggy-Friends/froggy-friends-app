@@ -128,7 +128,7 @@ export default function Header() {
                 </Grid>
                 <Grid item display={isDesktop && !account ? "flex" : "none"}>
                   <Button variant='contained' onClick={() => activateBrowserWallet()}>
-                    <Typography variant='h5'>Log</Typography>  
+                    <Typography variant='h5'>Login</Typography>  
                   </Button>
                 </Grid>
                 <Grid item display={isDesktop && account ? "flex" : "none"}>
@@ -179,7 +179,7 @@ export default function Header() {
               </Grid>
               <Grid item display={!account ? "flex" : "none"} pr={2}>
                 <Button variant='contained' onClick={() => activateBrowserWallet()}>
-                  <Typography variant='h5'>Log</Typography>  
+                  <Typography variant='h5'>Login</Typography>  
                 </Button>
               </Grid>
             </Grid>

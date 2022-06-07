@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, List, ListItemText, ListItem } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, LinearProgress, Modal, Box, IconButton } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
+import { useEthers } from '@usedapp/core';
 import { commify } from '@ethersproject/units';
 import { marketplaceUrl } from '../data';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
+import { Close } from '@mui/icons-material';
 import axios from 'axios';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ribbit from '../images/ribbit.gif';
 import biz from '../images/biz.png';
+import please from '../images/plz.png';
 
 interface TabPanelProps {
   id: string;
@@ -58,6 +61,21 @@ const useStyles: any = makeStyles((theme: Theme) =>
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       minHeight: '130%'
+    },
+    modal: {
+      position: 'absolute' as 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 500,
+      backgroundColor: '#cfdcae',
+      color: theme.palette.background.default,
+      border: '0px',
+      borderRadius: 5,
+      padding: 4,
+      [theme.breakpoints.down('sm')]: {
+        width: 300
+      }
     }
   })
 );
@@ -68,16 +86,21 @@ export default function Market() {
   const dispatch = useAppDispatch();
   const [value, setValue] = useState(0);
   const [showAll, setShowAll] = useState(false);
+  const [loadingItems, setLoadingItems] = useState(false);
   const [items, setItems] = useState<RibbitItem[]>([]);
+  const { account } = useEthers();
 
   useEffect(() => {
     async function getItems() {
       try {
+        setLoadingItems(true);
         const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
         let items = response.data;
         setItems(items);
+        setLoadingItems(false);
       } catch (error) {
         console.log("fetch items error: ", error);
+        setLoadingItems(false);
       }
     }
 
@@ -125,6 +148,11 @@ export default function Market() {
     dispatch(add(item));
   }
 
+  const onBuyCollabItem = (item: RibbitItem) => {
+    // buy collab item directly
+
+  }
+
   const isItemDisabled = (item: RibbitItem) => {
     if (!item.isOnSale) {
       return true;
@@ -134,7 +162,17 @@ export default function Market() {
       return true;
     }
 
+    if (!account) {
+      return true;
+    }
+
     return false;
+  }
+
+  const onLoadingItemsClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setLoadingItems(false);
+    }
   }
 
   return (
@@ -260,8 +298,8 @@ export default function Market() {
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(friend.price)}</Typography>
                               </Grid>
-                              <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={isItemDisabled(friend)}>
-                                <AddShoppingCartIcon/>
+                              <Button variant='contained' color='success' onClick={() => onBuyCollabItem(friend)} disabled={isItemDisabled(friend)}>
+                                Buy Now
                               </Button>
                             </CardContent>
                           </Card>
@@ -358,6 +396,26 @@ export default function Market() {
           </TabPanel>
         </Grid>
       </Grid>
+      <Modal open={loadingItems} onClose={onLoadingItemsClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
+        <Box className={classes.modal}>
+          <Grid container justifyContent='space-between' alignItems='center' pb={5}>
+            <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
+              <Typography id='modal-title' variant="h4" p={3}>Loading Ribbit Items</Typography>
+            </Grid>
+            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+              <IconButton size='medium' color='inherit' onClick={onLoadingItemsClose}>
+                <Close fontSize='medium'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+          <Grid container justifyContent='center' pb={3}>
+            <Grid item>
+              <img src={please} style={{height: 100, width: 100}} alt='please'/>
+            </Grid>
+          </Grid>
+          <LinearProgress variant='indeterminate' color='info'/>
+        </Box>
+      </Modal>
     </Grid>
   )
 }
