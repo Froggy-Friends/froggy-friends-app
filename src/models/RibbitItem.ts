@@ -4,6 +4,7 @@ export interface RibbitItem {
   name: string;
   description: string;
   category: string;
+  collabId: number;
   image: string;
   previewImage: string;
   price: number;

@@ -188,6 +188,8 @@ export default function Cart() {
       await bundleBuy(ids, amounts);
     } catch (error) {
       console.log("checkout error: ", error);
+      setAlertMessage("Checkout error");
+      setShowAlert(true);
     }
   }
 

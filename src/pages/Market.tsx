@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, LinearProgress, Modal, Box, IconButton } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, LinearProgress, Modal, Box, IconButton, Link, Snackbar } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers } from '@usedapp/core';
 import { commify } from '@ethersproject/units';
+import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client';
 import { marketplaceUrl } from '../data';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { Close } from '@mui/icons-material';
+import { Check, Close, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ribbit from '../images/ribbit.gif';
 import biz from '../images/biz.png';
 import please from '../images/plz.png';
+import hype from '../images/hype.png';
+import uhhh from '../images/uhhh.png';
 
 interface TabPanelProps {
   id: string;
@@ -88,7 +91,45 @@ export default function Market() {
   const [showAll, setShowAll] = useState(false);
   const [loadingItems, setLoadingItems] = useState(false);
   const [items, setItems] = useState<RibbitItem[]>([]);
+  const [alertMessage, setAlertMessage] = useState<any>(undefined);
+  const [showAlert, setShowAlert] = useState(false);
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const { account } = useEthers();
+  const isSpendingApproved = useSpendingApproved(account ?? '');
+  const { collabBuy, collabBuyState } = useCollabBuy();
+  const { approveSpender, approveSpenderState } = useApproveSpender();
+  console.log("spending approved: ", isSpendingApproved);
+  
+  useEffect(() => {
+    if (approveSpenderState.status === "Exception" || approveSpenderState.status === "Fail") {
+      console.log("approve spender error: ", approveSpenderState.errorMessage);
+      if (approveSpenderState.errorMessage?.includes("execution reverted")) {
+        setAlertMessage(approveSpenderState.errorMessage.replace(/^execution reverted:/i, ''));
+      } else {
+        setAlertMessage(approveSpenderState.errorMessage);
+      }
+
+      setShowAlert(true);
+    } else if (approveSpenderState.status === "Mining") {
+      setShowPurchaseModal(true);
+    }
+  }, [approveSpenderState])
+
+  useEffect(() => {
+    console.log("collab buy state: ", collabBuyState);
+    if (collabBuyState.status === "Exception" || collabBuyState.status === "Fail") {
+      console.log("approve spender error: ", collabBuyState.errorMessage);
+      if (collabBuyState.errorMessage?.includes("execution reverted")) {
+        setAlertMessage(collabBuyState.errorMessage.replace(/^execution reverted:/i, ''));
+      } else {
+        setAlertMessage(collabBuyState.errorMessage);
+      }
+
+      setShowAlert(true);
+    } else if (collabBuyState.status === "Mining") {
+      setShowPurchaseModal(true);
+    }
+  }, [collabBuyState])
 
   useEffect(() => {
     async function getItems() {
@@ -148,9 +189,29 @@ export default function Market() {
     dispatch(add(item));
   }
 
-  const onBuyCollabItem = (item: RibbitItem) => {
+  const onBuyCollabItem = async (item: RibbitItem) => {
     // buy collab item directly
+    console.log("collab item: ", item);
+    try {
+      // check ribbit item is granted approval to spend ribbit
+      if (!isSpendingApproved) {
+        // request unlimited spending approval
+        await approveSpender(process.env.REACT_APP_RIBBIT_ITEM_CONTRACT, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+      }
 
+      // buy bundle items
+      await collabBuy(item.id, 1, item.collabId);
+    } catch (error) {
+      console.log("checkout error: ", error);
+      setAlertMessage("Buy collab item error");
+      setShowAlert(true);
+    }
+  }
+
+  const onPurchaseModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setShowPurchaseModal(false);
+    }
   }
 
   const isItemDisabled = (item: RibbitItem) => {
@@ -168,6 +229,14 @@ export default function Market() {
 
     return false;
   }
+
+  const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setShowAlert(false);
+  };
 
   const onLoadingItemsClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason !== 'backdropClick') {
@@ -396,6 +465,70 @@ export default function Market() {
           </TabPanel>
         </Grid>
       </Grid>
+      <Modal open={showPurchaseModal} onClose={onPurchaseModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
+        <Box className={classes.modal}>
+          <Grid container justifyContent='space-between' alignItems='center' pb={5}>
+            {
+              !isSpendingApproved && 
+              <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
+                <Typography id='modal-title' variant="h4" p={3}>Granting Permissions...</Typography>
+              </Grid>
+            }
+            {
+              isSpendingApproved && 
+              <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
+                { collabBuyState.status === "None" && <Typography id='modal-title' variant="h4" p={3}>Sign Purchase</Typography>}
+                { collabBuyState.status === "PendingSignature" && <Typography id='modal-title' variant="h4" p={3}>Sign Purchase</Typography>}
+                { collabBuyState.status === "Mining" && <Typography id='modal-title' variant="h4" p={3}>Purchasing Pending</Typography>}
+                { collabBuyState.status === "Success" && <Typography id='modal-title' variant="h4" p={3}>Ribbit Items Purchased!</Typography>}
+                { collabBuyState.status === "Fail" && <Typography id='modal-title' variant="h4" p={3}>Purchase Failed</Typography>}
+                { collabBuyState.status === "Exception" && <Typography id='modal-title' variant="h4" p={3}>Purchase Failed</Typography>}
+              </Grid>
+            }
+            <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={2}>
+              <IconButton size='medium' color='inherit' onClick={onPurchaseModalClose}>
+                <Close fontSize='medium'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+          <Grid container justifyContent='center' p={3}>
+            <Grid item>
+              { collabBuyState.status === "Success" && <img src={hype} style={{height: 100, width: 100}} alt='hype'/> }
+              { collabBuyState.status === "Mining" && <img src={please} style={{height: 100, width: 100}} alt='please'/> }
+              { collabBuyState.status === "Fail" && <img src={uhhh} style={{height: 100, width: 100}} alt='uhhh'/> }
+            </Grid>
+          </Grid>
+          {
+            !isSpendingApproved && 
+            <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${approveSpenderState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+              <Typography id='modal-description' variant="h6" p={3}>
+                Grant Ribbit Prime Permissions {approveSpenderState.status === "Success" && <Check/>} {approveSpenderState.status === "Fail" && <Warning/>}
+              </Typography>
+            </Link>
+          }
+          {
+            isSpendingApproved && 
+            <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${collabBuyState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+              <Typography id='modal-description' variant="h6" p={3}>
+                Purchase transaction {collabBuyState.status === "Success" && <Check/>} {collabBuyState.status === "Fail" && <Warning/>}
+              </Typography>
+            </Link>
+          }
+          { (approveSpenderState.status === "Mining" || collabBuyState.status === "Mining") && <LinearProgress  sx={{margin: 2}}/>}
+        </Box>
+      </Modal>
+      <Snackbar
+        open={showAlert} 
+        autoHideDuration={5000} 
+        message={alertMessage} 
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={onAlertClose}
+        action={
+          <IconButton size='small' aria-label='close' color='inherit' onClick={onAlertClose}>
+            <Close fontSize='small' />
+          </IconButton>
+        }
+      />
       <Modal open={loadingItems} onClose={onLoadingItemsClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
         <Box className={classes.modal}>
           <Grid container justifyContent='space-between' alignItems='center' pb={5}>

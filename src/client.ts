@@ -28,6 +28,14 @@ export function useBundleBuy() {
   }
 }
 
+export function useCollabBuy() {
+  const { send, state } = useContractFunction(ribbitItemContract, 'collabBuy');
+  return {
+    collabBuy: send,
+    collabBuyState: state
+  }
+}
+
 export function useApproveSpender() {
   const { send, state } = useContractFunction(ribbitContract, 'approve');
   return {
