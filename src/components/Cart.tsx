@@ -293,7 +293,7 @@ export default function Cart() {
               <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
                 { bundleBuyState.status === "None" && <Typography id='modal-title' variant="h4" p={3}>Sign Purchase</Typography>}
                 { bundleBuyState.status === "PendingSignature" && <Typography id='modal-title' variant="h4" p={3}>Sign Purchase</Typography>}
-                { bundleBuyState.status === "Mining" && <Typography id='modal-title' variant="h4" p={3}>Purchasing Pending</Typography>}
+                { bundleBuyState.status === "Mining" && <Typography id='modal-title' variant="h4" p={3}>Purchase Pending</Typography>}
                 { bundleBuyState.status === "Success" && <Typography id='modal-title' variant="h4" p={3}>Ribbit Items Purchased!</Typography>}
                 { bundleBuyState.status === "Fail" && <Typography id='modal-title' variant="h4" p={3}>Purchase Failed</Typography>}
                 { bundleBuyState.status === "Exception" && <Typography id='modal-title' variant="h4" p={3}>Purchase Failed</Typography>}
