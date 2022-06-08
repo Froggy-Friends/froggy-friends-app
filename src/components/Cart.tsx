@@ -1,14 +1,14 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Fade, Grid, Typography, CardMedia, IconButton, Button, createStyles, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar } from "@mui/material";
+import { Fade, Grid, Typography, CardMedia, IconButton, Button, createStyles, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar, useTheme } from "@mui/material";
 import { BigNumber } from 'ethers';
 import { commify, formatEther } from "ethers/lib/utils";
 import { cartItems, cartOpen, empty, remove, toggle } from '../redux/cartSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { RibbitItem } from '../models/RibbitItem';
 import { useSpendingApproved, useApproveSpender, useBundleBuy } from '../client';
-import { Check, Close, Warning } from '@mui/icons-material';
+import { AddShoppingCart, Check, Close, Warning } from '@mui/icons-material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ribbit from '../images/ribbit.gif';
 import please from '../images/plz.png';
@@ -26,6 +26,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
       borderRadius: 5,
       boxShadow: 24,
       p: 4,
+      height: '90vh',
       [theme.breakpoints.down('md')]: {
         top: '0%',
         left: '0%',
@@ -61,6 +62,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 export default function Cart() {
   const classes = useStyles();
+  const theme = useTheme();
   const dispatch = useAppDispatch();
   const isCartOpen = useAppSelector(cartOpen);
   const items = useAppSelector(cartItems);
@@ -195,8 +197,8 @@ export default function Cart() {
           }}
         >
         <Fade id='cart' in={isCartOpen}>
-          <Grid className={classes.cart} item xl={4} lg={6} md={8} sm={12} xs={12} container direction="column" p={2}>
-            <Grid id='title' item xs={1} container justifyContent='space-between' alignItems='center' pb={2}>
+          <Grid className={classes.cart} item xl={4} lg={6} md={8} sm={12} xs={12} container direction="column" justifyContent='space-between' p={2}>
+            <Grid id='title' item sm={1} xs={1} container justifyContent='space-between' alignItems='center' pb={2}>
               <Grid item>
                 <Typography variant='h4' color='info' fontWeight='bold'>Ribbit Cart</Typography>
               </Grid>
@@ -206,11 +208,20 @@ export default function Cart() {
                 </IconButton>
               </Grid>
             </Grid>
-            <Grid id='items' item xs={7} maxHeight='50vh' overflow='scroll' 
+            <Grid id='items' item sm={8} xs={8} maxHeight='50vh' overflow='scroll' 
               sx={{
                   "::-webkit-scrollbar": { width: 0, height: 0, backgroundColor: "transparent"}, 
                   
               }}>
+              {
+                items.length === 0 && 
+                <Typography variant='h6'>
+                  Add items to your cart using the add to cart button
+                  <Button variant='contained' size='small' color='success' sx={{marginLeft: theme.spacing(1)}}>
+                    <AddShoppingCart/>
+                  </Button>
+                </Typography>
+              }
               {
                 items.map((item, index) => {
                   return <Grid className={classes.cartItem} key={index} container item mb={1} xl={12} lg={12} md={12} sm={12} xs={12}>
@@ -233,7 +244,7 @@ export default function Cart() {
                 })
               }
             </Grid>
-            <Grid id="total" className={classes.cartItem} item xs={3} mt={2}>
+            <Grid id="total" item sm={2} xs={2} className={classes.cartItem} mt={2}>
               <Grid container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Typography variant='h6' color='secondary' p={1} pl={2}>Ribbit</Typography>
                 <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
@@ -256,7 +267,7 @@ export default function Cart() {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid id='checkout' item alignSelf='center' xs={1} pt={2}>
+            <Grid id='checkout' item sm={1} xs={1} alignSelf='center' pt={2}>
               <Button variant='contained' color='success' fullWidth disabled={isCheckoutDisabled()} onClick={checkout}>
                 <Typography variant='subtitle1' color='secondary'>Checkout</Typography>
               </Button>
