@@ -4,6 +4,7 @@ import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleB
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { commify, formatEther } from '@ethersproject/units';
+import { BigNumber } from 'ethers';
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client';
 import { marketplaceUrl } from '../data';
 import { useAppDispatch, } from '../redux/hooks';
@@ -107,7 +108,7 @@ export default function Market() {
   const { collabBuy, collabBuyState } = useCollabBuy();
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const isSpendingApproved = useSpendingApproved(account ?? '');
-  const ribbitBalance: any = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || 0;
+  const ribbitBalance: BigNumber | undefined = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account);
 
   async function getItems() {
     try {
@@ -266,7 +267,10 @@ export default function Market() {
     }
   }
 
-  const formatBalance = (balance: any) => {
+  const formatBalance = (balance: BigNumber | undefined) => {
+    if (!balance) {
+      return 0;
+    }
     const etherFormat = formatEther(balance);
     const number = +etherFormat;
     return commify(number.toFixed(2));
