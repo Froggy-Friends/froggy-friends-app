@@ -492,12 +492,12 @@ export default function Market() {
                                   <Typography>{allowlist.name}</Typography>
                                   <Grid item display={allowlist.twitter ? "flex" : "none"} pl={2}>
                                     <Link href={allowlist.twitter} target='_blank'>
-                                      <img src={twitter} style={{height: 25, width: 25}} alt='twitter'/>
+                                      <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
                                     </Link>
                                   </Grid>
                                   <Grid item display={allowlist.discord ? "flex" : "none"} pl={1}>
                                     <Link href={allowlist.discord} target="_blank">
-                                      <img src={discord} style={{height: 25, width: 25}} alt='discord'/>
+                                      <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
                                     </Link>
                                   </Grid>
                                 </Grid>
