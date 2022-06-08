@@ -315,7 +315,7 @@ export default function Market() {
               <Grid item xl={9} lg={12} md={12} sm={12} xs={12}>
                 {
                   filterItems('lilies').map((lily, index) => {
-                    return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} minHeight={450}>
+                    return <Grid key={index} item xl={2.5} lg={2.5} md={3.5} sm={5} xs={12} minHeight={450}>
                             <Card className={isItemDisabled(lily) ? "disabled" : ""}>
                               <CardHeader title="Golden Lily Pad" titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
                               <CardMedia component='img' image={lily.image} alt='Golden Lily Pad'/>
@@ -484,7 +484,7 @@ export default function Market() {
                 <Grid id='allowlists' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
                     {
                       filterItems('allowlists').map((allowlist, index) => {
-                        return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
+                        return <Grid key={index} item xl={2.5} lg={2.5} md={3.5} sm={5} xs={12} p={2} minHeight={500}>
                           <Card className={isItemDisabled(allowlist) ? "disabled" : ""}>
                             <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
                               title={
@@ -505,6 +505,7 @@ export default function Market() {
                             />
                             <CardMedia component='img' image={allowlist.image} alt='Allowlist'/>
                             <CardContent>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{allowlist.description}</Typography>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(allowlist)}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
