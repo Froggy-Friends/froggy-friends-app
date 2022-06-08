@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, LinearProgress, Modal, Box, IconButton, Link, Snackbar } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
@@ -259,9 +259,9 @@ export default function Market() {
             <ToggleButton value={true}>All</ToggleButton>
           </ToggleButtonGroup>
         </Grid>
-        <Grid id='item-link' pr={2}>
-          <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{paddingRight: 1}}/>} onClick={() => window.open('https://opensea.io/account/ribbit-items', '_blank')}>
-            <Typography variant='subtitle1' color='secondary' p={1}>Purchased Items</Typography>
+        <Grid id='item-link' p={2}>
+          <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{padding: 1}}/>}>
+            <Link href='https://opensea.io/account/ribbit-items' variant='subtitle1' color='inherit' underline='none' target='_blank' p={1}>Purchased Items</Link>
           </Button>
         </Grid>
       </Grid>
@@ -299,7 +299,7 @@ export default function Market() {
                   filterItems('lilies').map((lily, index) => {
                     return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} minHeight={300}>
                             <Card className={isItemDisabled(lily) ? "disabled" : ""}>
-                              <CardHeader title="Golden Lily Pad"/>
+                              <CardHeader title="Golden Lily Pad" titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
                               <CardMedia component='img' image={lily.image} alt='Froggy'/>
                               <CardContent>
                                 <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(lily)}</Typography>
@@ -325,7 +325,8 @@ export default function Market() {
             <Grid id='friends-description' item xl={12}>
               <Typography variant='subtitle1' color='secondary' pb={5}>
                 Friends offer $RIBBIT staking boosts and will be pairable with your Froggy. <br/>
-                Pairing a Friend with your Froggy applies the boost and burns the item.
+                Pairing a Friend with your Froggy applies the boost and burns the item. <br/>
+                Collab Friends are available to purchase if you own the collab NFT.
               </Typography>
             </Grid>
             <Grid id='genesis-friends-title' item xl={12}>
@@ -336,7 +337,7 @@ export default function Market() {
                 filterItems('friends').map((friend, index) => { 
                   return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={3} sm={4} xs={12}>
                           <Card className={isItemDisabled(friend) ? "disabled" : ""}>
-                            <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
+                            <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                             <CardMedia component='img' image={friend.previewImage} alt='Froggy'/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(friend)}</Typography>
@@ -366,7 +367,7 @@ export default function Market() {
                 filterItems('collabs').map((friend, index) => { 
                   return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={3} sm={4} xs={12}>
                           <Card className={isItemDisabled(friend) ? "disabled" : ""}>
-                            <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
+                            <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                             <CardMedia component='img' image={friend.previewImage} alt='Froggy'/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(friend)}</Typography>
@@ -398,7 +399,7 @@ export default function Market() {
                 filterItems('nfts').map((nft, index) => {
                   return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
                           <Card className={isItemDisabled(nft) ? "disabled" : ""}>
-                            <CardHeader title={nft.name}/>
+                            <CardHeader title={nft.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                             <CardMedia component='img' image={nft.image} alt='Froggy'/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(nft)}</Typography>
@@ -431,7 +432,7 @@ export default function Market() {
                 filterItems('raffles').map((raffle, index) => {
                   return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
                           <Card className={isItemDisabled(raffle) ? "disabled" : ""}>
-                            <CardHeader title={raffle.name}/>
+                            <CardHeader title={raffle.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                             <CardMedia component='img' image={raffle.image} alt='Froggy'/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
@@ -453,10 +454,46 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='allowlists-panel' value={value} index={4}>
-            <Grid container direction="column" alignItems="center">
-              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Allowlists Coming Soon</Typography>
-              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-            </Grid>
+            {
+              filterItems('allowlists').length > 0 &&
+              <Fragment>
+                <Grid item xl={12}>
+                <Typography variant='subtitle1' color='secondary' pb={1}>
+                  Purchase instant allowlist spots gifted to our community.<br/>
+                  NFA, DYOR. Allowlists listed are not endorsements of projects. 
+                </Typography>
+              </Grid>
+              <Grid id='allowlists' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                  {
+                    filterItems('allowlists').map((allowlist, index) => {
+                      return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
+                        <Card className={isItemDisabled(allowlist) ? "disabled" : ""}>
+                          <CardHeader title={allowlist.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
+                          <CardMedia component='img' image={allowlist.image} alt='Froggy'/>
+                          <CardContent>
+                            <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(allowlist)}</Typography>
+                            <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                              <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                              <Typography>{commify(allowlist.price)}</Typography>
+                            </Grid>
+                            <Button variant='contained' color='success' onClick={() => onBuyItem(allowlist)} disabled={isItemDisabled(allowlist)}>
+                              <AddShoppingCartIcon/>
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    })
+                  }
+                </Grid>
+              </Fragment>
+            }
+            {
+              filterItems('allowlists').length === 0 && 
+              <Grid container direction="column" alignItems="center">
+                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Allowlists Coming Soon</Typography>
+                <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
+              </Grid>
+            }
           </TabPanel>
           <TabPanel id='merch-panel' value={value} index={5}>
             <Grid container direction="column" alignItems="center">

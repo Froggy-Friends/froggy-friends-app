@@ -105,7 +105,7 @@ export default function MusicPlayer(props: MusicPlayerProps) {
   }
 
   return (
-    <Card className={inverted ? "inverted" : ""} sx={{ display: 'flex', maxWidth: 440 }}>
+    <Card className={inverted ? "inverted" : ""} sx={{ display: 'flex', maxWidth: 440, zIndex: 1 }}>
       <Grid container direction='column' minWidth={200} maxWidth={220}>
         <CardContent sx={{ flex: '1 0 auto' }}>
           <Typography component="div" variant="h6" color={inverted ? "info" : "secondary"}>{track.name}</Typography>
