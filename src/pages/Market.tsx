@@ -94,21 +94,43 @@ export default function Market() {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const [value, setValue] = useState(0);
-  const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] = useState(true);
   const [loadingItems, setLoadingItems] = useState(false);
   const [items, setItems] = useState<RibbitItem[]>([]);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showAlert, setShowAlert] = useState(false);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const { account } = useEthers();
-  const isSpendingApproved = useSpendingApproved(account ?? '');
   const { collabBuy, collabBuyState } = useCollabBuy();
   const { approveSpender, approveSpenderState } = useApproveSpender();
-  console.log("spending approved: ", isSpendingApproved);
+  const isSpendingApproved = useSpendingApproved(account ?? '');
+
+  async function getItems() {
+    try {
+      setLoadingItems(true);
+      const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
+      let items = response.data;
+      setItems(items);
+      setLoadingItems(false);
+    } catch (error) {
+      setLoadingItems(false);
+      setAlertMessage("Failed to get items");
+      setShowAlert(true);
+    }
+  }
+
+  async function getItemsBackground() {
+    try {
+      const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
+      let items = response.data;
+      setItems(items);
+    } catch (error) {
+      console.log("fetch items in background error: ", error);
+    }
+  }
   
   useEffect(() => {
     if (approveSpenderState.status === "Exception" || approveSpenderState.status === "Fail") {
-      console.log("approve spender error: ", approveSpenderState.errorMessage);
       if (approveSpenderState.errorMessage?.includes("execution reverted")) {
         setAlertMessage(approveSpenderState.errorMessage.replace(/^execution reverted:/i, ''));
       } else {
@@ -122,9 +144,7 @@ export default function Market() {
   }, [approveSpenderState])
 
   useEffect(() => {
-    console.log("collab buy state: ", collabBuyState);
     if (collabBuyState.status === "Exception" || collabBuyState.status === "Fail") {
-      console.log("collab buy error: ", collabBuyState.errorMessage);
       if (collabBuyState.errorMessage?.includes("execution reverted")) {
         setAlertMessage(collabBuyState.errorMessage.replace(/^execution reverted:/i, ''));
       } else {
@@ -138,20 +158,14 @@ export default function Market() {
   }, [collabBuyState])
 
   useEffect(() => {
-    async function getItems() {
-      try {
-        setLoadingItems(true);
-        const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
-        let items = response.data;
-        setItems(items);
-        setLoadingItems(false);
-      } catch (error) {
-        console.log("fetch items error: ", error);
-        setLoadingItems(false);
-      }
-    }
-
     getItems();
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getItemsBackground();
+    }, 30000);
+    return () => clearInterval(interval);
   }, [])
 
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, filter: boolean) => {
@@ -197,7 +211,6 @@ export default function Market() {
 
   const onBuyCollabItem = async (item: RibbitItem) => {
     // buy collab item directly
-    console.log("collab item: ", item);
     try {
       // check ribbit item is granted approval to spend ribbit
       if (!isSpendingApproved) {
@@ -208,7 +221,6 @@ export default function Market() {
       // buy bundle items
       await collabBuy(item.id, 1, item.collabId);
     } catch (error) {
-      console.log("checkout error: ", error);
       setAlertMessage("Buy collab item error");
       setShowAlert(true);
     }
