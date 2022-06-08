@@ -48,7 +48,6 @@ export default function Header() {
   const isMarket = location.pathname === "/market";
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
   const [musicOpen, setMusicOpen] = useState<boolean>(false);
-  const [drawerMusicOpen, setDrawerMusicOpen] = useState<boolean>(false);
   const { activateBrowserWallet, account } = useEthers();
   const ens = useLookupAddress();
   const [displayName, setDisplayName] = useState<string>("");
