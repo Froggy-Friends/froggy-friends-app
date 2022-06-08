@@ -297,7 +297,7 @@ export default function Market() {
               <Grid item xl={9} lg={12} md={12} sm={12} xs={12}>
                 {
                   filterItems('lilies').map((lily, index) => {
-                    return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} minHeight={300}>
+                    return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} minHeight={450}>
                             <Card className={isItemDisabled(lily) ? "disabled" : ""}>
                               <CardHeader title="Golden Lily Pad" titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
                               <CardMedia component='img' image={lily.image} alt='Golden Lily Pad'/>
@@ -335,7 +335,7 @@ export default function Market() {
             <Grid id='genesis-friends' container item pb={3} xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
                 filterItems('friends').map((friend, index) => { 
-                  return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={3} sm={4} xs={12}>
+                  return <Grid key={index} item p={2} minHeight={450} xl={2} lg={2} md={3} sm={4} xs={12}>
                           <Card className={isItemDisabled(friend) ? "disabled" : ""}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                             <CardMedia component='img' image={friend.previewImage} alt='Genesis Friend'/>
@@ -365,7 +365,7 @@ export default function Market() {
             <Grid id="collab-friends" container item pb={3} xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
                 filterItems('collabs').map((friend, index) => { 
-                  return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={3} sm={4} xs={12}>
+                  return <Grid key={index} item p={2} minHeight={450} xl={2} lg={2} md={3} sm={4} xs={12}>
                           <Card className={isItemDisabled(friend) ? "disabled" : ""}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                             <CardMedia component='img' image={friend.previewImage} alt='Collab Friend'/>
@@ -397,7 +397,7 @@ export default function Market() {
             <Grid id='nfts' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
                 filterItems('nfts').map((nft, index) => {
-                  return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
+                  return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
                           <Card className={isItemDisabled(nft) ? "disabled" : ""}>
                             <CardHeader title={nft.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                             <CardMedia component='img' image={nft.image} alt='NFT'/>
@@ -430,7 +430,7 @@ export default function Market() {
             <Grid id='raffles' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
                 filterItems('raffles').map((raffle, index) => {
-                  return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
+                  return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
                           <Card className={isItemDisabled(raffle) ? "disabled" : ""}>
                             <CardHeader title={raffle.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                             <CardMedia component='img' image={raffle.image} alt='Raffle'/>
@@ -462,28 +462,28 @@ export default function Market() {
                   Purchase instant allowlist spots gifted to our community.<br/>
                   NFA, DYOR. Allowlists listed are not endorsements of projects. 
                 </Typography>
-              </Grid>
-              <Grid id='allowlists' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
-                  {
-                    filterItems('allowlists').map((allowlist, index) => {
-                      return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
-                        <Card className={isItemDisabled(allowlist) ? "disabled" : ""}>
-                          <CardHeader title={allowlist.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                          <CardMedia component='img' image={allowlist.image} alt='Allowlist'/>
-                          <CardContent>
-                            <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(allowlist)}</Typography>
-                            <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                              <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                              <Typography>{commify(allowlist.price)}</Typography>
-                            </Grid>
-                            <Button variant='contained' color='success' onClick={() => onBuyItem(allowlist)} disabled={isItemDisabled(allowlist)}>
-                              <AddShoppingCartIcon/>
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    })
-                  }
+                </Grid>
+                <Grid id='allowlists' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                    {
+                      filterItems('allowlists').map((allowlist, index) => {
+                        return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
+                          <Card className={isItemDisabled(allowlist) ? "disabled" : ""}>
+                            <CardHeader title={allowlist.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
+                            <CardMedia component='img' image={allowlist.image} alt='Allowlist'/>
+                            <CardContent>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(allowlist)}</Typography>
+                              <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                <Typography>{commify(allowlist.price)}</Typography>
+                              </Grid>
+                              <Button variant='contained' color='success' onClick={() => onBuyItem(allowlist)} disabled={isItemDisabled(allowlist)}>
+                                <AddShoppingCartIcon/>
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                      })
+                    }
                 </Grid>
               </Fragment>
             }
@@ -507,7 +507,7 @@ export default function Market() {
               <Grid id='merch' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
                   {
                     filterItems('merch').map((merch, index) => {
-                      return <Grid key={index} item xl={3} lg={3} md={4} sm={5} xs={12} p={2} minHeight={300}>
+                      return <Grid key={index} item xl={3} lg={3} md={4} sm={5} xs={12} p={2} minHeight={450}>
                         <Card className={isItemDisabled(merch) ? "disabled" : ""}>
                           <CardHeader title={merch.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                           <CardMedia component='img' image={merch.image} alt='Merch'/>
