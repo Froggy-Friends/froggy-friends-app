@@ -22,7 +22,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
-      backgroundColor: theme.palette.common.white,
+      backgroundColor: '#181818',
+      color: '#ebedf1',
       borderRadius: 5,
       boxShadow: 24,
       p: 4,
@@ -36,7 +37,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
       }
     },
     cartItem: {
-      backgroundColor: '#181818',
+      backgroundColor: '#333333',
       color: '#ebedf1',
       alignItems: 'center',
       borderRadius: 5
@@ -198,17 +199,17 @@ export default function Cart() {
         >
         <Fade id='cart' in={isCartOpen}>
           <Grid className={classes.cart} item xl={4} lg={6} md={8} sm={12} xs={12} container direction="column" justifyContent='space-between' p={2}>
-            <Grid id='title' item sm={1} xs={1} container justifyContent='space-between' alignItems='center' pb={2}>
+            <Grid id='title' item xl={1} lg={1} md={1} sm={1} xs={1} container justifyContent='space-between' alignItems='center' pb={2}>
               <Grid item>
-                <Typography variant='h4' color='info' fontWeight='bold'>Ribbit Cart</Typography>
+                <Typography variant='h4' fontWeight='bold'>Ribbit Cart</Typography>
               </Grid>
               <Grid item>
-                <IconButton size='large' color='info' onClick={handleClose}>
+                <IconButton size='large' color='secondary' onClick={handleClose}>
                   <Close/>
                 </IconButton>
               </Grid>
             </Grid>
-            <Grid id='items' item sm={8} xs={8} maxHeight='50vh' overflow='scroll' 
+            <Grid id='items' item xl={8} lg={8} md={8} sm={8} xs={8} maxHeight='50vh' overflow='scroll' 
               sx={{
                   "::-webkit-scrollbar": { width: 0, height: 0, backgroundColor: "transparent"}, 
                   
@@ -244,7 +245,7 @@ export default function Cart() {
                 })
               }
             </Grid>
-            <Grid id="total" item sm={2} xs={2} className={classes.cartItem} mt={2}>
+            <Grid id="total" item xl={2} lg={2} md={2} sm={2} xs={2} className={classes.cartItem} mt={2}>
               <Grid container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Typography variant='h6' color='secondary' p={1} pl={2}>Ribbit</Typography>
                 <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
@@ -267,7 +268,7 @@ export default function Cart() {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid id='checkout' item sm={1} xs={1} alignSelf='center' pt={2}>
+            <Grid id='checkout' item xl={1} lg={1} md={1} sm={1} xs={1} alignSelf='center' pt={2}>
               <Button variant='contained' color='success' fullWidth disabled={isCheckoutDisabled()} onClick={checkout}>
                 <Typography variant='subtitle1' color='secondary'>Checkout</Typography>
               </Button>
