@@ -1,9 +1,9 @@
 import { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, LinearProgress, Modal, Box, IconButton, Link, Snackbar } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
-import { useEthers } from '@usedapp/core';
-import { commify } from '@ethersproject/units';
+import { useEthers, useTokenBalance } from '@usedapp/core';
+import { commify, formatEther } from '@ethersproject/units';
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client';
 import { marketplaceUrl } from '../data';
 import { useAppDispatch, } from '../redux/hooks';
@@ -18,6 +18,7 @@ import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import discord from '../images/discord.png';
 import twitter from '../images/twitter.png';
+import chest from '../images/chest.png';
 
 interface TabPanelProps {
   id: string;
@@ -92,6 +93,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 export default function Market() {
   const classes = useStyles();
+  const theme = useTheme();
+  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useAppDispatch();
   const [value, setValue] = useState(0);
   const [showAll, setShowAll] = useState(true);
@@ -104,6 +107,7 @@ export default function Market() {
   const { collabBuy, collabBuyState } = useCollabBuy();
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const isSpendingApproved = useSpendingApproved(account ?? '');
+  const ribbitBalance: any = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || 0;
 
   async function getItems() {
     try {
@@ -262,9 +266,15 @@ export default function Market() {
     }
   }
 
+  const formatBalance = (balance: any) => {
+    const etherFormat = formatEther(balance);
+    const number = +etherFormat;
+    return commify(number.toFixed(2));
+  }
+
   return (
     <Grid id="market" className={classes.market} container direction="column" justifyContent="start" pt={15}>
-      <Grid id='filters-and-items-link' container justifyContent='space-between' alignItems='center'>
+      <Grid id='filters-and-items-link' container direction={isSmallMobile ? 'column' : 'row'} justifyContent='space-between' alignItems={isSmallMobile ? 'start' : 'center'}>
         <Grid id="filters" item alignItems="center" p={2}>
           <ToggleButtonGroup
             color="primary"
@@ -276,6 +286,10 @@ export default function Market() {
             <ToggleButton value={false}>Avl</ToggleButton>
             <ToggleButton value={true}>All</ToggleButton>
           </ToggleButtonGroup>
+        </Grid>
+        <Grid id='balance' item display='flex' justifyContent='center' alignItems='center' bgcolor='#000000d1' borderRadius={2} p={1} ml={2} pl={2} pr={2}>
+          <img src={chest} style={{height: 25, width: 25}} alt='chest'/>
+          <Typography variant='h6' color='secondary' pl={2}>{formatBalance(ribbitBalance)} $RIBBIT</Typography>
         </Grid>
         <Grid id='item-link' p={2}>
           <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{padding: 1}}/>}>
