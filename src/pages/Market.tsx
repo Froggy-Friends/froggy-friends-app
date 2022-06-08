@@ -63,7 +63,11 @@ const useStyles: any = makeStyles((theme: Theme) =>
       backgroundColor: '#000000',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
-      minHeight: '130%'
+      minHeight: '130%',
+      [theme.breakpoints.up('lg')]: {
+        paddingLeft: theme.spacing(6),
+        paddingRight: theme.spacing(6)
+      }
     },
     modal: {
       position: 'absolute' as 'absolute',
@@ -261,7 +265,7 @@ export default function Market() {
         </Grid>
         <Grid id='item-link' p={2}>
           <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{padding: 1}}/>}>
-            <Link href='https://opensea.io/account/ribbit-items' variant='subtitle1' color='inherit' underline='none' target='_blank' p={1}>Purchased Items</Link>
+            <Link href='https://opensea.io/account/ribbit-items' variant='subtitle1' color='inherit' underline='none' target='_blank' p={0.5}>Purchased Items</Link>
           </Button>
         </Grid>
       </Grid>
