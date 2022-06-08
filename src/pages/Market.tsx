@@ -300,7 +300,7 @@ export default function Market() {
                     return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} minHeight={300}>
                             <Card className={isItemDisabled(lily) ? "disabled" : ""}>
                               <CardHeader title="Golden Lily Pad" titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
-                              <CardMedia component='img' image={lily.image} alt='Froggy'/>
+                              <CardMedia component='img' image={lily.image} alt='Golden Lily Pad'/>
                               <CardContent>
                                 <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(lily)}</Typography>
                                 <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
@@ -338,7 +338,7 @@ export default function Market() {
                   return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={3} sm={4} xs={12}>
                           <Card className={isItemDisabled(friend) ? "disabled" : ""}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                            <CardMedia component='img' image={friend.previewImage} alt='Froggy'/>
+                            <CardMedia component='img' image={friend.previewImage} alt='Genesis Friend'/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(friend)}</Typography>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{friend.percentage}% Boost</Typography>
@@ -368,7 +368,7 @@ export default function Market() {
                   return <Grid key={index} item p={2} minHeight={300} xl={2} lg={2} md={3} sm={4} xs={12}>
                           <Card className={isItemDisabled(friend) ? "disabled" : ""}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                            <CardMedia component='img' image={friend.previewImage} alt='Froggy'/>
+                            <CardMedia component='img' image={friend.previewImage} alt='Collab Friend'/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(friend)}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
@@ -400,7 +400,7 @@ export default function Market() {
                   return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
                           <Card className={isItemDisabled(nft) ? "disabled" : ""}>
                             <CardHeader title={nft.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                            <CardMedia component='img' image={nft.image} alt='Froggy'/>
+                            <CardMedia component='img' image={nft.image} alt='NFT'/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(nft)}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
@@ -433,7 +433,7 @@ export default function Market() {
                   return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
                           <Card className={isItemDisabled(raffle) ? "disabled" : ""}>
                             <CardHeader title={raffle.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                            <CardMedia component='img' image={raffle.image} alt='Froggy'/>
+                            <CardMedia component='img' image={raffle.image} alt='Raffle'/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
@@ -469,7 +469,7 @@ export default function Market() {
                       return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={300}>
                         <Card className={isItemDisabled(allowlist) ? "disabled" : ""}>
                           <CardHeader title={allowlist.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                          <CardMedia component='img' image={allowlist.image} alt='Froggy'/>
+                          <CardMedia component='img' image={allowlist.image} alt='Allowlist'/>
                           <CardContent>
                             <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(allowlist)}</Typography>
                             <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
@@ -496,10 +496,45 @@ export default function Market() {
             }
           </TabPanel>
           <TabPanel id='merch-panel' value={value} index={5}>
-            <Grid container direction="column" alignItems="center">
-              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Merch Coming Soon</Typography>
-              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-            </Grid>
+            {
+              filterItems('merch').length > 0 &&
+              <Fragment>
+                <Grid item xl={12}>
+                <Typography variant='subtitle1' color='secondary' pb={1}>
+                  Purchase marketplace exclusive Froggy Friends merch.
+                </Typography>
+              </Grid>
+              <Grid id='merch' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                  {
+                    filterItems('merch').map((merch, index) => {
+                      return <Grid key={index} item xl={3} lg={3} md={4} sm={5} xs={12} p={2} minHeight={300}>
+                        <Card className={isItemDisabled(merch) ? "disabled" : ""}>
+                          <CardHeader title={merch.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
+                          <CardMedia component='img' image={merch.image} alt='Merch'/>
+                          <CardContent>
+                            <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(merch)}</Typography>
+                            <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                              <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                              <Typography>{commify(merch.price)}</Typography>
+                            </Grid>
+                            <Button variant='contained' color='success' onClick={() => onBuyItem(merch)} disabled={isItemDisabled(merch)}>
+                              <AddShoppingCartIcon/>
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    })
+                  }
+                </Grid>
+              </Fragment>
+            }
+            {
+              filterItems('merch').length === 0 && 
+              <Grid container direction="column" alignItems="center">
+                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Merch Coming Soon</Typography>
+                <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
+              </Grid>
+            }
           </TabPanel>
           <TabPanel id='costumes-panel' value={value} index={6}>
             <Grid container direction="column" alignItems="center">
