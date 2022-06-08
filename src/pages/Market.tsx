@@ -16,6 +16,8 @@ import biz from '../images/biz.png';
 import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
+import discord from '../images/discord.png';
+import twitter from '../images/twitter.png';
 
 interface TabPanelProps {
   id: string;
@@ -472,7 +474,23 @@ export default function Market() {
                       filterItems('allowlists').map((allowlist, index) => {
                         return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
                           <Card className={isItemDisabled(allowlist) ? "disabled" : ""}>
-                            <CardHeader title={allowlist.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
+                            <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
+                              title={
+                                <Grid item display='flex' justifyContent='center'>
+                                  <Typography>{allowlist.name}</Typography>
+                                  <Grid item display={allowlist.twitter ? "flex" : "none"} pl={2}>
+                                    <Link href={allowlist.twitter} target='_blank'>
+                                      <img src={twitter} style={{height: 25, width: 25}} alt='twitter'/>
+                                    </Link>
+                                  </Grid>
+                                  <Grid item display={allowlist.discord ? "flex" : "none"} pl={1}>
+                                    <Link href={allowlist.discord} target="_blank">
+                                      <img src={discord} style={{height: 25, width: 25}} alt='discord'/>
+                                    </Link>
+                                  </Grid>
+                                </Grid>
+                              }
+                            />
                             <CardMedia component='img' image={allowlist.image} alt='Allowlist'/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(allowlist)}</Typography>

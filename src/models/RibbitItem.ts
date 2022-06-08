@@ -5,6 +5,8 @@ export interface RibbitItem {
   description: string;
   category: string;
   collabId: number;
+  twitter: string;
+  discord: string;
   image: string;
   previewImage: string;
   price: number;
