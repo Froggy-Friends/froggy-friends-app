@@ -297,7 +297,7 @@ export default function Market() {
               <Grid item xl={9} lg={12} md={12} sm={12} xs={12}>
                 {
                   filterItems('lilies').map((lily, index) => {
-                    return <Grid key={index} item xl={3} lg={3} md={5} sm={8} xs={12} minHeight={450}>
+                    return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} minHeight={450}>
                             <Card className={isItemDisabled(lily) ? "disabled" : ""}>
                               <CardHeader title="Golden Lily Pad" titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
                               <CardMedia component='img' image={lily.image} alt='Golden Lily Pad'/>
@@ -507,7 +507,7 @@ export default function Market() {
               <Grid id='merch' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
                   {
                     filterItems('merch').map((merch, index) => {
-                      return <Grid key={index} item xl={3} lg={3} md={4} sm={5} xs={12} p={2} minHeight={450}>
+                      return <Grid key={index} item xl={2} lg={3} md={4} sm={5} xs={12} p={2} minHeight={450}>
                         <Card className={isItemDisabled(merch) ? "disabled" : ""}>
                           <CardHeader title={merch.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                           <CardMedia component='img' image={merch.image} alt='Merch'/>
