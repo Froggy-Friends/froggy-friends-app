@@ -216,11 +216,12 @@ export default function Cart() {
               }}>
               {
                 items.length === 0 && 
-                <Typography variant='h6'>
-                  Add items to your cart using the add to cart button
-                  <Button variant='contained' size='small' color='success' sx={{marginLeft: theme.spacing(1)}}>
+                <Typography variant='h6' color='secondary'>
+                  Click the add to cart button
+                  <Button variant='contained' size='small' color='success' sx={{marginLeft: theme.spacing(1), marginRight: theme.spacing(1)}}>
                     <AddShoppingCart/>
                   </Button>
+                  on any item to see it here
                 </Typography>
               }
               {
