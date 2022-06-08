@@ -112,7 +112,7 @@ export default function Header() {
                 </Grid> 
               </Grid>
               <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={3} lg={3} md={3} sm={6} xs={10}>
-                <Grid item display={isTablet ? "flex" : "none"} pr={2}>
+                <Grid item display="flex" pr={2}>
                   <Fab size='small' onClick={onMusicClick}>
                     <Badge invisible={!playing} badgeContent=" " color="primary">
                       <Headphones fontSize='medium'/>
@@ -171,12 +171,7 @@ export default function Header() {
             <Grid item pb={3}>
               <Link href={REACT_APP_WEBSITE_URL + '/license'} underline='none' variant="h5" color="secondary">License</Link>
             </Grid>
-            <Grid id='music' container item alignItems='center'>
-              <Grid item display={isTablet ? "none" : "flex"} pr={2}>
-                <Fab size='small' onClick={() => setDrawerMusicOpen(!drawerMusicOpen)}>
-                  <Headphones fontSize='medium'/>
-                </Fab>
-              </Grid>
+            <Grid id='account' container item alignItems='center'>
               <Grid item display={!account ? "flex" : "none"} pr={2}>
                 <Button variant='contained' onClick={() => activateBrowserWallet()}>
                   <Typography variant='h5'>Login</Typography>  
@@ -186,15 +181,10 @@ export default function Header() {
             <Grid item display={account ? "flex" : "none"} pt={3}>
               <Typography variant='h5' color='secondary'>{displayName}</Typography>
             </Grid>
-            <Fade in={drawerMusicOpen}>
-              <Grid id='drawerPlayer' container pt={3}>
-                <MusicPlayer inverted/>
-              </Grid>
-            </Fade>
           </Grid>
         </Drawer>
         <Fade in={musicOpen}>
-          <Grid id='player' className={classes.musicPlayer} container>
+          <Grid id='player' className={classes.musicPlayer} container zIndex={1}>
             <MusicPlayer inverted={false}/>
           </Grid>
         </Fade>

@@ -291,7 +291,7 @@ export default function Market() {
           <img src={chest} style={{height: 25, width: 25}} alt='chest'/>
           <Typography variant='h6' color='secondary' pl={2}>{formatBalance(ribbitBalance)} $RIBBIT</Typography>
         </Grid>
-        <Grid id='item-link' p={2}>
+        <Grid id='item-link' p={2} zIndex={0}>
           <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{padding: 1}}/>}>
             <Link href='https://opensea.io/account/ribbit-items' variant='subtitle1' color='inherit' underline='none' target='_blank' p={0.5}>Purchased Items</Link>
           </Button>
@@ -556,7 +556,7 @@ export default function Market() {
               <Grid id='merch' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
                   {
                     filterItems('merch').map((merch, index) => {
-                      return <Grid key={index} item xl={2} lg={3} md={4} sm={5} xs={12} p={2} minHeight={450}>
+                      return <Grid key={index} item xl={3} lg={3} md={4} sm={5} xs={12} p={2} minHeight={450}>
                         <Card className={isItemDisabled(merch) ? "disabled" : ""}>
                           <CardHeader title={merch.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                           <CardMedia component='img' image={merch.image} alt='Merch'/>

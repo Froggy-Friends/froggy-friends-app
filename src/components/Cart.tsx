@@ -37,7 +37,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
     cartItem: {
       backgroundColor: '#181818',
       color: '#ebedf1',
-      alignItems: 'center'
+      alignItems: 'center',
+      borderRadius: 5
     },
     modal: {
       position: 'absolute' as 'absolute',
@@ -232,22 +233,22 @@ export default function Cart() {
                 })
               }
             </Grid>
-            <Grid id="total" item xs={3} pt={2}>
-              <Grid className={classes.cartItem} container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
+            <Grid id="total" className={classes.cartItem} item xs={3} mt={2}>
+              <Grid container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Typography variant='h6' color='secondary' p={1} pl={2}>Ribbit</Typography>
                 <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                   <Typography>{formatBalance(ribbitBalance)}</Typography>
                 </Grid>
               </Grid>
-              <Grid className={classes.cartItem} container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Typography variant='h6' color='secondary' p={1} pl={2}>Cart total</Typography>
                 <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                   <Typography>{commify(total.toFixed(2))}</Typography>
                 </Grid>
               </Grid>
-              <Grid className={classes.cartItem} container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
                 <Typography variant='h6' color='secondary' p={1} pl={2}>Remaining</Typography>
                 <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
@@ -255,7 +256,7 @@ export default function Cart() {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid id='checkout' item xs={1} pt={2}>
+            <Grid id='checkout' item alignSelf='center' xs={1} pt={2}>
               <Button variant='contained' color='success' fullWidth disabled={isCheckoutDisabled()} onClick={checkout}>
                 <Typography variant='subtitle1' color='secondary'>Checkout</Typography>
               </Button>
