@@ -1,80 +1,129 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Card, Box, CardContent, Typography, CardMedia, Grid } from "@mui/material";
+import { tracks, sprite } from "../data";
+import { Track } from "../models/Track";
+import { useAppDispatch } from "../redux/hooks";
+import { togglePlay } from "../redux/musicSlice";
 import useSound from 'use-sound';
-import { makeStyles } from '@mui/styles';
-import { Grid, Card, Box, CardContent, Typography, Theme, createStyles } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from "@mui/icons-material/Pause";
+import StopIcon from '@mui/icons-material/Stop';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
-import { tracks } from "../data";
-import { Track } from "../models/Track";
+import mix from "../tracks/mix.mp3";
 
-const useStyles: any = makeStyles((theme: Theme) => 
-  createStyles({
-    player: {
-      display: "flex",
-      maxWidth: "fit-content",
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      margin: theme.spacing(2)
-    },
-    playerBox: {
-      display: 'flex', 
-      flexDirection: 'column'
-    }
-  })
-);
+interface MusicPlayerProps {
+  inverted: boolean;
+}
 
-export default function MusicPlayer() {
-  const classes = useStyles();
+export default function MusicPlayer(props: MusicPlayerProps) {
+  const { inverted } = props;
+  const dispatch = useAppDispatch();
   const [current, setCurrent] = useState(0);
   const [track, setTrack] = useState<Track>(tracks[current]);
-  const [play, {pause}] = useSound(track.sound);
   const [playing, setPlaying] = useState(false);
+  const [songEnded, setSongEnded] = useState(false);
+  const [play, {pause}] = useSound(mix, 
+    { 
+      id: tracks[current].id, 
+      sprite: sprite,
+      autoplay: true,
+      onend: () => setSongEnded(true)
+    }
+  );
 
-  const onToggle = (isPlaying: boolean) => {
-    isPlaying ? play() : pause();
-    setPlaying(isPlaying);
+  useEffect(() => {
+    if (songEnded) {
+      setSongEnded(false);
+      setPlaying(true);
+      onNext();
+    }
+  }, [songEnded]);
+
+  const onPlayToggle = (playToggle: boolean) => {
+    if (playToggle) {
+      play({id: track.id});
+      setPlaying(playToggle);
+      dispatch(togglePlay({isPlaying: true}));
+    } else {
+      pause();
+      setPlaying(playToggle);
+      dispatch(togglePlay({isPlaying: false}));
+    }
   }
 
   const onPrevious = () => {
-    // end of playlist, start from beginning
+    // pause previuos track
+    if (playing) {
+      pause();
+    }
+
+    let newTrack;
+    // skip to end of playlist
     if (current === 0) {
-      setCurrent(tracks.length-1);
-      setTrack(tracks[tracks.length-1]);
-      // play({id: track.id})
+      newTrack = tracks[tracks.length - 1];
+      setCurrent(tracks.length - 1);
+      setTrack(newTrack);
+    }
+    // skip to previous track of playlist
+    else {
+      newTrack = tracks[current - 1];
+      setCurrent(current - 1);
+      setTrack(newTrack);
+    }
+
+    // auto play previous track if user is listenting to music
+    if (playing) {
+      play({id: newTrack.id});
     }
   }
 
   const onNext = () => {
+    // pause previous track
+    if (playing) {
+      pause();
+    }
+
+    let newTrack;
+    // skip to beginning of playlist
     if (current === tracks.length -1) {
+      newTrack = tracks[0];
       setCurrent(0);
-      setTrack(tracks[0]);
-      // play({id: track.id})
+      setTrack(newTrack);
+    }
+    // skip to next track of playlist
+    else {
+      newTrack = tracks[current + 1];
+      setCurrent(current + 1);
+      setTrack(newTrack);
+    }
+
+    // auto play next track if user is listening to music
+    if (playing) {
+      play({id: newTrack.id});
     }
   }
 
   return (
-    <Card className={classes.player}>
-      <Grid container>
+    <Card className={inverted ? "inverted" : ""} sx={{ display: 'flex', maxWidth: 440, zIndex: 1 }}>
+      <Grid container direction='column' minWidth={200} maxWidth={220}>
         <CardContent sx={{ flex: '1 0 auto' }}>
-          <Typography component="div" variant="h6" color="secondary">{track.name}</Typography>
-          <Typography variant="subtitle1" color="secondary" component="div">{track.producer}</Typography>
+          <Typography component="div" variant="h6" color={inverted ? "info" : "secondary"}>{track.name}</Typography>
+          <Typography variant="subtitle1" color={inverted ? "info" : "secondary"} component="div">{track.producer}</Typography>
         </CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
-          <IconButton aria-label="previous" color="secondary" onClick={onPrevious}>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <IconButton aria-label="previous" color={inverted ? "info" : "secondary"} onClick={onPrevious}>
             <SkipPreviousIcon />
           </IconButton>
-          <IconButton aria-label="play/pause" color="secondary" onClick={() => onToggle(!playing)}>
-            { playing ? <PauseIcon sx={{ height: 38, width: 38 }}/> : <PlayArrowIcon sx={{ height: 38, width: 38 }} /> }
+          <IconButton aria-label="play/pause" color={inverted ? "info" : "secondary"} onClick={() => onPlayToggle(!playing)}>
+            { playing ? <StopIcon sx={{ height: 38, width: 38 }}/> : <PlayArrowIcon sx={{ height: 38, width: 38 }} /> }
           </IconButton>
-          <IconButton aria-label="next" color="secondary" onClick={onNext}>
+          <IconButton aria-label="next" color={inverted ? "info" : "secondary"} onClick={onNext}>
             <SkipNextIcon />
           </IconButton>
         </Box>
       </Grid>
+      <CardMedia component="img" sx={{ height: 150, maxWidth: 150 }} image={track.image} alt={track.name}/>
     </Card>
   )
 }

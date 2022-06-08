@@ -1,14 +1,16 @@
+import { Fragment, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { makeStyles } from '@mui/styles';
+import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Fade, Button } from "@mui/material";
+import { Close, ShoppingCart, Menu, Headphones } from "@mui/icons-material";
+import { cartCount, toggle } from "../redux/cartSlice";
+import { isPlaying } from "../redux/musicSlice";
 import logo from '../images/logo.png';
 import theme from "../theme";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { cartCount, toggle } from "../redux/cartSlice";
-import { Fragment, useState } from "react";
-import { Close } from "@mui/icons-material";
+import MusicPlayer from "./MusicPlayer";
+import Cart from "./Cart";
 
 const { REACT_APP_WEBSITE_URL } = process.env;
 
@@ -24,21 +26,42 @@ const useStyles: any = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('lg')]: {
         marginTop: '10px'
       }
+    },
+    musicPlayer: {
+      position: 'absolute',
+      inset: '80px 10px auto auto',
+      maxWidth: 350
     }
   })
 );
 
 export default function Header() {
   const classes = useStyles();
-  const cartItemCount = useAppSelector(cartCount);
   const dispatch = useAppDispatch();
+  const cartItemCount = useAppSelector(cartCount);
+  const playing = useAppSelector(isPlaying);
   const navigate = useNavigate();
   const location = useLocation();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
+  const isTablet = useMediaQuery(theme.breakpoints.up('sm'));
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const isMarket = location.pathname === "/market";
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
+  const [musicOpen, setMusicOpen] = useState<boolean>(false);
+  const { activateBrowserWallet, account } = useEthers();
+  const ens = useLookupAddress();
+  const [displayName, setDisplayName] = useState<string>("");
+
+  useEffect(() => {
+    if (ens) {
+      setDisplayName(ens);
+    } else if (account && account.length > 0) {
+      setDisplayName(shortenAddress(account));
+    }
+  }, [account, ens]);
 
   const getTitle = () => {
-    if (location.pathname === "/market") {
+    if (isMarket) {
       return "Ribbit Prime";
     } else if (location.pathname === "/staking") {
       return "Ribbit Staking";
@@ -49,24 +72,28 @@ export default function Header() {
     }
   }
 
+  const onMusicClick = () => {
+    setMusicOpen(!musicOpen);
+  }
+
   const onCartClick = () => {
     navigate("/market");
     // toggle items sidebar
-    dispatch(toggle());
+    dispatch(toggle(true));
   }
 
   return (
       <Fragment>
         <AppBar position="fixed">
           <Toolbar disableGutters>
-            <Grid id="header" container item justifyContent="space-between" alignItems="center" pl={4} pr={4} xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid container item xl={3} lg={4} md={4} sm={10} xs={10}>
+            <Grid id="header" container item justifyContent="space-between" alignItems="center" pl={isMobile ? 2 : 4} pr={isMobile ? 2 : 4} xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid id='logo' container item justifyContent="start" xl={3} lg={3} md={3} sm={6} xs={2}>
                 <Link href={REACT_APP_WEBSITE_URL} underline='none'>
                   <Avatar className={classes.avatar} alt='Home' src={logo} sx={{width: 65, height: 65}}/>
                 </Link>
-                <Typography variant='h5' color='secondary' fontWeight='bold' alignSelf="center" pl={3}>{getTitle()}</Typography>
+                { isTablet && <Typography variant='h5' color='secondary' fontWeight='bold' alignSelf="center" pl={3}>{getTitle()}</Typography>}
               </Grid>
-              <Grid container item display={isMobile ? "none" : "flex"} xl={6} lg={6} mx={8} sm={12} xs={12}>
+              <Grid id='links' container item display={isDesktop ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' xl={6} lg={6} md={6}>
                 <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                   <Link href={REACT_APP_WEBSITE_URL + '/team'} underline='none' variant="h5" color="secondary">Team</Link>
                 </Grid>
@@ -83,18 +110,35 @@ export default function Header() {
                   <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/leaderboard")}>Board</Typography>
                 </Grid> 
               </Grid>
-              <Grid item display={isMobile ? "flex" : "none"} justifyContent="end" sm={2} xs={2}>
-                <IconButton size="large" color="inherit" aria-label="menu" onClick={() => setSidemenuOpen(!sidemenuOpen)}>
-                  <MenuIcon/>
-                </IconButton>
+              <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={3} lg={3} md={3} sm={6} xs={10}>
+                <Grid item display="flex" pr={2}>
+                  <Fab size='small' onClick={onMusicClick}>
+                    <Badge invisible={!playing} badgeContent=" " color="primary">
+                      <Headphones fontSize='medium'/>
+                    </Badge>
+                  </Fab>
+                </Grid>
+                <Grid item display="flex" pr={2}>
+                  <Fab size='small' onClick={onCartClick}>
+                    <Badge badgeContent={cartItemCount} color="primary">
+                      <ShoppingCart fontSize='medium'/>
+                    </Badge>
+                  </Fab>
+                </Grid>
+                <Grid item display={isDesktop && !account ? "flex" : "none"}>
+                  <Button variant='contained' onClick={() => activateBrowserWallet()}>
+                    <Typography variant='h5'>Login</Typography>  
+                  </Button>
+                </Grid>
+                <Grid item display={isDesktop && account ? "flex" : "none"}>
+                  <Typography variant='h5'>{displayName}</Typography>
+                </Grid>
+                <Grid item display={isMobile ? "flex" : "none"} justifyContent="end" pl={1}>
+                  <IconButton size="large" color="inherit" aria-label="menu" onClick={() => setSidemenuOpen(!sidemenuOpen)}>
+                    <Menu/>
+                  </IconButton>
+                </Grid>
               </Grid>
-              {/* <Grid container item justifyContent="center" alignItems="center" xl={1} lg={1} md={1} sm={1} xs={1}>
-                <Fab size='medium' onClick={onCartClick}>
-                  <Badge badgeContent={cartItemCount} color="primary">
-                    <ShoppingCartIcon fontSize='large'/>
-                  </Badge>
-                </Fab>
-              </Grid> */}
             </Grid>
           </Toolbar>
         </AppBar>
@@ -126,8 +170,24 @@ export default function Header() {
             <Grid item pb={3}>
               <Link href={REACT_APP_WEBSITE_URL + '/license'} underline='none' variant="h5" color="secondary">License</Link>
             </Grid>
+            <Grid id='account' container item alignItems='center'>
+              <Grid item display={!account ? "flex" : "none"} pr={2}>
+                <Button variant='contained' onClick={() => activateBrowserWallet()}>
+                  <Typography variant='h5'>Login</Typography>  
+                </Button>
+              </Grid>
+            </Grid>
+            <Grid item display={account ? "flex" : "none"} pt={3}>
+              <Typography variant='h5' color='secondary'>{displayName}</Typography>
+            </Grid>
           </Grid>
         </Drawer>
+        <Fade in={musicOpen}>
+          <Grid id='player' className={classes.musicPlayer} container zIndex={1}>
+            <MusicPlayer inverted={false}/>
+          </Grid>
+        </Fade>
+        <Cart />
       </Fragment>
   )
 }

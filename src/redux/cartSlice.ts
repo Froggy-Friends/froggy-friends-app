@@ -1,5 +1,5 @@
 import { RibbitItem } from './../models/RibbitItem';
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from './store';
 
 interface CartState {
@@ -20,13 +20,19 @@ const cartSlice = createSlice({
         state.items.push(action.payload);
       }
     },
-    toggle(state) {
-      state.open = !state.open;
+    remove(state, action) {
+      state.items.splice(state.items.findIndex(item => item.id === action.payload.id), 1);
+    },
+    toggle(state, action?) {
+      state.open = action.payload;
+    },
+    empty(state) {
+      state.items = [];
     }
   }
 });
 
-export const { add, toggle } = cartSlice.actions;
+export const { add, remove, toggle, empty } = cartSlice.actions;
 
 export const cartCount = (state: RootState) => state.cart.items.length;
 export const cartOpen = (state: RootState) => state.cart.open;

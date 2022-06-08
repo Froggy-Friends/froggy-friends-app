@@ -374,7 +374,7 @@ export default function Staking() {
             {
               owned.froggies.map((froggy: any) => {
                 return <Grid key={froggy.edition} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
-                  <Card sx={{height: '100%', borderColor: getBorderColor(froggy.edition)}}>
+                  <Card sx={{height: '100%', border: '5px solid', borderColor: getBorderColor(froggy.edition)}}>
                     <CardMedia component='img' image={froggy.image} alt='Froggy'/>
                     <CardContent>
                       <Typography variant='h5'>{froggy.name}</Typography>
