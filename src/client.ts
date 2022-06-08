@@ -4,17 +4,37 @@ import { Interface } from '@ethersproject/abi';
 import froggyfriendsjson from './abi/froggyfriends.json';
 import ribbitJson from './abi/ribbit.json';
 import stakingJson from './abi/staking.json';
+import ribbitItemJson from './abi/ribbitItem.json';
 import { BigNumber } from "ethers";
 
 const abi = new Interface(froggyfriendsjson);
 const ribbitAbi = new Interface(ribbitJson);
 const stakingAbi = new Interface(stakingJson);
+const ribbitItemAbi = new Interface(ribbitItemJson);
 const froggyContract = new Contract(`${process.env.REACT_APP_CONTRACT}`, abi);
 const ribbitContract = new Contract(`${process.env.REACT_APP_RIBBIT_CONTRACT}`, ribbitAbi);
 const stakingContract = new Contract(`${process.env.REACT_APP_STAKING_CONTRACT}`, stakingAbi);
+const ribbitItemContract = new Contract(`${process.env.REACT_APP_RIBBIT_ITEM_CONTRACT}`, ribbitItemAbi);
 console.log("froggy address: ", froggyContract.address);
 console.log("ribbit address: ", ribbitContract.address);
 console.log("staking address: ", stakingContract.address);
+console.log("ribbit item address: ", ribbitItemContract.address);
+
+export function useBundleBuy() {
+  const { send, state } = useContractFunction(ribbitItemContract, 'bundleBuy');
+  return {
+    bundleBuy: send,
+    bundleBuyState: state
+  }
+}
+
+export function useCollabBuy() {
+  const { send, state } = useContractFunction(ribbitItemContract, 'collabBuy');
+  return {
+    collabBuy: send,
+    collabBuyState: state
+  }
+}
 
 export function useApproveSpender() {
   const { send, state } = useContractFunction(ribbitContract, 'approve');
@@ -111,4 +131,14 @@ export function useFroggiesOwned(account: string): number {
   } else {
     return 0;
   }
+}
+
+export function useSpendingApproved(account: string): boolean {
+  const { value, error } = useCall({contract: ribbitContract, method: 'allowance', args: [account, ribbitItemContract.address]}) ?? {};
+  if (error) {
+    console.log("check spending allowance error: ", error);
+  }
+
+  const allowance: BigNumber = value?.[0] || BigNumber.from(0);
+  return allowance.gt(0);
 }

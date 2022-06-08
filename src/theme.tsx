@@ -13,6 +13,12 @@ let theme = createTheme({
     },
     success: {
       main: '#cfdcae'
+    },
+    info: {
+      main: '#181818'
+    },
+    warning: {
+      main: '#BFB85D'
     }
   },
   typography: {
@@ -56,6 +62,14 @@ let theme = createTheme({
             backgroundColor: "#b3b6bb",
             cursor: "not-allowed",
             pointerEvents: "auto"
+          },
+          "&.transparent": {
+            backgroundColor: "#000000d1",
+            borderRadius: 5,
+            textTransform: 'capitalize',
+            ":hover": {
+              color: "#5ea14e"
+            }
           }
         }
       }
@@ -64,19 +78,25 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           fontSize: '1.3rem',
+          backgroundColor: '#BFB85D',
+          color: '#181818'
         }
       }
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          border: '5px solid #1a1b1c',
           backgroundColor: '#181818',
           color: '#ebedf1',
           width: '100%',
           textAlign: 'center',
           "&.disabled": {
             backgroundColor: "#ebedf145"
+          },
+          "&.inverted": {
+            backgroundColor: "#ebedf1",
+            color: "#181818",
+            width: 350
           }
         }
       }
@@ -124,7 +144,7 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           color: "#ebedf1",
-          fontSize: '1.2rem',
+          fontSize: '1rem',
           alignItems: 'start',
           padding: 24,
           "&.Mui-selected": {
@@ -137,7 +157,8 @@ let theme = createTheme({
     MuiTabs: {
       styleOverrides: {
         root: {
-          minWidth: 200
+          minWidth: 200,
+          color: '#5ea14e'
         }
       }
     },
@@ -182,7 +203,37 @@ let theme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundColor: "#181818"
+          backgroundColor: "#181818",
+          "&.MuiDrawer-paper": {
+            width: '100%',
+            maxWidth: 425
+          } 
+        }
+      }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltipPlacementBottom: {
+          backgroundColor: 'transparent'
+        }
+      }
+    },
+    MuiGrid: {
+      styleOverrides: {
+        root: {
+          "&.scrollable": {
+            "::-webkit-scrollbar": {
+              width: 5,
+              height: 5,
+              backgroundColor: "#181818"
+            },
+            "::-webkit-scrollbar-thumb": {
+              backgroundColor: "#5ea14e",
+              borderRadius: 5,
+              height: 50,
+              width: 50
+            }
+          }
         }
       }
     }
