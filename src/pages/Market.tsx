@@ -435,7 +435,23 @@ export default function Market() {
                 filterItems('nfts').map((nft, index) => {
                   return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
                           <Card className={isItemDisabled(nft) ? "disabled" : ""}>
-                            <CardHeader title={nft.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
+                            <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
+                              title={
+                                <Grid item display='flex' justifyContent='center'>
+                                  <Typography>{nft.name}</Typography>
+                                  <Grid item display={nft.twitter ? "flex" : "none"} pl={2}>
+                                    <Link href={nft.twitter} target='_blank'>
+                                      <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
+                                    </Link>
+                                  </Grid>
+                                  <Grid item display={nft.discord ? "flex" : "none"} pl={1}>
+                                    <Link href={nft.discord} target="_blank">
+                                      <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
+                                    </Link>
+                                  </Grid>
+                                </Grid>
+                              }
+                            />
                             <CardMedia component='img' image={nft.image} alt='NFT'/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(nft)}</Typography>
