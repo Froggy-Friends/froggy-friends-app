@@ -319,6 +319,7 @@ export default function Market() {
             <Tab label="Allowlists" {...a11yProps('allowlists')} />
             <Tab label="Merch" {...a11yProps('merch')} />
             <Tab label="Costumes" {...a11yProps('costumes')} />
+            <Tab label="Community" {...a11yProps('costumes')} />
           </Tabs>
           <TabPanel id='golden-lily-pad-panel' value={value} index={0}>
             <Typography variant='subtitle1' color='secondary' pb={1}>
@@ -608,6 +609,12 @@ export default function Market() {
           <TabPanel id='costumes-panel' value={value} index={6}>
             <Grid container direction="column" alignItems="center">
               <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Costumes Coming Soon</Typography>
+              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
+            </Grid>
+          </TabPanel>
+          <TabPanel id='community-panel' value={value} index={7}>
+            <Grid container direction="column" alignItems="center">
+              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Community Listings Coming Soon</Typography>
               <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
             </Grid>
           </TabPanel>
