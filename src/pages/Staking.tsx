@@ -38,6 +38,12 @@ interface Owned {
   isStakingApproved: boolean;
 }
 
+const formatBalance = (balance: any) => {
+  const etherFormat = formatEther(balance);
+  const number = +etherFormat;
+  return commify(number.toFixed(2));
+}
+
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     app: {
@@ -102,6 +108,11 @@ export default function Staking() {
   const stakingBalance = useCheckStakingBalance(account ?? '');
   const stakingStarted = useStakingStarted();
   const froggiesStaked = useFroggiesStaked();
+
+  useEffect(() => {
+    console.log("Account: ", account);
+    console.log("Staking Balance: ", formatBalance(stakingBalance));
+  }, [stakingBalance, account])
 
   useEffect(() => {
     console.log("staking started: ", stakingStarted);
@@ -295,12 +306,6 @@ export default function Staking() {
   const froggiesStakedPercentage = () => {
     let staked = (froggiesStaked / 4444) * 100;
     return staked.toFixed(2);
-  }
-
-  const formatBalance = (balance: any) => {
-    const etherFormat = formatEther(balance);
-    const number = +etherFormat;
-    return commify(number.toFixed(2));
   }
 
   const getBackgroundSize = () => {
