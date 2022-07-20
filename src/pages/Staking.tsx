@@ -110,11 +110,6 @@ export default function Staking() {
   const froggiesStaked = useFroggiesStaked();
 
   useEffect(() => {
-    console.log("Account: ", account);
-    console.log("Staking Balance: ", formatBalance(stakingBalance));
-  }, [stakingBalance, account])
-
-  useEffect(() => {
     console.log("staking started: ", stakingStarted);
   }, [stakingStarted])
 
