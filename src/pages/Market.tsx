@@ -98,7 +98,7 @@ export default function Market() {
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useAppDispatch();
   const [value, setValue] = useState(0);
-  const [showAll, setShowAll] = useState(true);
+  const [showAll, setShowAll] = useState(false);
   const [loadingItems, setLoadingItems] = useState(false);
   const [items, setItems] = useState<RibbitItem[]>([]);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
