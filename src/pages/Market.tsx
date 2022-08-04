@@ -329,10 +329,10 @@ export default function Market() {
                   Complimentary bud service at IRL events and more to come.
             </Typography>
             <Grid id="golden-lilies" container pt={3} pb={3}>
-              <Grid item xl={9} lg={12} md={12} sm={12} xs={12}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 {
                   filterItems('lilies').map((lily, index) => {
-                    return <Grid key={index} item xl={2.5} lg={2.5} md={3.5} sm={5} xs={12} minHeight={450}>
+                    return <Grid key={index} item xl={2} lg={3} md={4} sm={6} xs={12} minHeight={450}>
                             <Card className={isItemDisabled(lily) ? "disabled" : ""}>
                               <CardHeader title="Golden Lily Pad" titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
                               <CardMedia component='img' image={lily.image} alt='Golden Lily Pad'/>
