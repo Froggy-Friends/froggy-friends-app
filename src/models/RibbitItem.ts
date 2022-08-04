@@ -7,6 +7,7 @@ export interface RibbitItem {
   collabId: number;
   twitter: string;
   discord: string;
+  community: boolean;
   image: string;
   previewImage: string;
   price: number;
