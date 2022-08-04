@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { commify, formatEther } from '@ethersproject/units';
@@ -457,7 +457,13 @@ export default function Market() {
                                 <CardMedia component='img' image={nft.image} alt='NFT'/>
                                 <CardContent>
                                   <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(nft)}</Typography>
-                                  <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                  <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
+                                    {
+                                      nft.community && 
+                                      <Grid item pr={2}>
+                                        <Chip label="community" color='secondary'/>
+                                      </Grid>
+                                    }
                                     <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                     <Typography>{commify(nft.price)}</Typography>
                                   </Grid>
@@ -499,7 +505,13 @@ export default function Market() {
                                   <CardMedia component='img' image={raffle.image} alt='Raffle'/>
                                   <CardContent>
                                     <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
-                                    <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                    <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
+                                      {
+                                        raffle.community && 
+                                        <Grid item pr={2}>
+                                          <Chip label="community" color='secondary'/>
+                                        </Grid>
+                                      }
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                       <Typography>{commify(raffle.price)}</Typography>
                                     </Grid>
@@ -599,7 +611,13 @@ export default function Market() {
                           <CardMedia component='img' image={merch.image} alt='Merch'/>
                           <CardContent>
                             <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(merch)}</Typography>
-                            <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                            <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
+                              {
+                                merch.community && 
+                                <Grid item pr={2}>
+                                  <Chip label="community" color='secondary'/>
+                                </Grid>
+                              }
                               <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                               <Typography>{commify(merch.price)}</Typography>
                             </Grid>
