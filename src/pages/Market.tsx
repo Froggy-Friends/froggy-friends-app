@@ -424,52 +424,61 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='nfts-panel' value={value} index={2}>
-            <Grid item xl={12}>
-              <Typography variant='subtitle1' color='secondary' pb={1}>
-                Purchase community owned NFTs with $RIBBIT.
-              </Typography>
-            </Grid>
-            <Grid id='nfts' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
-              {
-                filterItems('nfts').map((nft, index) => {
-                  return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
-                          <Card className={isItemDisabled(nft) ? "disabled" : ""}>
-                            <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
-                              title={
-                                <Grid item display='flex' justifyContent='center'>
-                                  <Typography>{nft.name}</Typography>
-                                  <Grid item display={nft.twitter ? "flex" : "none"} pl={2}>
-                                    <Link href={nft.twitter} target='_blank'>
-                                      <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
-                                    </Link>
+            {
+              filterItems('nfts').length > 0 &&
+              <Fragment>
+                <Grid item xl={12}>
+                  <Typography variant='subtitle1' color='secondary' pb={1}>
+                    Purchase community owned NFTs with $RIBBIT.
+                  </Typography>
+                </Grid>
+                <Grid id='nfts' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                  {
+                    filterItems('nfts').map((nft, index) => {
+                      return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
+                              <Card className={isItemDisabled(nft) ? "disabled" : ""}>
+                                <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
+                                  title={
+                                    <Grid item display='flex' justifyContent='center'>
+                                      <Typography>{nft.name}</Typography>
+                                      <Grid item display={nft.twitter ? "flex" : "none"} pl={2}>
+                                        <Link href={nft.twitter} target='_blank'>
+                                          <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
+                                        </Link>
+                                      </Grid>
+                                      <Grid item display={nft.discord ? "flex" : "none"} pl={1}>
+                                        <Link href={nft.discord} target="_blank">
+                                          <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
+                                        </Link>
+                                      </Grid>
+                                    </Grid>
+                                  }
+                                />
+                                <CardMedia component='img' image={nft.image} alt='NFT'/>
+                                <CardContent>
+                                  <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(nft)}</Typography>
+                                  <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                    <Typography>{commify(nft.price)}</Typography>
                                   </Grid>
-                                  <Grid item display={nft.discord ? "flex" : "none"} pl={1}>
-                                    <Link href={nft.discord} target="_blank">
-                                      <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
-                                    </Link>
-                                  </Grid>
-                                </Grid>
-                              }
-                            />
-                            <CardMedia component='img' image={nft.image} alt='NFT'/>
-                            <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(nft)}</Typography>
-                              <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                <Typography>{commify(nft.price)}</Typography>
-                              </Grid>
-                              <Button variant='contained' color='success' onClick={() => onBuyItem(nft)} disabled={isItemDisabled(nft)}>
-                                <AddShoppingCartIcon/>
-                              </Button>
-                            </CardContent>
-                          </Card>
-                        </Grid> 
-                })
-              }
-              {
-                filterItems('nfts').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
-              }
-            </Grid>
+                                  <Button variant='contained' color='success' onClick={() => onBuyItem(nft)} disabled={isItemDisabled(nft)}>
+                                    <AddShoppingCartIcon/>
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            </Grid> 
+                    })
+                  }
+                </Grid>
+              </Fragment>
+            }
+            {
+              filterItems('nfts').length === 0 &&
+              <Grid container direction="column" alignItems="center">
+                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>NFTs Coming Soon</Typography>
+                <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
+              </Grid>
+            }
           </TabPanel>
           <TabPanel id='raffles-panel' value={value} index={3}>
               {
