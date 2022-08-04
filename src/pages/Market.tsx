@@ -490,10 +490,10 @@ export default function Market() {
                       <br/>Each ticket is a 10% chance of winning a random community owned NFT.
                     </Typography>
                   </Grid>
-                  <Grid id='raffles' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                  <Grid id='raffles' container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                     {
                       filterItems('raffles').map((raffle, index) => {
-                        return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
+                        return <Grid key={index} item xl={2} lg={3} md={4} sm={6} xs={12} p={2} minHeight={450}>
                                 <Card className={isItemDisabled(raffle) ? "disabled" : ""}>
                                   <CardHeader title={raffle.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                                   <CardMedia component='img' image={raffle.image} alt='Raffle'/>
