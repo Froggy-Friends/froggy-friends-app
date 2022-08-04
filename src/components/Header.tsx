@@ -62,7 +62,7 @@ export default function Header() {
 
   const getTitle = () => {
     if (isMarket) {
-      return "Ribbit Prime";
+      return "Ribbit Market";
     } else if (location.pathname === "/staking") {
       return "Ribbit Staking";
     } else if (location.pathname === "/admin") {
