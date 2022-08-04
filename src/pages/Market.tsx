@@ -432,10 +432,10 @@ export default function Market() {
                     Purchase community owned NFTs with $RIBBIT.
                   </Typography>
                 </Grid>
-                <Grid id='nfts' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                <Grid id='nfts' container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                   {
                     filterItems('nfts').map((nft, index) => {
-                      return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
+                      return <Grid key={index} item xl={2} lg={3} md={4} sm={6} xs={12} p={2} minHeight={450}>
                               <Card className={isItemDisabled(nft) ? "disabled" : ""}>
                                 <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
                                   title={
