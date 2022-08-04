@@ -394,9 +394,12 @@ export default function Market() {
                 filterItems('friends').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
               }
             </Grid>
-            <Grid id='collab-friends-title' item xl={12}>
-              <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Collab Friends</Typography>
-            </Grid>
+            {
+              filterItems('collabs').length > 0 &&
+              <Grid id='collab-friends-title' item xl={12}>
+                <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Collab Friends</Typography>
+              </Grid>
+            }
             <Grid id="collab-friends" container item pb={3} xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
                 filterItems('collabs').map((friend, index) => { 
@@ -417,9 +420,6 @@ export default function Market() {
                           </Card>
                         </Grid> 
                 })
-              },
-              {
-                filterItems('collabs').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
               }
             </Grid>
           </TabPanel>
