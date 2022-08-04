@@ -236,6 +236,13 @@ let theme = createTheme({
           }
         }
       }
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#fdb904'
+        }
+      }
     }
   }
 });
