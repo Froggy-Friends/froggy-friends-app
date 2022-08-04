@@ -74,17 +74,22 @@ const useStyles: any = makeStyles((theme: Theme) =>
       }
     },
     cardMedia: {
+      position: 'relative',
+    },
+    community: {
+      position: 'absolute',
+      top: 0,
+      backgroundColor: '#ebca27',
+      marginTop: theme.spacing(1),
+      marginLeft: theme.spacing(1)
+    },
+    cardMediaImage: {
       display: 'block',
       backgroundSize: 'cover',
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'center',
       width: '100%',
       objectFit: 'cover'
-    },
-    community: {
-      position: 'absolute',
-      marginTop: theme.spacing(1),
-      marginLeft: theme.spacing(1)
     },
     modal: {
       position: 'absolute' as 'absolute',
@@ -467,16 +472,15 @@ export default function Market() {
                                     </Grid>
                                   }
                                 />
-                                <CardMedia component='img' image={nft.image} alt='NFT'/>
+                                <CardMedia component={() =>
+                                      <Grid className={classes.cardMedia} container>
+                                        { nft.community && <Chip className={classes.community} label="community"/> }
+                                        <img className={classes.cardMediaImage} src={nft.image} alt='NFT'/>
+                                      </Grid>
+                                  }/>
                                 <CardContent>
                                   <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(nft)}</Typography>
                                   <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
-                                    {
-                                      nft.community && 
-                                      <Grid item pr={2}>
-                                        <Chip label="community" color='secondary'/>
-                                      </Grid>
-                                    }
                                     <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                     <Typography>{commify(nft.price)}</Typography>
                                   </Grid>
@@ -516,9 +520,9 @@ export default function Market() {
                                 <Card className={isItemDisabled(raffle) ? "disabled" : ""}>
                                   <CardHeader title={raffle.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                                   <CardMedia component={() =>
-                                      <Grid container>
-                                        { raffle.community && <Chip className={classes.community} label="community" color='secondary'/> }
-                                        <img className={classes.cardMedia} src={raffle.image} />
+                                      <Grid className={classes.cardMedia} container>
+                                        { raffle.community && <Chip className={classes.community} label="community"/> }
+                                        <img className={classes.cardMediaImage} src={raffle.image} alt='NFT'/>
                                       </Grid>
                                   }/>
                                   <CardContent>
@@ -620,16 +624,15 @@ export default function Market() {
                       return <Grid key={index} item xl={3} lg={3} md={4} sm={5} xs={12} p={2} minHeight={450}>
                         <Card className={isItemDisabled(merch) ? "disabled" : ""}>
                           <CardHeader title={merch.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                          <CardMedia component='img' image={merch.image} alt='Merch'/>
+                          <CardMedia component={() =>
+                              <Grid className={classes.cardMedia} container>
+                                { merch.community && <Chip className={classes.community} label="community"/> }
+                                <img className={classes.cardMediaImage} src={merch.image} alt='NFT'/>
+                              </Grid>
+                          }/>
                           <CardContent>
                             <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(merch)}</Typography>
                             <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
-                              {
-                                merch.community && 
-                                <Grid item pr={2}>
-                                  <Chip label="community" color='secondary'/>
-                                </Grid>
-                              }
                               <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                               <Typography>{commify(merch.price)}</Typography>
                             </Grid>
