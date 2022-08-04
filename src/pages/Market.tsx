@@ -532,10 +532,10 @@ export default function Market() {
                   NFA, DYOR. Allowlists listed are not endorsements of projects. 
                 </Typography>
                 </Grid>
-                <Grid id='allowlists' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                <Grid id='allowlists' container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                     {
                       filterItems('allowlists').map((allowlist, index) => {
-                        return <Grid key={index} item xl={2.5} lg={2.5} md={3.5} sm={5} xs={12} p={2} minHeight={500}>
+                        return <Grid key={index} item xl={2} lg={3} md={4} sm={6} xs={12} p={2} minHeight={500}>
                           <Card className={isItemDisabled(allowlist) ? "disabled" : ""}>
                             <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
                               title={
