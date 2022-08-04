@@ -73,6 +73,19 @@ const useStyles: any = makeStyles((theme: Theme) =>
         paddingRight: theme.spacing(6)
       }
     },
+    cardMedia: {
+      display: 'block',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+      width: '100%',
+      objectFit: 'cover'
+    },
+    community: {
+      position: 'absolute',
+      marginTop: theme.spacing(1),
+      marginLeft: theme.spacing(1)
+    },
     modal: {
       position: 'absolute' as 'absolute',
       top: '50%',
@@ -502,16 +515,15 @@ export default function Market() {
                         return <Grid key={index} item xl={2} lg={3} md={4} sm={6} xs={12} p={2} minHeight={450}>
                                 <Card className={isItemDisabled(raffle) ? "disabled" : ""}>
                                   <CardHeader title={raffle.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                                  <CardMedia component='img' image={raffle.image} alt='Raffle'/>
+                                  <CardMedia component={() =>
+                                      <Grid container>
+                                        { raffle.community && <Chip className={classes.community} label="community" color='secondary'/> }
+                                        <img className={classes.cardMedia} src={raffle.image} />
+                                      </Grid>
+                                  }/>
                                   <CardContent>
                                     <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
                                     <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
-                                      {
-                                        raffle.community && 
-                                        <Grid item pr={2}>
-                                          <Chip label="community" color='secondary'/>
-                                        </Grid>
-                                      }
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                       <Typography>{commify(raffle.price)}</Typography>
                                     </Grid>
@@ -679,7 +691,7 @@ export default function Market() {
             !isSpendingApproved && 
             <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${approveSpenderState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
               <Typography id='modal-description' variant="h6" p={3}>
-                Grant Ribbit Prime Permissions {approveSpenderState.status === "Success" && <Check/>} {approveSpenderState.status === "Fail" && <Warning/>}
+                Grant Ribbit Market Permissions {approveSpenderState.status === "Success" && <Check/>} {approveSpenderState.status === "Fail" && <Warning/>}
               </Typography>
             </Link>
           }
