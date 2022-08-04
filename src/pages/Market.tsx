@@ -367,10 +367,10 @@ export default function Market() {
             <Grid id='genesis-friends-title' item xl={12}>
               <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
             </Grid>
-            <Grid id='genesis-friends' container item pb={3} xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+            <Grid id='genesis-friends' container item pb={3} xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
                 filterItems('friends').map((friend, index) => { 
-                  return <Grid key={index} item p={2} minHeight={450} xl={2} lg={2} md={3} sm={4} xs={12}>
+                  return <Grid key={index} item p={2} minHeight={450} xl={2} lg={3} md={4} sm={6} xs={12}>
                           <Card className={isItemDisabled(friend) ? "disabled" : ""}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                             <CardMedia component='img' image={friend.previewImage} alt='Genesis Friend'/>
@@ -400,10 +400,10 @@ export default function Market() {
                 <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Collab Friends</Typography>
               </Grid>
             }
-            <Grid id="collab-friends" container item pb={3} xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+            <Grid id="collab-friends" container item pb={3} xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
                 filterItems('collabs').map((friend, index) => { 
-                  return <Grid key={index} item p={2} minHeight={450} xl={2} lg={2} md={3} sm={4} xs={12}>
+                  return <Grid key={index} item p={2} minHeight={450} xl={2} lg={3} md={4} sm={6} xs={12}>
                           <Card className={isItemDisabled(friend) ? "disabled" : ""}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
                             <CardMedia component='img' image={friend.previewImage} alt='Collab Friend'/>
