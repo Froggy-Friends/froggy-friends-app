@@ -318,8 +318,6 @@ export default function Market() {
             <Tab label="Raffles" {...a11yProps('raffles')} />
             <Tab label="Allowlists" {...a11yProps('allowlists')} />
             <Tab label="Merch" {...a11yProps('merch')} />
-            <Tab label="Costumes" {...a11yProps('costumes')} />
-            <Tab label="Community" {...a11yProps('costumes')} />
           </Tabs>
           <TabPanel id='golden-lily-pad-panel' value={value} index={0}>
             <Typography variant='subtitle1' color='secondary' pb={1}>
@@ -474,37 +472,46 @@ export default function Market() {
             </Grid>
           </TabPanel>
           <TabPanel id='raffles-panel' value={value} index={3}>
-            <Grid item xl={12}>
-              <Typography variant='subtitle1' color='secondary' pb={1}>
-                Purchase raffle tickets for community owned NFTs with $RIBBIT.
-                <br/>Each ticket is a 10% chance of winning a random community owned NFT.
-              </Typography>
-            </Grid>
-            <Grid id='raffles' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
-                filterItems('raffles').map((raffle, index) => {
-                  return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
-                          <Card className={isItemDisabled(raffle) ? "disabled" : ""}>
-                            <CardHeader title={raffle.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                            <CardMedia component='img' image={raffle.image} alt='Raffle'/>
-                            <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
-                              <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                <Typography>{commify(raffle.price)}</Typography>
-                              </Grid>
-                              <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={isItemDisabled(raffle)}>
-                                <AddShoppingCartIcon/>
-                              </Button>
-                            </CardContent>
-                          </Card>
-                        </Grid> 
-                })
+                filterItems('raffles').length > 0 &&
+                <Fragment>
+                  <Grid item xl={12}>
+                    <Typography variant='subtitle1' color='secondary' pb={1}>
+                      Purchase raffle tickets for community owned NFTs with $RIBBIT.
+                      <br/>Each ticket is a 10% chance of winning a random community owned NFT.
+                    </Typography>
+                  </Grid>
+                  <Grid id='raffles' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                    {
+                      filterItems('raffles').map((raffle, index) => {
+                        return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
+                                <Card className={isItemDisabled(raffle) ? "disabled" : ""}>
+                                  <CardHeader title={raffle.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
+                                  <CardMedia component='img' image={raffle.image} alt='Raffle'/>
+                                  <CardContent>
+                                    <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
+                                    <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                      <Typography>{commify(raffle.price)}</Typography>
+                                    </Grid>
+                                    <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={isItemDisabled(raffle)}>
+                                      <AddShoppingCartIcon/>
+                                    </Button>
+                                  </CardContent>
+                                </Card>
+                              </Grid> 
+                      })
+                    }
+                  </Grid>
+                </Fragment>
               }
               {
-                filterItems('raffles').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
+                filterItems('raffles').length === 0 && 
+                <Grid container direction="column" alignItems="center">
+                  <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Raffles Coming Soon</Typography>
+                  <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
+                </Grid>
               }
-            </Grid>
           </TabPanel>
           <TabPanel id='allowlists-panel' value={value} index={4}>
             {
@@ -605,18 +612,6 @@ export default function Market() {
                 <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
               </Grid>
             }
-          </TabPanel>
-          <TabPanel id='costumes-panel' value={value} index={6}>
-            <Grid container direction="column" alignItems="center">
-              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Costumes Coming Soon</Typography>
-              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-            </Grid>
-          </TabPanel>
-          <TabPanel id='community-panel' value={value} index={7}>
-            <Grid container direction="column" alignItems="center">
-              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Community Listings Coming Soon</Typography>
-              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-            </Grid>
           </TabPanel>
         </Grid>
       </Grid>
