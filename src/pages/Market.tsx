@@ -669,6 +669,11 @@ export default function Market() {
                               title={
                                 <Grid item display='flex' justifyContent='center' alignItems='center'>
                                   <Typography>{merch.name}</Typography>
+                                  <Grid item display={merch.twitter ? "flex" : "none"} justifySelf='center' pl={2}>
+                                    <Link display='flex' href={merch.twitter} target='_blank'>
+                                      <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
+                                    </Link>
+                                  </Grid>
                                   <Tooltip title={merch.description}>
                                     <IconButton color='secondary'>
                                       <InfoOutlined/>
