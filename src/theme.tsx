@@ -241,7 +241,7 @@ let theme = createTheme({
     MuiChip: {
       styleOverrides: {
         root: {
-          backgroundColor: 'white',
+          backgroundColor: '#fece07',
           color: 'black'
         }
       }
