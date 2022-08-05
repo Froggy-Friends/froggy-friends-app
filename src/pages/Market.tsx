@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { commify, formatEther } from '@ethersproject/units';
@@ -9,7 +9,7 @@ import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client'
 import { marketplaceUrl } from '../data';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { Check, Close, OpenInNew, Warning } from '@mui/icons-material';
+import { Check, Close, InfoOutlined, OpenInNew, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import { formatDistance } from 'date-fns';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -90,7 +90,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'center',
       width: '100%',
-      objectFit: 'cover'
+      objectFit: 'cover',
+      minHeight: 300
     },
     modal: {
       position: 'absolute' as 'absolute',
@@ -580,9 +581,9 @@ export default function Market() {
                           <Card className={isItemDisabled(allowlist) ? "disabled" : ""}>
                             <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
                               title={
-                                <Grid item display='flex' justifyContent='center'>
+                                <Grid item display='flex' justifyContent='center' alignItems='center'>
                                   <Typography>{allowlist.name}</Typography>
-                                  <Grid item display={allowlist.twitter ? "flex" : "none"} pl={2}>
+                                  <Grid item display={allowlist.twitter ? "flex" : "none"} justifySelf='center' pl={2}>
                                     <Link href={allowlist.twitter} target='_blank'>
                                       <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
                                     </Link>
@@ -592,12 +593,16 @@ export default function Market() {
                                       <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
                                     </Link>
                                   </Grid>
+                                  <Tooltip title={allowlist.description}>
+                                    <IconButton color='secondary'>
+                                      <InfoOutlined/>
+                                    </IconButton>
+                                  </Tooltip>
                                 </Grid>
                               }
                             />
-                            <CardMedia component='img' image={allowlist.image} alt='Allowlist'/>
+                            <CardMedia component='img' image={allowlist.image} style={{minHeight: 300}} alt='Allowlist'/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{allowlist.description}</Typography>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(allowlist)}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
