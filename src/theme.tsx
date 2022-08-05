@@ -240,7 +240,8 @@ let theme = createTheme({
     MuiChip: {
       styleOverrides: {
         root: {
-          backgroundColor: '#fdb904'
+          backgroundColor: 'white',
+          color: 'black'
         }
       }
     }
