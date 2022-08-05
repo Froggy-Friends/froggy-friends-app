@@ -584,12 +584,12 @@ export default function Market() {
                                 <Grid item display='flex' justifyContent='center' alignItems='center'>
                                   <Typography>{allowlist.name}</Typography>
                                   <Grid item display={allowlist.twitter ? "flex" : "none"} justifySelf='center' pl={2}>
-                                    <Link href={allowlist.twitter} target='_blank'>
+                                    <Link display='flex' href={allowlist.twitter} target='_blank'>
                                       <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
                                     </Link>
                                   </Grid>
                                   <Grid item display={allowlist.discord ? "flex" : "none"} pl={1}>
-                                    <Link href={allowlist.discord} target="_blank">
+                                    <Link display='flex' href={allowlist.discord} target="_blank">
                                       <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
                                     </Link>
                                   </Grid>
