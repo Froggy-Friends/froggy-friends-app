@@ -91,7 +91,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
       backgroundPosition: 'center',
       width: '100%',
       objectFit: 'cover',
-      minHeight: 300
+      minHeight: 300,
+      maxHeight: 300
     },
     modal: {
       position: 'absolute' as 'absolute',
