@@ -11,6 +11,7 @@ import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
 import { Check, Close, OpenInNew, Warning } from '@mui/icons-material';
 import axios from 'axios';
+import { formatDistance } from 'date-fns';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ribbit from '../images/ribbit.gif';
 import biz from '../images/biz.png';
@@ -219,6 +220,10 @@ export default function Market() {
 
     if (!item.isOnSale) {
       return "Off Market";
+    }
+
+    if (item.category === 'raffles' && item.endDate) {
+      return "Ends in " + formatDistance(new Date(), new Date(item.endDate));
     }
 
     return `${item.supply - item.minted} / ${item.supply} Available`;
@@ -509,8 +514,7 @@ export default function Market() {
                 <Fragment>
                   <Grid item xl={12}>
                     <Typography variant='subtitle1' color='secondary' pb={1}>
-                      Purchase raffle tickets for community owned NFTs with $RIBBIT.
-                      <br/>Each ticket is a 10% chance of winning a random community owned NFT.
+                      Purchase raffle tickets for various items with $RIBBIT.
                     </Typography>
                   </Grid>
                   <Grid id='raffles' container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
