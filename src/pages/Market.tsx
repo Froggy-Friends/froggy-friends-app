@@ -322,7 +322,13 @@ export default function Market() {
         </Grid>
         <Grid id='item-link' p={2} zIndex={0}>
           <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{padding: 1}}/>}>
-            <Link href='https://opensea.io/account/ribbit-items' variant='subtitle1' color='inherit' underline='none' target='_blank' p={0.5}>Purchased Items</Link>
+            <Link href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x46898f15f99b8887d87669ab19d633f579939ad9&chain=mainnet'
+              variant='subtitle1' color='inherit' underline='none' target='_blank' p={0.5}>
+                Purchase $RIBBIT
+            </Link>
+          </Button>
+          <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{padding: 1}}/>}>
+            <Link href='https://opensea.io/account/ribbit-items' variant='subtitle1' color='inherit' underline='none' target='_blank' p={0.5}>View on Opensea</Link>
           </Button>
         </Grid>
       </Grid>
