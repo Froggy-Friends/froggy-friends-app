@@ -214,7 +214,8 @@ let theme = createTheme({
     MuiTooltip: {
       styleOverrides: {
         tooltipPlacementBottom: {
-          backgroundColor: 'transparent'
+          backgroundColor: '#181818',
+          color: '#ebedf1'
         }
       }
     },
@@ -240,7 +241,8 @@ let theme = createTheme({
     MuiChip: {
       styleOverrides: {
         root: {
-          backgroundColor: '#fdb904'
+          backgroundColor: '#fece07',
+          color: 'black'
         }
       }
     }

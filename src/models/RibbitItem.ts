@@ -8,6 +8,7 @@ export interface RibbitItem {
   twitter: string;
   discord: string;
   community: boolean;
+  endDate: number;
   image: string;
   previewImage: string;
   price: number;
