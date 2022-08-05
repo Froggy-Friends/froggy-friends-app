@@ -533,7 +533,30 @@ export default function Market() {
                       filterItems('raffles').map((raffle, index) => {
                         return <Grid key={index} item xl={2} lg={3} md={4} sm={6} xs={12} p={2} minHeight={450}>
                                 <Card className={isItemDisabled(raffle) ? "disabled" : ""}>
-                                  <CardHeader title={raffle.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
+                                  <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
+                                    title={
+                                      <Grid item display='flex' justifyContent='center' alignItems='center'>
+                                        <Typography>{raffle.name}</Typography>
+                                        <Grid item display={raffle.twitter ? "flex" : "none"} justifySelf='center' pl={2}>
+                                          <Link display='flex' href={raffle.twitter} target='_blank'>
+                                            <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
+                                          </Link>
+                                        </Grid>
+                                        <Grid item display={raffle.discord ? "flex" : "none"} pl={1}>
+                                          <Link display='flex' href={raffle.discord} target="_blank">
+                                            <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
+                                          </Link>
+                                        </Grid>
+                                        <Grid item display={raffle.twitter ? "flex" : "none"}>
+                                          <Tooltip title={raffle.description}>
+                                            <IconButton color='secondary'>
+                                              <InfoOutlined/>
+                                            </IconButton>
+                                          </Tooltip>
+                                        </Grid>
+                                      </Grid>
+                                    }
+                                  />
                                   <CardMedia component={() =>
                                       <Grid className={classes.cardMedia} container>
                                         { raffle.community && <Chip className={classes.community} label="community"/> }
