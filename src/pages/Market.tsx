@@ -641,7 +641,18 @@ export default function Market() {
                     filterItems('merch').map((merch, index) => {
                       return <Grid key={index} item xl={3} lg={3} md={4} sm={5} xs={12} p={2} minHeight={450}>
                         <Card className={isItemDisabled(merch) ? "disabled" : ""}>
-                          <CardHeader title={merch.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
+                          <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
+                              title={
+                                <Grid item display='flex' justifyContent='center' alignItems='center'>
+                                  <Typography>{merch.name}</Typography>
+                                  <Tooltip title={merch.description}>
+                                    <IconButton color='secondary'>
+                                      <InfoOutlined/>
+                                    </IconButton>
+                                  </Tooltip>
+                                </Grid>
+                              }
+                            />
                           <CardMedia component={() =>
                               <Grid className={classes.cardMedia} container>
                                 { merch.community && <Chip className={classes.community} label="community"/> }
