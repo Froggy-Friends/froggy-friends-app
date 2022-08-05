@@ -396,10 +396,14 @@ export default function Market() {
                   return <Grid key={index} item p={2} minHeight={450} xl={2} lg={3} md={4} sm={6} xs={12}>
                           <Card className={isItemDisabled(friend) ? "disabled" : ""}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                            <CardMedia component='img' image={friend.previewImage} alt='Genesis Friend'/>
+                            <CardMedia component={() =>
+                                <Grid className={classes.cardMedia} container>
+                                  <Chip className={classes.community} label={friend.percentage + "% Boost"}/>
+                                  <img className={classes.cardMediaImage} src={friend.previewImage} alt='Genesis Friend'/>
+                                </Grid>
+                            }/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(friend)}</Typography>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{friend.percentage}% Boost</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(friend.price)}</Typography>
@@ -429,7 +433,12 @@ export default function Market() {
                   return <Grid key={index} item p={2} minHeight={450} xl={2} lg={3} md={4} sm={6} xs={12}>
                           <Card className={isItemDisabled(friend) ? "disabled" : ""}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                            <CardMedia component='img' image={friend.previewImage} alt='Collab Friend'/>
+                            <CardMedia component={() =>
+                                <Grid className={classes.cardMedia} container>
+                                  <Chip className={classes.community} label={friend.percentage + "% Boost"}/>
+                                  <img className={classes.cardMediaImage} src={friend.previewImage} alt='Collab Friend'/>
+                                </Grid>
+                            }/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(friend)}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
