@@ -574,6 +574,7 @@ export default function Market() {
                                     <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                       <Typography>{commify(raffle.price)}</Typography>
+                                      <Typography pl={2}>{raffle.minted} entered</Typography>
                                     </Grid>
                                     <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={isItemDisabled(raffle)}>
                                       <AddShoppingCartIcon/>
