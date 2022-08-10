@@ -18,5 +18,6 @@ export interface RibbitItem {
   walletLimit: number;
   isBoost: boolean;
   isOnSale: boolean;
+  amount: number;
   attributes: Attribute[];
 }
