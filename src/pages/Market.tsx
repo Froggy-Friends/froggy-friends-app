@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, Slider } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { commify, formatEther } from '@ethersproject/units';
@@ -122,6 +122,7 @@ export default function Market() {
   const [showAll, setShowAll] = useState(false);
   const [loadingItems, setLoadingItems] = useState(false);
   const [items, setItems] = useState<RibbitItem[]>([]);
+  const [itemAmounts, setItemAmounts] = useState(new Map<number,number>());
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showAlert, setShowAlert] = useState(false);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
@@ -235,8 +236,19 @@ export default function Market() {
     setValue(newValue);
   };
 
+  const updateItemAmounts = (key: number, value: number) => {
+    setItemAmounts(map => new Map(map.set(key, value)));
+  }
+
+  const onRaffleTicketChange = (event: Event, amount: number | number[], item: RibbitItem) => {
+    updateItemAmounts(item.id, amount as number);
+  }
+
   const onBuyItem = (item: RibbitItem) => {
-    dispatch(add(item));
+    const ribbitItem = {...item};
+    ribbitItem.amount = itemAmounts.get(ribbitItem.id) || 1;
+    dispatch(add(ribbitItem));
+    updateItemAmounts(ribbitItem.id, 0);
   }
 
   const onBuyCollabItem = async (item: RibbitItem) => {
@@ -576,6 +588,17 @@ export default function Market() {
                                       <Typography>{commify(raffle.price)}</Typography>
                                       <Typography pl={2}>{raffle.minted} entered</Typography>
                                     </Grid>
+                                    <Slider 
+                                      aria-label='Raffle' 
+                                      value={itemAmounts.get(raffle.id)}
+                                      onChange={(event: Event, value: number | number[]) => onRaffleTicketChange(event, value, raffle)} 
+                                      valueLabelDisplay='auto'
+                                      defaultValue={1} 
+                                      step={1} 
+                                      marks 
+                                      min={1} 
+                                      max={50}
+                                    />
                                     <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={isItemDisabled(raffle)}>
                                       <AddShoppingCartIcon/>
                                     </Button>
