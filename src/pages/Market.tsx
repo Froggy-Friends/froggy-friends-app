@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
@@ -131,6 +131,7 @@ export default function Market() {
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const isSpendingApproved = useSpendingApproved(account ?? '');
   const ribbitBalance: BigNumber | undefined = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account);
+  const maxItemAmounts = 200;
 
   useEffect(() => {
     getItems();
@@ -312,6 +313,30 @@ export default function Market() {
     const etherFormat = formatEther(balance);
     const number = +etherFormat;
     return commify(number.toFixed(2));
+  }
+
+  const onTicketDecrement = (item: RibbitItem) => {
+    const value = itemAmounts.get(item.id) || 0;
+    if (value === 0) {
+      return;
+    }
+    updateItemAmounts(item.id, value-1);
+  }
+
+  const onTicketIncrement = (item: RibbitItem) => {
+    const value = itemAmounts.get(item.id) || 0;
+    if (value === maxItemAmounts) {
+      return;
+    }
+    updateItemAmounts(item.id, value+1);
+  }
+
+  const onItemAmountsChange = (event: React.ChangeEvent<HTMLInputElement>, item: RibbitItem) => {
+    const value = +event.target.value;
+    if (isNaN(value) || value > maxItemAmounts) {
+      return;
+    }
+    updateItemAmounts(item.id, value);
   }
 
   return (
@@ -593,19 +618,20 @@ export default function Market() {
                                         id='tickets' 
                                         label='Tickets'
                                         color='secondary'
-                                        defaultValue={1}
                                         focused
+                                        value={itemAmounts.get(raffle.id) || 0}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => onItemAmountsChange(event, raffle)}
                                         InputProps={{
                                           startAdornment: (
                                             <InputAdornment position='start'>
-                                              <IconButton color='secondary'>
+                                              <IconButton color='secondary' onClick={() => onTicketDecrement(raffle)}>
                                                 <RemoveCircle/>
                                               </IconButton>
                                             </InputAdornment>
                                           ),
                                           endAdornment: (
                                             <InputAdornment position='end'>
-                                              <IconButton color='secondary'>
+                                              <IconButton color='secondary' onClick={() => onTicketIncrement(raffle)}>
                                                 <AddCircle/>
                                               </IconButton>
                                             </InputAdornment>
