@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, Slider } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { commify, formatEther } from '@ethersproject/units';
@@ -9,7 +9,7 @@ import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client'
 import { marketplaceUrl } from '../data';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { Check, Close, InfoOutlined, OpenInNew, Warning } from '@mui/icons-material';
+import { AddCircle, Check, Close, InfoOutlined, OpenInNew, RemoveCircle, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import { formatDistance } from 'date-fns';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -132,12 +132,24 @@ export default function Market() {
   const isSpendingApproved = useSpendingApproved(account ?? '');
   const ribbitBalance: BigNumber | undefined = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account);
 
+  useEffect(() => {
+    getItems();
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getItemsBackground();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [])
+
   async function getItems() {
     try {
       setLoadingItems(true);
       const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
       let items = response.data;
       setItems(items);
+      setItemAmounts(new Map(items.map(item => [item.id, 0])));
       setLoadingItems(false);
     } catch (error) {
       setLoadingItems(false);
@@ -183,17 +195,6 @@ export default function Market() {
       setShowPurchaseModal(true);
     }
   }, [collabBuyState])
-
-  useEffect(() => {
-    getItems();
-  }, [])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getItemsBackground();
-    }, 30000);
-    return () => clearInterval(interval);
-  }, [])
 
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, filter: boolean) => {
     if (filter === null) return;
@@ -428,7 +429,6 @@ export default function Market() {
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(friend.price)}</Typography>
                               </Grid>
-                              {/* TODO: Add amount slider with friend.limit max */}
                               <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={isItemDisabled(friend)}>
                                 <AddShoppingCartIcon/>
                               </Button>
@@ -588,17 +588,31 @@ export default function Market() {
                                       <Typography>{commify(raffle.price)}</Typography>
                                       <Typography pl={2}>{raffle.minted} entered</Typography>
                                     </Grid>
-                                    <Slider 
-                                      aria-label='Raffle' 
-                                      value={itemAmounts.get(raffle.id)}
-                                      onChange={(event: Event, value: number | number[]) => onRaffleTicketChange(event, value, raffle)} 
-                                      valueLabelDisplay='auto'
-                                      defaultValue={1} 
-                                      step={1} 
-                                      marks 
-                                      min={1} 
-                                      max={50}
-                                    />
+                                    <Grid item display='flex' justifyContent='center' alignItems='center' pb={2}>
+                                      <TextField 
+                                        id='tickets' 
+                                        label='Tickets'
+                                        color='secondary'
+                                        defaultValue={1}
+                                        focused
+                                        InputProps={{
+                                          startAdornment: (
+                                            <InputAdornment position='start'>
+                                              <IconButton color='secondary'>
+                                                <RemoveCircle/>
+                                              </IconButton>
+                                            </InputAdornment>
+                                          ),
+                                          endAdornment: (
+                                            <InputAdornment position='end'>
+                                              <IconButton color='secondary'>
+                                                <AddCircle/>
+                                              </IconButton>
+                                            </InputAdornment>
+                                          )
+                                        }}  
+                                      />
+                                    </Grid>
                                     <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={isItemDisabled(raffle)}>
                                       <AddShoppingCartIcon/>
                                     </Button>
