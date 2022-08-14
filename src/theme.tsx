@@ -249,9 +249,9 @@ let theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          color: 'white',
           input: {
-            textAlign: 'center'
+            textAlign: 'center',
+            color: 'white'
           }
         }
       }

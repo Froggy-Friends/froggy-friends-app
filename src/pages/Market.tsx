@@ -617,21 +617,20 @@ export default function Market() {
                                       <TextField 
                                         id='tickets' 
                                         label='Tickets'
-                                        color='secondary'
-                                        focused
+                                        color='primary'
                                         value={itemAmounts.get(raffle.id) || 0}
                                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => onItemAmountsChange(event, raffle)}
                                         InputProps={{
                                           startAdornment: (
                                             <InputAdornment position='start'>
-                                              <IconButton color='secondary' onClick={() => onTicketDecrement(raffle)}>
+                                              <IconButton color='primary' onClick={() => onTicketDecrement(raffle)}>
                                                 <RemoveCircle/>
                                               </IconButton>
                                             </InputAdornment>
                                           ),
                                           endAdornment: (
                                             <InputAdornment position='end'>
-                                              <IconButton color='secondary' onClick={() => onTicketIncrement(raffle)}>
+                                              <IconButton color='primary' onClick={() => onTicketIncrement(raffle)}>
                                                 <AddCircle/>
                                               </IconButton>
                                             </InputAdornment>
