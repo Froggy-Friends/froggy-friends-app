@@ -245,6 +245,16 @@ let theme = createTheme({
           color: 'black'
         }
       }
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          color: 'white',
+          input: {
+            textAlign: 'center'
+          }
+        }
+      }
     }
   }
 });
