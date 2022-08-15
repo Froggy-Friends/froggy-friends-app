@@ -56,6 +56,7 @@ export default function Header() {
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const isTablet = useMediaQuery(theme.breakpoints.up('sm'));
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const isTinyMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isMarket = location.pathname === "/market";
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
   const [musicOpen, setMusicOpen] = useState<boolean>(false);
@@ -103,7 +104,7 @@ export default function Header() {
         <AppBar position="fixed">
           <Toolbar disableGutters>
             <Grid id="header" container item justifyContent="space-between" alignItems="center" pl={isMobile ? 2 : 4} pr={isMobile ? 2 : 4} xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid id='logo' container item justifyContent="start" xl={3} lg={3} md={3} sm={6} xs={2}>
+              <Grid id='logo' container item display={isTinyMobile ? "none" : "flex"} justifyContent="start" xl={3} lg={3} md={3} sm={6} xs={2}>
                 <Link href={REACT_APP_WEBSITE_URL} underline='none'>
                   <Avatar className={classes.avatar} alt='Home' src={logo} sx={{width: 65, height: 65}}/>
                 </Link>
