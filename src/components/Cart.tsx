@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Fade, Grid, Typography, CardMedia, IconButton, Button, createStyles, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar, useTheme } from "@mui/material";
+import { Fade, Grid, Typography, CardMedia, IconButton, Button, createStyles, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar, useTheme, useMediaQuery } from "@mui/material";
 import { BigNumber } from 'ethers';
 import { commify, formatEther } from "ethers/lib/utils";
 import { cartItems, cartOpen, empty, remove, toggle } from '../redux/cartSlice';
@@ -77,7 +77,7 @@ export default function Cart() {
   const isSpendingApproved = useSpendingApproved(account ?? '');
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const { bundleBuy, bundleBuyState } = useBundleBuy();
-  
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
   
   useEffect(() => {
     if (approveSpenderState.status === "Exception" || approveSpenderState.status === "Fail") {
@@ -117,7 +117,7 @@ export default function Cart() {
 
   useEffect(() => {
     if (items) {
-      const total = items.reduce((acc, item) => { return acc + item.price}, 0);
+      const total = items.reduce((acc, item) => { return acc + (item.price * item.amount)}, 0);
       setTotal(total);
 
       const etherFormat = formatEther(ribbitBalance);
@@ -175,7 +175,7 @@ export default function Cart() {
 
       // buy bundle items
       const ids = items.map(item => item.id);
-      const amounts = Array(items.length).fill(1);
+      const amounts = items.map(item => item.amount);
       await bundleBuy(ids, amounts);
     } catch (error) {
       console.log("checkout error: ", error);
@@ -216,25 +216,28 @@ export default function Cart() {
               }}>
               {
                 items.length === 0 && 
-                <Typography variant='h6'>
-                  Add items to your cart using the add to cart button
-                  <Button variant='contained' size='small' color='success' sx={{marginLeft: theme.spacing(1)}}>
+                <Typography variant='h6' color='secondary'>
+                  Click the add to cart button
+                  <Button variant='contained' size='small' color='success' sx={{marginLeft: theme.spacing(1), marginRight: theme.spacing(1)}}>
                     <AddShoppingCart/>
                   </Button>
+                  on any item to see it here
                 </Typography>
               }
               {
                 items.map((item, index) => {
                   return <Grid className={classes.cartItem} key={index} container item mb={1} xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <Grid id='item-image' item p={1} xl={2} lg={2} md={1} sm={1} xs={2}>
+                      <Grid id='item-image' display={isXs ? "none" : "flex"} item p={1} xl={2} lg={2} md={1} sm={1}>
                         <CardMedia component="img" image={item.image} alt={item.name}/>
                       </Grid>
-                      <Grid id='item-title' item justifySelf="start" xl={5} lg={5} md={5} sm={5} xs={4}>
-                        <Typography variant='subtitle1' color='secondary' pl={2}>{item.name}</Typography>
+                      <Grid id='item-title' item justifySelf="start" xl={6} lg={6} md={6} sm={6} xs={6}>
+                        <Typography variant='subtitle1' color='secondary' pl={1}>
+                          { item.category === 'raffles' ? `${item.name} (${item.amount} tickets)` : item.name }
+                        </Typography>
                       </Grid>
-                      <Grid item display='flex' p={1} xl={3} lg={3} md={4} sm={4} xs={4}>
+                      <Grid item display='flex' justifyContent='center' p={1} xl={2} lg={2} md={3} sm={3} xs={4}>
                         <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                        <Typography variant='subtitle1'>{commify(item.price)}</Typography>
+                        <Typography variant='subtitle1'>{commify(item.price * item.amount)}</Typography>
                       </Grid>
                       <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={2}>
                         <IconButton size='small' color='primary' onClick={() => onRemoveItem(item)}>
@@ -313,7 +316,7 @@ export default function Cart() {
             !isSpendingApproved && 
             <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${approveSpenderState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
               <Typography id='modal-description' variant="h6" p={3}>
-                Grant Ribbit Prime Permissions {approveSpenderState.status === "Success" && <Check/>} {approveSpenderState.status === "Fail" && <Warning/>}
+                Grant Ribbit Market Permissions {approveSpenderState.status === "Success" && <Check/>} {approveSpenderState.status === "Fail" && <Warning/>}
               </Typography>
             </Link>
           }

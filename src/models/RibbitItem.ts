@@ -7,6 +7,8 @@ export interface RibbitItem {
   collabId: number;
   twitter: string;
   discord: string;
+  community: boolean;
+  endDate: number;
   image: string;
   previewImage: string;
   price: number;
@@ -16,5 +18,6 @@ export interface RibbitItem {
   walletLimit: number;
   isBoost: boolean;
   isOnSale: boolean;
+  amount: number;
   attributes: Attribute[];
 }

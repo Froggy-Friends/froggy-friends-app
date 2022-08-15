@@ -1,15 +1,17 @@
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { commify, formatEther } from '@ethersproject/units';
+import { BigNumber } from 'ethers';
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client';
 import { marketplaceUrl } from '../data';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { Check, Close, OpenInNew, Warning } from '@mui/icons-material';
+import { AddCircle, Check, Close, InfoOutlined, OpenInNew, RemoveCircle, Warning } from '@mui/icons-material';
 import axios from 'axios';
+import { formatDistance } from 'date-fns';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ribbit from '../images/ribbit.gif';
 import biz from '../images/biz.png';
@@ -72,6 +74,26 @@ const useStyles: any = makeStyles((theme: Theme) =>
         paddingRight: theme.spacing(6)
       }
     },
+    cardMedia: {
+      position: 'relative',
+    },
+    community: {
+      position: 'absolute',
+      top: 0,
+      backgroundColor: '#ebca27',
+      marginTop: theme.spacing(1),
+      marginLeft: theme.spacing(1)
+    },
+    cardMediaImage: {
+      display: 'block',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+      width: '100%',
+      objectFit: 'cover',
+      minHeight: 300,
+      maxHeight: 300
+    },
     modal: {
       position: 'absolute' as 'absolute',
       top: '50%',
@@ -97,9 +119,10 @@ export default function Market() {
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useAppDispatch();
   const [value, setValue] = useState(0);
-  const [showAll, setShowAll] = useState(true);
+  const [showAll, setShowAll] = useState(false);
   const [loadingItems, setLoadingItems] = useState(false);
   const [items, setItems] = useState<RibbitItem[]>([]);
+  const [itemAmounts, setItemAmounts] = useState(new Map<number,number>());
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showAlert, setShowAlert] = useState(false);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
@@ -107,7 +130,19 @@ export default function Market() {
   const { collabBuy, collabBuyState } = useCollabBuy();
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const isSpendingApproved = useSpendingApproved(account ?? '');
-  const ribbitBalance: any = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || 0;
+  const ribbitBalance: BigNumber | undefined = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account);
+  const maxItemAmounts = 1000;
+
+  useEffect(() => {
+    getItems();
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getItemsBackground();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [])
 
   async function getItems() {
     try {
@@ -115,6 +150,7 @@ export default function Market() {
       const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
       let items = response.data;
       setItems(items);
+      setItemAmounts(new Map(items.map(item => [item.id, 0])));
       setLoadingItems(false);
     } catch (error) {
       setLoadingItems(false);
@@ -161,17 +197,6 @@ export default function Market() {
     }
   }, [collabBuyState])
 
-  useEffect(() => {
-    getItems();
-  }, [])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getItemsBackground();
-    }, 30000);
-    return () => clearInterval(interval);
-  }, [])
-
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, filter: boolean) => {
     if (filter === null) return;
     setShowAll(filter);
@@ -202,6 +227,10 @@ export default function Market() {
       return "Off Market";
     }
 
+    if (item.category === 'raffles' && item.endDate) {
+      return "Ends in " + formatDistance(new Date(), new Date(item.endDate));
+    }
+
     return `${item.supply - item.minted} / ${item.supply} Available`;
   }
 
@@ -209,8 +238,19 @@ export default function Market() {
     setValue(newValue);
   };
 
+  const updateItemAmounts = (key: number, value: number) => {
+    setItemAmounts(map => new Map(map.set(key, value)));
+  }
+
+  const onRaffleTicketChange = (event: Event, amount: number | number[], item: RibbitItem) => {
+    updateItemAmounts(item.id, amount as number);
+  }
+
   const onBuyItem = (item: RibbitItem) => {
-    dispatch(add(item));
+    const ribbitItem = {...item};
+    ribbitItem.amount = itemAmounts.get(ribbitItem.id) || 1;
+    dispatch(add(ribbitItem));
+    updateItemAmounts(ribbitItem.id, 0);
   }
 
   const onBuyCollabItem = async (item: RibbitItem) => {
@@ -266,10 +306,37 @@ export default function Market() {
     }
   }
 
-  const formatBalance = (balance: any) => {
+  const formatBalance = (balance: BigNumber | undefined) => {
+    if (!balance) {
+      return 0;
+    }
     const etherFormat = formatEther(balance);
     const number = +etherFormat;
     return commify(number.toFixed(2));
+  }
+
+  const onTicketDecrement = (item: RibbitItem) => {
+    const value = itemAmounts.get(item.id) || 0;
+    if (value === 0) {
+      return;
+    }
+    updateItemAmounts(item.id, value-1);
+  }
+
+  const onTicketIncrement = (item: RibbitItem) => {
+    const value = itemAmounts.get(item.id) || 0;
+    if (value === maxItemAmounts) {
+      return;
+    }
+    updateItemAmounts(item.id, value+1);
+  }
+
+  const onItemAmountsChange = (event: React.ChangeEvent<HTMLInputElement>, item: RibbitItem) => {
+    const value = +event.target.value;
+    if (isNaN(value) || value > maxItemAmounts) {
+      return;
+    }
+    updateItemAmounts(item.id, value);
   }
 
   return (
@@ -293,7 +360,13 @@ export default function Market() {
         </Grid>
         <Grid id='item-link' p={2} zIndex={0}>
           <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{padding: 1}}/>}>
-            <Link href='https://opensea.io/account/ribbit-items' variant='subtitle1' color='inherit' underline='none' target='_blank' p={0.5}>Purchased Items</Link>
+            <Link href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x46898f15f99b8887d87669ab19d633f579939ad9&chain=mainnet'
+              variant='subtitle1' color='inherit' underline='none' target='_blank' p={0.5}>
+                Purchase $RIBBIT
+            </Link>
+          </Button>
+          <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{padding: 1}}/>}>
+            <Link href='https://opensea.io/account/ribbit-items' variant='subtitle1' color='inherit' underline='none' target='_blank' p={0.5}>View on Opensea</Link>
           </Button>
         </Grid>
       </Grid>
@@ -314,7 +387,6 @@ export default function Market() {
             <Tab label="Raffles" {...a11yProps('raffles')} />
             <Tab label="Allowlists" {...a11yProps('allowlists')} />
             <Tab label="Merch" {...a11yProps('merch')} />
-            <Tab label="Costumes" {...a11yProps('costumes')} />
           </Tabs>
           <TabPanel id='golden-lily-pad-panel' value={value} index={0}>
             <Typography variant='subtitle1' color='secondary' pb={1}>
@@ -326,10 +398,10 @@ export default function Market() {
                   Complimentary bud service at IRL events and more to come.
             </Typography>
             <Grid id="golden-lilies" container pt={3} pb={3}>
-              <Grid item xl={9} lg={12} md={12} sm={12} xs={12}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 {
                   filterItems('lilies').map((lily, index) => {
-                    return <Grid key={index} item xl={2.5} lg={2.5} md={3.5} sm={5} xs={12} minHeight={450}>
+                    return <Grid key={index} item xl={2} lg={3} md={4} sm={6} xs={12} minHeight={450}>
                             <Card className={isItemDisabled(lily) ? "disabled" : ""}>
                               <CardHeader title="Golden Lily Pad" titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
                               <CardMedia component='img' image={lily.image} alt='Golden Lily Pad'/>
@@ -364,21 +436,24 @@ export default function Market() {
             <Grid id='genesis-friends-title' item xl={12}>
               <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Genesis Friends</Typography>
             </Grid>
-            <Grid id='genesis-friends' container item pb={3} xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+            <Grid id='genesis-friends' container item pb={3} xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
                 filterItems('friends').map((friend, index) => { 
-                  return <Grid key={index} item p={2} minHeight={450} xl={2} lg={2} md={3} sm={4} xs={12}>
+                  return <Grid key={index} item p={2} minHeight={450} xl={2} lg={3} md={4} sm={6} xs={12}>
                           <Card className={isItemDisabled(friend) ? "disabled" : ""}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                            <CardMedia component='img' image={friend.previewImage} alt='Genesis Friend'/>
+                            <CardMedia component={() =>
+                                <Grid className={classes.cardMedia} container>
+                                  <Chip className={classes.community} label={friend.percentage + "% Boost"}/>
+                                  <img className={classes.cardMediaImage} src={friend.previewImage} alt='Genesis Friend'/>
+                                </Grid>
+                            }/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(friend)}</Typography>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{friend.percentage}% Boost</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(friend.price)}</Typography>
                               </Grid>
-                              {/* TODO: Add amount slider with friend.limit max */}
                               <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={isItemDisabled(friend)}>
                                 <AddShoppingCartIcon/>
                               </Button>
@@ -391,16 +466,24 @@ export default function Market() {
                 filterItems('friends').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
               }
             </Grid>
-            <Grid id='collab-friends-title' item xl={12}>
-              <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Collab Friends</Typography>
-            </Grid>
-            <Grid id="collab-friends" container item pb={3} xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+            {
+              filterItems('collabs').length > 0 &&
+              <Grid id='collab-friends-title' item xl={12}>
+                <Typography variant='h6' color='secondary' fontWeight='bold' pb={2}>Collab Friends</Typography>
+              </Grid>
+            }
+            <Grid id="collab-friends" container item pb={3} xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
                 filterItems('collabs').map((friend, index) => { 
-                  return <Grid key={index} item p={2} minHeight={450} xl={2} lg={2} md={3} sm={4} xs={12}>
+                  return <Grid key={index} item p={2} minHeight={450} xl={2} lg={3} md={4} sm={6} xs={12}>
                           <Card className={isItemDisabled(friend) ? "disabled" : ""}>
                             <CardHeader title={`${friend.name}`} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                            <CardMedia component='img' image={friend.previewImage} alt='Collab Friend'/>
+                            <CardMedia component={() =>
+                                <Grid className={classes.cardMedia} container>
+                                  <Chip className={classes.community} label={friend.percentage + "% Boost"}/>
+                                  <img className={classes.cardMediaImage} src={friend.previewImage} alt='Collab Friend'/>
+                                </Grid>
+                            }/>
                             <CardContent>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(friend)}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
@@ -414,76 +497,165 @@ export default function Market() {
                           </Card>
                         </Grid> 
                 })
-              },
-              {
-                filterItems('collabs').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
               }
             </Grid>
           </TabPanel>
           <TabPanel id='nfts-panel' value={value} index={2}>
-            <Grid item xl={12}>
-              <Typography variant='subtitle1' color='secondary' pb={1}>
-                Purchase community owned NFTs with $RIBBIT.
-              </Typography>
-            </Grid>
-            <Grid id='nfts' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
-              {
-                filterItems('nfts').map((nft, index) => {
-                  return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
-                          <Card className={isItemDisabled(nft) ? "disabled" : ""}>
-                            <CardHeader title={nft.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                            <CardMedia component='img' image={nft.image} alt='NFT'/>
-                            <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(nft)}</Typography>
-                              <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                <Typography>{commify(nft.price)}</Typography>
-                              </Grid>
-                              <Button variant='contained' color='success' onClick={() => onBuyItem(nft)} disabled={isItemDisabled(nft)}>
-                                <AddShoppingCartIcon/>
-                              </Button>
-                            </CardContent>
-                          </Card>
-                        </Grid> 
-                })
-              }
-              {
-                filterItems('nfts').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
-              }
-            </Grid>
+            {
+              filterItems('nfts').length > 0 &&
+              <Fragment>
+                <Grid item xl={12}>
+                  <Typography variant='subtitle1' color='secondary' pb={1}>
+                    Purchase community owned NFTs with $RIBBIT.
+                  </Typography>
+                </Grid>
+                <Grid id='nfts' container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                  {
+                    filterItems('nfts').map((nft, index) => {
+                      return <Grid key={index} item xl={2} lg={3} md={4} sm={6} xs={12} p={2} minHeight={450}>
+                              <Card className={isItemDisabled(nft) ? "disabled" : ""}>
+                                <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
+                                  title={
+                                    <Grid item display='flex' justifyContent='center'>
+                                      <Typography>{nft.name}</Typography>
+                                      <Grid item display={nft.twitter ? "flex" : "none"} pl={2}>
+                                        <Link href={nft.twitter} target='_blank'>
+                                          <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
+                                        </Link>
+                                      </Grid>
+                                      <Grid item display={nft.discord ? "flex" : "none"} pl={1}>
+                                        <Link href={nft.discord} target="_blank">
+                                          <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
+                                        </Link>
+                                      </Grid>
+                                    </Grid>
+                                  }
+                                />
+                                <CardMedia component={() =>
+                                      <Grid className={classes.cardMedia} container>
+                                        { nft.community && <Chip className={classes.community} label="community"/> }
+                                        <img className={classes.cardMediaImage} src={nft.image} alt='NFT'/>
+                                      </Grid>
+                                  }/>
+                                <CardContent>
+                                  <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(nft)}</Typography>
+                                  <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
+                                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                    <Typography>{commify(nft.price)}</Typography>
+                                  </Grid>
+                                  <Button variant='contained' color='success' onClick={() => onBuyItem(nft)} disabled={isItemDisabled(nft)}>
+                                    <AddShoppingCartIcon/>
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            </Grid> 
+                    })
+                  }
+                </Grid>
+              </Fragment>
+            }
+            {
+              filterItems('nfts').length === 0 &&
+              <Grid container direction="column" alignItems="center">
+                <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>NFTs Coming Soon</Typography>
+                <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
+              </Grid>
+            }
           </TabPanel>
           <TabPanel id='raffles-panel' value={value} index={3}>
-            <Grid item xl={12}>
-              <Typography variant='subtitle1' color='secondary' pb={1}>
-                Purchase raffle tickets for community owned NFTs with $RIBBIT.
-                <br/>Each ticket is a 10% chance of winning a random community owned NFT.
-              </Typography>
-            </Grid>
-            <Grid id='raffles' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
               {
-                filterItems('raffles').map((raffle, index) => {
-                  return <Grid key={index} item xl={2} lg={2} md={3} sm={4} xs={12} p={2} minHeight={450}>
-                          <Card className={isItemDisabled(raffle) ? "disabled" : ""}>
-                            <CardHeader title={raffle.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                            <CardMedia component='img' image={raffle.image} alt='Raffle'/>
-                            <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
-                              <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
-                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                <Typography>{commify(raffle.price)}</Typography>
-                              </Grid>
-                              <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={isItemDisabled(raffle)}>
-                                <AddShoppingCartIcon/>
-                              </Button>
-                            </CardContent>
-                          </Card>
-                        </Grid> 
-                })
+                filterItems('raffles').length > 0 &&
+                <Fragment>
+                  <Grid item xl={12}>
+                    <Typography variant='subtitle1' color='secondary' pb={1}>
+                      Purchase raffle tickets for various items with $RIBBIT.
+                    </Typography>
+                  </Grid>
+                  <Grid id='raffles' container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                    {
+                      filterItems('raffles').map((raffle, index) => {
+                        return <Grid key={index} item xl={2} lg={3} md={4} sm={6} xs={12} p={2} minHeight={450}>
+                                <Card className={isItemDisabled(raffle) ? "disabled" : ""}>
+                                  <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
+                                    title={
+                                      <Grid item display='flex' justifyContent='center' alignItems='center'>
+                                        <Typography>{raffle.name}</Typography>
+                                        <Grid item display={raffle.twitter ? "flex" : "none"} justifySelf='center' pl={2}>
+                                          <Link display='flex' href={raffle.twitter} target='_blank'>
+                                            <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
+                                          </Link>
+                                        </Grid>
+                                        <Grid item display={raffle.discord ? "flex" : "none"} pl={1}>
+                                          <Link display='flex' href={raffle.discord} target="_blank">
+                                            <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
+                                          </Link>
+                                        </Grid>
+                                        <Grid item display={raffle.twitter ? "flex" : "none"}>
+                                          <Tooltip title={raffle.description}>
+                                            <IconButton color='secondary'>
+                                              <InfoOutlined/>
+                                            </IconButton>
+                                          </Tooltip>
+                                        </Grid>
+                                      </Grid>
+                                    }
+                                  />
+                                  <CardMedia component={() =>
+                                      <Grid className={classes.cardMedia} container>
+                                        { raffle.community && <Chip className={classes.community} label="community"/> }
+                                        <img className={classes.cardMediaImage} src={raffle.image} alt='NFT'/>
+                                      </Grid>
+                                  }/>
+                                  <CardContent>
+                                    <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
+                                    <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
+                                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                      <Typography>{commify(raffle.price * (itemAmounts.get(raffle.id) || 1))}</Typography>
+                                      <Typography pl={2}>{raffle.minted} entered</Typography>
+                                    </Grid>
+                                    <Grid item display='flex' justifyContent='center' alignItems='center' pb={2}>
+                                      <TextField 
+                                        id='tickets' 
+                                        label='Tickets'
+                                        color='primary'
+                                        value={itemAmounts.get(raffle.id) || 0}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => onItemAmountsChange(event, raffle)}
+                                        InputProps={{
+                                          startAdornment: (
+                                            <InputAdornment position='start'>
+                                              <IconButton color='primary' onClick={() => onTicketDecrement(raffle)}>
+                                                <RemoveCircle/>
+                                              </IconButton>
+                                            </InputAdornment>
+                                          ),
+                                          endAdornment: (
+                                            <InputAdornment position='end'>
+                                              <IconButton color='primary' onClick={() => onTicketIncrement(raffle)}>
+                                                <AddCircle/>
+                                              </IconButton>
+                                            </InputAdornment>
+                                          )
+                                        }}  
+                                      />
+                                    </Grid>
+                                    <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={isItemDisabled(raffle)}>
+                                      <AddShoppingCartIcon/>
+                                    </Button>
+                                  </CardContent>
+                                </Card>
+                              </Grid> 
+                      })
+                    }
+                  </Grid>
+                </Fragment>
               }
               {
-                filterItems('raffles').length === 0 && <Typography variant='h4' color='secondary' pl={2}>No items available</Typography>
+                filterItems('raffles').length === 0 && 
+                <Grid container direction="column" alignItems="center">
+                  <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Raffles Coming Soon</Typography>
+                  <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
+                </Grid>
               }
-            </Grid>
           </TabPanel>
           <TabPanel id='allowlists-panel' value={value} index={4}>
             {
@@ -495,31 +667,35 @@ export default function Market() {
                   NFA, DYOR. Allowlists listed are not endorsements of projects. 
                 </Typography>
                 </Grid>
-                <Grid id='allowlists' container item xl={9} lg={12} md={12} sm={12} xs={12} ml={-2}>
+                <Grid id='allowlists' container item xl={12} lg={12} md={12} sm={12} xs={12} ml={-2}>
                     {
                       filterItems('allowlists').map((allowlist, index) => {
-                        return <Grid key={index} item xl={2.5} lg={2.5} md={3.5} sm={5} xs={12} p={2} minHeight={500}>
+                        return <Grid key={index} item xl={2} lg={3} md={4} sm={6} xs={12} p={2} minHeight={500}>
                           <Card className={isItemDisabled(allowlist) ? "disabled" : ""}>
                             <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
                               title={
-                                <Grid item display='flex' justifyContent='center'>
+                                <Grid item display='flex' justifyContent='center' alignItems='center'>
                                   <Typography>{allowlist.name}</Typography>
-                                  <Grid item display={allowlist.twitter ? "flex" : "none"} pl={2}>
-                                    <Link href={allowlist.twitter} target='_blank'>
+                                  <Grid item display={allowlist.twitter ? "flex" : "none"} justifySelf='center' pl={2}>
+                                    <Link display='flex' href={allowlist.twitter} target='_blank'>
                                       <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
                                     </Link>
                                   </Grid>
                                   <Grid item display={allowlist.discord ? "flex" : "none"} pl={1}>
-                                    <Link href={allowlist.discord} target="_blank">
+                                    <Link display='flex' href={allowlist.discord} target="_blank">
                                       <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
                                     </Link>
                                   </Grid>
+                                  <Tooltip title={allowlist.description}>
+                                    <IconButton color='secondary'>
+                                      <InfoOutlined/>
+                                    </IconButton>
+                                  </Tooltip>
                                 </Grid>
                               }
                             />
-                            <CardMedia component='img' image={allowlist.image} alt='Allowlist'/>
+                            <CardMedia component='img' image={allowlist.image} style={{minHeight: 300}} alt='Allowlist'/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{allowlist.description}</Typography>
                               <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(allowlist)}</Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
@@ -558,11 +734,32 @@ export default function Market() {
                     filterItems('merch').map((merch, index) => {
                       return <Grid key={index} item xl={3} lg={3} md={4} sm={5} xs={12} p={2} minHeight={450}>
                         <Card className={isItemDisabled(merch) ? "disabled" : ""}>
-                          <CardHeader title={merch.name} titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}/>
-                          <CardMedia component='img' image={merch.image} alt='Merch'/>
+                          <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
+                              title={
+                                <Grid item display='flex' justifyContent='center' alignItems='center'>
+                                  <Typography>{merch.name}</Typography>
+                                  <Grid item display={merch.twitter ? "flex" : "none"} justifySelf='center' pl={2}>
+                                    <Link display='flex' href={merch.twitter} target='_blank'>
+                                      <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
+                                    </Link>
+                                  </Grid>
+                                  <Tooltip title={merch.description}>
+                                    <IconButton color='secondary'>
+                                      <InfoOutlined/>
+                                    </IconButton>
+                                  </Tooltip>
+                                </Grid>
+                              }
+                            />
+                          <CardMedia component={() =>
+                              <Grid className={classes.cardMedia} container>
+                                { merch.community && <Chip className={classes.community} label="community"/> }
+                                <img className={classes.cardMediaImage} src={merch.image} alt='NFT'/>
+                              </Grid>
+                          }/>
                           <CardContent>
                             <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(merch)}</Typography>
-                            <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                            <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
                               <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                               <Typography>{commify(merch.price)}</Typography>
                             </Grid>
@@ -584,12 +781,6 @@ export default function Market() {
                 <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
               </Grid>
             }
-          </TabPanel>
-          <TabPanel id='costumes-panel' value={value} index={6}>
-            <Grid container direction="column" alignItems="center">
-              <Typography variant='h4' color='secondary' fontWeight='bold' pb={5}>Costumes Coming Soon</Typography>
-              <img src={biz} alt="Coming Soon" style={{height: 200, width: 200}}/>
-            </Grid>
           </TabPanel>
         </Grid>
       </Grid>
@@ -630,7 +821,7 @@ export default function Market() {
             !isSpendingApproved && 
             <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${approveSpenderState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
               <Typography id='modal-description' variant="h6" p={3}>
-                Grant Ribbit Prime Permissions {approveSpenderState.status === "Success" && <Check/>} {approveSpenderState.status === "Fail" && <Warning/>}
+                Grant Ribbit Market Permissions {approveSpenderState.status === "Success" && <Check/>} {approveSpenderState.status === "Fail" && <Warning/>}
               </Typography>
             </Link>
           }
