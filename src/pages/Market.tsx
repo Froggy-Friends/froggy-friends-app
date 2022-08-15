@@ -131,7 +131,7 @@ export default function Market() {
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const isSpendingApproved = useSpendingApproved(account ?? '');
   const ribbitBalance: BigNumber | undefined = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account);
-  const maxItemAmounts = 200;
+  const maxItemAmounts = 1000;
 
   useEffect(() => {
     getItems();
@@ -610,7 +610,7 @@ export default function Market() {
                                     <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
                                     <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                      <Typography>{commify(raffle.price)}</Typography>
+                                      <Typography>{commify(raffle.price * (itemAmounts.get(raffle.id) || 1))}</Typography>
                                       <Typography pl={2}>{raffle.minted} entered</Typography>
                                     </Grid>
                                     <Grid item display='flex' justifyContent='center' alignItems='center' pb={2}>
