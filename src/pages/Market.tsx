@@ -1,6 +1,6 @@
-import { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { commify, formatEther } from '@ethersproject/units';
@@ -9,7 +9,7 @@ import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client'
 import { marketplaceUrl } from '../data';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { Check, Close, InfoOutlined, OpenInNew, Warning } from '@mui/icons-material';
+import { AddCircle, Check, Close, InfoOutlined, OpenInNew, RemoveCircle, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import { formatDistance } from 'date-fns';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -122,6 +122,7 @@ export default function Market() {
   const [showAll, setShowAll] = useState(false);
   const [loadingItems, setLoadingItems] = useState(false);
   const [items, setItems] = useState<RibbitItem[]>([]);
+  const [itemAmounts, setItemAmounts] = useState(new Map<number,number>());
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showAlert, setShowAlert] = useState(false);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
@@ -130,6 +131,18 @@ export default function Market() {
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const isSpendingApproved = useSpendingApproved(account ?? '');
   const ribbitBalance: BigNumber | undefined = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account);
+  const maxItemAmounts = 1000;
+
+  useEffect(() => {
+    getItems();
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getItemsBackground();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [])
 
   async function getItems() {
     try {
@@ -137,6 +150,7 @@ export default function Market() {
       const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
       let items = response.data;
       setItems(items);
+      setItemAmounts(new Map(items.map(item => [item.id, 0])));
       setLoadingItems(false);
     } catch (error) {
       setLoadingItems(false);
@@ -183,17 +197,6 @@ export default function Market() {
     }
   }, [collabBuyState])
 
-  useEffect(() => {
-    getItems();
-  }, [])
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getItemsBackground();
-    }, 30000);
-    return () => clearInterval(interval);
-  }, [])
-
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, filter: boolean) => {
     if (filter === null) return;
     setShowAll(filter);
@@ -235,8 +238,19 @@ export default function Market() {
     setValue(newValue);
   };
 
+  const updateItemAmounts = (key: number, value: number) => {
+    setItemAmounts(map => new Map(map.set(key, value)));
+  }
+
+  const onRaffleTicketChange = (event: Event, amount: number | number[], item: RibbitItem) => {
+    updateItemAmounts(item.id, amount as number);
+  }
+
   const onBuyItem = (item: RibbitItem) => {
-    dispatch(add(item));
+    const ribbitItem = {...item};
+    ribbitItem.amount = itemAmounts.get(ribbitItem.id) || 1;
+    dispatch(add(ribbitItem));
+    updateItemAmounts(ribbitItem.id, 0);
   }
 
   const onBuyCollabItem = async (item: RibbitItem) => {
@@ -299,6 +313,30 @@ export default function Market() {
     const etherFormat = formatEther(balance);
     const number = +etherFormat;
     return commify(number.toFixed(2));
+  }
+
+  const onTicketDecrement = (item: RibbitItem) => {
+    const value = itemAmounts.get(item.id) || 0;
+    if (value === 0) {
+      return;
+    }
+    updateItemAmounts(item.id, value-1);
+  }
+
+  const onTicketIncrement = (item: RibbitItem) => {
+    const value = itemAmounts.get(item.id) || 0;
+    if (value === maxItemAmounts) {
+      return;
+    }
+    updateItemAmounts(item.id, value+1);
+  }
+
+  const onItemAmountsChange = (event: React.ChangeEvent<HTMLInputElement>, item: RibbitItem) => {
+    const value = +event.target.value;
+    if (isNaN(value) || value > maxItemAmounts) {
+      return;
+    }
+    updateItemAmounts(item.id, value);
   }
 
   return (
@@ -416,7 +454,6 @@ export default function Market() {
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(friend.price)}</Typography>
                               </Grid>
-                              {/* TODO: Add amount slider with friend.limit max */}
                               <Button variant='contained' color='success' onClick={() => onBuyItem(friend)} disabled={isItemDisabled(friend)}>
                                 <AddShoppingCartIcon/>
                               </Button>
@@ -573,8 +610,33 @@ export default function Market() {
                                     <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
                                     <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                                      <Typography>{commify(raffle.price)}</Typography>
+                                      <Typography>{commify(raffle.price * (itemAmounts.get(raffle.id) || 1))}</Typography>
                                       <Typography pl={2}>{raffle.minted} entered</Typography>
+                                    </Grid>
+                                    <Grid item display='flex' justifyContent='center' alignItems='center' pb={2}>
+                                      <TextField 
+                                        id='tickets' 
+                                        label='Tickets'
+                                        color='primary'
+                                        value={itemAmounts.get(raffle.id) || 0}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => onItemAmountsChange(event, raffle)}
+                                        InputProps={{
+                                          startAdornment: (
+                                            <InputAdornment position='start'>
+                                              <IconButton color='primary' onClick={() => onTicketDecrement(raffle)}>
+                                                <RemoveCircle/>
+                                              </IconButton>
+                                            </InputAdornment>
+                                          ),
+                                          endAdornment: (
+                                            <InputAdornment position='end'>
+                                              <IconButton color='primary' onClick={() => onTicketIncrement(raffle)}>
+                                                <AddCircle/>
+                                              </IconButton>
+                                            </InputAdornment>
+                                          )
+                                        }}  
+                                      />
                                     </Grid>
                                     <Button variant='contained' color='success' onClick={() => onBuyItem(raffle)} disabled={isItemDisabled(raffle)}>
                                       <AddShoppingCartIcon/>
