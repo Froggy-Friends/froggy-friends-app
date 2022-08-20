@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment, SnackbarContent } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { commify, formatEther } from '@ethersproject/units';
@@ -108,6 +108,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         width: 300
       }
+    },
+    cartAddAlert: {
+      backgroundColor: '#5ea14e'
     }
   })
 );
@@ -125,6 +128,7 @@ export default function Market() {
   const [itemAmounts, setItemAmounts] = useState(new Map<number,number>());
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showAlert, setShowAlert] = useState(false);
+  const [alertBg, setAlertBg] = useState<string | null>(null);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const { account } = useEthers();
   const { collabBuy, collabBuyState } = useCollabBuy();
@@ -251,6 +255,9 @@ export default function Market() {
     ribbitItem.amount = itemAmounts.get(ribbitItem.id) || 1;
     dispatch(add(ribbitItem));
     updateItemAmounts(ribbitItem.id, 0);
+    setAlertMessage(`Added ${ribbitItem.amount} item(s) to your cart!`);
+    setAlertBg("#5ea14e");
+    setShowAlert(true);
   }
 
   const onBuyCollabItem = async (item: RibbitItem) => {
@@ -842,12 +849,20 @@ export default function Market() {
         message={alertMessage} 
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         onClose={onAlertClose}
-        action={
-          <IconButton size='small' aria-label='close' color='inherit' onClick={onAlertClose}>
-            <Close fontSize='small' />
-          </IconButton>
-        }
-      />
+        
+      >
+        <SnackbarContent 
+          message={alertMessage}
+          style={{
+            backgroundColor: alertBg ? alertBg : ""
+          }}
+          action={
+            <IconButton size='small' aria-label='close' color='inherit' onClick={onAlertClose}>
+              <Close fontSize='small' />
+            </IconButton>
+          }
+        />
+      </Snackbar>
       <Modal open={loadingItems} onClose={onLoadingItemsClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
         <Box className={classes.modal}>
           <Grid container justifyContent='space-between' alignItems='center' pb={5}>
