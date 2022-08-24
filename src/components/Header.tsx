@@ -121,6 +121,9 @@ export default function Header() {
                   <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/staking")}>Stake</Typography>
                 </Grid>
                 <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                  <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/items")}>Items</Typography>
+                </Grid>
+                <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                   <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/market")}>Market</Typography>
                 </Grid>
                 <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
@@ -182,6 +185,9 @@ export default function Header() {
             </Grid>
             <Grid item pb={3}>
               <Typography className="link" variant="h5" color="secondary" onClick={() => {navigate("/staking"); setSidemenuOpen(false)}}>Stake</Typography>
+            </Grid>
+            <Grid item pb={3}>
+              <Typography className="link" variant="h5" color="secondary" onClick={() => {navigate("/items"); setSidemenuOpen(false)}}>Items</Typography>
             </Grid>
             <Grid item pb={3}>
               <Typography className="link" variant="h5" color="secondary" onClick={() => {navigate("/market"); setSidemenuOpen(false)}}>Market</Typography>
