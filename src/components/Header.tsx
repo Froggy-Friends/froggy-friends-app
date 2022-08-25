@@ -15,8 +15,6 @@ import theme from "../theme";
 import MusicPlayer from "./MusicPlayer";
 import Cart from "./Cart";
 
-const { REACT_APP_WEBSITE_URL } = process.env;
-
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     avatar: {
@@ -109,7 +107,7 @@ export default function Header() {
           <Toolbar disableGutters>
             <Grid id="header" container item justifyContent="space-between" alignItems="center" pl={isMobile ? 2 : 4} pr={isMobile ? 2 : 4} xl={12} lg={12} md={12} sm={12} xs={12}>
               <Grid id='logo' container item display={isTinyMobile ? "none" : "flex"} justifyContent="start" xl={3} lg={3} md={3} sm={6} xs={2}>
-                <Link href={REACT_APP_WEBSITE_URL} underline='none'>
+                <Link href={'/staking'} underline='none'>
                   <Avatar className={classes.avatar} alt='Home' src={logo} sx={{width: 65, height: 65}}/>
                 </Link>
                 { isTablet && <Typography variant='h5' color='secondary' fontWeight='bold' alignSelf="center" pl={3}>{getTitle()}</Typography>}

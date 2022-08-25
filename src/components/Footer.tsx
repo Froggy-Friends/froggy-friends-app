@@ -42,8 +42,9 @@ export default function Footer() {
         </Grid>
         <Grid item>
           <Typography variant='body1' color='secondary'>
-            4,444 of the friendliest frogs in the metaverse. 
+            4,444 of the friendliest frogs in the metaverse.
           </Typography>
+          <Typography color='secondary' pt={3}>&copy;	FroggyLabs LLC</Typography>
         </Grid>
         <Grid container justifyContent='center' p={2}>
             <Grid item p={1}>
@@ -84,26 +85,6 @@ export default function Footer() {
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
             <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/leaderboard")}>Board</Typography>
-          </Grid>
-        </Grid>
-        <Grid container justifyContent={isMobile ? 'center' : 'space-between'} mt={10} pb={-10} maxWidth={'60%'} sx={{borderTop: '1px solid #b3b6bb'}}>
-          <Grid item>
-            <Typography color='secondary' pt={3}>&copy;	Froggy Friends NFT</Typography>
-          </Grid>
-          <Grid item>
-            <Grid container alignItems='center'>
-              <Link href={process.env.REACT_APP_WEBSITE_URL + '/terms-of-use'} underline='none'>
-                <Typography variant='body2' color='secondary' pt={3} pr={1}>Terms</Typography>
-              </Link>
-              <Typography color='secondary' pt={3}>•</Typography>
-              <Link href={process.env.REACT_APP_WEBSITE_URL + '/privacy-policy'} underline='none'>
-                <Typography variant='body2' color='secondary' pt={3} pl={1} pr={1}>Privacy</Typography>
-              </Link>
-              <Typography color='secondary' pt={3}>•</Typography>
-              <Link href={process.env.REACT_APP_WEBSITE_URL + '/license'} underline='none'>
-                <Typography variant='body2' color='secondary' pt={3} pl={1}>License</Typography>
-              </Link>
-            </Grid>
           </Grid>
         </Grid>
       </Grid>
