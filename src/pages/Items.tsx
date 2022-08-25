@@ -134,8 +134,8 @@ export default function Items() {
           }
           {
             filterItems('lilies').length > 0 &&
-            <Grid id='lilies' container item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid item xl={12} p={2}>
+            <Grid id='lilies' container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} p={2}>
                 <Typography variant='h3' color='secondary'>Golden Lily Pads</Typography>
               </Grid>
               {
@@ -159,8 +159,8 @@ export default function Items() {
           }
           {
             filterItems('friends').length > 0 &&
-            <Grid id="friends" container item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid item xl={12} p={2}>
+            <Grid id="friends" container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} p={2}>
                 <Typography variant='h3' color='secondary'>Friends</Typography>
               </Grid>
               {
@@ -188,8 +188,8 @@ export default function Items() {
           }
           {
             filterItems('collabs').length > 0 && 
-            <Grid id="collabs" container item xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid item xl={12} p={2}>
+            <Grid id="collabs" container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} p={2}>
                 <Typography variant='h3' color='secondary'>Friends</Typography>
               </Grid>
               {
