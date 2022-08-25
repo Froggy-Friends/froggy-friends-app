@@ -24,14 +24,13 @@ import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import usePairFriend from "../client";
-import { stakeUrl } from "../data";
+import { RibbitItem } from "../models/RibbitItem";
+import hi from '../images/hi.png';
 
 const useStyles: any = makeStyles((theme: Theme) =>
   createStyles({
     app: {
-      backgroundColor: "#000000",
-      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${stakeUrl})`,
-      backgroundRepeat: "no-repeat",
+      backgroundColor: "#000000"
     },
     modal: {
       position: "absolute" as "absolute",
@@ -65,8 +64,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
     },
 
     select: {
-      color: "white"
-    }
+      color: "white",
+    },
   })
 );
 
@@ -75,7 +74,7 @@ export default function Items() {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
 
-  const [ownedItems, setOwnedItems] = useState<any>([]);
+  const [ownedItems, setOwnedItems] = useState<RibbitItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [selectedFrog, setSelectedFrog] = useState<any>(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -116,7 +115,7 @@ export default function Items() {
       selectedFrog,
     ]);
     const proof = response.data[0];
-    
+
     pairFriend(selectedFrog, proof, selectedItem.id);
   };
 
@@ -135,92 +134,79 @@ export default function Items() {
     console.log(pairFriendState);
   }, [pairFriendState]);
 
+  const filterItems = (category: string) => {
+    return ownedItems.filter(item => item.category.toLowerCase() == category.toLowerCase());
+  }
+
   return (
     <div>
-      <Grid
-        id="app"
-        className={classes.app}
-        sx={{ backgroundSize: getBackgroundSize() }}
-        container
-        direction="column"
-        pt={20}
-        pb={30}
-      >
+      <Grid id="app" className={classes.app} sx={{ backgroundSize: getBackgroundSize() }} container direction="column" pt={20} pb={30}>
         <Container maxWidth="xl">
-          <Grid
-            id="froggies"
-            container
-            item
-            xl={12}
-            lg={12}
-            md={12}
-            sm={12}
-            xs={12}
-          >
-            {ownedItems.length > 0 &&
-              ownedItems.map(
-                (ownedItem: any) =>
-                  ownedItem.isBoost && (
-                    <Grid
-                      key={ownedItem.id}
-                      item
-                      xl={2}
-                      lg={2}
-                      md={3}
-                      sm={6}
-                      xs={12}
-                      p={2}
-                      minHeight={300}
-                    >
-                      <Card>
-                        <CardHeader
-                          title={ownedItem.name}
-                          titleTypographyProps={{
-                            variant: "h6",
-                            color: "secondary",
-                          }}
-                        />
-                        <CardMedia
-                          component="img"
-                          image={ownedItem.image}
-                          alt={ownedItem.name}
-                        />
-                        <CardContent>
-                          <Typography
-                            variant="subtitle1"
-                            color="secondary"
-                            pb={1}
-                          >
-                            {ownedItem.name}
-                          </Typography>
-                          <Grid
-                            item
-                            display="flex"
-                            justifyContent="center"
-                            pb={2}
-                            pr={1}
-                          >
-                            <Typography
-                              variant="subtitle1"
-                              color="secondary"
-                              pb={1}
-                            >
-                              {ownedItem.percentage}% Boost
+          {
+            ownedItems.length == 0 && 
+            <Grid item display='flex' direction='column'>
+              <Typography variant='h5' color='secondary' pb={3}>No Ribbit Items purchased yet. Browse the market to purchase items.</Typography>
+              <img src={hi} style={{height: 125, width: 125}}/>
+            </Grid>
+          }
+          {
+            filterItems('friends').length > 0 &&
+            <Grid id="friends" container item xl={12} lg={12} md={12} sm={12} xs={12}>
+            <Grid item xl={12} p={2}>
+              <Typography variant='h3' color='secondary'>Friends</Typography>
+            </Grid>
+            {
+              filterItems('friends').map(friend => {
+                return <Grid key={friend.id} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                        <Card>
+                          <CardHeader title={friend.name} titleTypographyProps={{variant: "h6", color: "secondary"}}/>
+                          <CardMedia component="img" image={friend.image} alt={friend.name}/>
+                          <CardContent>
+                            <Typography variant="subtitle1" color="secondary" pb={1}>
+                              {friend.name}
                             </Typography>
-                          </Grid>
-                          <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() => confirmPair(ownedItem)}
-                          >
-                            PAIR
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  )
-              )}
+                            <Grid item display="flex" justifyContent="center" pb={2} pr={1}> 
+                              <Typography   variant="subtitle1"   color="secondary"   pb={1} >   {friend.percentage}% Boost </Typography>
+                            </Grid>
+                            <Button variant="contained" color="success" disabled onClick={() => confirmPair(friend)}> 
+                              PAIR
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+              })
+            }
           </Grid>
+          }
+          {
+            filterItems('collabs').length > 0 && 
+            <Grid id="collabs" container item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid item xl={12} p={2}>
+                <Typography variant='h3' color='secondary'>Friends</Typography>
+              </Grid>
+              {
+                filterItems('collabs').map(friend => {
+                  return <Grid key={friend.id} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                          <Card>
+                            <CardHeader title={friend.name} titleTypographyProps={{variant: "h6", color: "secondary"}}/>
+                            <CardMedia component="img" image={friend.image} alt={friend.name}/>
+                            <CardContent>
+                              <Typography variant="subtitle1" color="secondary" pb={1}>
+                                {friend.name}
+                              </Typography>
+                              <Grid item display="flex" justifyContent="center" pb={2} pr={1}> 
+                                <Typography   variant="subtitle1"   color="secondary"   pb={1} >   {friend.percentage}% Boost </Typography>
+                              </Grid>
+                              <Button variant="contained" color="success" disabled onClick={() => confirmPair(friend)}> 
+                                PAIR
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                })
+              }
+            </Grid>
+          }
         </Container>
       </Grid>
       <Modal
@@ -253,11 +239,13 @@ export default function Items() {
             </Grid>
           </Grid>
           <FormControl fullWidth>
-            <Select
-              onChange={(e) => setSelectedFrog(e.target.value)}
-            >
+            <Select onChange={(e) => setSelectedFrog(e.target.value)}>
               {ownedFrogs.map((frog: any) => (
-                <MenuItem key={frog.edition} value={frog.edition} className="frogSelection">
+                <MenuItem
+                  key={frog.edition}
+                  value={frog.edition}
+                  className="frogSelection"
+                >
                   {frog.name}
                 </MenuItem>
               ))}
