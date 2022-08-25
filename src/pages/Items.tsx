@@ -1,31 +1,14 @@
+import React, { useCallback, useEffect, useState } from "react";
+import axios from "axios";
 import { Close } from "@mui/icons-material";
-import {
-  Button,
-  Card,
-  createStyles,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  Grid,
-  Typography,
-  useMediaQuery,
-  useTheme,
-  Theme,
-  Container,
-  Modal,
-  IconButton,
-  Box,
-  Select,
-  MenuItem,
-  FormControl,
-} from "@mui/material";
+import {Button, Card, createStyles, CardContent, CardHeader, CardMedia, Grid, Typography, useMediaQuery, useTheme, Theme, Container, Modal, IconButton, Box, Select, MenuItem, FormControl} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useEthers } from "@usedapp/core";
-import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import { commify } from '@ethersproject/units';
 import usePairFriend from "../client";
 import { RibbitItem } from "../models/RibbitItem";
 import hi from '../images/hi.png';
+import ribbit from '../images/ribbit.gif';
 
 const useStyles: any = makeStyles((theme: Theme) =>
   createStyles({
@@ -150,33 +133,58 @@ export default function Items() {
             </Grid>
           }
           {
+            filterItems('lilies').length > 0 &&
+            <Grid id='lilies' container item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <Grid item xl={12} p={2}>
+                <Typography variant='h3' color='secondary'>Golden Lily Pads</Typography>
+              </Grid>
+              {
+                filterItems('lilies').map((lily, index) => {
+                  return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={450}>
+                          <Card>
+                            <CardHeader title="Golden Lily Pad" titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
+                            <CardMedia component='img' image={lily.image} alt='Golden Lily Pad'/>
+                            <CardContent>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{lily.name}</Typography>
+                              <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                <Typography>{commify(lily.price)}</Typography>
+                              </Grid>
+                            </CardContent>
+                          </Card>
+                        </Grid> 
+                })
+              }
+            </Grid>
+          }
+          {
             filterItems('friends').length > 0 &&
             <Grid id="friends" container item xl={12} lg={12} md={12} sm={12} xs={12}>
-            <Grid item xl={12} p={2}>
-              <Typography variant='h3' color='secondary'>Friends</Typography>
+              <Grid item xl={12} p={2}>
+                <Typography variant='h3' color='secondary'>Friends</Typography>
+              </Grid>
+              {
+                filterItems('friends').map(friend => {
+                  return <Grid key={friend.id} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                          <Card>
+                            <CardHeader title={friend.name} titleTypographyProps={{variant: "h6", color: "secondary"}}/>
+                            <CardMedia component="img" image={friend.image} alt={friend.name}/>
+                            <CardContent>
+                              <Typography variant="subtitle1" color="secondary" pb={1}>
+                                {friend.name}
+                              </Typography>
+                              <Grid item display="flex" justifyContent="center" pb={2} pr={1}> 
+                                <Typography   variant="subtitle1"   color="secondary"   pb={1} >   {friend.percentage}% Boost </Typography>
+                              </Grid>
+                              <Button variant="contained" color="success" disabled onClick={() => confirmPair(friend)}> 
+                                PAIR
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                })
+              }
             </Grid>
-            {
-              filterItems('friends').map(friend => {
-                return <Grid key={friend.id} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
-                        <Card>
-                          <CardHeader title={friend.name} titleTypographyProps={{variant: "h6", color: "secondary"}}/>
-                          <CardMedia component="img" image={friend.image} alt={friend.name}/>
-                          <CardContent>
-                            <Typography variant="subtitle1" color="secondary" pb={1}>
-                              {friend.name}
-                            </Typography>
-                            <Grid item display="flex" justifyContent="center" pb={2} pr={1}> 
-                              <Typography   variant="subtitle1"   color="secondary"   pb={1} >   {friend.percentage}% Boost </Typography>
-                            </Grid>
-                            <Button variant="contained" color="success" disabled onClick={() => confirmPair(friend)}> 
-                              PAIR
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-              })
-            }
-          </Grid>
           }
           {
             filterItems('collabs').length > 0 && 
