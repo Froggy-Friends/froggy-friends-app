@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { Close } from "@mui/icons-material";
-import {Button, Card, createStyles, CardContent, CardHeader, CardMedia, Grid, Typography, useMediaQuery, useTheme, Theme, Container, Modal, IconButton, Box, Select, MenuItem, FormControl} from "@mui/material";
+import { Close, InfoOutlined } from "@mui/icons-material";
+import {Button, Card, createStyles, CardContent, CardHeader, CardMedia, Grid, Typography, useMediaQuery, useTheme, Theme, Container, Modal, IconButton, Box, Select, MenuItem, FormControl, Link, Tooltip} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useEthers } from "@usedapp/core";
 import { commify } from '@ethersproject/units';
 import usePairFriend from "../client";
 import { RibbitItem } from "../models/RibbitItem";
 import hi from '../images/hi.png';
+import discord from '../images/discord.png';
+import twitter from '../images/twitter.png';
 import ribbit from '../images/ribbit.gif';
 
 const useStyles: any = makeStyles((theme: Theme) =>
@@ -81,9 +83,9 @@ export default function Items() {
     setOwnedFrogs(ownedFrogs);
   }, []);
 
-  const getOwnedItems = useCallback(async () => {
+  const getOwnedItems = useCallback(async (address: string) => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/items/owned/${account}`
+      `${process.env.REACT_APP_API}/items/owned/${address}`
     );
     setOwnedItems(response.data);
   }, [account]);
@@ -108,7 +110,7 @@ export default function Items() {
 
   useEffect(() => {
     if (account) {
-      getOwnedItems();
+      getOwnedItems(account);
       getOwnedFrogs(account);
     }
   }, [account, getOwnedItems, getOwnedFrogs]);
@@ -161,7 +163,7 @@ export default function Items() {
             filterItems('friends').length > 0 &&
             <Grid id="friends" container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} p={2}>
-                <Typography variant='h3' color='secondary'>Friends</Typography>
+                <Typography variant='h3' color='secondary'>Genesis Friends</Typography>
               </Grid>
               {
                 filterItems('friends').map(friend => {
@@ -190,7 +192,7 @@ export default function Items() {
             filterItems('collabs').length > 0 && 
             <Grid id="collabs" container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} p={2}>
-                <Typography variant='h3' color='secondary'>Friends</Typography>
+                <Typography variant='h3' color='secondary'>Collab Friends</Typography>
               </Grid>
               {
                 filterItems('collabs').map(friend => {
@@ -215,6 +217,56 @@ export default function Items() {
               }
             </Grid>
           }
+          // nfts
+          // raffles
+          // allowlists
+          {
+            filterItems('allowlists').length > 0 && 
+            <Grid id="collabs" container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} p={2}>
+                <Typography variant='h3' color='secondary'>Allowlists</Typography>
+              </Grid>
+              {
+                filterItems('allowlists').map((allowlist, index) => {
+                  return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={500}>
+                    <Card>
+                      <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
+                        title={
+                          <Grid item display='flex' justifyContent='center' alignItems='center'>
+                            <Typography>{allowlist.name}</Typography>
+                            <Grid item display={allowlist.twitter ? "flex" : "none"} justifySelf='center' pl={2}>
+                              <Link display='flex' href={allowlist.twitter} target='_blank'>
+                                <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
+                              </Link>
+                            </Grid>
+                            <Grid item display={allowlist.discord ? "flex" : "none"} pl={1}>
+                              <Link display='flex' href={allowlist.discord} target="_blank">
+                                <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
+                              </Link>
+                            </Grid>
+                            <Tooltip title={allowlist.description}>
+                              <IconButton color='secondary'>
+                                <InfoOutlined/>
+                              </IconButton>
+                            </Tooltip>
+                          </Grid>
+                        }
+                      />
+                      <CardMedia component='img' image={allowlist.image} style={{minHeight: 350}} alt='Allowlist'/>
+                      <CardContent>
+                        <Typography variant='subtitle1' color='secondary' pb={1}>{allowlist.name}</Typography>
+                        <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
+                          <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                          <Typography>{commify(allowlist.price)}</Typography>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                })
+              }
+            </Grid>
+          }
+          // merch
         </Container>
       </Grid>
       <Modal
