@@ -74,16 +74,13 @@ export default function Footer() {
         </Grid>
         <Grid container direction={isTinyMobile ? "column" : "row"} justifyContent='center' pt={2} maxWidth={500}>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-            <Link href={process.env.REACT_APP_WEBSITE_URL + '/team'} underline='none' color='secondary' variant="h6">Team</Link>
-          </Grid>
-          <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-            <Link href={process.env.REACT_APP_WEBSITE_URL + '/collabs'} underline='none' color='secondary' variant="h6">Collabs</Link>
-          </Grid>
-          <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
             <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/staking")}>Staking</Typography>
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
             <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/market")}>Market</Typography>
+          </Grid>
+          <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+            <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/items")}>Items</Typography>
           </Grid>
           <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
             <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/leaderboard")}>Board</Typography>

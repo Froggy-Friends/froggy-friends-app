@@ -119,6 +119,12 @@ export function useStakingDeposits(account: string) {
   }
 }
 
+export default function usePairFriend() {
+  const { send: pairFriend, state: pairFriendState } = useContractFunction(stakingContract, 'pairFriend') ?? {};
+
+  return { pairFriend, pairFriendState };
+}
+
 export function useFroggiesOwned(account: string): number {
   const { value, error } = useCall({contract: froggyContract, method: 'balanceOf', args: [account]}) ?? {};
   if (error) {
