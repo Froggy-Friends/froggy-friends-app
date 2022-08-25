@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { Close, InfoOutlined } from "@mui/icons-material";
-import {Button, Card, createStyles, CardContent, CardHeader, CardMedia, Grid, Typography, useMediaQuery, useTheme, Theme, Container, Modal, IconButton, Box, Select, MenuItem, FormControl, Link, Tooltip} from "@mui/material";
+import {Button, Card, createStyles, CardContent, CardHeader, CardMedia, Grid, Typography, useMediaQuery, useTheme, Theme, Container, Modal, IconButton, Box, Select, MenuItem, FormControl, Link, Tooltip, Chip} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useEthers } from "@usedapp/core";
 import { commify } from '@ethersproject/units';
@@ -50,6 +50,18 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
     select: {
       color: "white",
+    },
+    cardMedia: {
+      position: 'relative',
+    },
+    cardMediaImage: {
+      display: 'block',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+      width: '100%',
+      objectFit: 'cover',
+      height: 350
     },
   })
 );
@@ -142,7 +154,7 @@ export default function Items() {
               </Grid>
               {
                 filterItems('lilies').map((lily, index) => {
-                  return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={450}>
+                  return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2}>
                           <Card>
                             <CardHeader title="Golden Lily Pad" titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
                             <CardMedia component='img' image={lily.image} alt='Golden Lily Pad'/>
@@ -167,7 +179,7 @@ export default function Items() {
               </Grid>
               {
                 filterItems('friends').map(friend => {
-                  return <Grid key={friend.id} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={300}>
+                  return <Grid key={friend.id} item xl={3} lg={3} md={4} sm={6} xs={12} p={2}>
                           <Card>
                             <CardHeader title={friend.name} titleTypographyProps={{variant: "h6", color: "secondary"}}/>
                             <CardMedia component="img" image={friend.image} alt={friend.name}/>
@@ -196,7 +208,7 @@ export default function Items() {
               </Grid>
               {
                 filterItems('collabs').map(friend => {
-                  return <Grid key={friend.id} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={300}>
+                  return <Grid key={friend.id} item xl={3} lg={3} md={4} sm={6} xs={12} p={2}>
                           <Card>
                             <CardHeader title={friend.name} titleTypographyProps={{variant: "h6", color: "secondary"}}/>
                             <CardMedia component="img" image={friend.image} alt={friend.name}/>
@@ -219,16 +231,65 @@ export default function Items() {
           }
           // nfts
           // raffles
+          {
+            filterItems('raffles').length > 0 && 
+            <Grid id="raffles" container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} p={2}>
+                <Typography variant='h3' color='secondary'>Raffles</Typography>
+              </Grid>
+              {
+                filterItems('raffles').map((raffle, index) => {
+                  return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2}>
+                          <Card>
+                            <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
+                              title={
+                                <Grid item display='flex' justifyContent='center' alignItems='center'>
+                                  <Typography>{raffle.name}</Typography>
+                                  <Grid item display={raffle.twitter ? "flex" : "none"} justifySelf='center' pl={2}>
+                                    <Link display='flex' href={raffle.twitter} target='_blank'>
+                                      <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
+                                    </Link>
+                                  </Grid>
+                                  <Grid item display={raffle.discord ? "flex" : "none"} pl={1}>
+                                    <Link display='flex' href={raffle.discord} target="_blank">
+                                      <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
+                                    </Link>
+                                  </Grid>
+                                  <Grid item display={raffle.twitter ? "flex" : "none"}>
+                                    <Tooltip title={raffle.description}>
+                                      <IconButton color='secondary'>
+                                        <InfoOutlined/>
+                                      </IconButton>
+                                    </Tooltip>
+                                  </Grid>
+                                </Grid>
+                              }
+                            />
+                            <CardMedia component={() =>
+                                <Grid className={classes.cardMedia} container>
+                                  { raffle.community && <Chip className={classes.community} label="community"/> }
+                                  <img className={classes.cardMediaImage} src={raffle.image} alt='NFT'/>
+                                </Grid>
+                            }/>
+                            <CardContent>
+                              <Typography variant='subtitle1' color='secondary' pb={1}>{raffle.name}</Typography>
+                            </CardContent>
+                          </Card>
+                        </Grid> 
+                })
+              }
+            </Grid>
+          }
           // allowlists
           {
             filterItems('allowlists').length > 0 && 
-            <Grid id="collabs" container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
+            <Grid id="allowlists" container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} p={2}>
                 <Typography variant='h3' color='secondary'>Allowlists</Typography>
               </Grid>
               {
                 filterItems('allowlists').map((allowlist, index) => {
-                  return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={500}>
+                  return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2}>
                     <Card>
                       <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
                         title={
@@ -252,7 +313,7 @@ export default function Items() {
                           </Grid>
                         }
                       />
-                      <CardMedia component='img' image={allowlist.image} style={{minHeight: 350}} alt='Allowlist'/>
+                      <CardMedia component='img' image={allowlist.image} style={{height: 350}} alt='Allowlist'/>
                       <CardContent>
                         <Typography variant='subtitle1' color='secondary' pb={1}>{allowlist.name}</Typography>
                         <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
