@@ -110,21 +110,15 @@ export default function Header() {
                 </Link>
                 { isTablet && <Typography variant='h5' color='secondary' fontWeight='bold' alignSelf="center" pl={3}>{getTitle()}</Typography>}
               </Grid>
-              <Grid id='links' container item display={isDesktop ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' xl={6} lg={6} md={6}>
-                <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                  <Link href={REACT_APP_WEBSITE_URL + '/team'} underline='none' variant="h5" color="secondary">Team</Link>
-                </Grid>
-                <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                  <Link href={REACT_APP_WEBSITE_URL + '/collabs'} underline='none' variant="h5" color="secondary">Collabs</Link>
-                </Grid>
+              <Grid id='links' container item display={isDesktop ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' xl={4} lg={4} md={4}>
                 <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                   <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/staking")}>Stake</Typography>
                 </Grid>
                 <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                  <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/items")}>Items</Typography>
+                  <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/market")}>Market</Typography>
                 </Grid>
                 <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                  <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/market")}>Market</Typography>
+                  <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/items")}>Items</Typography>
                 </Grid>
                 <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                   <Typography className="link" variant="h5" color="secondary" onClick={() => navigate("/leaderboard")}>Board</Typography>
@@ -178,25 +172,16 @@ export default function Header() {
               </Grid>
             </Grid>
             <Grid item pb={3}>
-              <Link href={REACT_APP_WEBSITE_URL + '/team'} underline='none' variant="h5" color="secondary">Team</Link>
-            </Grid>
-            <Grid item pb={3}>
-              <Link href={REACT_APP_WEBSITE_URL + '/collabs'} underline='none' variant="h5" color="secondary">Collabs</Link>
-            </Grid>
-            <Grid item pb={3}>
               <Typography className="link" variant="h5" color="secondary" onClick={() => {navigate("/staking"); setSidemenuOpen(false)}}>Stake</Typography>
-            </Grid>
-            <Grid item pb={3}>
-              <Typography className="link" variant="h5" color="secondary" onClick={() => {navigate("/items"); setSidemenuOpen(false)}}>Items</Typography>
             </Grid>
             <Grid item pb={3}>
               <Typography className="link" variant="h5" color="secondary" onClick={() => {navigate("/market"); setSidemenuOpen(false)}}>Market</Typography>
             </Grid>
             <Grid item pb={3}>
-              <Typography className="link" variant="h5" color="secondary" onClick={() => {navigate("/leaderboard"); setSidemenuOpen(false)}}>Board</Typography>
+              <Typography className="link" variant="h5" color="secondary" onClick={() => {navigate("/items"); setSidemenuOpen(false)}}>Items</Typography>
             </Grid>
             <Grid item pb={3}>
-              <Link href={REACT_APP_WEBSITE_URL + '/license'} underline='none' variant="h5" color="secondary">License</Link>
+              <Typography className="link" variant="h5" color="secondary" onClick={() => {navigate("/leaderboard"); setSidemenuOpen(false)}}>Board</Typography>
             </Grid>
             <Grid id='account' container item alignItems='center'>
               <Grid item display={!account ? "flex" : "none"} pr={2}>
