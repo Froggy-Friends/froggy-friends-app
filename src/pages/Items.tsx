@@ -63,6 +63,13 @@ const useStyles: any = makeStyles((theme: Theme) =>
       objectFit: 'cover',
       height: 350
     },
+    community: {
+      position: 'absolute',
+      top: 0,
+      backgroundColor: '#ebca27',
+      marginTop: theme.spacing(1),
+      marginLeft: theme.spacing(1)
+    },
   })
 );
 
@@ -184,11 +191,12 @@ export default function Items() {
                             <CardHeader title={friend.name} titleTypographyProps={{variant: "h6", color: "secondary"}}/>
                             <CardMedia component="img" image={friend.image} alt={friend.name}/>
                             <CardContent>
-                              <Typography variant="subtitle1" color="secondary" pb={1}>
-                                {friend.name}
-                              </Typography>
-                              <Grid item display="flex" justifyContent="center" pb={2} pr={1}> 
+                              <Grid item display="flex" justifyContent="center" pb={1}> 
                                 <Typography   variant="subtitle1"   color="secondary"   pb={1} >   {friend.percentage}% Boost </Typography>
+                              </Grid>
+                              <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
+                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                <Typography>{commify(friend.price)}</Typography>
                               </Grid>
                               <Button variant="contained" color="success" disabled onClick={() => confirmPair(friend)}> 
                                 PAIR
@@ -229,8 +237,51 @@ export default function Items() {
               }
             </Grid>
           }
-          // nfts
-          // raffles
+          {
+            filterItems('nfts').length > 0 && 
+            <Grid id="nfts" container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} p={2}>
+                <Typography variant='h3' color='secondary'>NFTs</Typography>
+              </Grid>
+              {
+                filterItems('nfts').map((nft, index) => {
+                  return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2}>
+                          <Card>
+                            <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
+                              title={
+                                <Grid item display='flex' justifyContent='center'>
+                                  <Typography>{nft.name}</Typography>
+                                  <Grid item display={nft.twitter ? "flex" : "none"} pl={2}>
+                                    <Link href={nft.twitter} target='_blank'>
+                                      <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
+                                    </Link>
+                                  </Grid>
+                                  <Grid item display={nft.discord ? "flex" : "none"} pl={1}>
+                                    <Link href={nft.discord} target="_blank">
+                                      <img src={discord} style={{height: 20, width: 20}} alt='discord'/>
+                                    </Link>
+                                  </Grid>
+                                </Grid>
+                              }
+                            />
+                            <CardMedia component={() =>
+                                  <Grid className={classes.cardMedia} container>
+                                    { nft.community && <Chip className={classes.community} label="community"/> }
+                                    <img className={classes.cardMediaImage} src={nft.image} alt='NFT'/>
+                                  </Grid>
+                              }/>
+                            <CardContent>
+                              <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
+                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                <Typography>{commify(nft.price)}</Typography>
+                              </Grid>
+                            </CardContent>
+                          </Card>
+                        </Grid> 
+                })
+              }
+            </Grid>
+          }
           {
             filterItems('raffles').length > 0 && 
             <Grid id="raffles" container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
@@ -272,7 +323,10 @@ export default function Items() {
                                 </Grid>
                             }/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{raffle.name}</Typography>
+                              <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
+                                <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                <Typography>{commify(raffle.price)}</Typography>
+                              </Grid>
                             </CardContent>
                           </Card>
                         </Grid> 
@@ -280,7 +334,6 @@ export default function Items() {
               }
             </Grid>
           }
-          // allowlists
           {
             filterItems('allowlists').length > 0 && 
             <Grid id="allowlists" container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
@@ -327,7 +380,51 @@ export default function Items() {
               }
             </Grid>
           }
-          // merch
+          {
+            filterItems('merch').length > 0 && 
+            <Grid id="merch" container item xl={12} lg={12} md={12} sm={12} xs={12} pb={5}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} p={2}>
+                <Typography variant='h3' color='secondary'>Merch</Typography>
+              </Grid>
+              {
+                filterItems('merch').map((merch, index) => {
+                  return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={450}>
+                    <Card>
+                      <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
+                          title={
+                            <Grid item display='flex' justifyContent='center' alignItems='center'>
+                              <Typography>{merch.name}</Typography>
+                              <Grid item display={merch.twitter ? "flex" : "none"} justifySelf='center' pl={2}>
+                                <Link display='flex' href={merch.twitter} target='_blank'>
+                                  <img src={twitter} style={{height: 20, width: 20}} alt='twitter'/>
+                                </Link>
+                              </Grid>
+                              <Tooltip title={merch.description}>
+                                <IconButton color='secondary'>
+                                  <InfoOutlined/>
+                                </IconButton>
+                              </Tooltip>
+                            </Grid>
+                          }
+                        />
+                      <CardMedia component={() =>
+                          <Grid className={classes.cardMedia} container>
+                            { merch.community && <Chip className={classes.community} label="community"/> }
+                            <img className={classes.cardMediaImage} src={merch.image} alt='NFT'/>
+                          </Grid>
+                      }/>
+                      <CardContent>
+                        <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
+                          <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                          <Typography>{commify(merch.price)}</Typography>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                })
+              }
+            </Grid>
+          }
         </Container>
       </Grid>
       <Modal
