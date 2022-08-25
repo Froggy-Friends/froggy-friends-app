@@ -167,7 +167,7 @@ export default function Items() {
               </Grid>
               {
                 filterItems('friends').map(friend => {
-                  return <Grid key={friend.id} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                  return <Grid key={friend.id} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={300}>
                           <Card>
                             <CardHeader title={friend.name} titleTypographyProps={{variant: "h6", color: "secondary"}}/>
                             <CardMedia component="img" image={friend.image} alt={friend.name}/>
@@ -196,7 +196,7 @@ export default function Items() {
               </Grid>
               {
                 filterItems('collabs').map(friend => {
-                  return <Grid key={friend.id} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                  return <Grid key={friend.id} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={300}>
                           <Card>
                             <CardHeader title={friend.name} titleTypographyProps={{variant: "h6", color: "secondary"}}/>
                             <CardMedia component="img" image={friend.image} alt={friend.name}/>
