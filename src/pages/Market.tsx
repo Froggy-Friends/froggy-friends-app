@@ -361,20 +361,9 @@ export default function Market() {
             <ToggleButton value={true}>All</ToggleButton>
           </ToggleButtonGroup>
         </Grid>
-        <Grid id='balance' item display='flex' justifyContent='center' alignItems='center' bgcolor='#000000d1' borderRadius={2} p={1} ml={2} pl={2} pr={2}>
+        <Grid id='balance' item display='flex' justifyContent='center' alignItems='center' bgcolor='#000000d1' borderRadius={2} ml={isSmallMobile ? 2 : 0} mr={2} p={1} pl={2} pr={2}>
           <img src={chest} style={{height: 25, width: 25}} alt='chest'/>
           <Typography variant='h6' color='secondary' pl={2}>{formatBalance(ribbitBalance)} $RIBBIT</Typography>
-        </Grid>
-        <Grid id='item-link' p={2} zIndex={0}>
-          <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{padding: 1}}/>}>
-            <Link href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x46898f15f99b8887d87669ab19d633f579939ad9&chain=mainnet'
-              variant='subtitle1' color='inherit' underline='none' target='_blank' p={0.5}>
-                Purchase $RIBBIT
-            </Link>
-          </Button>
-          <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{padding: 1}}/>}>
-            <Link href='https://opensea.io/account/ribbit-items' variant='subtitle1' color='inherit' underline='none' target='_blank' p={0.5}>View on Opensea</Link>
-          </Button>
         </Grid>
       </Grid>
       <Grid id="items-and-cart" container item justifyContent='space-between' p={2} minHeight={855}>
