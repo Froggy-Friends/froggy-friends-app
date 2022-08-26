@@ -90,6 +90,7 @@ export default function Staking() {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isBelow320 = useMediaQuery(theme.breakpoints.down(320));
   const [froggiesToStake, setFroggiesToStake] = useState<number[]>([]);
   const [froggiesToUnstake, setFroggiesToUnstake] = useState<number[]>([]);
   const [showAlert, setShowAlert] = useState(false);
@@ -317,7 +318,7 @@ export default function Staking() {
           <Grid id='banner' container direction='column' bgcolor={theme.palette.info.main} borderRadius={3} xl={12} lg={12} md={12} sm={12} xs={12} p={3}>
             <Grid id='title' item display='flex' direction={isMobile ? 'column' : 'row'} justifyContent='space-between' pb={5}>
               <Typography variant='h4' color='secondary' pb={3}>Staking Stats</Typography>
-              <ButtonGroup sx={{justifyContent: isMobile ? 'center' : 'end'}}>
+              <ButtonGroup orientation={isBelow320 ? 'vertical' : 'horizontal'} sx={{height: isMobile ? 'inherit' : 35, justifyContent: isMobile ? 'center' : 'end'}}>
                 <Button className='inverted' disabled={froggiesToStake.length === 0} onClick={() => onStake()}>
                   Stake {froggiesToStake.length || ''}
                 </Button>
