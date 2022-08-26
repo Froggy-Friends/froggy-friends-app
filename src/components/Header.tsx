@@ -55,6 +55,7 @@ export default function Header() {
   const isTablet = useMediaQuery(theme.breakpoints.up('sm'));
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const isTinyMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isBelow320 = useMediaQuery(theme.breakpoints.down(321));
   const isMarket = location.pathname === "/market";
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
   const [musicOpen, setMusicOpen] = useState<boolean>(false);
@@ -104,9 +105,9 @@ export default function Header() {
   return (
       <Fragment>
         <AppBar position="fixed">
-          <Toolbar disableGutters>
-            <Grid id="header" container item justifyContent="space-between" alignItems="center" pl={isMobile ? 2 : 4} pr={isMobile ? 2 : 4} xl={12} lg={12} md={12} sm={12} xs={12}>
-              <Grid id='logo' container item display={isTinyMobile ? "none" : "flex"} justifyContent="start" xl={3} lg={3} md={3} sm={6} xs={2}>
+          <Toolbar>
+            <Grid id="header" container item justifyContent={isTinyMobile ? 'end' : 'space-between'} alignItems="center" xl={12} lg={12} md={12} sm={12} xs={12} pl={1}>
+              <Grid id='logo' container item display={isBelow320 ? 'none' : 'flex'} justifyContent="start" xl={3} lg={3} md={3} sm={6} xs={2}>
                 <Link href={'/staking'} underline='none'>
                   <Avatar className={classes.avatar} alt='Home' src={logo} sx={{width: 65, height: 65}}/>
                 </Link>
@@ -126,7 +127,7 @@ export default function Header() {
                   <Typography className="link" variant="h5" color={getLinkColor('/leaderboard')} onClick={() => navigate("/leaderboard")}>Board</Typography>
                 </Grid> 
               </Grid>
-              <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={3} lg={3} md={3} sm={6} xs={10}>
+              <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={3} lg={3} md={3} sm={6} xs={isBelow320 ? 12 : 10}>
                 <Grid item display="flex" pr={2}>
                   <Fab size='small' onClick={onSwapClick}>
                     <MonetizationOn color={swapOpen ? "primary" : "inherit"} fontSize="medium"/>

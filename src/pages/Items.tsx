@@ -15,7 +15,7 @@ import ribbit from '../images/ribbit.gif';
 const useStyles: any = makeStyles((theme: Theme) =>
   createStyles({
     app: {
-      backgroundColor: "#000000"
+      backgroundColor: "#181818"
     },
     modal: {
       position: "absolute" as "absolute",

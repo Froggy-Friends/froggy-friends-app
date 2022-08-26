@@ -22,7 +22,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
       }
     },
     footer: {
-      backgroundColor: '#181818'
+      backgroundColor: 'black'
     }
   })
 );
