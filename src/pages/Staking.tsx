@@ -316,7 +316,7 @@ export default function Staking() {
       <Container maxWidth='xl'>
         <Grid id='staking' container direction='column' textAlign='center'>
           <Grid id='banner' container direction='column' bgcolor={theme.palette.info.main} borderRadius={3} xl={12} lg={12} md={12} sm={12} xs={12} p={3}>
-            <Grid id='title' item display='flex' direction={isMobile ? 'column' : 'row'} justifyContent='space-between' pb={5}>
+            <Grid id='title' item display='flex' direction={isMobile ? 'column' : 'row'} justifyContent='space-between' pb={2}>
               <Typography variant='h4' color='secondary' pb={3}>Staking Stats</Typography>
               <ButtonGroup orientation={isBelow320 ? 'vertical' : 'horizontal'} sx={{height: isMobile ? 'inherit' : 35, justifyContent: isMobile ? 'center' : 'end'}}>
                 <Button className='inverted' disabled={froggiesToStake.length === 0} onClick={() => onStake()}>
@@ -328,29 +328,29 @@ export default function Staking() {
                 <Button className='inverted' onClick={() => onClaim()}>Claim</Button>
               </ButtonGroup>
             </Grid>
-            <Grid id='stats' item display='flex' direction={isMobile ? 'column' : 'row'} justifyContent='start'>
-              <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={3}>
+            <Grid id='stats' item display='flex' direction={isMobile ? 'column' : 'row'} alignItems={isMobile ? 'center' : 'end'} justifyContent='start'>
+              <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={2}>
                 <Typography variant='body1' color='secondary' textAlign={isMobile ? 'center' : 'start'} pb={2}>Froggies Staked</Typography>
                 <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                   <img src={think} style={{height: 50, width: 50}} alt='think'/>
                   <Typography variant='h6' color='secondary' pl={2}>{froggiesStakedPercentage()}&#37;</Typography>
                 </Grid>
               </Grid>
-              <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={3}>
+              <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={2}>
                 <Typography variant='body1' color='secondary' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit Balance</Typography>
                 <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                   <img src={chest} style={{height: 50, width: 50}} alt='think'/>
                   <Typography variant='h6' color='secondary' pl={2}>{formatBalance(ribbitBalance)}</Typography>
                 </Grid>
               </Grid>
-              <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={3}>
+              <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={2}>
                 <Typography variant='body1' color='secondary' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit Staked</Typography>
                 <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                   <img src={rain} style={{height: 50, width: 50}} alt='think'/>
                   <Typography variant='h6' color='secondary' pl={2}>{formatBalance(stakingBalance)}</Typography>
                 </Grid>
               </Grid>
-              <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={3}>
+              <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={2}>
                 <Typography variant='body1' color='secondary' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit / Day</Typography>
                 <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                   <img src={ribbit} style={{height: 50, width: 50}} alt='think'/>
