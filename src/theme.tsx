@@ -70,6 +70,13 @@ let theme = createTheme({
             ":hover": {
               color: "#5ea14e"
             }
+          },
+          "&.inverted": {
+            backgroundColor: '#ebedf1',
+            color: '#181818'
+          },
+          "&.inverted:hover": {
+            color: '#5ea14e'
           }
         }
       }
