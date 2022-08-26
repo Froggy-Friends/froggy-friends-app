@@ -47,7 +47,7 @@ const formatBalance = (balance: any) => {
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     app: {
-      backgroundColor: '#000000',
+      backgroundColor: '#181818',
       backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${stakeUrl})`,
       backgroundRepeat: 'no-repeat'
     },
