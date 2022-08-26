@@ -162,7 +162,7 @@ export default function Items() {
               {
                 filterItems('lilies').map((lily, index) => {
                   return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2}>
-                          <Card className='dark'>
+                          <Card>
                             <CardHeader title="Golden Lily Pad" titleTypographyProps={{variant: 'h6', color: 'secondary'}}/>
                             <CardMedia component='img' image={lily.image} alt='Golden Lily Pad'/>
                             <CardContent>
@@ -187,7 +187,7 @@ export default function Items() {
               {
                 filterItems('friends').map(friend => {
                   return <Grid key={friend.id} item xl={3} lg={3} md={4} sm={6} xs={12} p={2}>
-                          <Card className='dark'>
+                          <Card>
                             <CardHeader title={friend.name} titleTypographyProps={{variant: "h6", color: "secondary"}}/>
                             <CardMedia component="img" image={friend.image} alt={friend.name}/>
                             <CardContent>
@@ -217,7 +217,7 @@ export default function Items() {
               {
                 filterItems('collabs').map(friend => {
                   return <Grid key={friend.id} item xl={3} lg={3} md={4} sm={6} xs={12} p={2}>
-                          <Card className='dark'>
+                          <Card>
                             <CardHeader title={friend.name} titleTypographyProps={{variant: "h6", color: "secondary"}}/>
                             <CardMedia component="img" image={friend.image} alt={friend.name}/>
                             <CardContent>
@@ -246,7 +246,7 @@ export default function Items() {
               {
                 filterItems('nfts').map((nft, index) => {
                   return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2}>
-                          <Card className='dark'>
+                          <Card>
                             <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
                               title={
                                 <Grid item display='flex' justifyContent='center'>
@@ -291,7 +291,7 @@ export default function Items() {
               {
                 filterItems('raffles').map((raffle, index) => {
                   return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2}>
-                          <Card className='dark'>
+                          <Card>
                             <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
                               title={
                                 <Grid item display='flex' justifyContent='center' alignItems='center'>
@@ -343,7 +343,7 @@ export default function Items() {
               {
                 filterItems('allowlists').map((allowlist, index) => {
                   return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2}>
-                    <Card className='dark'>
+                    <Card>
                       <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
                         title={
                           <Grid item display='flex' justifyContent='center' alignItems='center'>
@@ -389,7 +389,7 @@ export default function Items() {
               {
                 filterItems('merch').map((merch, index) => {
                   return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={450}>
-                    <Card className='dark'>
+                    <Card>
                       <CardHeader titleTypographyProps={{variant: 'subtitle1', color: 'secondary'}}
                           title={
                             <Grid item display='flex' justifyContent='center' alignItems='center'>

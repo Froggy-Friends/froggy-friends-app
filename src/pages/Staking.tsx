@@ -268,7 +268,7 @@ export default function Staking() {
     } else if (froggiesToUnstake.includes(tokenId)) {
       return "#73161D";
     } else {
-      return "#1a1b1c";
+      return "black";
     }
   };
 

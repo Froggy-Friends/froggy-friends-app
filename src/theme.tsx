@@ -93,7 +93,7 @@ let theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          backgroundColor: '#181818',
+          backgroundColor: 'black',
           color: '#ebedf1',
           width: '100%',
           textAlign: 'center',
@@ -104,10 +104,6 @@ let theme = createTheme({
             backgroundColor: "#ebedf1",
             color: "#181818",
             width: 350
-          },
-          '&.dark': {
-            backgroundColor: 'black',
-            color: '#ebedf1'
           }
         }
       }
@@ -189,11 +185,11 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           overflowY: 'scroll',
-          backgroundColor: "#00000099",
+          backgroundColor: 'black',
           "::-webkit-scrollbar": {
             width: 8,
             height: 8,
-            backgroundColor: "#181818"
+            backgroundColor: 'black'
           },
           "::-webkit-scrollbar-thumb": {
             backgroundColor: "#5ea14e",
