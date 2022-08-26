@@ -104,6 +104,10 @@ let theme = createTheme({
             backgroundColor: "#ebedf1",
             color: "#181818",
             width: 350
+          },
+          '&.dark': {
+            backgroundColor: 'black',
+            color: '#ebedf1'
           }
         }
       }
