@@ -99,7 +99,7 @@ export default function Staking() {
   const [showClaimModal, setShowClamModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
-  const { activateBrowserWallet, account } = useEthers();
+  const { account } = useEthers();
   const ribbitBalance: any = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || 0;
   const { setApprovalForAll, setApprovalForAllState } = useSetApprovalForAll();
   const { stake, stakeState } = useStake();
@@ -358,12 +358,6 @@ export default function Staking() {
               </Grid>
             </Grid>
           </Grid>
-          { !account && <Grid item p={3}>
-              <Button variant='contained' onClick={() => activateBrowserWallet()}>
-                <Typography variant='h5'>Login</Typography>  
-              </Button>
-          </Grid>
-          }
           { account && loading && 
             <Grid item p={10}>
               <CircularProgress color='secondary' size={80}/>
