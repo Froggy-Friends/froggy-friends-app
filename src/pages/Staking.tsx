@@ -41,7 +41,7 @@ interface Owned {
 const formatBalance = (balance: any) => {
   const etherFormat = formatEther(balance);
   const number = +etherFormat;
-  return commify(number.toFixed(2));
+  return commify(number.toFixed(0));
 }
 
 const useStyles: any = makeStyles((theme: Theme) => 
