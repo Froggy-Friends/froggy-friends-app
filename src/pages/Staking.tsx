@@ -376,13 +376,13 @@ export default function Staking() {
                       {
                         froggy.isStaked === true && 
                         <Button variant='contained' color='success'  onClick={() => onSelectFroggyToUnstake(froggy.edition)}>
-                          <Typography variant='h5'>Unstake</Typography>
+                          <Typography variant='h6' color='secondary'>Unstake</Typography>
                         </Button>
                       }
                       {
                         froggy.isStaked === false && 
                         <Button variant='contained' color='success' onClick={() => onSelectFroggyToStake(froggy.edition)}>
-                          <Typography variant='h5'>Stake</Typography>
+                          <Typography variant='h6' color='secondary'>Stake</Typography>
                         </Button>
                       }
                     </CardContent>

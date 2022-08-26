@@ -54,6 +54,7 @@ let theme = createTheme({
           color: '#ebedf1',
           backgroundColor: '#5ea14e',
           borderRadius: 25,
+          height: 35,
           fontWeight: 'bold',
           ":hover": {
             backgroundColor: '#48793c'
