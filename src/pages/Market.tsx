@@ -896,7 +896,7 @@ export default function Market() {
         <Box className={classes.modal}>
           <Grid container justifyContent='space-between' alignItems='center' pb={5}>
             <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
-              <Typography id='modal-title' variant="h5" p={3}>{itemName} Allowlist Owners</Typography>
+              <Typography id='modal-title' variant="h5" p={3}>{itemName} Owners</Typography>
             </Grid>
             <Grid item display='flex' alignSelf='start' justifyContent='center' p={2} xl={2} lg={2} md={2} sm={2} xs={2}>
               <IconButton size='medium' color='inherit' onClick={onItemOwnersClose}>
