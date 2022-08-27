@@ -9,7 +9,7 @@ import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client'
 import { marketplaceUrl } from '../data';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { AddCircle, Check, Close, InfoOutlined, OpenInNew, RemoveCircle, Warning } from '@mui/icons-material';
+import { AddCircle, Check, Close, InfoOutlined, OpenInNew, Receipt, RemoveCircle, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import { formatDistance } from 'date-fns';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -130,6 +130,8 @@ export default function Market() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertBg, setAlertBg] = useState<string | null>(null);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [itemOwners, setItemOwners] = useState<string[]>([]);
+  const [itemName, setItemName] = useState<string>('');
   const { account } = useEthers();
   const { collabBuy, collabBuyState } = useCollabBuy();
   const { approveSpender, approveSpenderState } = useApproveSpender();
@@ -313,6 +315,13 @@ export default function Market() {
     }
   }
 
+  const onItemOwnersClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setItemOwners([]);
+      setItemName('');
+    }
+  }
+
   const formatBalance = (balance: BigNumber | undefined) => {
     if (!balance) {
       return 0;
@@ -344,6 +353,12 @@ export default function Market() {
       return;
     }
     updateItemAmounts(item.id, value);
+  }
+
+  const onItemOwnersClick = async (id: number, name: string) => {
+    const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/owners`);
+    setItemOwners(response.data);
+    setItemName(name);
   }
 
   return (
@@ -692,7 +707,12 @@ export default function Market() {
                             />
                             <CardMedia component='img' image={allowlist.image} style={{minHeight: 300}} alt='Allowlist'/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(allowlist)}</Typography>
+                              <Typography variant='subtitle1' color='secondary' display='flex' justifyContent='center' alignItems='center' pb={1}>
+                                {getItemTitle(allowlist)} 
+                                <IconButton color='secondary' onClick={() => onItemOwnersClick(allowlist.id, allowlist.name)}>
+                                  <Receipt/>
+                                </IconButton>
+                              </Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(allowlist.price)}</Typography>
@@ -870,6 +890,27 @@ export default function Market() {
             </Grid>
           </Grid>
           <LinearProgress variant='indeterminate' color='info'/>
+        </Box>
+      </Modal>
+      <Modal open={itemOwners.length > 0} onClose={onItemOwnersClose} keepMounted aria-labelledby='item-owners' aria-describedby='item-owners-description'>
+        <Box className={classes.modal}>
+          <Grid container justifyContent='space-between' alignItems='center' pb={5}>
+            <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
+              <Typography id='modal-title' variant="h5" p={3}>{itemName} Allowlist Owners</Typography>
+            </Grid>
+            <Grid item display='flex' alignSelf='start' justifyContent='center' p={2} xl={2} lg={2} md={2} sm={2} xs={2}>
+              <IconButton size='medium' color='inherit' onClick={onItemOwnersClose}>
+                <Close fontSize='medium'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+          <Grid container p={3} sx={{overflowWrap: 'anywhere'}}>
+            {
+              itemOwners.map(owner => {
+                return <Typography variant='body1'>{owner}</Typography>
+              })
+            }
+          </Grid>
         </Box>
       </Modal>
     </Grid>
