@@ -22,10 +22,7 @@ let theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'nunito',
-    h6: {
-      color: 'black'
-    }
+    fontFamily: 'nunito'
   },
   transitions: {
     duration: {

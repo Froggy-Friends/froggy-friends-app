@@ -100,8 +100,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: 500,
-      backgroundColor: '#cfdcae',
-      color: theme.palette.background.default,
+      backgroundColor: theme.palette.info.main,
+      color: theme.palette.secondary.main,
       border: '0px',
       borderRadius: 5,
       padding: 4,
@@ -357,6 +357,12 @@ export default function Market() {
 
   const onItemOwnersClick = async (id: number, name: string) => {
     const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/owners`);
+    setItemOwners(response.data);
+    setItemName(name);
+  }
+
+  const onRaffleTicketsClick = async (id: number, name: string) => {
+    const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/tickets`);
     setItemOwners(response.data);
     setItemName(name);
   }
@@ -618,7 +624,12 @@ export default function Market() {
                                       </Grid>
                                   }/>
                                   <CardContent>
-                                    <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
+                                    <Typography variant='subtitle1' color='secondary' display='flex' justifyContent='center' alignItems='center' pb={1}>
+                                      {getItemTitle(raffle)}
+                                      <IconButton color='secondary' onClick={() => onRaffleTicketsClick(raffle.id, raffle.name)}>
+                                        <Receipt/>
+                                      </IconButton>
+                                    </Typography>
                                     <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                       <Typography>{commify(raffle.price * (itemAmounts.get(raffle.id) || 1))}</Typography>
@@ -894,7 +905,7 @@ export default function Market() {
       </Modal>
       <Modal open={itemOwners.length > 0} onClose={onItemOwnersClose} keepMounted aria-labelledby='item-owners' aria-describedby='item-owners-description'>
         <Box className={classes.modal}>
-          <Grid container justifyContent='space-between' alignItems='center' pb={5}>
+          <Grid container justifyContent='space-between' alignItems='center'>
             <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
               <Typography id='modal-title' variant="h5" p={3}>{itemName} Owners</Typography>
             </Grid>
@@ -904,7 +915,7 @@ export default function Market() {
               </IconButton>
             </Grid>
           </Grid>
-          <Grid container p={3} sx={{overflowWrap: 'anywhere'}}>
+          <Grid className="scrollable" container p={3} mb={2} maxHeight={350} sx={{overflowY: 'scroll'}}>
             {
               itemOwners.map(owner => {
                 return <Typography variant='body1'>{owner}</Typography>
