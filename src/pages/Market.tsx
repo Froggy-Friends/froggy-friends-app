@@ -9,7 +9,7 @@ import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client'
 import { marketplaceUrl } from '../data';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { AddCircle, Check, Close, InfoOutlined, OpenInNew, RemoveCircle, Warning } from '@mui/icons-material';
+import { AddCircle, Check, Close, InfoOutlined, OpenInNew, Receipt, RemoveCircle, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import { formatDistance } from 'date-fns';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -100,8 +100,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: 500,
-      backgroundColor: '#cfdcae',
-      color: theme.palette.background.default,
+      backgroundColor: theme.palette.info.main,
+      color: theme.palette.secondary.main,
       border: '0px',
       borderRadius: 5,
       padding: 4,
@@ -121,7 +121,7 @@ export default function Market() {
   const theme = useTheme();
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useAppDispatch();
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(4);
   const [showAll, setShowAll] = useState(false);
   const [loadingItems, setLoadingItems] = useState(false);
   const [items, setItems] = useState<RibbitItem[]>([]);
@@ -130,6 +130,8 @@ export default function Market() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertBg, setAlertBg] = useState<string | null>(null);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [itemOwners, setItemOwners] = useState<string[]>([]);
+  const [itemName, setItemName] = useState<string>('');
   const { account } = useEthers();
   const { collabBuy, collabBuyState } = useCollabBuy();
   const { approveSpender, approveSpenderState } = useApproveSpender();
@@ -313,6 +315,13 @@ export default function Market() {
     }
   }
 
+  const onItemOwnersClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setItemOwners([]);
+      setItemName('');
+    }
+  }
+
   const formatBalance = (balance: BigNumber | undefined) => {
     if (!balance) {
       return 0;
@@ -346,6 +355,18 @@ export default function Market() {
     updateItemAmounts(item.id, value);
   }
 
+  const onItemOwnersClick = async (id: number, name: string) => {
+    const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/owners`);
+    setItemOwners(response.data);
+    setItemName(name);
+  }
+
+  const onRaffleTicketsClick = async (id: number, name: string) => {
+    const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/tickets`);
+    setItemOwners(response.data);
+    setItemName(name);
+  }
+
   return (
     <Grid id="market" className={classes.market} container direction="column" justifyContent="start" pt={15}>
       <Grid id='filters-and-items-link' container direction={isSmallMobile ? 'column' : 'row'} justifyContent='space-between' alignItems={isSmallMobile ? 'start' : 'center'}>
@@ -361,20 +382,9 @@ export default function Market() {
             <ToggleButton value={true}>All</ToggleButton>
           </ToggleButtonGroup>
         </Grid>
-        <Grid id='balance' item display='flex' justifyContent='center' alignItems='center' bgcolor='#000000d1' borderRadius={2} p={1} ml={2} pl={2} pr={2}>
+        <Grid id='balance' item display='flex' justifyContent='center' alignItems='center' bgcolor='#000000d1' borderRadius={2} ml={isSmallMobile ? 2 : 0} mr={2} p={1} pl={2} pr={2}>
           <img src={chest} style={{height: 25, width: 25}} alt='chest'/>
           <Typography variant='h6' color='secondary' pl={2}>{formatBalance(ribbitBalance)} $RIBBIT</Typography>
-        </Grid>
-        <Grid id='item-link' p={2} zIndex={0}>
-          <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{padding: 1}}/>}>
-            <Link href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x46898f15f99b8887d87669ab19d633f579939ad9&chain=mainnet'
-              variant='subtitle1' color='inherit' underline='none' target='_blank' p={0.5}>
-                Purchase $RIBBIT
-            </Link>
-          </Button>
-          <Button className='transparent' size='medium' endIcon={<OpenInNew sx={{padding: 1}}/>}>
-            <Link href='https://opensea.io/account/ribbit-items' variant='subtitle1' color='inherit' underline='none' target='_blank' p={0.5}>View on Opensea</Link>
-          </Button>
         </Grid>
       </Grid>
       <Grid id="items-and-cart" container item justifyContent='space-between' p={2} minHeight={855}>
@@ -614,7 +624,12 @@ export default function Market() {
                                       </Grid>
                                   }/>
                                   <CardContent>
-                                    <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(raffle)}</Typography>
+                                    <Typography variant='subtitle1' color='secondary' display='flex' justifyContent='center' alignItems='center' pb={1}>
+                                      {getItemTitle(raffle)}
+                                      <IconButton color='secondary' onClick={() => onRaffleTicketsClick(raffle.id, raffle.name)}>
+                                        <Receipt/>
+                                      </IconButton>
+                                    </Typography>
                                     <Grid item display='flex' justifyContent='center' alignItems='center' pb={2} pr={1}>
                                       <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                       <Typography>{commify(raffle.price * (itemAmounts.get(raffle.id) || 1))}</Typography>
@@ -703,7 +718,12 @@ export default function Market() {
                             />
                             <CardMedia component='img' image={allowlist.image} style={{minHeight: 300}} alt='Allowlist'/>
                             <CardContent>
-                              <Typography variant='subtitle1' color='secondary' pb={1}>{getItemTitle(allowlist)}</Typography>
+                              <Typography variant='subtitle1' color='secondary' display='flex' justifyContent='center' alignItems='center' pb={1}>
+                                {getItemTitle(allowlist)} 
+                                <IconButton color='secondary' onClick={() => onItemOwnersClick(allowlist.id, allowlist.name)}>
+                                  <Receipt/>
+                                </IconButton>
+                              </Typography>
                               <Grid item display='flex' justifyContent='center' pb={2} pr={1}>
                                 <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                 <Typography>{commify(allowlist.price)}</Typography>
@@ -881,6 +901,27 @@ export default function Market() {
             </Grid>
           </Grid>
           <LinearProgress variant='indeterminate' color='info'/>
+        </Box>
+      </Modal>
+      <Modal open={itemOwners.length > 0} onClose={onItemOwnersClose} keepMounted aria-labelledby='item-owners' aria-describedby='item-owners-description'>
+        <Box className={classes.modal}>
+          <Grid container justifyContent='space-between' alignItems='center'>
+            <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
+              <Typography id='modal-title' variant="h5" p={3}>{itemName} Owners</Typography>
+            </Grid>
+            <Grid item display='flex' alignSelf='start' justifyContent='center' p={2} xl={2} lg={2} md={2} sm={2} xs={2}>
+              <IconButton size='medium' color='inherit' onClick={onItemOwnersClose}>
+                <Close fontSize='medium'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+          <Grid className="scrollable" container p={3} mb={2} maxHeight={350} sx={{overflowY: 'scroll'}}>
+            {
+              itemOwners.map(owner => {
+                return <Typography variant='body1'>{owner}</Typography>
+              })
+            }
+          </Grid>
         </Box>
       </Modal>
     </Grid>

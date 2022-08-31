@@ -22,10 +22,7 @@ let theme = createTheme({
     }
   },
   typography: {
-    fontFamily: 'nunito',
-    h6: {
-      color: 'black'
-    }
+    fontFamily: 'nunito'
   },
   transitions: {
     duration: {
@@ -37,7 +34,7 @@ let theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: "#181818",
+          backgroundColor: "black",
         }
       }
     },
@@ -54,6 +51,7 @@ let theme = createTheme({
           color: '#ebedf1',
           backgroundColor: '#5ea14e',
           borderRadius: 25,
+          height: 35,
           fontWeight: 'bold',
           ":hover": {
             backgroundColor: '#48793c'
@@ -70,6 +68,13 @@ let theme = createTheme({
             ":hover": {
               color: "#5ea14e"
             }
+          },
+          "&.inverted": {
+            backgroundColor: '#ebedf1',
+            color: '#181818'
+          },
+          "&.inverted:hover": {
+            color: '#5ea14e'
           }
         }
       }
@@ -86,7 +91,7 @@ let theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          backgroundColor: '#181818',
+          backgroundColor: 'black',
           color: '#ebedf1',
           width: '100%',
           textAlign: 'center',
@@ -178,11 +183,11 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           overflowY: 'scroll',
-          backgroundColor: "#00000099",
+          backgroundColor: 'black',
           "::-webkit-scrollbar": {
             width: 8,
             height: 8,
-            backgroundColor: "#181818"
+            backgroundColor: 'black'
           },
           "::-webkit-scrollbar-thumb": {
             backgroundColor: "#5ea14e",
