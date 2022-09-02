@@ -68,7 +68,7 @@ export default function Footer() {
               </Link>
             </Grid>
             <Grid item p={1}>
-              <Link href="https://discord.com/invite/froggyfriends" underline='none' target='_blank'>
+              <Link href="https://discord.com/invite/froggylabs" underline='none' target='_blank'>
                 <Avatar className={classes.avatar} alt='Discord' src={discord} sx={{height: 35, width: 35}}/>
               </Link>
             </Grid>
