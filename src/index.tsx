@@ -10,18 +10,21 @@ import config from './config';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from "./redux/store";
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <DAppProvider config={config}>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </DAppProvider>
-      </ThemeProvider>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <DAppProvider config={config}>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </DAppProvider>
+        </ThemeProvider>
+      </Provider>
+    </ErrorBoundary>
   </React.StrictMode>,
   document.getElementById('root')
 );
