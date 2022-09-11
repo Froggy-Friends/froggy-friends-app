@@ -1,14 +1,15 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { makeStyles } from '@mui/styles';
 import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Fade, Button, useTheme } from "@mui/material";
-import { Close, ShoppingCart, Menu, Headphones, MonetizationOn } from "@mui/icons-material";
+import { Close, ShoppingCart, Menu, Headphones, MonetizationOn, DarkMode, LightMode } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
 import { darkTheme, SwapWidget } from '@uniswap/widgets'
 import { uniswapConfig } from '../config';
+import { ColorModeContext } from "../App";
 import '@uniswap/widgets/fonts.css'
 import logo from '../images/logo.png';
 import MusicPlayer from "./MusicPlayer";
@@ -50,6 +51,7 @@ export default function Header() {
   const playing = useAppSelector(isPlaying);
   const navigate = useNavigate();
   const location = useLocation();
+  const colorMode = useContext(ColorModeContext);
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const isTablet = useMediaQuery(theme.breakpoints.up('sm'));
@@ -105,7 +107,7 @@ export default function Header() {
   return (
       <Fragment>
         <AppBar position="fixed">
-          <Toolbar>
+          <Toolbar sx={{bgcolor: theme.palette.background.default}}>
             <Grid id="header" container item justifyContent={isTinyMobile ? 'end' : 'space-between'} alignItems="center" xl={12} lg={12} md={12} sm={12} xs={12} pl={1}>
               <Grid id='logo' container item display={isBelow320 ? 'none' : 'flex'} justifyContent="start" xl={3} lg={3} md={3} sm={6} xs={2}>
                 <Link href={'/staking'} underline='none'>
@@ -128,6 +130,11 @@ export default function Header() {
                 </Grid> 
               </Grid>
               <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={3} lg={3} md={3} sm={6} xs={isBelow320 ? 12 : 10}>
+                <Grid item display="flex" pr={2}>
+                  <Fab size='small' onClick={colorMode.toggleColorMode}>
+                    { theme.palette.mode === 'dark' ? <LightMode fontSize="medium"/> : <DarkMode fontSize="medium"/>}
+                  </Fab>
+                </Grid>
                 <Grid item display="flex" pr={2}>
                   <Fab size='small' onClick={onSwapClick}>
                     <MonetizationOn color={swapOpen ? "primary" : "inherit"} fontSize="medium"/>

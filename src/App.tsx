@@ -1,7 +1,7 @@
 import { createContext, useMemo, useState } from 'react';
 import { Provider } from 'react-redux';
 import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
-import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { DAppProvider } from '@usedapp/core';
 import { store } from "./redux/store";
 import { ErrorBoundary } from './components/ErrorBoundary';
