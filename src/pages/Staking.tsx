@@ -309,16 +309,9 @@ export default function Staking() {
     let staked = (froggiesStaked / 4444) * 100;
     return staked.toFixed(2);
   }
-
-  const getBackgroundSize = () => {
-    if (!isDesktop) {
-      return "contain";
-    }
-    return isDesktop && owned.froggies.length ? "contain" : "cover";
-  }
   
   return (
-    <Grid id='app' className={classes.app} sx={{backgroundSize: getBackgroundSize()}} container direction='column' pb={30}>
+    <Grid id='app' className={classes.app} container direction='column' pb={30}>
       <Paper elevation={3}>
         <Grid id='banner' container sx={{backgroundImage: `url(${pond})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 600}}/>
       </Paper>
