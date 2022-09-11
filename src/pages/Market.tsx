@@ -376,13 +376,13 @@ export default function Market() {
           </Grid>
           <Grid id='search-and-items' container direction='column' xl={10} lg={10} md={10} sm={12} xs={12}>
             <Grid id='controls' container item justifyContent='end'>
-              <Grid id='sort' item xl={2} lg={2}>
+              <Grid id='sort' item xl={2} lg={2} md={3} sm={4} xs={12} pb={2}>
                 <Select value={sort} onChange={onSortSelect}>
                   <MenuItem value='low-price' color='secondary'>Price: Low to High</MenuItem>
                   <MenuItem value='high-price'>Price: High to Low</MenuItem>
                 </Select>
               </Grid>
-              <Grid id='search' item xl={4} lg={6}>
+              <Grid id='search' item xl={4} lg={4} md={5} sm={5} xs={12} pb={2}>
                 <TextField placeholder='Search items by name' fullWidth 
                   InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}
                 />
