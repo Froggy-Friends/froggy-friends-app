@@ -8,7 +8,7 @@ import { BigNumber } from 'ethers';
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { AddCircle, Check, CheckBox, Close, FilterList, InfoOutlined, Receipt, RemoveCircle, Warning } from '@mui/icons-material';
+import { AddCircle, Check, CheckBox, Close, FilterList, InfoOutlined, Receipt, RemoveCircle, Search, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import { formatDistance } from 'date-fns';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -375,15 +375,18 @@ export default function Market() {
             </Grid>
           </Grid>
           <Grid id='search-and-items' container direction='column' xl={10} lg={10} md={10} sm={12} xs={12}>
-            <Grid id='controls' container justifyContent='end'>
-              <Grid id='sort' item>
+            <Grid id='controls' container item justifyContent='end'>
+              <Grid id='sort' item xl={2} lg={2}>
                 <Select value={sort} onChange={onSortSelect}>
                   <MenuItem value='low-price' color='secondary'>Price: Low to High</MenuItem>
-                  <MenuItem value='low-price'>Price: Low to High</MenuItem>
-                  <MenuItem value='low-price'>Price: Low to High</MenuItem>
+                  <MenuItem value='high-price'>Price: High to Low</MenuItem>
                 </Select>
               </Grid>
-              <Grid id='search' item></Grid>
+              <Grid id='search' item xl={4} lg={6}>
+                <TextField placeholder='Search items by name' fullWidth 
+                  InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}
+                />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
