@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { makeStyles } from '@mui/styles';
-import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Fade, Button } from "@mui/material";
+import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Fade, Button, useTheme } from "@mui/material";
 import { Close, ShoppingCart, Menu, Headphones, MonetizationOn } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
@@ -11,7 +11,6 @@ import { darkTheme, SwapWidget } from '@uniswap/widgets'
 import { uniswapConfig } from '../config';
 import '@uniswap/widgets/fonts.css'
 import logo from '../images/logo.png';
-import theme from "../theme";
 import MusicPlayer from "./MusicPlayer";
 import Cart from "./Cart";
 
@@ -51,6 +50,7 @@ export default function Header() {
   const playing = useAppSelector(isPlaying);
   const navigate = useNavigate();
   const location = useLocation();
+  const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const isTablet = useMediaQuery(theme.breakpoints.up('sm'));
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
