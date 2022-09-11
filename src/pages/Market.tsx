@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment, SnackbarContent, Paper, Container, Switch } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment, SnackbarContent, Paper, Container, Switch, FormControl, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { commify, formatEther } from '@ethersproject/units';
@@ -74,6 +74,7 @@ export default function Market() {
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useAppDispatch();
   const [value, setValue] = useState(4);
+  const [sort, setSort] = useState('low-price');
   const [showAll, setShowAll] = useState(false);
   const [loadingItems, setLoadingItems] = useState(false);
   const [items, setItems] = useState<RibbitItem[]>([]);
@@ -317,6 +318,10 @@ export default function Market() {
     setItemName(name);
   }
 
+  const onSortSelect = (event: SelectChangeEvent) => {
+    setSort(event.target.value as string);
+  }
+
   return (
     <Grid id="market" className={classes.market} container direction="column" justifyContent="start">
       <Paper elevation={3}>
@@ -369,8 +374,17 @@ export default function Market() {
               <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
             </Grid>
           </Grid>
-          <Grid id='items' xl={10} lg={10} md={10} sm={12} xs={12}>
-
+          <Grid id='search-and-items' container direction='column' xl={10} lg={10} md={10} sm={12} xs={12}>
+            <Grid id='controls' container justifyContent='end'>
+              <Grid id='sort' item>
+                <Select value={sort} onChange={onSortSelect}>
+                  <MenuItem value='low-price' color='secondary'>Price: Low to High</MenuItem>
+                  <MenuItem value='low-price'>Price: Low to High</MenuItem>
+                  <MenuItem value='low-price'>Price: Low to High</MenuItem>
+                </Select>
+              </Grid>
+              <Grid id='search' item></Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Container>
