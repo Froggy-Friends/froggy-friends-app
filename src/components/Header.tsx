@@ -113,24 +113,24 @@ export default function Header() {
               </Grid>
               <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={5} lg={4} md={4} sm={8} xs={isTinyMobile ? 12 : 11}>
                 <Grid item display="flex" pr={1}>
-                  <Fab size='small' onClick={colorMode.toggleColorMode}>
+                  <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={colorMode.toggleColorMode}>
                     { theme.palette.mode === 'dark' ? <LightMode fontSize="medium"/> : <DarkMode fontSize="medium"/>}
                   </Fab>
                 </Grid>
                 <Grid item display="flex" pr={1}>
-                  <Fab size='small' onClick={onSwapClick}>
+                  <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={onSwapClick}>
                     <MonetizationOn color={swapOpen ? "primary" : "inherit"} fontSize="medium"/>
                   </Fab>
                 </Grid>
                 <Grid item display="flex" pr={1}>
-                  <Fab size='small' onClick={onMusicClick}>
+                  <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={onMusicClick}>
                     <Badge invisible={!playing} badgeContent=" " color="primary">
                       <Headphones fontSize='medium'/>
                     </Badge>
                   </Fab>
                 </Grid>
                 <Grid item display="flex" pr={1}>
-                  <Fab size='small' onClick={onCartClick}>
+                  <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={onCartClick}>
                     <Badge badgeContent={cartItemCount} color="primary">
                       <ShoppingCart fontSize='medium'/>
                     </Badge>
@@ -141,7 +141,7 @@ export default function Header() {
                     <Typography variant='h5'>Login</Typography>  
                   </Button>
                 </Grid>
-                <Grid item display={isDesktop && account ? "flex" : "none"}>
+                <Grid item display={isDesktop && account ? "flex" : "none"} pl={1}>
                   <Typography variant='h5'>{displayName}</Typography>
                 </Grid>
                 <Grid item display={!isAboveTablet ? "flex" : "none"} justifyContent="end" pl={1}>
