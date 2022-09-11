@@ -140,11 +140,9 @@ export default function getTheme(isDarkMode: boolean) {
       MuiFab: {
         styleOverrides: {
           root: {
-            // backgroundColor: configs.secondary,
-            color: configs.dark,
+            backgroundColor: configs.dark,
             ":hover": {
-              // backgroundColor: configs.secondary,
-              color: configs.primary
+              backgroundColor: configs.primary,
             }
           }
         }

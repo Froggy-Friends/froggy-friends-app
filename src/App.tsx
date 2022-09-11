@@ -18,7 +18,7 @@ import Items from "./pages/Items";
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 export default function App() {
-  const [mode, setMode] = useState<PaletteMode>('light');
+  const [mode, setMode] = useState<PaletteMode>('dark');
   const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
