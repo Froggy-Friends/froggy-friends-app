@@ -1,7 +1,7 @@
 import { createContext, useMemo, useState } from 'react';
 import { Provider } from 'react-redux';
 import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
-import { CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, PaletteMode, ThemeProvider } from '@mui/material';
 import { DAppProvider } from '@usedapp/core';
 import { store } from "./redux/store";
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -15,7 +15,6 @@ import Header from "./components/Header";
 import Board from "./pages/Board";
 import Items from "./pages/Items";
 
-export type PaletteMode = 'light' | 'dark';
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 export default function App() {
