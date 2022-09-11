@@ -8,7 +8,7 @@ import { BigNumber } from 'ethers';
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { AddCircle, Check, Close, FilterList, InfoOutlined, Receipt, RemoveCircle, Warning } from '@mui/icons-material';
+import { AddCircle, Check, CheckBox, Close, FilterList, InfoOutlined, Receipt, RemoveCircle, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import { formatDistance } from 'date-fns';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -324,22 +324,49 @@ export default function Market() {
       </Paper>
       <Container maxWidth='xl' sx={{pt: 5}}>
         <Grid container>
-          <Grid id='left-panel' container direction='column' height={500} width='100%' xl={2} lg={2} md={2} sm={12} xs={12}>
-            <Grid id='title' container pb={5} alignItems='center'>
-              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='h5'>Filter</Typography></Grid>
+          <Grid id='left-panel' container direction='column' xl={2} lg={2} md={2} sm={12} xs={12}>
+            <Grid id='filter-title' container pb={5} alignItems='center'>
+              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='h5' fontWeight='bold'>Filter</Typography></Grid>
               <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><FilterList/></Grid>
             </Grid>
-            <Grid id='title' container pb={3}>
+            <Grid id='available' container pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Available</Typography></Grid>
               <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Switch/></Grid>
             </Grid>
-            <Grid id='title' container pb={3}>
+            <Grid id='community' container pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Community</Typography></Grid>
               <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Switch/></Grid>
             </Grid>
-            <Grid id='title' container pb={3}>
+            <Grid id='owned' container pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Owned</Typography></Grid>
               <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Switch/></Grid>
+            </Grid>
+            <Grid id='categories-title' container pt={5} pb={3}>
+              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='h6' fontWeight='bold'>Categories</Typography></Grid>
+            </Grid>
+            <Grid id='glp' container pb={3}>
+              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Golden Lily Pad</Typography></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
+            </Grid>
+            <Grid id='friends' container pb={3}>
+              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Friends</Typography></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
+            </Grid>
+            <Grid id='allowlist' container pb={3}>
+              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Allowlists</Typography></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
+            </Grid>
+            <Grid id='nfts' container pb={3}>
+              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>NFTs</Typography></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
+            </Grid>
+            <Grid id='raffles' container pb={3}>
+              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Raffles</Typography></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
+            </Grid>
+            <Grid id='merch' container pb={3}>
+              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Merch</Typography></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
             </Grid>
           </Grid>
           <Grid id='items' xl={10} lg={10} md={10} sm={12} xs={12}>
