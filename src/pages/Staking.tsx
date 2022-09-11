@@ -47,9 +47,7 @@ const formatBalance = (balance: any) => {
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     app: {
-      backgroundColor: '#181818',
-      backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0, 0, 0, 0.1)), url(${stakeUrl})`,
-      backgroundRepeat: 'no-repeat'
+      backgroundColor: theme.palette.background.default
     },
     modal: {
       position: 'absolute' as 'absolute',
@@ -273,6 +271,14 @@ export default function Staking() {
     }
   };
 
+  const getBorderWidth = (tokenId: number): string => {
+    if (froggiesToStake.includes(tokenId) || froggiesToUnstake.includes(tokenId)) {
+      return '5px solid';
+    } else {
+      return '0px';
+    }
+  }
+
   const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -368,12 +374,12 @@ export default function Staking() {
             {
               owned.froggies.map((froggy: any) => {
                 return <Grid key={froggy.edition} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
-                  <Card sx={{height: '100%', border: '5px solid', borderColor: getBorderColor(froggy.edition)}}>
+                  <Card sx={{height: '100%', border: getBorderWidth(froggy.eddition), borderColor: getBorderColor(froggy.edition)}}>
                     <CardMedia component='img' image={froggy.image} alt='Froggy'/>
-                    <CardContent>
-                      <Typography variant='h5'>{froggy.name}</Typography>
+                    <CardContent sx={{bgcolor: theme.palette.common.white, paddingBottom: 0}}>
+                      <Typography variant='body1' fontWeight='bold' pb={1} pt={1}>{froggy.name}</Typography>
                       <Grid container item justifyContent='space-between'>
-                        <Typography display='flex' alignItems='center' pb={2}> 
+                        <Typography display='flex' alignItems='center'> 
                           <img src={ribbit} style={{height: 30, width: 30}} alt='think'/>
                           {froggy.ribbit} day
                         </Typography>

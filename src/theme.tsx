@@ -5,7 +5,8 @@ const configs = {
   light: '#ebedf1',
   primary: '#5ea14e',
   gold: '#fece07',
-  disabled: "#b3b6bb"
+  disabled: "#b3b6bb",
+  white: '#ffffff'
 }
 
 export default function getTheme(isDarkMode: boolean) {
@@ -13,13 +14,13 @@ export default function getTheme(isDarkMode: boolean) {
     palette: {
       mode: isDarkMode ? 'dark' : 'light',
       background: {
-        default: isDarkMode ? configs.dark : configs.light
+        default: isDarkMode ? configs.dark : configs.white
       },
       primary: {
         main: configs.primary
       },
       secondary: {
-        main: isDarkMode ? configs.light : configs.dark
+        main: isDarkMode ? configs.white : configs.dark
       },
       text: {
         primary: isDarkMode ? configs.light : configs.dark
