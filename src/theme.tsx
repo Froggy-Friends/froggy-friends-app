@@ -178,16 +178,6 @@ export default function getTheme(isDarkMode: boolean) {
           }
         }
       },
-      MuiOutlinedInput: {
-        styleOverrides: {
-          root: {
-            input: {
-              textAlign: 'center',
-              color: 'white'
-            }
-          }
-        }
-      },
       MuiMenuItem: {
         styleOverrides: {
           root: {
