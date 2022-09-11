@@ -4,7 +4,8 @@ const configs = {
   dark: '#181818',
   light: '#ebedf1',
   primary: '#5ea14e',
-  gold: '#fece07'
+  gold: '#fece07',
+  disabled: "#b3b6bb"
 }
 
 export default function getTheme(isDarkMode: boolean) {
@@ -48,7 +49,7 @@ export default function getTheme(isDarkMode: boolean) {
             height: 35,
             fontWeight: 'bold',
             ":disabled": {
-              backgroundColor: "#b3b6bb",
+              backgroundColor: configs.disabled,
               cursor: "not-allowed",
               pointerEvents: "auto"
             }
@@ -66,8 +67,8 @@ export default function getTheme(isDarkMode: boolean) {
       MuiCard: {
         styleOverrides: {
           root: {
-            backgroundColor: 'black',
-            // color: configs.secondary,
+            color: configs.dark,
+            backgroundColor: configs.light,
             width: '100%',
             textAlign: 'center',
             "&.disabled": {

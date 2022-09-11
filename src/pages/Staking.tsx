@@ -269,7 +269,7 @@ export default function Staking() {
     } else if (froggiesToUnstake.includes(tokenId)) {
       return "#73161D";
     } else {
-      return "black";
+      return "transparent";
     }
   };
 
@@ -372,19 +372,15 @@ export default function Staking() {
                     <CardMedia component='img' image={froggy.image} alt='Froggy'/>
                     <CardContent>
                       <Typography variant='h5'>{froggy.name}</Typography>
-                      <Typography pb={2}>{froggy.ribbit} $RIBBIT per day</Typography>
-                      {
-                        froggy.isStaked === true && 
-                        <Button variant='contained' color='success'  onClick={() => onSelectFroggyToUnstake(froggy.edition)}>
-                          <Typography variant='h6' color='secondary'>Unstake</Typography>
+                      <Grid container item justifyContent='space-between'>
+                        <Typography display='flex' alignItems='center' pb={2}> 
+                          <img src={ribbit} style={{height: 30, width: 30}} alt='think'/>
+                          {froggy.ribbit} day
+                        </Typography>
+                        <Button variant='outlined' color='inherit'>
+                          <Typography variant='body2'>MORE</Typography>
                         </Button>
-                      }
-                      {
-                        froggy.isStaked === false && 
-                        <Button variant='contained' color='success' onClick={() => onSelectFroggyToStake(froggy.edition)}>
-                          <Typography variant='h6' color='secondary'>Stake</Typography>
-                        </Button>
-                      }
+                      </Grid>
                     </CardContent>
                   </Card>
                 </Grid>
