@@ -315,7 +315,7 @@ export default function Staking() {
     <Grid id='app' className={classes.app} sx={{backgroundSize: getBackgroundSize()}} container direction='column' pt={15} pb={30}>
       <Container maxWidth='xl'>
         <Grid id='staking' container direction='column' textAlign='center'>
-          <Grid id='banner' container direction='column' bgcolor={theme.palette.info.main} borderRadius={3} xl={12} lg={12} md={12} sm={12} xs={12} p={3}>
+          <Grid id='banner' container direction='column' bgcolor={theme.palette.background.default} borderRadius={3} xl={12} lg={12} md={12} sm={12} xs={12} p={3}>
             <Grid id='title' item display='flex' direction={isMobile ? 'column' : 'row'} justifyContent='space-between' pb={2}>
               <Typography variant='h4' color='secondary' pb={3}>Staking Stats</Typography>
               <ButtonGroup orientation={isBelow320 ? 'vertical' : 'horizontal'} sx={{height: isMobile ? 'inherit' : 35, justifyContent: isMobile ? 'center' : 'end'}}>

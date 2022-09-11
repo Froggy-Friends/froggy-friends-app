@@ -207,7 +207,7 @@ export default function Header() {
         </Drawer>
         <Fade in={musicOpen}>
           <Grid id='player' className={classes.musicPlayer} container zIndex={1}>
-            <MusicPlayer inverted={false}/>
+            <MusicPlayer/>
           </Grid>
         </Fade>
         <Fade in={swapOpen}>

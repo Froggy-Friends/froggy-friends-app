@@ -12,12 +12,8 @@ import StopIcon from '@mui/icons-material/Stop';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import mix from "../tracks/mix.mp3";
 
-interface MusicPlayerProps {
-  inverted: boolean;
-}
 
-export default function MusicPlayer(props: MusicPlayerProps) {
-  const { inverted } = props;
+export default function MusicPlayer() {
   const dispatch = useAppDispatch();
   const [current, setCurrent] = useState(0);
   const [track, setTrack] = useState<Track>(tracks[current]);
@@ -105,20 +101,20 @@ export default function MusicPlayer(props: MusicPlayerProps) {
   }
 
   return (
-    <Card className={inverted ? "inverted" : ""} sx={{ display: 'flex', maxWidth: 440, zIndex: 1 }}>
+    <Card sx={{ display: 'flex', maxWidth: 440, zIndex: 1 }}>
       <Grid container direction='column' minWidth={200} maxWidth={220}>
         <CardContent sx={{ flex: '1 0 auto' }}>
-          <Typography component="div" variant="h6" color={inverted ? "info" : "secondary"}>{track.name}</Typography>
-          <Typography variant="subtitle1" color={inverted ? "info" : "secondary"} component="div">{track.producer}</Typography>
+          <Typography component="div" variant="h6" color="secondary">{track.name}</Typography>
+          <Typography variant="subtitle1" color="secondary" component="div">{track.producer}</Typography>
         </CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <IconButton aria-label="previous" color={inverted ? "info" : "secondary"} onClick={onPrevious}>
+          <IconButton aria-label="previous" color="secondary" onClick={onPrevious}>
             <SkipPreviousIcon />
           </IconButton>
-          <IconButton aria-label="play/pause" color={inverted ? "info" : "secondary"} onClick={() => onPlayToggle(!playing)}>
+          <IconButton aria-label="play/pause" color="secondary" onClick={() => onPlayToggle(!playing)}>
             { playing ? <StopIcon sx={{ height: 38, width: 38 }}/> : <PlayArrowIcon sx={{ height: 38, width: 38 }} /> }
           </IconButton>
-          <IconButton aria-label="next" color={inverted ? "info" : "secondary"} onClick={onNext}>
+          <IconButton aria-label="next" color="secondary" onClick={onNext}>
             <SkipNextIcon />
           </IconButton>
         </Box>

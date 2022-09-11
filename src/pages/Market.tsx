@@ -100,8 +100,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: 500,
-      backgroundColor: theme.palette.info.main,
-      color: theme.palette.secondary.main,
+      backgroundColor: theme.palette.background.default,
       border: '0px',
       borderRadius: 5,
       padding: 4,
@@ -900,7 +899,7 @@ export default function Market() {
               <img src={please} style={{height: 100, width: 100}} alt='please'/>
             </Grid>
           </Grid>
-          <LinearProgress variant='indeterminate' color='info'/>
+          <LinearProgress variant='indeterminate' color='primary'/>
         </Box>
       </Modal>
       <Modal open={itemOwners.length > 0} onClose={onItemOwnersClose} keepMounted aria-labelledby='item-owners' aria-describedby='item-owners-description'>

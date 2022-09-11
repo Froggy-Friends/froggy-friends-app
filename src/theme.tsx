@@ -2,8 +2,8 @@ import { createTheme, responsiveFontSizes } from '@mui/material';
 
 const configs = {
   dark: '#181818',
+  light: '#ebedf1',
   primary: '#5ea14e',
-  secondary: '#ebedf1',
   gold: '#fece07'
 }
 
@@ -12,16 +12,16 @@ export default function getTheme(isDarkMode: boolean) {
     palette: {
       mode: isDarkMode ? 'dark' : 'light',
       background: {
-        default: configs.dark
+        default: isDarkMode ? configs.dark : configs.light
       },
       primary: {
         main: configs.primary
       },
       secondary: {
-        main: configs.secondary
+        main: isDarkMode ? configs.light : configs.dark
       },
-      info: {
-        main: configs.dark
+      text: {
+        primary: isDarkMode ? configs.light : configs.dark
       }
     },
     typography: {
@@ -51,7 +51,7 @@ export default function getTheme(isDarkMode: boolean) {
       MuiButton: {
         styleOverrides: {
           root: {
-            color: configs.secondary,
+            // color: configs.secondary,
             backgroundColor: configs.primary,
             borderRadius: 25,
             height: 35,
@@ -73,7 +73,7 @@ export default function getTheme(isDarkMode: boolean) {
               }
             },
             "&.inverted": {
-              backgroundColor: configs.secondary,
+              // backgroundColor: configs.secondary,
               color: configs.dark
             },
             "&.inverted:hover": {
@@ -87,7 +87,7 @@ export default function getTheme(isDarkMode: boolean) {
           root: {
             fontSize: '1.3rem',
             backgroundColor: configs.dark,
-            color: configs.secondary
+            // color: configs.secondary
           }
         }
       },
@@ -95,14 +95,14 @@ export default function getTheme(isDarkMode: boolean) {
         styleOverrides: {
           root: {
             backgroundColor: 'black',
-            color: configs.secondary,
+            // color: configs.secondary,
             width: '100%',
             textAlign: 'center',
             "&.disabled": {
               backgroundColor: "#ebedf145"
             },
             "&.inverted": {
-              backgroundColor: configs.secondary,
+              // backgroundColor: configs.secondary,
               color: configs.dark,
               width: 350
             }
@@ -133,7 +133,7 @@ export default function getTheme(isDarkMode: boolean) {
       MuiToggleButton: {
         styleOverrides: {
           root: {
-            color: configs.secondary,
+            // color: configs.secondary,
             fontWeight: "bold",
             "&.Mui-selected": {
               color: configs.primary
@@ -144,7 +144,7 @@ export default function getTheme(isDarkMode: boolean) {
       MuiTab: {
         styleOverrides: {
           root: {
-            color: configs.secondary,
+            // color: configs.secondary,
             fontSize: '1rem',
             alignItems: 'start',
             padding: 24,
@@ -166,10 +166,10 @@ export default function getTheme(isDarkMode: boolean) {
       MuiFab: {
         styleOverrides: {
           root: {
-            backgroundColor: configs.secondary,
+            // backgroundColor: configs.secondary,
             color: configs.dark,
             ":hover": {
-              backgroundColor: configs.secondary,
+              // backgroundColor: configs.secondary,
               color: configs.primary
             }
           }
@@ -197,7 +197,7 @@ export default function getTheme(isDarkMode: boolean) {
       MuiTableCell: {
         styleOverrides: {
           root: {
-            color: configs.secondary
+            // color: configs.secondary
           }
         }
       },
@@ -216,7 +216,7 @@ export default function getTheme(isDarkMode: boolean) {
         styleOverrides: {
           tooltipPlacementBottom: {
             backgroundColor: configs.dark,
-            color: configs.secondary
+            // color: configs.secondary
           }
         }
       },
