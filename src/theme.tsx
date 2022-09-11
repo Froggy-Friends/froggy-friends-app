@@ -7,7 +7,7 @@ const configs = {
   gold: '#fece07'
 }
 
-export default function setTheme(isDarkMode: boolean) {
+export default function getTheme(isDarkMode: boolean) {
   let theme = createTheme({
     palette: {
       mode: isDarkMode ? 'dark' : 'light',
