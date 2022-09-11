@@ -1,17 +1,17 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { makeStyles } from '@mui/styles';
-import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Fade, Button } from "@mui/material";
-import { Close, ShoppingCart, Menu, Headphones, MonetizationOn } from "@mui/icons-material";
+import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Fade, Button, useTheme } from "@mui/material";
+import { Close, ShoppingCart, Menu, Headphones, MonetizationOn, DarkMode, LightMode } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
 import { darkTheme, SwapWidget } from '@uniswap/widgets'
 import { uniswapConfig } from '../config';
+import { ColorModeContext } from "../App";
 import '@uniswap/widgets/fonts.css'
 import logo from '../images/logo.png';
-import theme from "../theme";
 import MusicPlayer from "./MusicPlayer";
 import Cart from "./Cart";
 
@@ -51,12 +51,12 @@ export default function Header() {
   const playing = useAppSelector(isPlaying);
   const navigate = useNavigate();
   const location = useLocation();
+  const colorMode = useContext(ColorModeContext);
+  const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
-  const isTablet = useMediaQuery(theme.breakpoints.up('sm'));
-  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
-  const isTinyMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isBelow320 = useMediaQuery(theme.breakpoints.down(321));
-  const isMarket = location.pathname === "/market";
+  const isAboveTablet = useMediaQuery(theme.breakpoints.up('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTinyMobile = useMediaQuery(theme.breakpoints.down(321));
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
   const [musicOpen, setMusicOpen] = useState<boolean>(false);
   const [swapOpen, setSwapOpen] = useState<boolean>(false);
@@ -71,18 +71,6 @@ export default function Header() {
       setDisplayName(shortenAddress(account));
     }
   }, [account, ens]);
-
-  const getTitle = () => {
-    if (isMarket) {
-      return "Ribbit Market";
-    } else if (location.pathname === "/staking") {
-      return "Ribbit Staking";
-    } else if (location.pathname === "/admin") {
-      return "Froggy Admin"
-    } else if (location.pathname === "/leaderboard") {
-      return "Leaderboard";
-    }
-  }
 
   const onSwapClick = () => {
     setSwapOpen(!swapOpen);
@@ -104,16 +92,15 @@ export default function Header() {
 
   return (
       <Fragment>
-        <AppBar position="fixed">
-          <Toolbar>
-            <Grid id="header" container item justifyContent={isTinyMobile ? 'end' : 'space-between'} alignItems="center" xl={12} lg={12} md={12} sm={12} xs={12} pl={1}>
-              <Grid id='logo' container item display={isBelow320 ? 'none' : 'flex'} justifyContent="start" xl={3} lg={3} md={3} sm={6} xs={2}>
+        <AppBar position="fixed" color="inherit">
+          <Toolbar sx={{bgcolor: theme.palette.background.default}}>
+            <Grid id="header" container item justifyContent={isMobile ? 'end' : 'space-between'} alignItems="center" xl={12} lg={12} md={12} sm={12} xs={12} pl={1}>
+              <Grid id='logo' container item display={isTinyMobile ? 'none' : 'flex'} justifyContent="start" xl={3} lg={3} md={3} sm={4} xs={1}>
                 <Link href={'/staking'} underline='none'>
                   <Avatar className={classes.avatar} alt='Home' src={logo} sx={{width: 65, height: 65}}/>
                 </Link>
-                { isTablet && <Typography variant='h5' color='secondary' fontWeight='bold' alignSelf="center" pl={3}>{getTitle()}</Typography>}
               </Grid>
-              <Grid id='links' container item display={isDesktop ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' xl={4} lg={4} md={4}>
+              <Grid id='links' container item display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' xl={3} lg={3} md={4}>
                 <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                   <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => navigate("/staking")}>Stake</Typography>
                 </Grid>
@@ -121,27 +108,29 @@ export default function Header() {
                   <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => navigate("/market")}>Market</Typography>
                 </Grid>
                 <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-                  <Typography className="link" variant="h5" color={getLinkColor('/items')} onClick={() => navigate("/items")}>Items</Typography>
-                </Grid>
-                <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                   <Typography className="link" variant="h5" color={getLinkColor('/leaderboard')} onClick={() => navigate("/leaderboard")}>Board</Typography>
                 </Grid> 
               </Grid>
-              <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={3} lg={3} md={3} sm={6} xs={isBelow320 ? 12 : 10}>
-                <Grid item display="flex" pr={2}>
-                  <Fab size='small' onClick={onSwapClick}>
+              <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={5} lg={4} md={4} sm={8} xs={isTinyMobile ? 12 : 11}>
+                <Grid item display="flex" pr={1}>
+                  <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={colorMode.toggleColorMode}>
+                    { theme.palette.mode === 'dark' ? <LightMode fontSize="medium"/> : <DarkMode fontSize="medium"/>}
+                  </Fab>
+                </Grid>
+                <Grid item display="flex" pr={1}>
+                  <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={onSwapClick}>
                     <MonetizationOn color={swapOpen ? "primary" : "inherit"} fontSize="medium"/>
                   </Fab>
                 </Grid>
-                <Grid item display="flex" pr={2}>
-                  <Fab size='small' onClick={onMusicClick}>
+                <Grid item display="flex" pr={1}>
+                  <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={onMusicClick}>
                     <Badge invisible={!playing} badgeContent=" " color="primary">
                       <Headphones fontSize='medium'/>
                     </Badge>
                   </Fab>
                 </Grid>
-                <Grid item display="flex" pr={2}>
-                  <Fab size='small' onClick={onCartClick}>
+                <Grid item display="flex" pr={1}>
+                  <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={onCartClick}>
                     <Badge badgeContent={cartItemCount} color="primary">
                       <ShoppingCart fontSize='medium'/>
                     </Badge>
@@ -152,10 +141,10 @@ export default function Header() {
                     <Typography variant='h5'>Login</Typography>  
                   </Button>
                 </Grid>
-                <Grid item display={isDesktop && account ? "flex" : "none"}>
+                <Grid item display={isDesktop && account ? "flex" : "none"} pl={1}>
                   <Typography variant='h5'>{displayName}</Typography>
                 </Grid>
-                <Grid item display={isMobile ? "flex" : "none"} justifyContent="end" pl={1}>
+                <Grid item display={!isAboveTablet ? "flex" : "none"} justifyContent="end" pl={1}>
                   <IconButton size="large" color="inherit" aria-label="menu" onClick={() => setSidemenuOpen(!sidemenuOpen)}>
                     <Menu/>
                   </IconButton>
@@ -200,7 +189,7 @@ export default function Header() {
         </Drawer>
         <Fade in={musicOpen}>
           <Grid id='player' className={classes.musicPlayer} container zIndex={1}>
-            <MusicPlayer inverted={false}/>
+            <MusicPlayer/>
           </Grid>
         </Fade>
         <Fade in={swapOpen}>
