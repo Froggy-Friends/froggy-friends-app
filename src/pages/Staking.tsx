@@ -319,13 +319,13 @@ export default function Staking() {
             <Grid id='title' item display='flex' direction={isMobile ? 'column' : 'row'} justifyContent='space-between' pb={2}>
               <Typography variant='h4' color='secondary' pb={3}>Staking Stats</Typography>
               <ButtonGroup orientation={isBelow320 ? 'vertical' : 'horizontal'} sx={{height: isMobile ? 'inherit' : 35, justifyContent: isMobile ? 'center' : 'end'}}>
-                <Button className='inverted' disabled={froggiesToStake.length === 0} onClick={() => onStake()}>
+                <Button disabled={froggiesToStake.length === 0} onClick={() => onStake()}>
                   Stake {froggiesToStake.length || ''}
                 </Button>
-                <Button className='inverted' disabled={froggiesToUnstake.length === 0} onClick={() => onUnstake()}>
+                <Button disabled={froggiesToUnstake.length === 0} onClick={() => onUnstake()}>
                   Unstake {froggiesToUnstake.length || ''}
                 </Button>
-                <Button className='inverted' onClick={() => onClaim()}>Claim</Button>
+                <Button onClick={() => onClaim()}>Claim</Button>
               </ButtonGroup>
             </Grid>
             <Grid id='stats' item display='flex' direction={isMobile ? 'column' : 'row'} alignItems={isMobile ? 'center' : 'end'} justifyContent='start'>

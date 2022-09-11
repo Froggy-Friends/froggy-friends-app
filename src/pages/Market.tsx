@@ -127,7 +127,6 @@ export default function Market() {
   const [itemAmounts, setItemAmounts] = useState(new Map<number,number>());
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertBg, setAlertBg] = useState<string | null>(null);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [itemOwners, setItemOwners] = useState<string[]>([]);
   const [itemName, setItemName] = useState<string>('');
@@ -257,7 +256,6 @@ export default function Market() {
     dispatch(add(ribbitItem));
     updateItemAmounts(ribbitItem.id, 0);
     setAlertMessage(`Added ${ribbitItem.amount} item(s) to your cart!`);
-    setAlertBg("#5ea14e");
     setShowAlert(true);
   }
 
@@ -872,9 +870,6 @@ export default function Market() {
       >
         <SnackbarContent 
           message={alertMessage}
-          style={{
-            backgroundColor: alertBg ? alertBg : ""
-          }}
           action={
             <IconButton size='small' aria-label='close' color='inherit' onClick={onAlertClose}>
               <Close fontSize='small' />

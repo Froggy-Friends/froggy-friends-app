@@ -34,13 +34,6 @@ export default function getTheme(isDarkMode: boolean) {
       }
     },
     components: {
-      MuiAppBar: {
-        styleOverrides: {
-          root: {
-            backgroundColor: configs.dark,
-          }
-        }
-      },
       MuiContainer: {
         styleOverrides: {
           root: {
@@ -51,33 +44,13 @@ export default function getTheme(isDarkMode: boolean) {
       MuiButton: {
         styleOverrides: {
           root: {
-            // color: configs.secondary,
-            backgroundColor: configs.primary,
             borderRadius: 25,
             height: 35,
             fontWeight: 'bold',
-            ":hover": {
-              backgroundColor: '#48793c'
-            },
             ":disabled": {
               backgroundColor: "#b3b6bb",
               cursor: "not-allowed",
               pointerEvents: "auto"
-            },
-            "&.transparent": {
-              backgroundColor: "#000000d1",
-              borderRadius: 5,
-              textTransform: 'capitalize',
-              ":hover": {
-                color: configs.primary
-              }
-            },
-            "&.inverted": {
-              // backgroundColor: configs.secondary,
-              color: configs.dark
-            },
-            "&.inverted:hover": {
-              color: configs.primary
             }
           }
         }
@@ -85,9 +58,8 @@ export default function getTheme(isDarkMode: boolean) {
       MuiSnackbarContent: {
         styleOverrides: {
           root: {
-            fontSize: '1.3rem',
-            backgroundColor: configs.dark,
-            // color: configs.secondary
+            color: isDarkMode ? configs.light : configs.dark,
+            backgroundColor: isDarkMode ? configs.dark : configs.light
           }
         }
       },
