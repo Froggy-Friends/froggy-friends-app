@@ -104,39 +104,6 @@ export default function getTheme(isDarkMode: boolean) {
           }
         }
       },
-      MuiToggleButton: {
-        styleOverrides: {
-          root: {
-            // color: configs.secondary,
-            fontWeight: "bold",
-            "&.Mui-selected": {
-              color: configs.primary
-            }
-          }
-        }
-      },
-      MuiTab: {
-        styleOverrides: {
-          root: {
-            // color: configs.secondary,
-            fontSize: '1rem',
-            alignItems: 'start',
-            padding: 24,
-            "&.Mui-selected": {
-              color: configs.primary,
-              fontWeight: 'bold'
-            },
-          },
-        }
-      },
-      MuiTabs: {
-        styleOverrides: {
-          root: {
-            minWidth: 200,
-            color: configs.primary
-          }
-        }
-      },
       MuiFab: {
         styleOverrides: {
           root: {
@@ -176,7 +143,7 @@ export default function getTheme(isDarkMode: boolean) {
       MuiPaper: {
         styleOverrides: {
           root: {
-            backgroundColor: configs.dark,
+            backgroundColor: isDarkMode ? configs.dark : configs.white,
             "&.MuiDrawer-paper": {
               width: '100%',
               maxWidth: 425
@@ -211,14 +178,6 @@ export default function getTheme(isDarkMode: boolean) {
           }
         }
       },
-      MuiChip: {
-        styleOverrides: {
-          root: {
-            backgroundColor: configs.gold,
-            color: configs.dark
-          }
-        }
-      },
       MuiOutlinedInput: {
         styleOverrides: {
           root: {
@@ -226,6 +185,22 @@ export default function getTheme(isDarkMode: boolean) {
               textAlign: 'center',
               color: 'white'
             }
+          }
+        }
+      },
+      MuiMenuItem: {
+        styleOverrides: {
+          root: {
+            "&.Mui-selected": {
+              backgroundColor: isDarkMode ? configs.dark : configs.white
+            }
+          }
+        }
+      },
+      MuiList: {
+        styleOverrides: {
+          root: {
+            backgroundColor: isDarkMode ? configs.dark : configs.white
           }
         }
       }
