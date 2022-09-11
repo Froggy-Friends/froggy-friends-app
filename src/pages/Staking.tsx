@@ -355,15 +355,15 @@ export default function Staking() {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid id='title' container item justifyContent={isMobile ? 'center' : 'end'} xl={3} lg={3} md={3} pb={2}>
+            <Grid id='buttons' container item justifyContent={isMobile ? 'center' : 'end'} xl={3} lg={3} md={3} pb={2}>
               <ButtonGroup orientation={isBelow320 ? 'vertical' : 'horizontal'} sx={{height: isMobile ? 'inherit' : 35, justifyContent: isMobile ? 'center' : 'end'}}>
-                <Button disabled={froggiesToStake.length === 0} onClick={() => onStake()}>
+                <Button variant='contained' onClick={() => onStake()}>
                   Stake {froggiesToStake.length || ''}
                 </Button>
-                <Button disabled={froggiesToUnstake.length === 0} onClick={() => onUnstake()}>
+                <Button variant='contained' onClick={() => onUnstake()}>
                   Unstake {froggiesToUnstake.length || ''}
                 </Button>
-                <Button onClick={() => onClaim()}>Claim</Button>
+                <Button variant='contained' onClick={() => onClaim()}>Claim</Button>
               </ButtonGroup>
             </Grid>
           </Grid>
