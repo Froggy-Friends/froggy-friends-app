@@ -1,13 +1,12 @@
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup } from "@mui/material";
+import { Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted, useFroggiesStaked } from '../client';
 import { formatEther, commify } from '@ethersproject/units';
 import axios from 'axios';
-import { stakeUrl } from '../data';
 import ribbit from '../images/ribbit.gif';
 import think from '../images/think.png';
 import chest from '../images/chest.png';
@@ -16,6 +15,7 @@ import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import hi from '../images/hi.png';
+import pond from '../images/pond.png';
 
 interface Attribute {
   trait_type: string;
@@ -318,10 +318,13 @@ export default function Staking() {
   }
   
   return (
-    <Grid id='app' className={classes.app} sx={{backgroundSize: getBackgroundSize()}} container direction='column' pt={15} pb={30}>
-      <Container maxWidth='xl'>
+    <Grid id='app' className={classes.app} sx={{backgroundSize: getBackgroundSize()}} container direction='column' pb={30}>
+      <Paper elevation={3}>
+        <Grid id='banner' container sx={{backgroundImage: `url(${pond})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 600}}/>
+      </Paper>
+      <Container maxWidth='xl' sx={{pt: 2}}>
         <Grid id='staking' container direction='column' textAlign='center'>
-          <Grid id='banner' container bgcolor={theme.palette.background.default} borderRadius={3} xl={12} lg={12} md={12} sm={12} xs={12} p={3}>
+          <Grid id='stats' container bgcolor={theme.palette.background.default} borderRadius={3} xl={12} lg={12} md={12} sm={12} xs={12} p={3}>
             <Grid id='stats' container item alignItems='end' xl={9} lg={9} md={9} pb={2}>
               <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={2}>
                 <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Froggies Staked</Typography>
