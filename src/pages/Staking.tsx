@@ -55,9 +55,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: 500,
-      backgroundColor: '#cfdcae',
-      color: theme.palette.background.default,
-      border: '2px solid #000',
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.secondary.main,
       borderRadius: 5,
       padding: 4,
       [theme.breakpoints.down('sm')]: {
