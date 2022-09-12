@@ -6,7 +6,8 @@ const configs = {
   primary: '#5ea14e',
   gold: '#fece07',
   disabled: "#b3b6bb",
-  white: '#ffffff'
+  white: '#ffffff',
+  error: '#73161D'
 }
 
 export default function getTheme(isDarkMode: boolean) {
@@ -24,6 +25,9 @@ export default function getTheme(isDarkMode: boolean) {
       },
       text: {
         primary: isDarkMode ? configs.light : configs.dark
+      },
+      error: {
+        main: configs.error
       }
     },
     typography: {
@@ -69,7 +73,7 @@ export default function getTheme(isDarkMode: boolean) {
         styleOverrides: {
           root: {
             color: configs.dark,
-            backgroundColor: configs.light,
+            backgroundColor: configs.white,
             width: '100%',
             textAlign: 'center',
             "&.disabled": {

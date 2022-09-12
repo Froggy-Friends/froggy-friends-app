@@ -389,14 +389,11 @@ export default function Staking() {
               })
             }
           </Grid>
-          {
-            account && !loading && 
-            <Grid item pt={5}>
-              <Button variant='contained' onClick={() => window.open("https://opensea.io/collection/froggyfriendsnft", "_blank")}>
-                  <Typography variant='h5'>Buy Froggies</Typography>
-              </Button>
-            </Grid>
-          }
+          <Grid item pt={5}>
+            <Button variant='outlined' onClick={() => window.open("https://opensea.io/collection/froggyfriendsnft", "_blank")}>
+                <Typography variant='h6'>Buy Frogs</Typography>
+            </Button>
+          </Grid>
         </Grid>  
       </Container>  
       
