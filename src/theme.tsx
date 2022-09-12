@@ -40,13 +40,6 @@ export default function getTheme(isDarkMode: boolean) {
       }
     },
     components: {
-      MuiContainer: {
-        styleOverrides: {
-          root: {
-            minHeight: 1500
-          }
-        }
-      },
       MuiButton: {
         styleOverrides: {
           root: {
