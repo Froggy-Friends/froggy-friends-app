@@ -141,6 +141,7 @@ export default function getTheme(isDarkMode: boolean) {
         styleOverrides: {
           root: {
             backgroundColor: isDarkMode ? configs.dark : configs.white,
+            background: 'none',
             "&.MuiDrawer-paper": {
               width: '100%',
               maxWidth: 425
