@@ -43,8 +43,8 @@ export default function Item (props: ItemProps) {
                     <img src={ribbitToken} style={{height: 30, width: 30}} alt='think'/>
                     {kFormatter(ribbit)} {isFrog ? '/ day' : ''}
                 </Typography>
-                <Button variant='outlined' color='inherit' size="small">
-                    <Typography variant='body2' fontSize={14}>MORE</Typography>
+                <Button variant='outlined' color='inherit' size="small" sx={{height: 20, borderRadius: 2, alignSelf: 'center'}}>
+                    <Typography variant='body2'>MORE</Typography>
                 </Button>
                 </Grid>
             </CardContent>
