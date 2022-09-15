@@ -6,7 +6,8 @@ const configs = {
   primary: '#5ea14e',
   gold: '#fece07',
   disabled: "#b3b6bb",
-  white: '#ffffff'
+  white: '#ffffff',
+  error: '#73161D'
 }
 
 export default function getTheme(isDarkMode: boolean) {
@@ -24,6 +25,9 @@ export default function getTheme(isDarkMode: boolean) {
       },
       text: {
         primary: isDarkMode ? configs.light : configs.dark
+      },
+      error: {
+        main: configs.error
       }
     },
     typography: {
@@ -36,13 +40,6 @@ export default function getTheme(isDarkMode: boolean) {
       }
     },
     components: {
-      MuiContainer: {
-        styleOverrides: {
-          root: {
-            minHeight: 1500
-          }
-        }
-      },
       MuiButton: {
         styleOverrides: {
           root: {
@@ -69,7 +66,7 @@ export default function getTheme(isDarkMode: boolean) {
         styleOverrides: {
           root: {
             color: configs.dark,
-            backgroundColor: configs.light,
+            backgroundColor: configs.white,
             width: '100%',
             textAlign: 'center',
             "&.disabled": {
@@ -101,39 +98,6 @@ export default function getTheme(isDarkMode: boolean) {
             ":hover": {
               color: configs.primary
             }
-          }
-        }
-      },
-      MuiToggleButton: {
-        styleOverrides: {
-          root: {
-            // color: configs.secondary,
-            fontWeight: "bold",
-            "&.Mui-selected": {
-              color: configs.primary
-            }
-          }
-        }
-      },
-      MuiTab: {
-        styleOverrides: {
-          root: {
-            // color: configs.secondary,
-            fontSize: '1rem',
-            alignItems: 'start',
-            padding: 24,
-            "&.Mui-selected": {
-              color: configs.primary,
-              fontWeight: 'bold'
-            },
-          },
-        }
-      },
-      MuiTabs: {
-        styleOverrides: {
-          root: {
-            minWidth: 200,
-            color: configs.primary
           }
         }
       },
@@ -176,7 +140,8 @@ export default function getTheme(isDarkMode: boolean) {
       MuiPaper: {
         styleOverrides: {
           root: {
-            backgroundColor: configs.dark,
+            backgroundColor: isDarkMode ? configs.dark : configs.white,
+            background: 'none',
             "&.MuiDrawer-paper": {
               width: '100%',
               maxWidth: 425
@@ -211,21 +176,19 @@ export default function getTheme(isDarkMode: boolean) {
           }
         }
       },
-      MuiChip: {
+      MuiMenuItem: {
         styleOverrides: {
           root: {
-            backgroundColor: configs.gold,
-            color: configs.dark
+            "&.Mui-selected": {
+              backgroundColor: isDarkMode ? configs.dark : configs.white
+            }
           }
         }
       },
-      MuiOutlinedInput: {
+      MuiList: {
         styleOverrides: {
           root: {
-            input: {
-              textAlign: 'center',
-              color: 'white'
-            }
+            backgroundColor: isDarkMode ? configs.dark : configs.white
           }
         }
       }

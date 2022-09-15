@@ -55,9 +55,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: 500,
-      backgroundColor: '#cfdcae',
-      color: theme.palette.background.default,
-      border: '2px solid #000',
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.secondary.main,
       borderRadius: 5,
       padding: 4,
       [theme.breakpoints.down('sm')]: {
@@ -389,14 +388,11 @@ export default function Staking() {
               })
             }
           </Grid>
-          {
-            account && !loading && 
-            <Grid item pt={5}>
-              <Button variant='contained' onClick={() => window.open("https://opensea.io/collection/froggyfriendsnft", "_blank")}>
-                  <Typography variant='h5'>Buy Froggies</Typography>
-              </Button>
-            </Grid>
-          }
+          <Grid item pt={5}>
+            <Button variant='outlined' onClick={() => window.open("https://opensea.io/collection/froggyfriendsnft", "_blank")}>
+                <Typography variant='h6'>Buy Frogs</Typography>
+            </Button>
+          </Grid>
         </Grid>  
       </Container>  
       
