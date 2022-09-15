@@ -21,6 +21,10 @@ import discord from '../images/discord.png';
 import twitter from '../images/twitter.png';
 import chest from '../images/chest.png';
 import market from '../images/market.png';
+<<<<<<< HEAD
+=======
+import Item from '../components/Item';
+>>>>>>> develop
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -327,7 +331,7 @@ export default function Market() {
       <Paper elevation={3}>
         <Grid id='banner' container sx={{backgroundImage: `url(${market})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 600}}/>
       </Paper>
-      <Container maxWidth='xl' sx={{pt: 5}}>
+      <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
         <Grid container>
           <Grid id='left-panel' container direction='column' xl={2} lg={2} md={2} sm={12} xs={12}>
             <Grid id='filter-title' container pb={5} alignItems='center'>
@@ -388,6 +392,15 @@ export default function Market() {
                 />
               </Grid>
             </Grid>
+            <Grid id='items' container item>
+            {
+              items.map((item: RibbitItem) => {
+                return <Grid key={item.name} item xl={2} lg={2} md={3} sm={6} xs={12} pl={2} pb={2}>
+                  <Item image={item.image} name={item.name} ribbit={item.price} selected={false}/>
+                </Grid>
+              })
+            }
+          </Grid>
           </Grid>
         </Grid>
       </Container>
