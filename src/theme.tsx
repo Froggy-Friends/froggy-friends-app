@@ -151,7 +151,7 @@ export default function getTheme(isDarkMode: boolean) {
         styleOverrides: {
           root: {
             overflowY: 'scroll',
-            backgroundColor: 'black',
+            backgroundColor: 'transparent',
             "::-webkit-scrollbar": {
               width: 8,
               height: 8,
