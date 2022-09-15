@@ -93,7 +93,7 @@ export default function Header() {
   return (
       <Fragment>
         <AppBar position="fixed" color="inherit">
-          <Toolbar sx={{bgcolor: theme.palette.background.default}}>
+          <Toolbar sx={{bgcolor: theme.palette.background.default, pb: theme.spacing(1)}}>
             <Container maxWidth='xl' disableGutters={isMobile}>
               <Grid id="header" container item justifyContent={isMobile ? 'end' : 'space-between'} alignItems="center" xl={12} lg={12} md={12} sm={12} xs={12} pl={1}>
                 <Grid id='logo' container item display={isTinyMobile ? 'none' : 'flex'} justifyContent="start" xl={3} lg={3} md={3} sm={4} xs={1}>

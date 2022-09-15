@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment, SnackbarContent, Paper, Container, Switch, FormControl, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
@@ -13,13 +13,9 @@ import axios from 'axios';
 import { formatDistance } from 'date-fns';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ribbit from '../images/ribbit.gif';
-import biz from '../images/biz.png';
 import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
-import discord from '../images/discord.png';
-import twitter from '../images/twitter.png';
-import chest from '../images/chest.png';
 import market from '../images/market.png';
 import Item from '../components/Item';
 
@@ -376,7 +372,7 @@ export default function Market() {
             </Grid>
           </Grid>
           <Grid id='search-and-items' container direction='column' xl={10} lg={10} md={10} sm={12} xs={12}>
-            <Grid id='controls' container item justifyContent='end'>
+            <Grid id='controls' container item justifyContent='end' pb={5}>
               <Grid id='sort' item xl={2} lg={2} md={3} sm={4} xs={12} pb={2}>
                 <Select value={sort} onChange={onSortSelect}>
                   <MenuItem value='low-price' color='secondary'>Price: Low to High</MenuItem>
@@ -392,8 +388,8 @@ export default function Market() {
             <Grid id='items' container item>
             {
               items.map((item: RibbitItem) => {
-                return <Grid key={item.name} item xl={2} lg={2} md={3} sm={6} xs={12} pl={2} pb={2}>
-                  <Item image={item.image} name={item.name} ribbit={item.price} selected={false}/>
+                return <Grid key={item.name} item xl={2.4} lg={2.4} md={3} sm={6} xs={12} pl={2} pb={2}>
+                  <Item item={item} selected={false}/>
                 </Grid>
               })
             }
