@@ -50,7 +50,7 @@ export default function Item (props: ItemProps) {
                 <Typography variant='body1' fontWeight='bold' pb={1} pt={1}>{item.name}</Typography>
                 <Grid container item justifyContent='space-between'>
                 <Typography display='flex' alignItems='center'> 
-                    <img src={ribbitToken} style={{height: 30, width: 30}} alt='think'/>
+                    <img src={ribbitToken} style={{height: 30, width: 30}} alt='Ribbit'/>
                     {kFormatter(item.price)} {isFrog ? '/ day' : ''}
                 </Typography>
                 <Button variant='outlined' color='inherit' size="small" sx={{height: 20, borderRadius: 2, alignSelf: 'center'}} onClick={() => onItemClick(item)}>
