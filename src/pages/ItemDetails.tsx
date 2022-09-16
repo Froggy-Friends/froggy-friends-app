@@ -12,6 +12,15 @@ export default function ItemDetails() {
     const navigate = useNavigate();
     const item = useAppSelector(itemDetails);
 
+    useEffect(() => {
+        scroll();
+    }, []);
+
+    const scroll = () => {
+        const itemDetails = document.querySelector('#item-details');
+        itemDetails?.scrollIntoView({ behavior: 'smooth'});
+    }
+
     const kFormatter = (num: number): string => {
         const fixed = ((Math.abs(num)/1000));
         const format = Math.abs(num) > 999 
