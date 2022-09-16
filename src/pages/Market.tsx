@@ -131,6 +131,11 @@ export default function Market() {
     }
   }, [collabBuyState])
 
+  const onItemRefresh = () => {
+    setItems([]);
+    getItems();
+  }
+
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, filter: boolean) => {
     if (filter === null) return;
     setShowAll(filter);
@@ -347,7 +352,7 @@ export default function Market() {
           <Grid id='search-and-items' container item direction='column' xl={10} lg={10} md={10} sm={12} xs={12}>
             <Grid id='controls' container item justifyContent='end' pb={5}>
               <Grid id='refresh' container item xl={1} lg={1} md={2} sm={3} xs={12} pb={2}>
-                <IconButton onClick={() => getItems()}>
+                <IconButton onClick={onItemRefresh}>
                   <Refresh fontSize='large'/>
                 </IconButton>
               </Grid>
