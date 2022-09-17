@@ -10,6 +10,7 @@ import { isPlaying } from "../redux/musicSlice";
 import { darkTheme, SwapWidget } from '@uniswap/widgets'
 import { uniswapConfig } from '../config';
 import { ColorModeContext } from "../App";
+import { ErrorBoundaryLocal } from "./ErrorBoundaryLocal";
 import '@uniswap/widgets/fonts.css'
 import logo from '../images/logo.png';
 import MusicPlayer from "./MusicPlayer";
@@ -196,13 +197,15 @@ export default function Header() {
         </Fade>
         <Fade in={swapOpen}>
           <Grid id='swap' className={classes.swap} container zIndex={1}>
-            <SwapWidget 
-              theme={darkTheme} 
-              jsonRpcUrlMap={uniswapConfig.jsonRpcUrlMap}
-              tokenList={uniswapConfig.tokenList}  
-              defaultOutputAmount={uniswapConfig.outputAmount}
-              defaultOutputTokenAddress={uniswapConfig.outputTokenAddress}
-            />
+            <ErrorBoundaryLocal>
+              <SwapWidget
+                theme={darkTheme} 
+                jsonRpcUrlMap={uniswapConfig.jsonRpcUrlMap}
+                tokenList={uniswapConfig.tokenList}  
+                defaultOutputAmount={uniswapConfig.outputAmount}
+                defaultOutputTokenAddress={uniswapConfig.outputTokenAddress}
+              />
+            </ErrorBoundaryLocal>
           </Grid>
         </Fade>
         <Cart />

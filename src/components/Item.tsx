@@ -40,7 +40,7 @@ export default function Item (props: ItemProps) {
     const onItemClick = (item: RibbitItem) => {
         console.log("dispatch add item details: ", item);
         dispatch(addItemDetails(item));
-        navigate('/item');
+        navigate(`/item/${item.id}`);
       }
 
     return (
