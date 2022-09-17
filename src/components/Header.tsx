@@ -115,24 +115,24 @@ export default function Header() {
                 </Grid>
                 <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={5} lg={4} md={4} sm={8} xs={isTinyMobile ? 12 : 11}>
                   <Grid item display="flex" pr={1}>
-                    <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={colorMode.toggleColorMode}>
+                    <Fab size='small' onClick={colorMode.toggleColorMode}>
                       { theme.palette.mode === 'dark' ? <LightMode fontSize="medium"/> : <DarkMode fontSize="medium"/>}
                     </Fab>
                   </Grid>
                   <Grid item display="flex" pr={1}>
-                    <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={onSwapClick}>
+                    <Fab size='small' onClick={onSwapClick}>
                       <MonetizationOn color={swapOpen ? "primary" : "inherit"} fontSize="medium"/>
                     </Fab>
                   </Grid>
                   <Grid item display="flex" pr={1}>
-                    <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={onMusicClick}>
+                    <Fab size='small' onClick={onMusicClick}>
                       <Badge invisible={!playing} badgeContent=" " color="primary">
                         <Headphones fontSize='medium'/>
                       </Badge>
                     </Fab>
                   </Grid>
                   <Grid item display="flex" pr={1}>
-                    <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={onCartClick}>
+                    <Fab size='small' onClick={onCartClick}>
                       <Badge badgeContent={cartItemCount} color="primary">
                         <ShoppingCart fontSize='medium'/>
                       </Badge>

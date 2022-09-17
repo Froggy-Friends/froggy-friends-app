@@ -55,6 +55,18 @@ export default function getTheme(isDarkMode: boolean) {
           }
         }
       },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            backgroundColor: configs.white,
+            color: configs.dark,
+            ":hover": {
+              backgroundColor: configs.white,
+              color: configs.primary
+            }
+          }
+        }
+      },
       MuiSnackbarContent: {
         styleOverrides: {
           root: {
@@ -105,9 +117,10 @@ export default function getTheme(isDarkMode: boolean) {
       MuiFab: {
         styleOverrides: {
           root: {
-            backgroundColor: configs.dark,
+            backgroundColor: configs.white,
+            color: configs.dark,
             ":hover": {
-              backgroundColor: configs.primary,
+              color: configs.primary,
             }
           }
         }
@@ -116,11 +129,11 @@ export default function getTheme(isDarkMode: boolean) {
         styleOverrides: {
           root: {
             overflowY: 'scroll',
-            backgroundColor: 'black',
+            backgroundColor: isDarkMode ? configs.dark : configs.white,
             "::-webkit-scrollbar": {
               width: 8,
               height: 8,
-              backgroundColor: 'black'
+              backgroundColor: isDarkMode ? configs.dark : configs.white
             },
             "::-webkit-scrollbar-thumb": {
               backgroundColor: configs.primary,
