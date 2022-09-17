@@ -6,7 +6,7 @@ interface ErrorBoundaryState {
   hasError: boolean;
 }
 
-export class ErrorBoundary extends Component {
+export class ErrorBoundaryLocal extends Component {
   state: ErrorBoundaryState;
 
   constructor(props: any) {
@@ -21,21 +21,13 @@ export class ErrorBoundary extends Component {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // You can also log the error to an error reporting service
-    console.log("Error caught: ", error, errorInfo);
+    console.log("Local Error caught: ", error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      // You can render any custom fallback UI
-      return (
-        <Grid container direction='column' bgcolor='#181818' height='100vh' alignItems='center' pt={5}>
-          <Typography variant='h4' p={3} sx={{color: '#ebedf1'}}>Oops something went wrong</Typography>
-          <Typography variant='h5' p={3} sx={{color: '#ebedf1'}}>An alert has been sent to the team. Please refresh your page.</Typography>
-          <img src={uhh} height='10%'/>
-        </Grid>
-      )
+        return <h1>Something went wrong.</h1>
     }
-
     return this.props.children; 
   }
 }
