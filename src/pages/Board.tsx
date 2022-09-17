@@ -50,7 +50,7 @@ export default function Board() {
   }, [leaders]);
 
   return (
-    <Grid id="leaderboard" container direction="column">
+    <Grid id="leaderboard" container direction="column" pb={20}>
       <Paper elevation={3}>
         <Grid id='banner' container sx={{backgroundImage: `url(${skyscrapers})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 600}}/>
       </Paper>
@@ -71,7 +71,7 @@ export default function Board() {
           </Grid>
         </Grid>
         <TableContainer component={Paper} sx={{mt: 5, height: "700px"}}>
-          <Table aria-label="simple table">
+          <Table stickyHeader aria-label="simple table">
             <TableHead>
               <TableRow className={classes.leaderboardRow}>
                 <TableCell><Typography variant='h5'>Rank</Typography></TableCell>
