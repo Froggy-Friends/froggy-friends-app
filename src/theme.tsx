@@ -131,13 +131,6 @@ export default function getTheme(isDarkMode: boolean) {
           }
         }
       },
-      MuiTableCell: {
-        styleOverrides: {
-          root: {
-            // color: configs.secondary
-          }
-        }
-      },
       MuiPaper: {
         styleOverrides: {
           root: {
@@ -190,6 +183,13 @@ export default function getTheme(isDarkMode: boolean) {
         styleOverrides: {
           root: {
             backgroundColor: isDarkMode ? configs.dark : configs.white
+          }
+        }
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            height: 35
           }
         }
       }

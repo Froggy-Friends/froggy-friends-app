@@ -352,7 +352,7 @@ export default function Market() {
           <Grid id='search-and-items' container item direction='column' xl={10} lg={10} md={10} sm={12} xs={12}>
             <Grid id='controls' container item justifyContent='end' pb={5}>
               <Grid id='refresh' container item xl={1} lg={1} md={2} sm={3} xs={12} pb={2}>
-                <IconButton onClick={onItemRefresh}>
+                <IconButton sx={{height: 35}} onClick={onItemRefresh}>
                   <Refresh fontSize='large'/>
                 </IconButton>
               </Grid>
