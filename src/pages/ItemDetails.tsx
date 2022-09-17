@@ -1,25 +1,42 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { itemDetails, removeItemDetails } from "../redux/itemSlice";
-import { Close, Search } from "@mui/icons-material";
-import { Button, Chip, Container, Grid, IconButton, Snackbar, SnackbarContent, Stack, TextField, Typography, useTheme } from "@mui/material";
-import ribbitToken from '../images/ribbit.gif';
-import axios from "axios";
+import { makeStyles } from '@mui/styles';
+import { ArrowBack, Close, Search } from "@mui/icons-material";
+import { createStyles, Button, Chip, Container, Grid, IconButton, Snackbar, SnackbarContent, Stack, TextField, Theme, Typography, useMediaQuery, useTheme, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
 import { RibbitItem } from "../models/RibbitItem";
+import axios from "axios";
+import ribbitToken from '../images/ribbit.gif';
+
+const useStyles: any = makeStyles(() => 
+  createStyles({
+    leaderboardRow: {
+      padding: 0,
+      border: 0,
+      '& td, th': {
+        padding: '1rem 0',
+        border: 0
+      },
+
+      '& th, h5': {
+        fontWeight: 'bold'
+      }
+    }
+  })
+);
 
 export default function ItemDetails() {
+    const classes = useStyles();
     const theme = useTheme();
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const params = useParams();
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const [item, setItem] = useState<RibbitItem>();
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
+    const [itemOwners, setItemOwners] = useState<string[]>([]);
 
     useEffect(() => {
-        const { id } = params;
-        getItem(`${id}`);
+        getItem(`${params.id}`);
         scroll();
     }, [params]);
 
@@ -28,11 +45,20 @@ export default function ItemDetails() {
           const response = await axios.get<RibbitItem>(`${process.env.REACT_APP_API}/items/${id}`);
           let item = response.data;
           setItem(item);
+
+          if (item.category == 'allowlists') {
+            getItemOwners(item.id, item.name);
+          }
         } catch (error) {
           setAlertMessage("Failed to get items");
           setShowAlert(true);
         }
-      }
+    }
+
+    const getItemOwners = async (id: number, name: string) => {
+        const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/owners`);
+        setItemOwners(response.data);
+    }
 
     const scroll = () => {
         const itemDetails = document.querySelector('#item-details');
@@ -48,7 +74,6 @@ export default function ItemDetails() {
     }
 
     const onItemDetailsClose = () => {
-        dispatch(removeItemDetails(item));
         navigate(-1);
     }
 
@@ -64,15 +89,17 @@ export default function ItemDetails() {
         <Grid id='item-details' container direction='column' bgcolor={theme.palette.background.default} pt={20} pb={20}>
             <Container maxWidth='lg'>
                 <Grid id='top-row' container justifyContent='space-between' pb={10}>
-                    <Grid id='image' item xl={4} lg={4} md={4} sm={5.5} xs={12} pb={3}>
+                    <Grid id='image' item xl={4} lg={4} md={4} sm={4} xs={12} pb={isXs ? 5 : 0}>
                         <img src={item?.image} width='100%' style={{borderRadius: 5}}/>
                     </Grid>
-                    <Grid id='info' container item direction='column' justifyContent='space-between' xl={7} lg={7} md={7} sm={5.5} xs={12}>
+                    <Grid id='info' container item direction='column' justifyContent='space-between' xl={7} lg={7} md={7} sm={7} xs={12}>
                         <Grid id='title-and-exit' container justifyContent='space-between' pb={5}>
                             <Typography variant='h5' fontWeight='bold'>{item?.name}</Typography>
-                            <IconButton size="large" sx={{bgcolor: theme.palette.common.white, color: theme.palette.common.black}} onClick={onItemDetailsClose}>   
-                                <Close/>
-                            </IconButton>
+                            <Paper sx={{borderRadius: 5}}>
+                                <IconButton size="large" onClick={onItemDetailsClose}>   
+                                    <ArrowBack/>
+                                </IconButton>
+                            </Paper>
                         </Grid>
                         <Grid id='price-and-socials' container pb={5}> 
                             <Grid id='price' item xl={2} lg={2} md={2} sm={2} xs={2}>
@@ -101,8 +128,8 @@ export default function ItemDetails() {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid id='bottom-row' container>
-                    <Grid id='tags' item xl={4} lg={4} md={4} sm={5.5} xs={12} pb={3}>
+                <Grid id='bottom-row' container justifyContent='space-between'>
+                    <Grid id='tags' item xl={4} lg={4} md={4} sm={12} xs={12} pb={5}>
                         <Stack spacing={1}>
                             <Typography fontWeight='bold'>Tags</Typography>
                             <Grid container spacing={2}>
@@ -112,13 +139,25 @@ export default function ItemDetails() {
                             </Grid>
                         </Stack>
                     </Grid>
-                    <Grid id='owners' item xl={7} lg={7} md={7} sm={5.5} xs={12}>
+                    <Grid id='owners' item xl={7} lg={7} md={7} sm={12} xs={12}>
                         <Stack spacing={1}>
                             <Stack direction='row' justifyContent='space-between'>
                                 <Typography fontWeight='bold'>Allowlist Owners</Typography>
                                 <TextField placeholder='Search by wallet' InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}/>
                             </Stack>
-
+                            <TableContainer component={Paper} elevation={1} sx={{p: 3, height: 300}}>
+                                <Table stickyHeader aria-label="simple table">
+                                    <TableBody>
+                                    {itemOwners.map((owner, index) => (
+                                        <TableRow key={index} className={classes.leaderboardRow}>
+                                        <TableCell>
+                                            <Typography variant='h6' color='secondary'>{owner}</Typography>
+                                        </TableCell>
+                                        </TableRow>
+                                    ))}
+                                    </TableBody>
+                                </Table>
+                                </TableContainer>
                         </Stack>
                     </Grid>
                 </Grid>

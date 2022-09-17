@@ -10,7 +10,6 @@ import ribbit from '../images/ribbit.gif';
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     leaderboardRow: {
-      backgroundColor: theme.palette.background.default,
       padding: 0,
       border: 0,
       '& td, th': {
