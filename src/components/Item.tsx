@@ -1,9 +1,7 @@
 import { Card, CardMedia, CardContent, Typography, Grid, Button, useTheme } from "@mui/material";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ribbitToken from '../images/ribbit.gif';
 import { RibbitItem } from "../models/RibbitItem";
-import { addItemDetails } from "../redux/itemSlice";
 
 interface ItemProps {
     item: RibbitItem;
@@ -16,7 +14,6 @@ interface ItemProps {
 export default function Item (props: ItemProps) {
     const { item, isFrog, selected, showGreenBorder, showRedBorder } = props;
     const theme = useTheme();
-    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const getBorderColor = () => {
@@ -39,7 +36,6 @@ export default function Item (props: ItemProps) {
 
     const onItemClick = (item: RibbitItem) => {
         console.log("dispatch add item details: ", item);
-        dispatch(addItemDetails(item));
         navigate(`/item/${item.id}`);
       }
 
