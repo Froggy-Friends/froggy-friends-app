@@ -35,13 +35,13 @@ export default function ItemDetails() {
     }
 
     return (
-        <Grid id='item-details' container direction='column' bgcolor={theme.palette.background.default} height='100%' pt={20}>
-            <Container maxWidth='xl'>
-                <Grid id='top-row' container>
-                    <Grid id='image' item xl={4} lg={4} md={4} sm={4} xs={4}>
-                        <img src={item.image} height='100%' width='100%' style={{borderRadius: 5}}/>
+        <Grid id='item-details' container direction='column' bgcolor={theme.palette.background.default} pt={20} pb={20}>
+            <Container maxWidth='lg'>
+                <Grid id='top-row' container justifyContent='space-between'>
+                    <Grid id='image' item xl={4} lg={4} md={4} sm={5.5} xs={12} pb={3}>
+                        <img src={item.image} width='100%' style={{borderRadius: 5}}/>
                     </Grid>
-                    <Grid id='info' container item direction='column' xl={8} lg={8} md={8} sm={8} xs={8} pl={8}>
+                    <Grid id='info' container item direction='column' justifyContent='space-between' xl={7} lg={7} md={7} sm={5.5} xs={12}>
                         <Grid id='title-and-exit' container justifyContent='space-between' pb={5}>
                             <Typography variant='h5' fontWeight='bold'>{item.name}</Typography>
                             <IconButton size="large" sx={{bgcolor: theme.palette.common.white, color: theme.palette.common.black}} onClick={onItemDetailsClose}>   
@@ -69,8 +69,8 @@ export default function ItemDetails() {
                             <Typography>{item.description}</Typography>
                         </Stack>
                         <Grid id='buttons' container>
-                            <Button variant='contained'>
-                                <Typography>Add to Cart</Typography>
+                            <Button variant='contained' sx={{height: 50}}>
+                                <Typography>Add to cart</Typography>
                             </Button>
                         </Grid>
                     </Grid>

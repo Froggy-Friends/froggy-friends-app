@@ -46,6 +46,7 @@ export default function getTheme(isDarkMode: boolean) {
             borderRadius: 25,
             height: 35,
             fontWeight: 'bold',
+            textTransform: 'capitalize',
             ":disabled": {
               backgroundColor: configs.disabled,
               cursor: "not-allowed",
