@@ -58,9 +58,11 @@ export default function getTheme(isDarkMode: boolean) {
       MuiIconButton: {
         styleOverrides: {
           root: {
-            backgroundColor: configs.white,
-            color: configs.dark,
-            ":hover": {
+            "&.cta": {
+              backgroundColor: configs.white,
+              color: configs.dark,
+            },
+            "&.cta:hover": {
               backgroundColor: configs.white,
               color: configs.primary
             }

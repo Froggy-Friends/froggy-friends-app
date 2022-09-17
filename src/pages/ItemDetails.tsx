@@ -95,8 +95,8 @@ export default function ItemDetails() {
                     <Grid id='info' container item direction='column' justifyContent='space-between' xl={7} lg={7} md={7} sm={7} xs={12}>
                         <Grid id='title-and-exit' container justifyContent='space-between' pb={5}>
                             <Typography variant='h5' fontWeight='bold'>{item?.name}</Typography>
-                            <Paper sx={{borderRadius: 5}}>
-                                <IconButton size="large" onClick={onItemDetailsClose}>   
+                            <Paper elevation={3} sx={{borderRadius: 25}}>
+                                <IconButton className="cta" size="large" onClick={onItemDetailsClose}>   
                                     <ArrowBack/>
                                 </IconButton>
                             </Paper>
