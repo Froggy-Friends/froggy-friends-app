@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
 import { ArrowBack, Close, Search } from "@mui/icons-material";
 import { createStyles, Button, Chip, Container, Grid, IconButton, Snackbar, SnackbarContent, Stack, TextField, Theme, Typography, useMediaQuery, useTheme, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
-import { RibbitItem } from "../models/RibbitItem";
 import axios from "axios";
 import ribbitToken from '../images/ribbit.gif';
 import twitter from '../images/twitter.svg';
@@ -12,6 +11,7 @@ import opensea from '../images/opensea.svg';
 import { Froggy } from "../models/Froggy";
 import { useEthers } from "@usedapp/core";
 import { useStakingDeposits } from '../client';
+import { saveAs } from 'file-saver';
 
 const useStyles: any = makeStyles(() => 
   createStyles({
@@ -38,7 +38,7 @@ export default function FrogDetails() {
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const { account } = useEthers();
     const deposits = useStakingDeposits(`${account}`);
-    const [item, setItem] = useState<Froggy>();
+    const [frog, setFrog] = useState<Froggy>();
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
 
@@ -51,10 +51,10 @@ export default function FrogDetails() {
 
     async function getFroggy(id: string) {
         try {
-          const response = await axios.post<Froggy>(`${process.env.REACT_APP_API}/frog/${id}`, { account: account});
+          const response = await axios.post<Froggy>(`${process.env.REACT_APP_API}/frog/${id}`);
           let item = response.data;
           console.log("item: ", item);
-          setItem(item);
+          setFrog(item);
         } catch (error) {
           setAlertMessage("Failed to get items");
           setShowAlert(true);
@@ -86,16 +86,20 @@ export default function FrogDetails() {
         setShowAlert(false);
     };
 
+    const downloadAsset = (asset: string, name: string) => {
+        saveAs(asset, name);
+    }
+
     return (
         <Grid id='item-details' container direction='column' bgcolor={theme.palette.background.default} pt={20} pb={20}>
             <Container maxWidth='lg'>
                 <Grid id='top-row' container justifyContent='space-between' pb={10}>
                     <Grid id='image' item xl={4} lg={4} md={4} sm={4} xs={12} pb={isXs ? 5 : 0}>
-                        <img src={item?.image} width='100%' style={{borderRadius: 5}}/>
+                        <img src={frog?.image} width='100%' style={{borderRadius: 5}}/>
                     </Grid>
                     <Grid id='info' container item direction='column' justifyContent='space-between' xl={7} lg={7} md={7} sm={7} xs={12}>
                         <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center'>
-                            <Typography variant='h5' fontWeight='bold'>{item?.name}</Typography>
+                            <Typography variant='h5' fontWeight='bold'>{frog?.name}</Typography>
                             <Paper elevation={3} sx={{borderRadius: 25}}>
                                 <IconButton className="cta" size="large" onClick={onItemDetailsClose}>   
                                     <ArrowBack/>
@@ -108,7 +112,7 @@ export default function FrogDetails() {
                                     <Typography variant='body1' fontWeight='bold'>Price</Typography>
                                     <Typography display='flex' alignItems='center'> 
                                         <img src={ribbitToken} style={{height: 30, width: 30}} alt='Ribbit'/>
-                                        {kFormatter(item?.ribbit || 0)}
+                                        {kFormatter(frog?.ribbit || 0)}
                                     </Typography>
                                 </Stack>
                             </Grid>
@@ -138,13 +142,13 @@ export default function FrogDetails() {
                         <Stack id='stacks' spacing={1}>
                             <Typography fontWeight='bold'>Tags</Typography>
                             <Grid container spacing={2}>
-                                <Grid item ml={-2}><Chip label={item?.rarity}/></Grid>
-                                <Grid item><Chip label={item?.isStaked ? 'staked' : 'unstaked'}/></Grid>
-                                <Grid item><Chip label={item?.isPaired ? 'paired' : 'unpaired'}/></Grid>
+                                <Grid item ml={-2}><Chip label={frog?.rarity}/></Grid>
+                                <Grid item><Chip label={frog?.isStaked ? 'staked' : 'unstaked'}/></Grid>
+                                <Grid item><Chip label={frog?.isPaired ? 'paired' : 'unpaired'}/></Grid>
                             </Grid>
                         </Stack>
                         {
-                            item && deposits.includes(item.edition) && <Grid id='buttons' container>
+                            frog && deposits.includes(frog.edition) && <Grid id='buttons' container>
                                 <Button variant='contained' disabled sx={{height: 50}}>
                                     <Typography color='secondary'>Pair Friend</Typography>
                                 </Button>
@@ -153,11 +157,11 @@ export default function FrogDetails() {
                     </Grid>
                 </Grid>
                 <Grid id='bottom-row' container justifyContent='space-between'>
-                    <Grid item xl={4} lg={4} md={4} sm={4} xs={12}>
+                    <Grid id='traits' item xl={4} lg={4} md={4} sm={4} xs={12}>
                         <Stack spacing={3}>
                             <Typography variant='h5' fontWeight='bold'>Traits</Typography>
                             {
-                                item?.attributes.map(trait => {
+                                frog?.attributes.map(trait => {
                                     return (
                                         <Stack>
                                             <Typography fontWeight='bold'>{trait.trait_type}</Typography>
@@ -166,6 +170,34 @@ export default function FrogDetails() {
                                     )
                                 })
                             }
+                        </Stack>
+                    </Grid>
+                    <Grid id='download' item xl={7} lg={7} md={7} sm={7} xs={12}>
+                        <Stack spacing={3}>
+                            <Typography variant='h5' fontWeight='bold'>Download Assets</Typography>
+                            <Stack direction='row' spacing={3}>
+                                {
+                                    frog?.image && 
+                                    <Stack alignItems='center' spacing={5}>
+                                        <img src={frog.image} width={200} style={{borderRadius: 5}}/>
+                                        <Button variant='contained' color="primary" sx={{width: 130}}onClick={() => downloadAsset(frog.image, `${frog.edition}.png`)}>Download</Button>
+                                    </Stack>
+                                }
+                                {
+                                    frog?.imagePixel && 
+                                    <Stack alignItems='center' spacing={5}>
+                                        <img src={frog?.imagePixel} width={200} style={{borderRadius: 5}}/>
+                                        <Button variant='contained' color="primary" sx={{width: 130}} onClick={() => downloadAsset(frog.imagePixel, `${frog.edition}-pixel.png`)}>Download</Button>
+                                    </Stack>
+                                }
+                                {
+                                    frog?.image3d && 
+                                    <Stack alignItems='center' spacing={5}>
+                                        <img src={frog.image3d} width={200} style={{borderRadius: 5}}/>
+                                        <Button variant='contained' color="primary" sx={{width: 130}} onClick={() => downloadAsset(frog.image3d, `${frog.edition}-3d.png`)}>Download</Button>
+                                    </Stack>
+                                }
+                            </Stack>
                         </Stack>
                     </Grid>
                 </Grid>

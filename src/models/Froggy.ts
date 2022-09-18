@@ -4,6 +4,8 @@ export interface Froggy {
     name: string;
     description: string;
     image: string;
+    imagePixel: string;
+    image3d: string;
     dna: string;
     edition: number;
     date: number;
