@@ -152,6 +152,7 @@ export default function getTheme(isDarkMode: boolean) {
             backgroundColor: isDarkMode ? configs.dark : configs.white,
             background: 'none',
             "&.MuiDrawer-paper": {
+              backgroundColor: isDarkMode ? configs.dark : configs.white,
               width: '100%',
               maxWidth: 425
             } 
