@@ -10,6 +10,8 @@ import twitter from '../images/twitter.svg';
 import discord from '../images/discord.svg';
 import opensea from '../images/opensea.svg';
 import { Froggy } from "../models/Froggy";
+import { useEthers } from "@usedapp/core";
+import { useStakingDeposits } from '../client';
 
 const useStyles: any = makeStyles(() => 
   createStyles({
@@ -34,6 +36,8 @@ export default function FrogDetails() {
     const navigate = useNavigate();
     const params = useParams();
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+    const { account } = useEthers();
+    const deposits = useStakingDeposits(`${account}`);
     const [item, setItem] = useState<Froggy>();
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
@@ -133,11 +137,13 @@ export default function FrogDetails() {
                             <Typography fontWeight='bold'>Description</Typography>
                             <Typography>{item?.description}</Typography>
                         </Stack>
-                        <Grid id='buttons' container>
-                            <Button variant='contained' disabled sx={{height: 50}}>
-                                <Typography>Pair Friend</Typography>
-                            </Button>
-                        </Grid>
+                        {
+                            item && deposits.includes(item.edition) && <Grid id='buttons' container>
+                                <Button variant='contained' disabled sx={{height: 50}}>
+                                    <Typography color='secondary'>Pair Friend</Typography>
+                                </Button>
+                            </Grid>
+                        }
                     </Grid>
                 </Grid>
                 <Grid id='bottom-row' container justifyContent='space-between'>
