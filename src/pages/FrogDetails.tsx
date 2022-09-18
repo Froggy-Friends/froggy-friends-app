@@ -13,28 +13,11 @@ import { useEthers } from "@usedapp/core";
 import { useStakingDeposits } from '../client';
 import { saveAs } from 'file-saver';
 
-const useStyles: any = makeStyles(() => 
-  createStyles({
-    row: {
-      padding: 0,
-      border: 0,
-      '& td, th': {
-        padding: '1rem 0',
-        border: 0
-      },
-
-      '& th, h5': {
-        fontWeight: 'bold'
-      }
-    }
-  })
-);
-
 export default function FrogDetails() {
-    const classes = useStyles();
     const theme = useTheme();
     const navigate = useNavigate();
     const params = useParams();
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const { account } = useEthers();
     const deposits = useStakingDeposits(`${account}`);
@@ -53,7 +36,6 @@ export default function FrogDetails() {
         try {
           const response = await axios.post<Froggy>(`${process.env.REACT_APP_API}/frog/${id}`);
           let item = response.data;
-          console.log("item: ", item);
           setFrog(item);
         } catch (error) {
           setAlertMessage("Failed to get items");
@@ -97,11 +79,11 @@ export default function FrogDetails() {
                     <Grid id='image' item xl={4} lg={4} md={4} sm={4} xs={12} pb={isXs ? 5 : 0}>
                         <img src={frog?.image} width='100%' style={{borderRadius: 5}}/>
                     </Grid>
-                    <Grid id='info' container item direction='column' justifyContent='space-between' xl={7} lg={7} md={7} sm={7} xs={12}>
+                    <Grid id='info' container item direction='column' justifyContent='space-between' minHeight={isSm ? 400 : 'inherit'} xl={7} lg={7} md={7} sm={7} xs={12}>
                         <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center'>
                             <Typography variant='h5' fontWeight='bold'>{frog?.name}</Typography>
                             <Paper elevation={3} sx={{borderRadius: 25}}>
-                                <IconButton className="cta" size="large" onClick={onItemDetailsClose}>   
+                                <IconButton className="cta" onClick={onItemDetailsClose}>   
                                     <ArrowBack/>
                                 </IconButton>
                             </Paper>
@@ -139,7 +121,7 @@ export default function FrogDetails() {
                                 </Stack>
                             </Grid>
                         </Grid>
-                        <Stack id='stacks' spacing={1}>
+                        <Stack id='tags' spacing={1}>
                             <Typography fontWeight='bold'>Tags</Typography>
                             <Grid container spacing={2}>
                                 <Grid item ml={-2}><Chip label={frog?.rarity}/></Grid>
@@ -157,7 +139,7 @@ export default function FrogDetails() {
                     </Grid>
                 </Grid>
                 <Grid id='bottom-row' container justifyContent='space-between'>
-                    <Grid id='traits' item xl={4} lg={4} md={4} sm={4} xs={12}>
+                    <Grid id='traits' item xl={4} lg={4} md={4} sm={4} xs={12} pb={5}>
                         <Stack spacing={3}>
                             <Typography variant='h5' fontWeight='bold'>Traits</Typography>
                             {
@@ -172,29 +154,29 @@ export default function FrogDetails() {
                             }
                         </Stack>
                     </Grid>
-                    <Grid id='download' item xl={7} lg={7} md={7} sm={7} xs={12}>
+                    <Grid id='download' item xl={7} lg={7} md={7} sm={7} xs={12} pb={5}>
                         <Stack spacing={3}>
                             <Typography variant='h5' fontWeight='bold'>Download Assets</Typography>
-                            <Stack direction='row' spacing={3}>
+                            <Stack direction={isXs ? 'column' : 'row'} spacing={3}>
                                 {
                                     frog?.image && 
-                                    <Stack alignItems='center' spacing={5}>
-                                        <img src={frog.image} width={200} style={{borderRadius: 5}}/>
-                                        <Button variant='contained' color="primary" sx={{width: 130}}onClick={() => downloadAsset(frog.image, `${frog.edition}.png`)}>Download</Button>
+                                    <Stack alignItems='center' spacing={5} pb={5}>
+                                        <img src={frog.image} width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
+                                        <Button variant='contained' color="primary" sx={{height: 50, width: 130}}onClick={() => downloadAsset(frog.image, `${frog.edition}.png`)}>Download</Button>
                                     </Stack>
                                 }
                                 {
                                     frog?.imagePixel && 
-                                    <Stack alignItems='center' spacing={5}>
-                                        <img src={frog?.imagePixel} width={200} style={{borderRadius: 5}}/>
-                                        <Button variant='contained' color="primary" sx={{width: 130}} onClick={() => downloadAsset(frog.imagePixel, `${frog.edition}-pixel.png`)}>Download</Button>
+                                    <Stack alignItems='center' spacing={5} pb={5}>
+                                        <img src={frog?.imagePixel} width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
+                                        <Button variant='contained' color="primary" sx={{height: 50, width: 130}} onClick={() => downloadAsset(frog.imagePixel, `${frog.edition}-pixel.png`)}>Download</Button>
                                     </Stack>
                                 }
                                 {
                                     frog?.image3d && 
-                                    <Stack alignItems='center' spacing={5}>
-                                        <img src={frog.image3d} width={200} style={{borderRadius: 5}}/>
-                                        <Button variant='contained' color="primary" sx={{width: 130}} onClick={() => downloadAsset(frog.image3d, `${frog.edition}-3d.png`)}>Download</Button>
+                                    <Stack alignItems='center' spacing={5} pb={5}>
+                                        <img src={frog.image3d} width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
+                                        <Button variant='contained' color="primary" sx={{height: 50, width: 130}} onClick={() => downloadAsset(frog.image3d, `${frog.edition}-3d.png`)}>Download</Button>
                                     </Stack>
                                 }
                             </Stack>
