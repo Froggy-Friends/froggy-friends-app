@@ -153,7 +153,21 @@ export default function FrogDetails() {
                     </Grid>
                 </Grid>
                 <Grid id='bottom-row' container justifyContent='space-between'>
-                    
+                    <Grid item xl={4} lg={4} md={4} sm={4} xs={12}>
+                        <Stack spacing={3}>
+                            <Typography variant='h5' fontWeight='bold'>Traits</Typography>
+                            {
+                                item?.attributes.map(trait => {
+                                    return (
+                                        <Stack>
+                                            <Typography fontWeight='bold'>{trait.trait_type}</Typography>
+                                            <Typography>{trait.value}</Typography>
+                                        </Stack>
+                                    )
+                                })
+                            }
+                        </Stack>
+                    </Grid>
                 </Grid>
             </Container>
             <Snackbar open={showAlert}  autoHideDuration={5000} message={alertMessage} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={onAlertClose}>
