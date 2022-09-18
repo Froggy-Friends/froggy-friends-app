@@ -10,6 +10,7 @@ import { isPlaying } from "../redux/musicSlice";
 import { darkTheme, SwapWidget } from '@uniswap/widgets'
 import { uniswapConfig } from '../config';
 import { ColorModeContext } from "../App";
+import { ErrorBoundaryLocal } from "./ErrorBoundaryLocal";
 import '@uniswap/widgets/fonts.css'
 import logo from '../images/logo.png';
 import MusicPlayer from "./MusicPlayer";
@@ -93,7 +94,7 @@ export default function Header() {
   return (
       <Fragment>
         <AppBar position="fixed" color="inherit">
-          <Toolbar sx={{bgcolor: theme.palette.background.default}}>
+          <Toolbar sx={{bgcolor: theme.palette.background.default, pb: theme.spacing(1)}}>
             <Container maxWidth='xl' disableGutters={isMobile}>
               <Grid id="header" container item justifyContent={isMobile ? 'end' : 'space-between'} alignItems="center" xl={12} lg={12} md={12} sm={12} xs={12} pl={1}>
                 <Grid id='logo' container item display={isTinyMobile ? 'none' : 'flex'} justifyContent="start" xl={3} lg={3} md={3} sm={4} xs={1}>
@@ -114,24 +115,24 @@ export default function Header() {
                 </Grid>
                 <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={5} lg={4} md={4} sm={8} xs={isTinyMobile ? 12 : 11}>
                   <Grid item display="flex" pr={1}>
-                    <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={colorMode.toggleColorMode}>
+                    <Fab size='small' onClick={colorMode.toggleColorMode}>
                       { theme.palette.mode === 'dark' ? <LightMode fontSize="medium"/> : <DarkMode fontSize="medium"/>}
                     </Fab>
                   </Grid>
                   <Grid item display="flex" pr={1}>
-                    <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={onSwapClick}>
+                    <Fab size='small' onClick={onSwapClick}>
                       <MonetizationOn color={swapOpen ? "primary" : "inherit"} fontSize="medium"/>
                     </Fab>
                   </Grid>
                   <Grid item display="flex" pr={1}>
-                    <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={onMusicClick}>
+                    <Fab size='small' onClick={onMusicClick}>
                       <Badge invisible={!playing} badgeContent=" " color="primary">
                         <Headphones fontSize='medium'/>
                       </Badge>
                     </Fab>
                   </Grid>
                   <Grid item display="flex" pr={1}>
-                    <Fab size='small' sx={{bgcolor: theme.palette.common.white}} onClick={onCartClick}>
+                    <Fab size='small' onClick={onCartClick}>
                       <Badge badgeContent={cartItemCount} color="primary">
                         <ShoppingCart fontSize='medium'/>
                       </Badge>
@@ -196,13 +197,15 @@ export default function Header() {
         </Fade>
         <Fade in={swapOpen}>
           <Grid id='swap' className={classes.swap} container zIndex={1}>
-            <SwapWidget 
-              theme={darkTheme} 
-              jsonRpcUrlMap={uniswapConfig.jsonRpcUrlMap}
-              tokenList={uniswapConfig.tokenList}  
-              defaultOutputAmount={uniswapConfig.outputAmount}
-              defaultOutputTokenAddress={uniswapConfig.outputTokenAddress}
-            />
+            <ErrorBoundaryLocal>
+              <SwapWidget
+                theme={darkTheme} 
+                jsonRpcUrlMap={uniswapConfig.jsonRpcUrlMap}
+                tokenList={uniswapConfig.tokenList}  
+                defaultOutputAmount={uniswapConfig.outputAmount}
+                defaultOutputTokenAddress={uniswapConfig.outputTokenAddress}
+              />
+            </ErrorBoundaryLocal>
           </Grid>
         </Fade>
         <Cart />

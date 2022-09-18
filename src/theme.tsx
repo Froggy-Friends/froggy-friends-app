@@ -46,10 +46,25 @@ export default function getTheme(isDarkMode: boolean) {
             borderRadius: 25,
             height: 35,
             fontWeight: 'bold',
+            textTransform: 'capitalize',
             ":disabled": {
               backgroundColor: configs.disabled,
               cursor: "not-allowed",
               pointerEvents: "auto"
+            }
+          }
+        }
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            "&.cta": {
+              backgroundColor: configs.white,
+              color: configs.dark,
+            },
+            "&.cta:hover": {
+              backgroundColor: configs.white,
+              color: configs.primary
             }
           }
         }
@@ -104,9 +119,10 @@ export default function getTheme(isDarkMode: boolean) {
       MuiFab: {
         styleOverrides: {
           root: {
-            backgroundColor: configs.dark,
+            backgroundColor: configs.white,
+            color: configs.dark,
             ":hover": {
-              backgroundColor: configs.primary,
+              color: configs.primary,
             }
           }
         }
@@ -115,11 +131,11 @@ export default function getTheme(isDarkMode: boolean) {
         styleOverrides: {
           root: {
             overflowY: 'scroll',
-            backgroundColor: 'black',
+            backgroundColor: isDarkMode ? configs.dark : configs.white,
             "::-webkit-scrollbar": {
               width: 8,
               height: 8,
-              backgroundColor: 'black'
+              backgroundColor: isDarkMode ? configs.dark : configs.white
             },
             "::-webkit-scrollbar-thumb": {
               backgroundColor: configs.primary,
@@ -127,13 +143,6 @@ export default function getTheme(isDarkMode: boolean) {
               height: 50,
               width: 50
             }
-          }
-        }
-      },
-      MuiTableCell: {
-        styleOverrides: {
-          root: {
-            // color: configs.secondary
           }
         }
       },
@@ -189,6 +198,13 @@ export default function getTheme(isDarkMode: boolean) {
         styleOverrides: {
           root: {
             backgroundColor: isDarkMode ? configs.dark : configs.white
+          }
+        }
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            height: 35
           }
         }
       }

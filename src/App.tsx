@@ -4,7 +4,7 @@ import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import { CssBaseline, PaletteMode, ThemeProvider } from '@mui/material';
 import { DAppProvider } from '@usedapp/core';
 import { store } from "./redux/store";
-import { ErrorBoundary } from './components/ErrorBoundary';
+import { ErrorBoundaryGlobal } from './components/ErrorBoundaryGlobal';
 import getTheme from './theme';
 import config from './config';
 import Admin from "./pages/Admin";
@@ -14,6 +14,7 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Board from "./pages/Board";
 import Items from "./pages/Items";
+import ItemDetails from './pages/ItemDetails';
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -31,7 +32,7 @@ export default function App() {
   const theme = useMemo(() => getTheme(mode === 'dark'), [mode]);
 
   return (
-    <ErrorBoundary>
+    <ErrorBoundaryGlobal>
       <Provider store={store}>
         <ColorModeContext.Provider value={colorMode}>
           <ThemeProvider theme={theme}>
@@ -44,7 +45,7 @@ export default function App() {
                   <Route path="/admin" element={<Admin/>} />
                   <Route path="/market" element={<Market/>}/>
                   <Route path="/leaderboard" element={<Board/>} />
-                  <Route path="/items" element={<Items/>} />
+                  <Route path="/item/:id" element={<ItemDetails/>} />
                   <Route path="*" element={ <Navigate to="/staking" replace />} />
                 </Routes>
                 <Footer/>
@@ -53,6 +54,6 @@ export default function App() {
           </ThemeProvider>
         </ColorModeContext.Provider>
       </Provider>
-    </ErrorBoundary>
+    </ErrorBoundaryGlobal>
   )
 }

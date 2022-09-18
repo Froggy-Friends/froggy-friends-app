@@ -1,6 +1,6 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment, SnackbarContent, Paper, Container, Switch, FormControl, Select, MenuItem, SelectChangeEvent } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment, SnackbarContent, Paper, Container, Switch, FormControl, Select, MenuItem, SelectChangeEvent, getListItemUtilityClass, Skeleton } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { commify, formatEther } from '@ethersproject/units';
@@ -8,18 +8,14 @@ import { BigNumber } from 'ethers';
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { AddCircle, Check, CheckBox, Close, FilterList, InfoOutlined, Receipt, RemoveCircle, Search, Warning } from '@mui/icons-material';
+import { AddCircle, Check, CheckBox, Close, FilterList, InfoOutlined, Receipt, Refresh, RemoveCircle, Search, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import { formatDistance } from 'date-fns';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ribbit from '../images/ribbit.gif';
-import biz from '../images/biz.png';
 import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
-import discord from '../images/discord.png';
-import twitter from '../images/twitter.png';
-import chest from '../images/chest.png';
 import market from '../images/market.png';
 import Item from '../components/Item';
 
@@ -77,7 +73,6 @@ export default function Market() {
   const [value, setValue] = useState(4);
   const [sort, setSort] = useState('low-price');
   const [showAll, setShowAll] = useState(false);
-  const [loadingItems, setLoadingItems] = useState(false);
   const [items, setItems] = useState<RibbitItem[]>([]);
   const [itemAmounts, setItemAmounts] = useState(new Map<number,number>());
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
@@ -96,35 +91,15 @@ export default function Market() {
     getItems();
   }, [])
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getItemsBackground();
-    }, 30000);
-    return () => clearInterval(interval);
-  }, [])
-
   async function getItems() {
     try {
-      setLoadingItems(true);
       const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
       let items = response.data;
       setItems(items);
       setItemAmounts(new Map(items.map(item => [item.id, 0])));
-      setLoadingItems(false);
     } catch (error) {
-      setLoadingItems(false);
       setAlertMessage("Failed to get items");
       setShowAlert(true);
-    }
-  }
-
-  async function getItemsBackground() {
-    try {
-      const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
-      let items = response.data;
-      setItems(items);
-    } catch (error) {
-      console.log("fetch items in background error: ", error);
     }
   }
   
@@ -155,6 +130,11 @@ export default function Market() {
       setShowPurchaseModal(true);
     }
   }, [collabBuyState])
+
+  const onItemRefresh = () => {
+    setItems([]);
+    getItems();
+  }
 
   const onFilterToggle = (event: React.MouseEvent<HTMLElement>, filter: boolean) => {
     if (filter === null) return;
@@ -261,12 +241,6 @@ export default function Market() {
     setShowAlert(false);
   };
 
-  const onLoadingItemsClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason !== 'backdropClick') {
-      setLoadingItems(false);
-    }
-  }
-
   const onItemOwnersClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason !== 'backdropClick') {
       setItemOwners([]);
@@ -330,7 +304,7 @@ export default function Market() {
       </Paper>
       <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
         <Grid container>
-          <Grid id='left-panel' container direction='column' xl={2} lg={2} md={2} sm={12} xs={12}>
+          <Grid id='left-panel' container item direction='column' xl={2} lg={2} md={2} sm={12} xs={12}>
             <Grid id='filter-title' container pb={5} alignItems='center'>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='h5' fontWeight='bold'>Filter</Typography></Grid>
               <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><FilterList/></Grid>
@@ -375,8 +349,13 @@ export default function Market() {
               <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
             </Grid>
           </Grid>
-          <Grid id='search-and-items' container direction='column' xl={10} lg={10} md={10} sm={12} xs={12}>
-            <Grid id='controls' container item justifyContent='end'>
+          <Grid id='search-and-items' container item direction='column' xl={10} lg={10} md={10} sm={12} xs={12}>
+            <Grid id='controls' container item justifyContent='end' pb={5}>
+              <Grid id='refresh' container item xl={1} lg={1} md={2} sm={3} xs={12} pb={2}>
+                <IconButton sx={{height: 35}} onClick={onItemRefresh}>
+                  <Refresh fontSize='large'/>
+                </IconButton>
+              </Grid>
               <Grid id='sort' item xl={2} lg={2} md={3} sm={4} xs={12} pb={2}>
                 <Select value={sort} onChange={onSortSelect}>
                   <MenuItem value='low-price' color='secondary'>Price: Low to High</MenuItem>
@@ -390,13 +369,22 @@ export default function Market() {
               </Grid>
             </Grid>
             <Grid id='items' container item>
-            {
-              items.map((item: RibbitItem) => {
-                return <Grid key={item.name} item xl={2} lg={2} md={3} sm={6} xs={12} pl={2} pb={2}>
-                  <Item image={item.image} name={item.name} ribbit={item.price} selected={false}/>
-                </Grid>
-              })
-            }
+              {
+                items.length > 0 ? 
+                (
+                  items.map((item: RibbitItem) => {
+                    return <Grid key={item.name} item xl={2.4} lg={2.4} md={3} sm={6} xs={12} pl={2} pb={2}>
+                      <Item item={item} selected={false}/>
+                    </Grid>
+                  })
+                ) : (
+                  new Array(20).fill('').map((item, index) => {
+                    return <Grid key={index} item xl={2.4} lg={2.4} md={3} sm={6} xs={12} pl={2} pb={2}>
+                      <Skeleton variant='rectangular' animation='wave' height={300}/>  
+                    </Grid>
+                  })
+                )
+              }
           </Grid>
           </Grid>
         </Grid>
@@ -470,26 +458,6 @@ export default function Market() {
           }
         />
       </Snackbar>
-      <Modal open={loadingItems} onClose={onLoadingItemsClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
-        <Box className={classes.modal}>
-          <Grid container justifyContent='space-between' alignItems='center' pb={5}>
-            <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
-              <Typography id='modal-title' variant="h4" p={3}>Loading Ribbit Items</Typography>
-            </Grid>
-            <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <IconButton size='medium' color='inherit' onClick={onLoadingItemsClose}>
-                <Close fontSize='medium'/>
-              </IconButton>
-            </Grid>
-          </Grid>
-          <Grid container justifyContent='center' pb={3}>
-            <Grid item>
-              <img src={please} style={{height: 100, width: 100}} alt='please'/>
-            </Grid>
-          </Grid>
-          <LinearProgress variant='indeterminate' color='primary'/>
-        </Box>
-      </Modal>
       <Modal open={itemOwners.length > 0} onClose={onItemOwnersClose} keepMounted aria-labelledby='item-owners' aria-describedby='item-owners-description'>
         <Box className={classes.modal}>
           <Grid container justifyContent='space-between' alignItems='center'>

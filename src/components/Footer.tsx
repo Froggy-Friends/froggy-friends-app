@@ -2,16 +2,16 @@ import { useNavigate } from "react-router-dom";
 import { Avatar, Grid, Link, Typography, Theme, createStyles, useTheme, useMediaQuery, Fab, Paper } from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import logo from '../images/logo.png';
-import twitter from '../images/twitter.png';
-import opensea from '../images/opensea.png';
-import looksrare from '../images/looksrare.png';
-import etherscan from '../images/etherscan.png';
-import discord from '../images/discord.png';
+import twitter from '../images/twitter.svg';
+import opensea from '../images/opensea.svg';
+import looksrare from '../images/looksrare.svg';
+import etherscan from '../images/etherscan.svg';
+import discord from '../images/discord.svg';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     avatar: {
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
     footerIcon: {
       bgcolor: theme.palette.common.black
@@ -43,35 +43,35 @@ export default function Footer() {
               <Grid item p={1}>
                 <Link href="https://twitter.com/FroggyFriendNFT" underline='none' target='_blank'>
                   <Fab size='small'>
-                    <Avatar className={classes.avatar} alt='Twitter' src={twitter}/>
+                    <Avatar className={classes.avatar} alt='Twitter' src={twitter} sx={{height: 28, width: 28}}/>
                   </Fab>
                 </Link>
               </Grid>
               <Grid item p={1}>
                 <Link href="https://opensea.io/collection/froggyfriendsnft" underline='none' target='_blank'>
                   <Fab size='small'>
-                    <Avatar className={classes.avatar} alt='Opensea' src={opensea}/>
+                    <Avatar className={classes.avatar} alt='Opensea' src={opensea} sx={{height: 28, width: 28}}/>
                   </Fab>
                 </Link>
               </Grid>
               <Grid item p={1}>
                 <Link href="https://looksrare.org/collections/0x29652C2e9D3656434Bc8133c69258C8d05290f41" underline='none' target='_blank'>
                   <Fab size='small'>
-                    <Avatar className={classes.avatar} alt='Looks Rare' src={looksrare}/>
+                    <Avatar className={classes.avatar} alt='Looks Rare' src={looksrare} sx={{height: 28, width: 28}}/>
                   </Fab>
                 </Link>
               </Grid>
               <Grid item p={1}>
                 <Link href="https://etherscan.io/address/0x29652C2e9D3656434Bc8133c69258C8d05290f41#code" underline='none' target='_blank'>
                   <Fab size='small'>
-                    <Avatar className={classes.avatar} alt='Etherscan' src={etherscan}/>
+                    <Avatar className={classes.avatar} alt='Etherscan' src={etherscan} sx={{height: 28, width: 28}}/>
                   </Fab>
                 </Link>
               </Grid>
               <Grid item p={1}>
                 <Link href="https://discord.gg/froggylabs" underline='none' target='_blank'>
                   <Fab size='small'>
-                    <Avatar className={classes.avatar} alt='Discord' src={discord}/>
+                    <Avatar className={classes.avatar} alt='Discord' src={discord} sx={{height: 28, width: 28}}/>
                   </Fab>
                 </Link>
               </Grid>

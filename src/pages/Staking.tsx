@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Check, Close, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted, useFroggiesStaked } from '../client';
 import { formatEther, commify } from '@ethersproject/units';
+import { Froggy } from '../models/Froggy';
 import axios from 'axios';
 import ribbit from '../images/ribbit.gif';
 import think from '../images/think.png';
@@ -17,20 +18,6 @@ import uhhh from '../images/uhhh.png';
 import hi from '../images/hi.png';
 import pond from '../images/pond.png';
 
-interface Attribute {
-  trait_type: string;
-  value: string;
-}
-
-interface Froggy {
-  name: string;
-  description: string;
-  image: string;
-  dna: string;
-  edition: number;
-  date: number;
-  attributes: Attribute[];
-}
 interface Owned {
   froggies: Froggy[];
   totalRibbit: number;
