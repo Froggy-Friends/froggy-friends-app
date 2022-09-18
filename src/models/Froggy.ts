@@ -8,6 +8,7 @@ export interface Froggy {
     edition: number;
     date: number;
     isStaked: boolean;
+    isPaired: boolean;
     ribbit: number;
     rarity: string;
     animation_url: string;

@@ -43,13 +43,15 @@ export default function FrogDetails() {
     const [showAlert, setShowAlert] = useState(false);
 
     useEffect(() => {
-        getFroggy(`${params.id}`);
         scroll();
-    }, [params]);
+        if (account) {
+            getFroggy(`${params.id}`);
+        }
+    }, [account]);
 
     async function getFroggy(id: string) {
         try {
-          const response = await axios.get<Froggy>(`${process.env.REACT_APP_API}/frog/${id}`);
+          const response = await axios.post<Froggy>(`${process.env.REACT_APP_API}/frog/${id}`, { account: account});
           let item = response.data;
           console.log("item: ", item);
           setItem(item);
@@ -92,7 +94,7 @@ export default function FrogDetails() {
                         <img src={item?.image} width='100%' style={{borderRadius: 5}}/>
                     </Grid>
                     <Grid id='info' container item direction='column' justifyContent='space-between' xl={7} lg={7} md={7} sm={7} xs={12}>
-                        <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center' pb={5}>
+                        <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center'>
                             <Typography variant='h5' fontWeight='bold'>{item?.name}</Typography>
                             <Paper elevation={3} sx={{borderRadius: 25}}>
                                 <IconButton className="cta" size="large" onClick={onItemDetailsClose}>   
@@ -100,7 +102,7 @@ export default function FrogDetails() {
                                 </IconButton>
                             </Paper>
                         </Grid>
-                        <Grid id='price-and-socials' container pb={5}> 
+                        <Grid id='price-and-socials' container> 
                             <Grid id='price' item xl={2} lg={2} md={2} sm={3} xs={4}>
                                 <Stack spacing={1}>
                                     <Typography variant='body1' fontWeight='bold'>Price</Typography>
@@ -133,9 +135,13 @@ export default function FrogDetails() {
                                 </Stack>
                             </Grid>
                         </Grid>
-                        <Stack spacing={1} pb={5}>
-                            <Typography fontWeight='bold'>Description</Typography>
-                            <Typography>{item?.description}</Typography>
+                        <Stack id='stacks' spacing={1}>
+                            <Typography fontWeight='bold'>Tags</Typography>
+                            <Grid container spacing={2}>
+                                <Grid item ml={-2}><Chip label={item?.rarity}/></Grid>
+                                <Grid item><Chip label={item?.isStaked ? 'staked' : 'unstaked'}/></Grid>
+                                <Grid item><Chip label={item?.isPaired ? 'paired' : 'unpaired'}/></Grid>
+                            </Grid>
                         </Stack>
                         {
                             item && deposits.includes(item.edition) && <Grid id='buttons' container>
@@ -147,16 +153,7 @@ export default function FrogDetails() {
                     </Grid>
                 </Grid>
                 <Grid id='bottom-row' container justifyContent='space-between'>
-                    <Grid id='tags' item xl={4} lg={4} md={4} sm={12} xs={12} pb={5}>
-                        <Stack spacing={1}>
-                            <Typography fontWeight='bold'>Tags</Typography>
-                            <Grid container spacing={2}>
-                                <Grid item ml={-2}><Chip label='Allowlist'/></Grid>
-                                <Grid item><Chip label='Allowlist'/></Grid>
-                                <Grid item><Chip label='Allowlist'/></Grid>
-                            </Grid>
-                        </Stack>
-                    </Grid>
+                    
                 </Grid>
             </Container>
             <Snackbar open={showAlert}  autoHideDuration={5000} message={alertMessage} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={onAlertClose}>

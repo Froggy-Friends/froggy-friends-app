@@ -208,6 +208,13 @@ export default function getTheme(isDarkMode: boolean) {
             height: 35
           }
         }
+      },
+      MuiChip: {
+        styleOverrides: {
+          root: {
+            textTransform: 'capitalize'
+          }
+        }
       }
     }
   });
