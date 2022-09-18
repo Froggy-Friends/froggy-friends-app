@@ -9,6 +9,7 @@ import ribbitToken from '../images/ribbit.gif';
 import twitter from '../images/twitter.svg';
 import discord from '../images/discord.svg';
 import opensea from '../images/opensea.svg';
+import { Froggy } from "../models/Froggy";
 const {REACT_APP_RIBBIT_ITEM_CONTRACT} = process.env;
 
 const useStyles: any = makeStyles(() => 
@@ -28,40 +29,32 @@ const useStyles: any = makeStyles(() =>
   })
 );
 
-export default function ItemDetails() {
+export default function FrogDetails() {
     const classes = useStyles();
     const theme = useTheme();
     const navigate = useNavigate();
     const params = useParams();
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
-    const [item, setItem] = useState<RibbitItem>();
+    const [item, setItem] = useState<Froggy>();
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
     const [itemOwners, setItemOwners] = useState<string[]>([]);
 
     useEffect(() => {
-        getItem(`${params.id}`);
+        getFroggy(`${params.id}`);
         scroll();
     }, [params]);
 
-    async function getItem(id: string) {
+    async function getFroggy(id: string) {
         try {
-          const response = await axios.get<RibbitItem>(`${process.env.REACT_APP_API}/items/${id}`);
+          const response = await axios.get<Froggy>(`${process.env.REACT_APP_API}/frog/${id}`);
           let item = response.data;
+          console.log("item: ", item);
           setItem(item);
-
-          if (item.category == 'allowlists') {
-            getItemOwners(item.id, item.name);
-          }
         } catch (error) {
           setAlertMessage("Failed to get items");
           setShowAlert(true);
         }
-    }
-
-    const getItemOwners = async (id: number, name: string) => {
-        const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/owners`);
-        setItemOwners(response.data);
     }
 
     const scroll = () => {
@@ -111,7 +104,7 @@ export default function ItemDetails() {
                                     <Typography variant='body1' fontWeight='bold'>Price</Typography>
                                     <Typography display='flex' alignItems='center'> 
                                         <img src={ribbitToken} style={{height: 30, width: 30}} alt='Ribbit'/>
-                                        {kFormatter(item?.price || 0)}
+                                        {kFormatter(item?.ribbit || 0)}
                                     </Typography>
                                 </Stack>
                             </Grid>
@@ -119,24 +112,18 @@ export default function ItemDetails() {
                                 <Stack spacing={1}>
                                     <Typography variant='body1' fontWeight='bold'>Socials</Typography>
                                     <Stack direction='row' spacing={2}>
-                                        {
-                                            item?.twitter &&
                                             <Paper elevation={3} sx={{borderRadius: 25}}>
-                                                <IconButton className="cta" href={item.twitter} target='_blank'>
+                                                <IconButton className="cta" href='' target='_blank'>
                                                     <img src={twitter} style={{height: 24, width: 24}}/>
                                                 </IconButton>
                                             </Paper>
-                                        }
-                                        {
-                                            item?.discord && 
                                             <Paper elevation={3} sx={{borderRadius: 25}}>
-                                                <IconButton className="cta" href={item.discord} target='_blank'>
+                                                <IconButton className="cta" href='' target='_blank'>
                                                     <img src={discord} style={{height: 24, width: 24}}/>
                                                 </IconButton>
                                             </Paper>
-                                        }
                                         <Paper elevation={3} sx={{borderRadius: 25}}>
-                                            <IconButton className="cta" href={`https://opensea.io/assets/ethereum/${REACT_APP_RIBBIT_ITEM_CONTRACT}/${item?.id}`} target='_blank'>
+                                            <IconButton className="cta" href='https://opensea.io/collection/froggyfriendsnft' target='_blank'>
                                                 <img src={opensea} style={{height: 24, width: 24}}/>
                                             </IconButton>
                                         </Paper>
@@ -149,8 +136,8 @@ export default function ItemDetails() {
                             <Typography>{item?.description}</Typography>
                         </Stack>
                         <Grid id='buttons' container>
-                            <Button variant='contained' sx={{height: 50}}>
-                                <Typography>Add to cart</Typography>
+                            <Button variant='contained' disabled sx={{height: 50}}>
+                                <Typography>Pair Friend</Typography>
                             </Button>
                         </Grid>
                     </Grid>
@@ -166,30 +153,6 @@ export default function ItemDetails() {
                             </Grid>
                         </Stack>
                     </Grid>
-                    {
-                        itemOwners.length > 0 && 
-                        <Grid id='owners' item xl={7} lg={7} md={7} sm={12} xs={12}>
-                            <Stack spacing={3}>
-                                <Stack direction='row' justifyContent='space-between'>
-                                    <Typography fontWeight='bold'>Allowlist Owners</Typography>
-                                    <TextField placeholder='Search by wallet' InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}/>
-                                </Stack>
-                                <TableContainer component={Paper} elevation={3} sx={{p: 3, height: 300}}>
-                                    <Table stickyHeader aria-label="simple table">
-                                        <TableBody>
-                                        {itemOwners.map((owner, index) => (
-                                            <TableRow key={index} className={classes.row}>
-                                            <TableCell>
-                                                <Typography variant='h6' color='secondary'>{owner}</Typography>
-                                            </TableCell>
-                                            </TableRow>
-                                        ))}
-                                        </TableBody>
-                                    </Table>
-                                    </TableContainer>
-                            </Stack>
-                        </Grid>
-                    }
                 </Grid>
             </Container>
             <Snackbar open={showAlert}  autoHideDuration={5000} message={alertMessage} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={onAlertClose}>
