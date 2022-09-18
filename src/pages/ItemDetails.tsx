@@ -13,7 +13,7 @@ const {REACT_APP_RIBBIT_ITEM_CONTRACT} = process.env;
 
 const useStyles: any = makeStyles(() => 
   createStyles({
-    leaderboardRow: {
+    row: {
       padding: 0,
       border: 0,
       '& td, th': {
@@ -178,7 +178,7 @@ export default function ItemDetails() {
                                     <Table stickyHeader aria-label="simple table">
                                         <TableBody>
                                         {itemOwners.map((owner, index) => (
-                                            <TableRow key={index} className={classes.leaderboardRow}>
+                                            <TableRow key={index} className={classes.row}>
                                             <TableCell>
                                                 <Typography variant='h6' color='secondary'>{owner}</Typography>
                                             </TableCell>

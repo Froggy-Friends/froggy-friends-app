@@ -35,9 +35,8 @@ export default function Item (props: ItemProps) {
     }
 
     const onItemClick = (item: RibbitItem) => {
-        console.log("dispatch add item details: ", item);
         navigate(`/item/${item.id}`);
-      }
+    }
 
     return (
         <Card sx={{height: '100%', border: selected ? '5px solid' : '0px', borderColor: getBorderColor()}}>

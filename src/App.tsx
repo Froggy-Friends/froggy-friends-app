@@ -13,8 +13,8 @@ import Market from "./pages/Market";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Board from "./pages/Board";
-import Items from "./pages/Items";
 import ItemDetails from './pages/ItemDetails';
+import FrogDetails from './pages/FrogDetails';
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -46,6 +46,7 @@ export default function App() {
                   <Route path="/market" element={<Market/>}/>
                   <Route path="/leaderboard" element={<Board/>} />
                   <Route path="/item/:id" element={<ItemDetails/>} />
+                  <Route path='/frog/:id' element={<FrogDetails/>}/>
                   <Route path="*" element={ <Navigate to="/staking" replace />} />
                 </Routes>
                 <Footer/>
