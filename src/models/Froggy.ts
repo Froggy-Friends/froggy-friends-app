@@ -10,5 +10,6 @@ export interface Froggy {
     isStaked: boolean;
     ribbit: number;
     rarity: string;
+    animation_url: string;
     attributes: Attribute[];
   }

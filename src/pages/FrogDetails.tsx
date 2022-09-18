@@ -10,7 +10,6 @@ import twitter from '../images/twitter.svg';
 import discord from '../images/discord.svg';
 import opensea from '../images/opensea.svg';
 import { Froggy } from "../models/Froggy";
-const {REACT_APP_RIBBIT_ITEM_CONTRACT} = process.env;
 
 const useStyles: any = makeStyles(() => 
   createStyles({
@@ -38,7 +37,6 @@ export default function FrogDetails() {
     const [item, setItem] = useState<Froggy>();
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
-    const [itemOwners, setItemOwners] = useState<string[]>([]);
 
     useEffect(() => {
         getFroggy(`${params.id}`);
