@@ -6,6 +6,10 @@ import { createStyles, Button, Chip, Container, Grid, IconButton, Snackbar, Snac
 import { RibbitItem } from "../models/RibbitItem";
 import axios from "axios";
 import ribbitToken from '../images/ribbit.gif';
+import twitter from '../images/twitter.svg';
+import discord from '../images/discord.svg';
+import opensea from '../images/opensea.svg';
+const {REACT_APP_RIBBIT_ITEM_CONTRACT} = process.env;
 
 const useStyles: any = makeStyles(() => 
   createStyles({
@@ -93,7 +97,7 @@ export default function ItemDetails() {
                         <img src={item?.image} width='100%' style={{borderRadius: 5}}/>
                     </Grid>
                     <Grid id='info' container item direction='column' justifyContent='space-between' xl={7} lg={7} md={7} sm={7} xs={12}>
-                        <Grid id='title-and-exit' container justifyContent='space-between' pb={5}>
+                        <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center' pb={5}>
                             <Typography variant='h5' fontWeight='bold'>{item?.name}</Typography>
                             <Paper elevation={3} sx={{borderRadius: 25}}>
                                 <IconButton className="cta" size="large" onClick={onItemDetailsClose}>   
@@ -102,7 +106,7 @@ export default function ItemDetails() {
                             </Paper>
                         </Grid>
                         <Grid id='price-and-socials' container pb={5}> 
-                            <Grid id='price' item xl={2} lg={2} md={2} sm={2} xs={2}>
+                            <Grid id='price' item xl={2} lg={2} md={2} sm={3} xs={4}>
                                 <Stack spacing={1}>
                                     <Typography variant='body1' fontWeight='bold'>Price</Typography>
                                     <Typography display='flex' alignItems='center'> 
@@ -114,6 +118,29 @@ export default function ItemDetails() {
                             <Grid id='socials' item xl={2} lg={2} md={2} sm={2} xs={2}>
                                 <Stack spacing={1}>
                                     <Typography variant='body1' fontWeight='bold'>Socials</Typography>
+                                    <Stack direction='row' spacing={2}>
+                                        {
+                                            item?.twitter &&
+                                            <Paper elevation={3} sx={{borderRadius: 25}}>
+                                                <IconButton className="cta" href={item.twitter} target='_blank'>
+                                                    <img src={twitter} style={{height: 24, width: 24}}/>
+                                                </IconButton>
+                                            </Paper>
+                                        }
+                                        {
+                                            item?.discord && 
+                                            <Paper elevation={3} sx={{borderRadius: 25}}>
+                                                <IconButton className="cta" href={item.discord} target='_blank'>
+                                                    <img src={discord} style={{height: 24, width: 24}}/>
+                                                </IconButton>
+                                            </Paper>
+                                        }
+                                        <Paper elevation={3} sx={{borderRadius: 25}}>
+                                            <IconButton className="cta" href={`https://opensea.io/assets/ethereum/${REACT_APP_RIBBIT_ITEM_CONTRACT}/${item?.id}`} target='_blank'>
+                                                <img src={opensea} style={{height: 24, width: 24}}/>
+                                            </IconButton>
+                                        </Paper>
+                                    </Stack>
                                 </Stack>
                             </Grid>
                         </Grid>
@@ -139,27 +166,30 @@ export default function ItemDetails() {
                             </Grid>
                         </Stack>
                     </Grid>
-                    <Grid id='owners' item xl={7} lg={7} md={7} sm={12} xs={12}>
-                        <Stack spacing={3}>
-                            <Stack direction='row' justifyContent='space-between'>
-                                <Typography fontWeight='bold'>Allowlist Owners</Typography>
-                                <TextField placeholder='Search by wallet' InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}/>
+                    {
+                        itemOwners.length > 0 && 
+                        <Grid id='owners' item xl={7} lg={7} md={7} sm={12} xs={12}>
+                            <Stack spacing={3}>
+                                <Stack direction='row' justifyContent='space-between'>
+                                    <Typography fontWeight='bold'>Allowlist Owners</Typography>
+                                    <TextField placeholder='Search by wallet' InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}/>
+                                </Stack>
+                                <TableContainer component={Paper} elevation={3} sx={{p: 3, height: 300}}>
+                                    <Table stickyHeader aria-label="simple table">
+                                        <TableBody>
+                                        {itemOwners.map((owner, index) => (
+                                            <TableRow key={index} className={classes.leaderboardRow}>
+                                            <TableCell>
+                                                <Typography variant='h6' color='secondary'>{owner}</Typography>
+                                            </TableCell>
+                                            </TableRow>
+                                        ))}
+                                        </TableBody>
+                                    </Table>
+                                    </TableContainer>
                             </Stack>
-                            <TableContainer component={Paper} elevation={3} sx={{p: 3, height: 300}}>
-                                <Table stickyHeader aria-label="simple table">
-                                    <TableBody>
-                                    {itemOwners.map((owner, index) => (
-                                        <TableRow key={index} className={classes.leaderboardRow}>
-                                        <TableCell>
-                                            <Typography variant='h6' color='secondary'>{owner}</Typography>
-                                        </TableCell>
-                                        </TableRow>
-                                    ))}
-                                    </TableBody>
-                                </Table>
-                                </TableContainer>
-                        </Stack>
-                    </Grid>
+                        </Grid>
+                    }
                 </Grid>
             </Container>
             <Snackbar open={showAlert}  autoHideDuration={5000} message={alertMessage} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={onAlertClose}>
