@@ -75,6 +75,7 @@ export default function Staking() {
   const theme = useTheme();
   const navigate = useNavigate();
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isBelow320 = useMediaQuery(theme.breakpoints.down(321));
   const [froggiesToStake, setFroggiesToStake] = useState<number[]>([]);
@@ -305,49 +306,51 @@ export default function Staking() {
       </Paper>
       <Container maxWidth='xl' sx={{pt: 2}}>
         <Grid id='staking' container direction='column' textAlign='center'>
-            <Grid id='stats' container item alignItems='end' xl={9} lg={9} md={9} sm={9} xs={12} p={isBelow320 ? 0 : 3}>
-              <Grid id='all-staked' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
-                <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Froggies Staked</Typography>
-                <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
-                  <img src={think} style={{height: 50, width: 50}} alt='think'/>
-                  <Typography variant='h6' color='secondary' pl={2}>{froggiesStakedPercentage()}</Typography>
+            <Grid container p={isBelow320 ? 0 : 3}>
+              <Grid id='stats' container item alignItems='end' xl={9} lg={9} md={9} sm={12} xs={12} pb={3}>
+                <Grid id='all-staked' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
+                  <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Froggies Staked</Typography>
+                  <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
+                    <img src={think} style={{height: 50, width: 50}} alt='think'/>
+                    <Typography variant='h6' color='secondary' pl={2}>{froggiesStakedPercentage()}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid id='balance' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
+                  <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit Balance</Typography>
+                  <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
+                    <img src={chest} style={{height: 50, width: 50}} alt='think'/>
+                    <Typography variant='h6' color='secondary' pl={2}>{formatBalance(ribbitBalance)}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid id='staked' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
+                  <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit Staked</Typography>
+                  <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
+                    <img src={rain} style={{height: 50, width: 50}} alt='think'/>
+                    <Typography variant='h6' color='secondary' pl={2}>{formatBalance(stakingBalance)}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid id='ribbit-per-day' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
+                  <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit / Day</Typography>
+                  <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
+                    <img src={ribbit} style={{height: 50, width: 50}} alt='think'/>
+                    <Typography variant='h6' color='secondary'>{owned.totalRibbit}</Typography>
+                  </Grid>
                 </Grid>
               </Grid>
-              <Grid id='balance' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
-                <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit Balance</Typography>
-                <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
-                  <img src={chest} style={{height: 50, width: 50}} alt='think'/>
-                  <Typography variant='h6' color='secondary' pl={2}>{formatBalance(ribbitBalance)}</Typography>
+              {
+                owned.froggies.length > 0 && <Grid id='buttons' container item justifyContent={isTablet ? 'center' : 'end'} xl={3} lg={3} md={3} sm={12} xs={12} pb={2}>
+                  <ButtonGroup sx={{height: isMobile ? 'inherit' : 35, justifyContent: isMobile ? 'center' : 'end'}}>
+                    <Button variant='contained' onClick={() => onStake()}>
+                      Stake {froggiesToStake.length || ''}
+                    </Button>
+                    <Button variant='contained' onClick={() => onUnstake()}>
+                      Unstake {froggiesToUnstake.length || ''}
+                    </Button>
+                    <Button variant='contained' onClick={() => onClaim()}>Claim</Button>
+                  </ButtonGroup>
                 </Grid>
-              </Grid>
-              <Grid id='staked' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
-                <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit Staked</Typography>
-                <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
-                  <img src={rain} style={{height: 50, width: 50}} alt='think'/>
-                  <Typography variant='h6' color='secondary' pl={2}>{formatBalance(stakingBalance)}</Typography>
-                </Grid>
-              </Grid>
-              <Grid id='ribbit-per-day' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
-                <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit / Day</Typography>
-                <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
-                  <img src={ribbit} style={{height: 50, width: 50}} alt='think'/>
-                  <Typography variant='h6' color='secondary'>{owned.totalRibbit}</Typography>
-                </Grid>
-              </Grid>
+              }
             </Grid>
-            {
-              account && <Grid id='buttons' container item justifyContent={isMobile ? 'center' : 'end'} xl={3} lg={3} md={3} pb={2}>
-                <ButtonGroup orientation={isBelow320 ? 'vertical' : 'horizontal'} sx={{height: isMobile ? 'inherit' : 35, justifyContent: isMobile ? 'center' : 'end'}}>
-                  <Button variant='contained' onClick={() => onStake()}>
-                    Stake {froggiesToStake.length || ''}
-                  </Button>
-                  <Button variant='contained' onClick={() => onUnstake()}>
-                    Unstake {froggiesToUnstake.length || ''}
-                  </Button>
-                  <Button variant='contained' onClick={() => onClaim()}>Claim</Button>
-                </ButtonGroup>
-              </Grid>
-            }
           <Grid id='froggies' container item xl={12} lg={12} md={12} sm={12} xs={12}>
             {
               loading && 
@@ -358,14 +361,13 @@ export default function Staking() {
               })
             }
             {
-              !account && <Typography variant='h6' pl={3} pt={3}>Login to view staked frogs</Typography>
+              !account && <Typography variant='h6' pl={3} pt={5}>Login to view staked frogs</Typography>
             }
             {
               account && owned.froggies.length == 0 && 
-              <Stack direction='row'>
-                <Typography pl={3} pr={1} display='flex' alignItems='center'>Purchase Froggy Friends on Opensea to begin staking</Typography>
-                
-                <Paper elevation={3} sx={{borderRadius: 25}}>
+              <Stack spacing={1} direction={isMobile ? 'column' : 'row'} alignItems='center' pt={5}>
+                <Typography pl={3} display='flex' alignItems='center'>Purchase Froggy Friends on Opensea to begin staking</Typography>
+                <Paper elevation={3} sx={{borderRadius: 25, width: 34, height: 34}}>
                   <IconButton className="cta" size='small' href='https://opensea.io/collection/froggyfriendsnft' target='_blank'>
                     <Launch/>
                   </IconButton>
