@@ -140,12 +140,12 @@ export default function ItemDetails() {
                         </Stack>
                     </Grid>
                     <Grid id='owners' item xl={7} lg={7} md={7} sm={12} xs={12}>
-                        <Stack spacing={1}>
+                        <Stack spacing={3}>
                             <Stack direction='row' justifyContent='space-between'>
                                 <Typography fontWeight='bold'>Allowlist Owners</Typography>
                                 <TextField placeholder='Search by wallet' InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}/>
                             </Stack>
-                            <TableContainer component={Paper} elevation={1} sx={{p: 3, height: 300}}>
+                            <TableContainer component={Paper} elevation={3} sx={{p: 3, height: 300}}>
                                 <Table stickyHeader aria-label="simple table">
                                     <TableBody>
                                     {itemOwners.map((owner, index) => (
