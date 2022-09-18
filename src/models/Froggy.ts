@@ -7,5 +7,7 @@ export interface Froggy {
     dna: string;
     edition: number;
     date: number;
+    isStaked: boolean;
+    ribbit: number;
     attributes: Attribute[];
   }

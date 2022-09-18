@@ -1,9 +1,9 @@
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper } from "@mui/material";
+import { Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
-import { Check, Close, Warning } from '@mui/icons-material';
+import { Check, Close, Launch, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted, useFroggiesStaked } from '../client';
 import { formatEther, commify } from '@ethersproject/units';
 import { Froggy } from '../models/Froggy';
@@ -17,6 +17,7 @@ import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import hi from '../images/hi.png';
 import pond from '../images/pond.png';
+import { useNavigate } from 'react-router-dom';
 
 interface Owned {
   froggies: Froggy[];
@@ -72,9 +73,10 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Staking() {
   const classes = useStyles();
   const theme = useTheme();
+  const navigate = useNavigate();
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isBelow320 = useMediaQuery(theme.breakpoints.down(320));
+  const isBelow320 = useMediaQuery(theme.breakpoints.down(321));
   const [froggiesToStake, setFroggiesToStake] = useState<number[]>([]);
   const [froggiesToUnstake, setFroggiesToUnstake] = useState<number[]>([]);
   const [showAlert, setShowAlert] = useState(false);
@@ -93,10 +95,6 @@ export default function Staking() {
   const stakingBalance = useCheckStakingBalance(account ?? '');
   const stakingStarted = useStakingStarted();
   const froggiesStaked = useFroggiesStaked();
-
-  useEffect(() => {
-    console.log("staking started: ", stakingStarted);
-  }, [stakingStarted])
 
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
@@ -293,7 +291,11 @@ export default function Staking() {
 
   const froggiesStakedPercentage = () => {
     let staked = (froggiesStaked / 4444) * 100;
-    return staked.toFixed(2);
+    return isNaN(staked) ? '0' : staked.toFixed(2) + '%';
+  }
+
+  const onItemClick = (frog: Froggy) => {
+    navigate(`/frog/${frog.edition}`);
   }
   
   return (
@@ -303,30 +305,29 @@ export default function Staking() {
       </Paper>
       <Container maxWidth='xl' sx={{pt: 2}}>
         <Grid id='staking' container direction='column' textAlign='center'>
-          <Grid id='stats' container bgcolor={theme.palette.background.default} borderRadius={3} xl={12} lg={12} md={12} sm={12} xs={12} p={3}>
-            <Grid id='stats' container item alignItems='end' xl={9} lg={9} md={9} pb={2}>
-              <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={2}>
+            <Grid id='stats' container item alignItems='end' xl={9} lg={9} md={9} sm={9} xs={12} p={isBelow320 ? 0 : 3}>
+              <Grid id='all-staked' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
                 <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Froggies Staked</Typography>
                 <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                   <img src={think} style={{height: 50, width: 50}} alt='think'/>
-                  <Typography variant='h6' color='secondary' pl={2}>{froggiesStakedPercentage()}&#37;</Typography>
+                  <Typography variant='h6' color='secondary' pl={2}>{froggiesStakedPercentage()}</Typography>
                 </Grid>
               </Grid>
-              <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={2}>
+              <Grid id='balance' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
                 <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit Balance</Typography>
                 <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                   <img src={chest} style={{height: 50, width: 50}} alt='think'/>
                   <Typography variant='h6' color='secondary' pl={2}>{formatBalance(ribbitBalance)}</Typography>
                 </Grid>
               </Grid>
-              <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={2}>
+              <Grid id='staked' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
                 <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit Staked</Typography>
                 <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                   <img src={rain} style={{height: 50, width: 50}} alt='think'/>
                   <Typography variant='h6' color='secondary' pl={2}>{formatBalance(stakingBalance)}</Typography>
                 </Grid>
               </Grid>
-              <Grid item display='column' xl={2} lg={2} md={3} sm={3} xs={12} pb={2}>
+              <Grid id='ribbit-per-day' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
                 <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit / Day</Typography>
                 <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                   <img src={ribbit} style={{height: 50, width: 50}} alt='think'/>
@@ -334,28 +335,47 @@ export default function Staking() {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid id='buttons' container item justifyContent={isMobile ? 'center' : 'end'} xl={3} lg={3} md={3} pb={2}>
-              <ButtonGroup orientation={isBelow320 ? 'vertical' : 'horizontal'} sx={{height: isMobile ? 'inherit' : 35, justifyContent: isMobile ? 'center' : 'end'}}>
-                <Button variant='contained' onClick={() => onStake()}>
-                  Stake {froggiesToStake.length || ''}
-                </Button>
-                <Button variant='contained' onClick={() => onUnstake()}>
-                  Unstake {froggiesToUnstake.length || ''}
-                </Button>
-                <Button variant='contained' onClick={() => onClaim()}>Claim</Button>
-              </ButtonGroup>
-            </Grid>
-          </Grid>
-          { account && loading && 
-            <Grid item p={10}>
-              <CircularProgress color='secondary' size={80}/>
-            </Grid>
-          }
+            {
+              account && <Grid id='buttons' container item justifyContent={isMobile ? 'center' : 'end'} xl={3} lg={3} md={3} pb={2}>
+                <ButtonGroup orientation={isBelow320 ? 'vertical' : 'horizontal'} sx={{height: isMobile ? 'inherit' : 35, justifyContent: isMobile ? 'center' : 'end'}}>
+                  <Button variant='contained' onClick={() => onStake()}>
+                    Stake {froggiesToStake.length || ''}
+                  </Button>
+                  <Button variant='contained' onClick={() => onUnstake()}>
+                    Unstake {froggiesToUnstake.length || ''}
+                  </Button>
+                  <Button variant='contained' onClick={() => onClaim()}>Claim</Button>
+                </ButtonGroup>
+              </Grid>
+            }
           <Grid id='froggies' container item xl={12} lg={12} md={12} sm={12} xs={12}>
             {
-              owned.froggies.map((froggy: any) => {
+              loading && 
+              new Array(20).fill('').map((item, index) => {
+                return <Grid key={index} item xl={2.4} lg={2.4} md={3} sm={6} xs={12} pl={2} pb={2}>
+                  <Skeleton variant='rectangular' animation='wave' height={300}/>  
+                </Grid>
+              })
+            }
+            {
+              !account && <Typography variant='h6' pl={3} pt={3}>Login to view staked frogs</Typography>
+            }
+            {
+              account && owned.froggies.length == 0 && 
+              <Stack direction='row'>
+                <Typography pl={3} pr={1} display='flex' alignItems='center'>Purchase Froggy Friends on Opensea to begin staking</Typography>
+                
+                <Paper elevation={3} sx={{borderRadius: 25}}>
+                  <IconButton className="cta" size='small' href='https://opensea.io/collection/froggyfriendsnft' target='_blank'>
+                    <Launch/>
+                  </IconButton>
+                </Paper>
+              </Stack>
+            }
+            {
+              owned.froggies.map((froggy: Froggy) => {
                 return <Grid key={froggy.edition} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
-                  <Card sx={{height: '100%', border: getBorderWidth(froggy.eddition), borderColor: getBorderColor(froggy.edition)}}>
+                  <Card sx={{height: '100%', border: getBorderWidth(froggy.edition), borderColor: getBorderColor(froggy.edition)}}>
                     <CardMedia component='img' image={froggy.image} alt='Froggy'/>
                     <CardContent sx={{bgcolor: theme.palette.common.white, paddingBottom: 0}}>
                       <Typography variant='body1' fontWeight='bold' pb={1} pt={1}>{froggy.name}</Typography>
@@ -364,21 +384,15 @@ export default function Staking() {
                           <img src={ribbit} style={{height: 30, width: 30}} alt='think'/>
                           {froggy.ribbit} day
                         </Typography>
-                        <Button variant='outlined' color='inherit'>
+                        <Button variant='outlined' color='inherit' onClick={() => onItemClick(froggy)}>
                           <Typography variant='body2'>MORE</Typography>
                         </Button>
                       </Grid>
                     </CardContent>
                   </Card>
                 </Grid>
-
               })
             }
-          </Grid>
-          <Grid item pt={5}>
-            <Button variant='outlined' onClick={() => window.open("https://opensea.io/collection/froggyfriendsnft", "_blank")}>
-                <Typography variant='h6'>Buy Frogs</Typography>
-            </Button>
           </Grid>
         </Grid>  
       </Container>  
