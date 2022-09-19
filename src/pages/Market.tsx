@@ -72,8 +72,11 @@ export default function Market() {
   const dispatch = useAppDispatch();
   const [value, setValue] = useState(4);
   const [sort, setSort] = useState('low-price');
-  const [showAll, setShowAll] = useState(false);
   const [items, setItems] = useState<RibbitItem[]>([]);
+  const [filteredItems, setFilteredItems] = useState<RibbitItem[]>([]);
+  const [filterAvailable, setFilterAvailable] = useState<boolean>(false);
+  const [filterCommunity, setFilterCommunity] = useState<boolean>(false);
+  const [filterOwned, setFilterOwned] = useState<boolean>(false);
   const [itemAmounts, setItemAmounts] = useState(new Map<number,number>());
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showAlert, setShowAlert] = useState(false);
@@ -91,12 +94,17 @@ export default function Market() {
     getItems();
   }, [])
 
+  useEffect(() => {
+    setFilteredItems(filterItems(items));
+  }, [filterAvailable])
+
   async function getItems() {
     try {
       const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
       let items = response.data;
       setItems(items);
       setItemAmounts(new Map(items.map(item => [item.id, 0])));
+      setFilteredItems(filterItems(items));
     } catch (error) {
       setAlertMessage("Failed to get items");
       setShowAlert(true);
@@ -136,20 +144,10 @@ export default function Market() {
     getItems();
   }
 
-  const onFilterToggle = (event: React.MouseEvent<HTMLElement>, filter: boolean) => {
-    if (filter === null) return;
-    setShowAll(filter);
-  };
-
-  const filterItems = (category: string) => {
+  const filterItems = (items: RibbitItem[]): RibbitItem[] => {
     return items.filter(item => {
-      // category must match
-      if (item.category !== category) {
-        return false;
-      }
-
-      // if show available filter on check if item is not for sale or sold out
-      if (!showAll && (!item.isOnSale || item.minted === item.supply)) {
+      
+      if (filterAvailable && (!item.isOnSale || item.minted === item.supply)) {
         return false;
       }
 
@@ -297,6 +295,18 @@ export default function Market() {
     setSort(event.target.value as string);
   }
 
+  const availableFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterAvailable(event.target.checked);
+  };
+
+  const communityFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterCommunity(event.target.checked);
+  };
+
+  const ownedFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterOwned(event.target.checked);
+  };
+
   return (
     <Grid id="market" className={classes.market} container direction="column" justifyContent="start">
       <Paper elevation={3}>
@@ -311,15 +321,15 @@ export default function Market() {
             </Grid>
             <Grid id='available' container pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Available</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Switch/></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Switch checked={filterAvailable} onChange={availableFilterChanged}/></Grid>
             </Grid>
             <Grid id='community' container pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Community</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Switch/></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Switch checked={filterCommunity} onChange={communityFilterChanged}/></Grid>
             </Grid>
             <Grid id='owned' container pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Owned</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Switch/></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Switch checked={filterOwned} onChange={ownedFilterChanged}/></Grid>
             </Grid>
             <Grid id='categories-title' container pt={5} pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='h6' fontWeight='bold'>Categories</Typography></Grid>
@@ -370,9 +380,9 @@ export default function Market() {
             </Grid>
             <Grid id='items' container item>
               {
-                items.length > 0 ? 
+                filteredItems.length > 0 ? 
                 (
-                  items.map((item: RibbitItem) => {
+                  filteredItems.map((item: RibbitItem) => {
                     return <Grid key={item.name} item xl={2.4} lg={2.4} md={3} sm={6} xs={12} pl={2} pb={2}>
                       <Item item={item} selected={false}/>
                     </Grid>
