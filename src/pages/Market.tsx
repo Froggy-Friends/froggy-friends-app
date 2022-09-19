@@ -18,6 +18,8 @@ import Item from '../components/Item';
 import useDebounce from '../hooks/useDebounce';
 const { REACT_APP_RIBBIT_ITEM_CONTRACT } = process.env;
 
+type SortCriteria = 'low-high' | 'high-low';
+
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     market: {
@@ -51,7 +53,7 @@ export default function Market() {
   const isXs = useMediaQuery(theme.breakpoints.down('sm'));
   const isDown425 = useMediaQuery(theme.breakpoints.down(425));
   const dispatch = useAppDispatch();
-  const [sort, setSort] = useState('low-price');
+  const [sort, setSort] = useState<SortCriteria>('low-high');
   const [items, setItems] = useState<RibbitItem[]>([]);
   const [ownedNfts, setOwnedNfts] = useState([]);
   const [filteredItems, setFilteredItems] = useState<RibbitItem[]>([]);
@@ -87,7 +89,9 @@ export default function Market() {
   }, [account])
 
   useEffect(() => {
-    setFilteredItems(filterItems(items, debouncedSearch));
+    const filtered = filterItems(items, debouncedSearch);
+    const filteredAndSorted = sortItems(filtered, sort);
+    setFilteredItems(filteredAndSorted);
   }, [
     filterAvailable, 
     filterCommunity, 
@@ -99,7 +103,8 @@ export default function Market() {
     filterNfts,
     filterRaffles,
     filterMerch,
-    debouncedSearch
+    debouncedSearch,
+    sort
   ])
 
   async function getItems() {
@@ -177,6 +182,18 @@ export default function Market() {
       if (!filterMerch && item.category == 'merch') return false;
       return true;
     });
+  }
+
+  const sortItems = (items: RibbitItem[], criteria: SortCriteria): RibbitItem[] => {
+    return items.sort((a,b) => {
+      if (criteria === 'low-high') {
+        return a.price - b.price;
+      } else if (criteria === 'high-low') {
+        return b.price - a.price;
+      }
+
+      return -1;
+    })
   }
 
   const updateItemAmounts = (key: number, value: number) => {
@@ -265,7 +282,7 @@ export default function Market() {
   }
 
   const onSortSelect = (event: SelectChangeEvent) => {
-    setSort(event.target.value as string);
+    setSort(event.target.value as SortCriteria);
   }
 
   const availableFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
@@ -433,8 +450,8 @@ export default function Market() {
               </Grid>
               <Grid id='sort' item xl={2} lg={2} md={3} sm={4} xs={12} pb={2}>
                 <Select value={sort} onChange={onSortSelect}>
-                  <MenuItem value='low-price' color='secondary'>Price: Low to High</MenuItem>
-                  <MenuItem value='high-price'>Price: High to Low</MenuItem>
+                  <MenuItem value='low-high' color='secondary'>Price: Low to High</MenuItem>
+                  <MenuItem value='high-low'>Price: High to Low</MenuItem>
                 </Select>
               </Grid>
               <Grid id='search' item xl={4} lg={4} md={5} sm={5} xs={12} pb={2}>
