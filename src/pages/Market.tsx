@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment, SnackbarContent, Paper, Container, Switch, FormControl, Select, MenuItem, SelectChangeEvent, getListItemUtilityClass, Skeleton } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Checkbox, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment, SnackbarContent, Paper, Container, Switch, FormControl, Select, MenuItem, SelectChangeEvent, getListItemUtilityClass, Skeleton } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { commify, formatEther } from '@ethersproject/units';
@@ -8,7 +8,7 @@ import { BigNumber } from 'ethers';
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { AddCircle, Check, CheckBox, Close, FilterList, InfoOutlined, Receipt, Refresh, RemoveCircle, Search, Warning } from '@mui/icons-material';
+import { AddCircle, Check, Close, FilterList, InfoOutlined, Receipt, Refresh, RemoveCircle, Search, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import { formatDistance } from 'date-fns';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -79,6 +79,13 @@ export default function Market() {
   const [filterAvailable, setFilterAvailable] = useState<boolean>(false);
   const [filterCommunity, setFilterCommunity] = useState<boolean>(false);
   const [filterOwned, setFilterOwned] = useState<boolean>(false);
+  const [filterGLP, setFilterGLP] = useState<boolean>(true);
+  const [filterFriends, setFilterFriends] = useState<boolean>(true);
+  const [filterCollabFriends, setFilterCollabFriends] = useState<boolean>(true);
+  const [filterAllowlists, setFilterAllowlists] = useState<boolean>(true);
+  const [filterNfts, setFilterNfts] = useState<boolean>(true);
+  const [filterRaffles, setFilterRaffles] = useState<boolean>(true);
+  const [filterMerch, setFilterMerch] = useState<boolean>(true);
   const [itemAmounts, setItemAmounts] = useState(new Map<number,number>());
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showAlert, setShowAlert] = useState(false);
@@ -101,7 +108,18 @@ export default function Market() {
 
   useEffect(() => {
     setFilteredItems(filterItems(items));
-  }, [filterAvailable, filterCommunity, filterOwned])
+  }, [
+    filterAvailable, 
+    filterCommunity, 
+    filterOwned,
+    filterGLP,
+    filterFriends,
+    filterCollabFriends,
+    filterAllowlists,
+    filterNfts,
+    filterRaffles,
+    filterMerch
+  ])
 
   async function getItems() {
     try {
@@ -163,16 +181,16 @@ export default function Market() {
 
   const filterItems = (items: RibbitItem[]): RibbitItem[] => {
     return items.filter(item => {
-      if (filterAvailable && (!item.isOnSale || item.minted === item.supply)) {
-        return false;
-      }
-      if (filterCommunity && !item.community) {
-        return false;
-      }
-      if (filterOwned && !ownedNfts.find((nft: any) => +nft.tokenId == item.id)) {
-        return false;
-      }
-
+      if (filterAvailable && (!item.isOnSale || item.minted === item.supply)) return false;
+      if (filterCommunity && !item.community) return false;
+      if (filterOwned && !ownedNfts.find((nft: any) => +nft.tokenId == item.id)) return false;
+      if (!filterGLP && item.category == 'lilies') return false;
+      if (!filterFriends && item.category == 'friends') return false;
+      if (!filterCollabFriends && item.category == 'collabs') return false;
+      if (!filterAllowlists && item.category == 'allowlists') return false;
+      if (!filterNfts && item.category == 'nfts') return false;
+      if (!filterRaffles && item.category == 'raffles') return false;
+      if (!filterMerch && item.category == 'merch') return false;
       return true;
     });
   }
@@ -317,17 +335,39 @@ export default function Market() {
     setSort(event.target.value as string);
   }
 
-  const availableFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const availableFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
     setFilterAvailable(event.target.checked);
   };
 
-  const communityFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const communityFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
     setFilterCommunity(event.target.checked);
   };
 
-  const ownedFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const ownedFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
     setFilterOwned(event.target.checked);
   };
+
+  const glpFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterGLP(event.target.checked);
+  }
+  const friendsFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterFriends(event.target.checked);
+  }
+  const collabFriendsFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterCollabFriends(event.target.checked);
+  }
+  const allowlistsFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterAllowlists(event.target.checked);
+  }
+  const nftsFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterNfts(event.target.checked);
+  }
+  const rafflesFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterRaffles(event.target.checked);
+  }
+  const merchFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterMerch(event.target.checked);
+  }
 
   return (
     <Grid id="market" className={classes.market} container direction="column" justifyContent="start">
@@ -358,27 +398,31 @@ export default function Market() {
             </Grid>
             <Grid id='glp' container pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Golden Lily Pad</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterGLP} onChange={glpFilterChanged}/></Grid>
             </Grid>
             <Grid id='friends' container pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Friends</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterFriends} onChange={friendsFilterChanged}/></Grid>
+            </Grid>
+            <Grid id='collab-friends' container pb={3}>
+              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Collab Friends</Typography></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterCollabFriends} onChange={collabFriendsFilterChanged}/></Grid>
             </Grid>
             <Grid id='allowlist' container pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Allowlists</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterAllowlists} onChange={allowlistsFilterChanged}/></Grid>
             </Grid>
             <Grid id='nfts' container pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>NFTs</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterNfts} onChange={nftsFilterChanged}/></Grid>
             </Grid>
             <Grid id='raffles' container pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Raffles</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterRaffles} onChange={rafflesFilterChanged}/></Grid>
             </Grid>
             <Grid id='merch' container pb={3}>
               <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Merch</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
+              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterMerch} onChange={merchFilterChanged}/></Grid>
             </Grid>
           </Grid>
           <Grid id='search-and-items' container item direction='column' xl={10} lg={10} md={10} sm={12} xs={12}>
