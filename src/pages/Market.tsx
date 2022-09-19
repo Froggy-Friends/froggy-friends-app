@@ -18,6 +18,7 @@ import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import market from '../images/market.png';
 import Item from '../components/Item';
+const { REACT_APP_RIBBIT_CONTRACT, REACT_APP_RIBBIT_ITEM_CONTRACT } = process.env;
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -73,6 +74,7 @@ export default function Market() {
   const [value, setValue] = useState(4);
   const [sort, setSort] = useState('low-price');
   const [items, setItems] = useState<RibbitItem[]>([]);
+  const [ownedNfts, setOwnedNfts] = useState([]);
   const [filteredItems, setFilteredItems] = useState<RibbitItem[]>([]);
   const [filterAvailable, setFilterAvailable] = useState<boolean>(false);
   const [filterCommunity, setFilterCommunity] = useState<boolean>(false);
@@ -87,12 +89,15 @@ export default function Market() {
   const { collabBuy, collabBuyState } = useCollabBuy();
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const isSpendingApproved = useSpendingApproved(account ?? '');
-  const ribbitBalance: BigNumber | undefined = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account);
+  const ribbitBalance: BigNumber | undefined = useTokenBalance(REACT_APP_RIBBIT_CONTRACT, account);
   const maxItemAmounts = 1000;
 
   useEffect(() => {
-    getItems();
-  }, [])
+    if (account) {
+      getItems();
+      getOwnedNfts();
+    }
+  }, [account])
 
   useEffect(() => {
     setFilteredItems(filterItems(items));
@@ -108,6 +113,18 @@ export default function Market() {
     } catch (error) {
       setAlertMessage("Failed to get items");
       setShowAlert(true);
+    }
+  }
+
+  async function getOwnedNfts() {
+    try {
+      const url = `${process.env.REACT_APP_API}/owned/nfts/`;
+      const body = { account: account, contract: REACT_APP_RIBBIT_ITEM_CONTRACT };
+      const nfts = (await axios.post(url, body)).data;
+      setOwnedNfts(nfts);
+    } catch (error) {
+      console.log("get owned nfts error: ", error);
+      setOwnedNfts([]);
     }
   }
   
@@ -152,9 +169,9 @@ export default function Market() {
       if (filterCommunity && !item.community) {
         return false;
       }
-      // if (filterOwned && !ownedItems.includes(item.id)) {
-      //   return false;
-      // }
+      if (filterOwned && !ownedNfts.find((nft: any) => +nft.tokenId == item.id)) {
+        return false;
+      }
 
       return true;
     });
