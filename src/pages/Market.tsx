@@ -18,7 +18,7 @@ import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import market from '../images/market.png';
 import Item from '../components/Item';
-const { REACT_APP_RIBBIT_CONTRACT, REACT_APP_RIBBIT_ITEM_CONTRACT } = process.env;
+const { REACT_APP_RIBBIT_ITEM_CONTRACT } = process.env;
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -70,8 +70,8 @@ export default function Market() {
   const classes = useStyles();
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+  const isDown425 = useMediaQuery(theme.breakpoints.down(425));
   const dispatch = useAppDispatch();
-  const [value, setValue] = useState(4);
   const [sort, setSort] = useState('low-price');
   const [items, setItems] = useState<RibbitItem[]>([]);
   const [ownedNfts, setOwnedNfts] = useState([]);
@@ -96,7 +96,6 @@ export default function Market() {
   const { collabBuy, collabBuyState } = useCollabBuy();
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const isSpendingApproved = useSpendingApproved(account ?? '');
-  const ribbitBalance: BigNumber | undefined = useTokenBalance(REACT_APP_RIBBIT_CONTRACT, account);
   const maxItemAmounts = 1000;
 
   useEffect(() => {
@@ -210,10 +209,6 @@ export default function Market() {
 
     return `${item.supply - item.minted} / ${item.supply} Available`;
   }
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
 
   const updateItemAmounts = (key: number, value: number) => {
     setItemAmounts(map => new Map(map.set(key, value)));
@@ -448,7 +443,7 @@ export default function Market() {
               {
                 !items.length && 
                 new Array(20).fill('').map((item, index) => {
-                  return <Grid key={index} item xl={2.4} lg={2.4} md={3} sm={6} xs={12} pl={2} pb={2}>
+                  return <Grid key={index} item xl={2.4} lg={2.4} md={3} sm={6} xs={isDown425 ? 12 : 6} pl={2} pb={2}>
                     <Skeleton variant='rectangular' animation='wave' height={300}/>  
                   </Grid>
                 })
@@ -457,7 +452,7 @@ export default function Market() {
                 filteredItems.length > 0 ? 
                 (
                   filteredItems.map((item: RibbitItem) => {
-                    return <Grid key={item.name} item xl={2.4} lg={2.4} md={3} sm={6} xs={12} pl={2} pb={2}>
+                    return <Grid key={item.name} item xl={2.4} lg={2.4} md={3} sm={4} xs={isDown425 ? 12 : 6} pl={2} pb={2}>
                       <Item item={item} selected={false}/>
                     </Grid>
                   })

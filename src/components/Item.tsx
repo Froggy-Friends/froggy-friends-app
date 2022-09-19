@@ -1,4 +1,4 @@
-import { Card, CardMedia, CardContent, Typography, Grid, Button, useTheme } from "@mui/material";
+import { Card, CardMedia, CardContent, Typography, Grid, Button, useTheme, useMediaQuery } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ribbitToken from '../images/ribbit.gif';
 import { RibbitItem } from "../models/RibbitItem";
@@ -15,6 +15,7 @@ export default function Item (props: ItemProps) {
     const { item, isFrog, selected, showGreenBorder, showRedBorder } = props;
     const theme = useTheme();
     const navigate = useNavigate();
+    const isDown425 = useMediaQuery(theme.breakpoints.down(425));
 
     const getBorderColor = () => {
         if (selected && showGreenBorder) {
@@ -40,7 +41,7 @@ export default function Item (props: ItemProps) {
 
     return (
         <Card sx={{height: '100%', border: selected ? '5px solid' : '0px', borderColor: getBorderColor()}}>
-            <CardMedia component='img' image={item.image} alt='Froggy' height={200}/>
+            <CardMedia component='img' image={item.image} alt='Froggy' height={isDown425 ? 300 : 200}/>
             <CardContent sx={{bgcolor: theme.palette.common.white}}>
                 <Typography variant='body1' fontWeight='bold' pb={1} pt={1}>{item.name}</Typography>
                 <Grid container item justifyContent='space-between'>
