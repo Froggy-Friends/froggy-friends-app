@@ -32,12 +32,16 @@ export default function Board() {
   const classes = useStyles();
   const theme = useTheme();
   const [leaders, setLeaders] = useState<Leaderboard[]>([]);
+  const [filteredLeaders, setFilteredLeaders] = useState<Leaderboard[]>([]);
+  const [search, setSearch] = useState<string>("");
 
   useEffect(() => {
     const getLeaderboard = async () => {
       try {
         const response = await axios.get<Leaderboard[]>(`${process.env.REACT_APP_API}/leaderboard`);
+        console.log(response.data)
         setLeaders(response.data);
+        setFilteredLeaders(response.data);
       } catch (error) {
         console.log("leaderboard error: ", error);
       }
@@ -47,6 +51,18 @@ export default function Board() {
       getLeaderboard();
     }
   }, [leaders]);
+
+  const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+
+  useEffect(() => {
+    if(search === "") {
+      setFilteredLeaders(leaders);
+    } else {
+      setFilteredLeaders((filteredLeaders) => filteredLeaders.filter(leader => leader.account.includes("search")));
+    }
+  }, [search]);
 
   return (
     <Grid id="leaderboard" container direction="column" pb={20}>
@@ -63,6 +79,7 @@ export default function Board() {
               sx={{ ml: 1, flex: 1 }}
               placeholder="Search by address"
               inputProps={{ 'aria-label': 'search leaderboard' }}
+              onChange={onSearch}
             />
             <IconButton type="button" aria-label="search">
               <SearchIcon />
@@ -79,8 +96,8 @@ export default function Board() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {leaders.map((leader, index) => (
-                <TableRow
+              {filteredLeaders.map((leader, index) => (
+                  <TableRow
                   key={leader.account}
                   className={classes.leaderboardRow}
                 >
