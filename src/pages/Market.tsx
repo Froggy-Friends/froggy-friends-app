@@ -68,7 +68,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Market() {
   const classes = useStyles();
   const theme = useTheme();
-  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
   const dispatch = useAppDispatch();
   const [value, setValue] = useState(4);
   const [sort, setSort] = useState('low-price');
@@ -96,7 +96,7 @@ export default function Market() {
 
   useEffect(() => {
     setFilteredItems(filterItems(items));
-  }, [filterAvailable])
+  }, [filterAvailable, filterCommunity, filterOwned])
 
   async function getItems() {
     try {
@@ -146,10 +146,15 @@ export default function Market() {
 
   const filterItems = (items: RibbitItem[]): RibbitItem[] => {
     return items.filter(item => {
-      
       if (filterAvailable && (!item.isOnSale || item.minted === item.supply)) {
         return false;
       }
+      if (filterCommunity && !item.community) {
+        return false;
+      }
+      // if (filterOwned && !ownedItems.includes(item.id)) {
+      //   return false;
+      // }
 
       return true;
     });
@@ -380,6 +385,14 @@ export default function Market() {
             </Grid>
             <Grid id='items' container item>
               {
+                !items.length && 
+                new Array(20).fill('').map((item, index) => {
+                  return <Grid key={index} item xl={2.4} lg={2.4} md={3} sm={6} xs={12} pl={2} pb={2}>
+                    <Skeleton variant='rectangular' animation='wave' height={300}/>  
+                  </Grid>
+                })
+              }
+              {
                 filteredItems.length > 0 ? 
                 (
                   filteredItems.map((item: RibbitItem) => {
@@ -388,11 +401,7 @@ export default function Market() {
                     </Grid>
                   })
                 ) : (
-                  new Array(20).fill('').map((item, index) => {
-                    return <Grid key={index} item xl={2.4} lg={2.4} md={3} sm={6} xs={12} pl={2} pb={2}>
-                      <Skeleton variant='rectangular' animation='wave' height={300}/>  
-                    </Grid>
-                  })
+                  <Typography variant='h6' pl={isXs ? 2 : 5}>No items found matching the selected filters try removing filters to see results.</Typography>
                 )
               }
           </Grid>
