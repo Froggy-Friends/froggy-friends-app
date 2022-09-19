@@ -1,17 +1,14 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Checkbox, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment, SnackbarContent, Paper, Container, Switch, FormControl, Select, MenuItem, SelectChangeEvent, getListItemUtilityClass, Skeleton, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Checkbox, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, TextField, SnackbarContent, Paper, Container, Switch, Select, MenuItem, SelectChangeEvent, Skeleton, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
-import { useEthers, useTokenBalance } from '@usedapp/core';
-import { commify, formatEther } from '@ethersproject/units';
-import { BigNumber } from 'ethers';
+import { useEthers } from '@usedapp/core';
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { AddCircle, Check, Close, ExpandMore, FilterList, InfoOutlined, Receipt, Refresh, RemoveCircle, Search, Warning } from '@mui/icons-material';
+import { AddShoppingCart, Check, Close, ExpandMore, FilterList, Refresh, Search, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import { formatDistance } from 'date-fns';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ribbit from '../images/ribbit.gif';
 import please from '../images/plz.png';
 import hype from '../images/hype.png';
@@ -25,26 +22,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
   createStyles({
     market: {
       backgroundColor: theme.palette.background.default
-    },
-    cardMedia: {
-      position: 'relative',
-    },
-    community: {
-      position: 'absolute',
-      top: 0,
-      backgroundColor: '#ebca27',
-      marginTop: theme.spacing(1),
-      marginLeft: theme.spacing(1)
-    },
-    cardMediaImage: {
-      display: 'block',
-      backgroundSize: 'cover',
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center',
-      width: '100%',
-      objectFit: 'cover',
-      minHeight: 300,
-      maxHeight: 300
     },
     modal: {
       position: 'absolute' as 'absolute',
@@ -202,22 +179,6 @@ export default function Market() {
     });
   }
 
-  const getItemTitle = (item: RibbitItem) => {
-    if (item.minted === item.supply) {
-      return "Sold Out!";
-    }
-
-    if (!item.isOnSale) {
-      return "Off Market";
-    }
-
-    if (item.category === 'raffles' && item.endDate) {
-      return "Ends in " + formatDistance(new Date(), new Date(item.endDate));
-    }
-
-    return `${item.supply - item.minted} / ${item.supply} Available`;
-  }
-
   const updateItemAmounts = (key: number, value: number) => {
     setItemAmounts(map => new Map(map.set(key, value)));
   }
@@ -258,22 +219,6 @@ export default function Market() {
     }
   }
 
-  const isItemDisabled = (item: RibbitItem) => {
-    if (!item.isOnSale) {
-      return true;
-    }
-
-    if (item.minted === item.supply) {
-      return true;
-    }
-
-    if (!account) {
-      return true;
-    }
-
-    return false;
-  }
-
   const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -287,15 +232,6 @@ export default function Market() {
       setItemOwners([]);
       setItemName('');
     }
-  }
-
-  const formatBalance = (balance: BigNumber | undefined) => {
-    if (!balance) {
-      return 0;
-    }
-    const etherFormat = formatEther(balance);
-    const number = +etherFormat;
-    return commify(number.toFixed(2));
   }
 
   const onTicketDecrement = (item: RibbitItem) => {
@@ -320,12 +256,6 @@ export default function Market() {
       return;
     }
     updateItemAmounts(item.id, value);
-  }
-
-  const onItemOwnersClick = async (id: number, name: string) => {
-    const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/owners`);
-    setItemOwners(response.data);
-    setItemName(name);
   }
 
   const onRaffleTicketsClick = async (id: number, name: string) => {
