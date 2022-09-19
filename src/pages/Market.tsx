@@ -18,6 +18,7 @@ import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import market from '../images/market.png';
 import Item from '../components/Item';
+import useDebounce from '../hooks/useDebounce';
 const { REACT_APP_RIBBIT_ITEM_CONTRACT } = process.env;
 
 const useStyles: any = makeStyles((theme: Theme) => 
@@ -93,6 +94,8 @@ export default function Market() {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [itemOwners, setItemOwners] = useState<string[]>([]);
   const [itemName, setItemName] = useState<string>('');
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 500);
   const { account } = useEthers();
   const { collabBuy, collabBuyState } = useCollabBuy();
   const { approveSpender, approveSpenderState } = useApproveSpender();
@@ -107,7 +110,7 @@ export default function Market() {
   }, [account])
 
   useEffect(() => {
-    setFilteredItems(filterItems(items));
+    setFilteredItems(filterItems(items, debouncedSearch));
   }, [
     filterAvailable, 
     filterCommunity, 
@@ -118,7 +121,8 @@ export default function Market() {
     filterAllowlists,
     filterNfts,
     filterRaffles,
-    filterMerch
+    filterMerch,
+    debouncedSearch
   ])
 
   async function getItems() {
@@ -127,7 +131,7 @@ export default function Market() {
       let items = response.data;
       setItems(items);
       setItemAmounts(new Map(items.map(item => [item.id, 0])));
-      setFilteredItems(filterItems(items));
+      setFilteredItems(filterItems(items, debouncedSearch));
     } catch (error) {
       setAlertMessage("Failed to get items");
       setShowAlert(true);
@@ -179,8 +183,11 @@ export default function Market() {
     getItems();
   }
 
-  const filterItems = (items: RibbitItem[]): RibbitItem[] => {
+  const filterItems = (items: RibbitItem[], debouncedSearch: string): RibbitItem[] => {
     return items.filter(item => {
+      if (debouncedSearch && item.name.toLowerCase().includes(debouncedSearch.toLowerCase()) === false) {
+        return false;
+      }
       if (filterAvailable && (!item.isOnSale || item.minted === item.supply)) return false;
       if (filterCommunity && !item.community) return false;
       if (filterOwned && !ownedNfts.find((nft: any) => +nft.tokenId == item.id)) return false;
@@ -365,6 +372,10 @@ export default function Market() {
     setFilterMerch(event.target.checked);
   }
 
+  const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+
   return (
     <Grid id="market" className={classes.market} container direction="column" justifyContent="start">
       <Paper elevation={3}>
@@ -499,6 +510,7 @@ export default function Market() {
               <Grid id='search' item xl={4} lg={4} md={5} sm={5} xs={12} pb={2}>
                 <TextField placeholder='Search items by name' fullWidth 
                   InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}
+                  value={search} onChange={onSearch}
                 />
               </Grid>
             </Grid>
