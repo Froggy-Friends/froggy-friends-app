@@ -1,48 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Tab, Tabs, ToggleButton, ToggleButtonGroup, Button, Card, CardContent, CardMedia, CardHeader, Chip, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, Tooltip, TextField, InputAdornment, SnackbarContent, Paper, Container, Switch, FormControl, Select, MenuItem, SelectChangeEvent, getListItemUtilityClass, Skeleton } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Checkbox, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, TextField, SnackbarContent, Paper, Container, Switch, Select, MenuItem, SelectChangeEvent, Skeleton, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
-import { useEthers, useTokenBalance } from '@usedapp/core';
-import { commify, formatEther } from '@ethersproject/units';
-import { BigNumber } from 'ethers';
+import { useEthers } from '@usedapp/core';
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client';
 import { useAppDispatch, } from '../redux/hooks';
 import { add } from '../redux/cartSlice';
-import { AddCircle, Check, CheckBox, Close, FilterList, InfoOutlined, Receipt, Refresh, RemoveCircle, Search, Warning } from '@mui/icons-material';
+import { AddShoppingCart, Check, Close, ExpandMore, FilterList, Refresh, Search, Warning } from '@mui/icons-material';
 import axios from 'axios';
 import { formatDistance } from 'date-fns';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ribbit from '../images/ribbit.gif';
 import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import market from '../images/market.png';
 import Item from '../components/Item';
+import useDebounce from '../hooks/useDebounce';
+const { REACT_APP_RIBBIT_ITEM_CONTRACT } = process.env;
+
+type SortCriteria = 'low-high' | 'high-low';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
     market: {
       backgroundColor: theme.palette.background.default
-    },
-    cardMedia: {
-      position: 'relative',
-    },
-    community: {
-      position: 'absolute',
-      top: 0,
-      backgroundColor: '#ebca27',
-      marginTop: theme.spacing(1),
-      marginLeft: theme.spacing(1)
-    },
-    cardMediaImage: {
-      display: 'block',
-      backgroundSize: 'cover',
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center',
-      width: '100%',
-      objectFit: 'cover',
-      minHeight: 300,
-      maxHeight: 300
     },
     modal: {
       position: 'absolute' as 'absolute',
@@ -68,28 +49,63 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Market() {
   const classes = useStyles();
   const theme = useTheme();
-  const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSm = useMediaQuery(theme.breakpoints.down('md'));
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+  const isDown425 = useMediaQuery(theme.breakpoints.down(425));
   const dispatch = useAppDispatch();
-  const [value, setValue] = useState(4);
-  const [sort, setSort] = useState('low-price');
-  const [showAll, setShowAll] = useState(false);
+  const [sort, setSort] = useState<SortCriteria>('low-high');
   const [items, setItems] = useState<RibbitItem[]>([]);
+  const [ownedNfts, setOwnedNfts] = useState([]);
+  const [filteredItems, setFilteredItems] = useState<RibbitItem[]>([]);
+  const [filterAvailable, setFilterAvailable] = useState<boolean>(false);
+  const [filterCommunity, setFilterCommunity] = useState<boolean>(false);
+  const [filterOwned, setFilterOwned] = useState<boolean>(false);
+  const [filterGLP, setFilterGLP] = useState<boolean>(true);
+  const [filterFriends, setFilterFriends] = useState<boolean>(true);
+  const [filterCollabFriends, setFilterCollabFriends] = useState<boolean>(true);
+  const [filterAllowlists, setFilterAllowlists] = useState<boolean>(true);
+  const [filterNfts, setFilterNfts] = useState<boolean>(true);
+  const [filterRaffles, setFilterRaffles] = useState<boolean>(true);
+  const [filterMerch, setFilterMerch] = useState<boolean>(true);
   const [itemAmounts, setItemAmounts] = useState(new Map<number,number>());
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showAlert, setShowAlert] = useState(false);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [itemOwners, setItemOwners] = useState<string[]>([]);
   const [itemName, setItemName] = useState<string>('');
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 500);
   const { account } = useEthers();
   const { collabBuy, collabBuyState } = useCollabBuy();
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const isSpendingApproved = useSpendingApproved(account ?? '');
-  const ribbitBalance: BigNumber | undefined = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account);
   const maxItemAmounts = 1000;
 
   useEffect(() => {
-    getItems();
-  }, [])
+    if (account) {
+      getItems();
+      getOwnedNfts();
+    }
+  }, [account])
+
+  useEffect(() => {
+    const filtered = filterItems(items, debouncedSearch);
+    const filteredAndSorted = sortItems(filtered, sort);
+    setFilteredItems(filteredAndSorted);
+  }, [
+    filterAvailable, 
+    filterCommunity, 
+    filterOwned,
+    filterGLP,
+    filterFriends,
+    filterCollabFriends,
+    filterAllowlists,
+    filterNfts,
+    filterRaffles,
+    filterMerch,
+    debouncedSearch,
+    sort
+  ])
 
   async function getItems() {
     try {
@@ -97,9 +113,22 @@ export default function Market() {
       let items = response.data;
       setItems(items);
       setItemAmounts(new Map(items.map(item => [item.id, 0])));
+      setFilteredItems(filterItems(items, debouncedSearch));
     } catch (error) {
       setAlertMessage("Failed to get items");
       setShowAlert(true);
+    }
+  }
+
+  async function getOwnedNfts() {
+    try {
+      const url = `${process.env.REACT_APP_API}/owned/nfts/`;
+      const body = { account: account, contract: REACT_APP_RIBBIT_ITEM_CONTRACT };
+      const nfts = (await axios.post(url, body)).data;
+      setOwnedNfts(nfts);
+    } catch (error) {
+      console.log("get owned nfts error: ", error);
+      setOwnedNfts([]);
     }
   }
   
@@ -136,46 +165,36 @@ export default function Market() {
     getItems();
   }
 
-  const onFilterToggle = (event: React.MouseEvent<HTMLElement>, filter: boolean) => {
-    if (filter === null) return;
-    setShowAll(filter);
-  };
-
-  const filterItems = (category: string) => {
+  const filterItems = (items: RibbitItem[], debouncedSearch: string): RibbitItem[] => {
     return items.filter(item => {
-      // category must match
-      if (item.category !== category) {
+      if (debouncedSearch && item.name.toLowerCase().includes(debouncedSearch.toLowerCase()) === false) {
         return false;
       }
-
-      // if show available filter on check if item is not for sale or sold out
-      if (!showAll && (!item.isOnSale || item.minted === item.supply)) {
-        return false;
-      }
-
+      if (filterAvailable && (!item.isOnSale || item.minted === item.supply)) return false;
+      if (filterCommunity && !item.community) return false;
+      if (filterOwned && !ownedNfts.find((nft: any) => +nft.tokenId == item.id)) return false;
+      if (!filterGLP && item.category == 'lilies') return false;
+      if (!filterFriends && item.category == 'friends') return false;
+      if (!filterCollabFriends && item.category == 'collabs') return false;
+      if (!filterAllowlists && item.category == 'allowlists') return false;
+      if (!filterNfts && item.category == 'nfts') return false;
+      if (!filterRaffles && item.category == 'raffles') return false;
+      if (!filterMerch && item.category == 'merch') return false;
       return true;
     });
   }
 
-  const getItemTitle = (item: RibbitItem) => {
-    if (item.minted === item.supply) {
-      return "Sold Out!";
-    }
+  const sortItems = (items: RibbitItem[], criteria: SortCriteria): RibbitItem[] => {
+    return items.sort((a,b) => {
+      if (criteria === 'low-high') {
+        return a.price - b.price;
+      } else if (criteria === 'high-low') {
+        return b.price - a.price;
+      }
 
-    if (!item.isOnSale) {
-      return "Off Market";
-    }
-
-    if (item.category === 'raffles' && item.endDate) {
-      return "Ends in " + formatDistance(new Date(), new Date(item.endDate));
-    }
-
-    return `${item.supply - item.minted} / ${item.supply} Available`;
+      return -1;
+    })
   }
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
 
   const updateItemAmounts = (key: number, value: number) => {
     setItemAmounts(map => new Map(map.set(key, value)));
@@ -217,22 +236,6 @@ export default function Market() {
     }
   }
 
-  const isItemDisabled = (item: RibbitItem) => {
-    if (!item.isOnSale) {
-      return true;
-    }
-
-    if (item.minted === item.supply) {
-      return true;
-    }
-
-    if (!account) {
-      return true;
-    }
-
-    return false;
-  }
-
   const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -246,15 +249,6 @@ export default function Market() {
       setItemOwners([]);
       setItemName('');
     }
-  }
-
-  const formatBalance = (balance: BigNumber | undefined) => {
-    if (!balance) {
-      return 0;
-    }
-    const etherFormat = formatEther(balance);
-    const number = +etherFormat;
-    return commify(number.toFixed(2));
   }
 
   const onTicketDecrement = (item: RibbitItem) => {
@@ -281,12 +275,6 @@ export default function Market() {
     updateItemAmounts(item.id, value);
   }
 
-  const onItemOwnersClick = async (id: number, name: string) => {
-    const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/owners`);
-    setItemOwners(response.data);
-    setItemName(name);
-  }
-
   const onRaffleTicketsClick = async (id: number, name: string) => {
     const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/tickets`);
     setItemOwners(response.data);
@@ -294,8 +282,46 @@ export default function Market() {
   }
 
   const onSortSelect = (event: SelectChangeEvent) => {
-    setSort(event.target.value as string);
+    setSort(event.target.value as SortCriteria);
   }
+
+  const availableFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterAvailable(event.target.checked);
+  };
+
+  const communityFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterCommunity(event.target.checked);
+  };
+
+  const ownedFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterOwned(event.target.checked);
+  };
+
+  const glpFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterGLP(event.target.checked);
+  }
+  const friendsFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterFriends(event.target.checked);
+  }
+  const collabFriendsFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterCollabFriends(event.target.checked);
+  }
+  const allowlistsFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterAllowlists(event.target.checked);
+  }
+  const nftsFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterNfts(event.target.checked);
+  }
+  const rafflesFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterRaffles(event.target.checked);
+  }
+  const merchFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setFilterMerch(event.target.checked);
+  }
+
+  const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
 
   return (
     <Grid id="market" className={classes.market} container direction="column" justifyContent="start">
@@ -304,51 +330,117 @@ export default function Market() {
       </Paper>
       <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
         <Grid container>
-          <Grid id='left-panel' container item direction='column' xl={2} lg={2} md={2} sm={12} xs={12}>
-            <Grid id='filter-title' container pb={5} alignItems='center'>
-              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='h5' fontWeight='bold'>Filter</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><FilterList/></Grid>
+          {
+            !isSm && 
+            <Grid id='left-panel' container item direction='column' xl={2} lg={2} md={2} sm={12} xs={12}>
+              <Grid id='filter-title' container pb={5} alignItems='center'>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='h5' fontWeight='bold'>Filter</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><FilterList/></Grid>
+              </Grid>
+              <Grid id='available' container pb={3}>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Available</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={filterAvailable} onChange={availableFilterChanged}/></Grid>
+              </Grid>
+              <Grid id='community' container pb={3}>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Community</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={filterCommunity} onChange={communityFilterChanged}/></Grid>
+              </Grid>
+              <Grid id='owned' container pb={3}>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Owned</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={filterOwned} onChange={ownedFilterChanged}/></Grid>
+              </Grid>
+              <Grid id='categories-title' container pt={5} pb={3}>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='h6' fontWeight='bold'>Categories</Typography></Grid>
+              </Grid>
+              <Grid id='glp' container alignItems='center' pb={3}>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Golden Lily Pad</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterGLP} onChange={glpFilterChanged}/></Grid>
+              </Grid>
+              <Grid id='friends' container alignItems='center' pb={3}>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Friends</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterFriends} onChange={friendsFilterChanged}/></Grid>
+              </Grid>
+              <Grid id='collab-friends' container alignItems='center' pb={3}>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Collab Friends</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterCollabFriends} onChange={collabFriendsFilterChanged}/></Grid>
+              </Grid>
+              <Grid id='allowlist' container alignItems='center' pb={3}>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Allowlists</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterAllowlists} onChange={allowlistsFilterChanged}/></Grid>
+              </Grid>
+              <Grid id='nfts' container alignItems='center' pb={3}>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>NFTs</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterNfts} onChange={nftsFilterChanged}/></Grid>
+              </Grid>
+              <Grid id='raffles' container alignItems='center' pb={3}>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Raffles</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterRaffles} onChange={rafflesFilterChanged}/></Grid>
+              </Grid>
+              <Grid id='merch' container alignItems='center' pb={3}>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Merch</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterMerch} onChange={merchFilterChanged}/></Grid>
+              </Grid>
             </Grid>
-            <Grid id='available' container pb={3}>
-              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Available</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Switch/></Grid>
-            </Grid>
-            <Grid id='community' container pb={3}>
-              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Community</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Switch/></Grid>
-            </Grid>
-            <Grid id='owned' container pb={3}>
-              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Owned</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><Switch/></Grid>
-            </Grid>
-            <Grid id='categories-title' container pt={5} pb={3}>
-              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='h6' fontWeight='bold'>Categories</Typography></Grid>
-            </Grid>
-            <Grid id='glp' container pb={3}>
-              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Golden Lily Pad</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
-            </Grid>
-            <Grid id='friends' container pb={3}>
-              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Friends</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
-            </Grid>
-            <Grid id='allowlist' container pb={3}>
-              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Allowlists</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
-            </Grid>
-            <Grid id='nfts' container pb={3}>
-              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>NFTs</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
-            </Grid>
-            <Grid id='raffles' container pb={3}>
-              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Raffles</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
-            </Grid>
-            <Grid id='merch' container pb={3}>
-              <Grid id='filter' item xl={6} lg={6} md={6} sm={6} xs={6}><Typography variant='body1'>Merch</Typography></Grid>
-              <Grid id='filter-icon' item xl={6} lg={6} md={6} sm={6} xs={6} display='flex' justifyContent='center'><CheckBox color='primary'/></Grid>
-            </Grid>
-          </Grid>
+          }
+          {
+            isSm &&
+            <Accordion sx={{width: '100%', mb: 5}}>
+              <AccordionSummary expandIcon={<ExpandMore/>}>
+                <Typography variant='h6' fontWeight='bold'>All Filters</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid id='left-panel' container item direction='column' sm={12} xs={12}>
+                  <Grid id='filter-title' container pb={5} alignItems='center'>
+                    <Grid id='filter' item sm={3} xs={6}><Typography variant='h5' fontWeight='bold'>Filter</Typography></Grid>
+                    <Grid id='filter-icon' item sm={3} xs={6} display='flex' justifyContent='center'><FilterList/></Grid>
+                  </Grid>
+                  <Grid id='available' container pb={3}>
+                    <Grid id='filter' item sm={3} xs={6}><Typography variant='body1'>Available</Typography></Grid>
+                    <Grid id='filter-icon' item sm={3} xs={6} display='flex' justifyContent='center'><Switch checked={filterAvailable} onChange={availableFilterChanged}/></Grid>
+                  </Grid>
+                  <Grid id='community' container pb={3}>
+                    <Grid id='filter' item sm={3} xs={6}><Typography variant='body1'>Community</Typography></Grid>
+                    <Grid id='filter-icon' item sm={3} xs={6} display='flex' justifyContent='center'><Switch checked={filterCommunity} onChange={communityFilterChanged}/></Grid>
+                  </Grid>
+                  <Grid id='owned' container pb={3}>
+                    <Grid id='filter' item sm={3} xs={6}><Typography variant='body1'>Owned</Typography></Grid>
+                    <Grid id='filter-icon' item sm={3} xs={6} display='flex' justifyContent='center'><Switch checked={filterOwned} onChange={ownedFilterChanged}/></Grid>
+                  </Grid>
+                  <Grid id='categories-title' container pt={5} pb={3}>
+                    <Grid id='filter' item sm={3} xs={6}><Typography variant='h6' fontWeight='bold'>Categories</Typography></Grid>
+                  </Grid>
+                  <Grid id='glp' container alignItems='center' pb={3}>
+                    <Grid id='filter' item sm={3} xs={6}><Typography variant='body1'>Golden Lily Pad</Typography></Grid>
+                    <Grid id='filter-icon' item sm={3} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterGLP} onChange={glpFilterChanged}/></Grid>
+                  </Grid>
+                  <Grid id='friends' container alignItems='center' pb={3}>
+                    <Grid id='filter' item sm={3} xs={6}><Typography variant='body1'>Friends</Typography></Grid>
+                    <Grid id='filter-icon' item sm={3} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterFriends} onChange={friendsFilterChanged}/></Grid>
+                  </Grid>
+                  <Grid id='collab-friends' container alignItems='center' pb={3}>
+                    <Grid id='filter' item sm={3} xs={6}><Typography variant='body1'>Collab Friends</Typography></Grid>
+                    <Grid id='filter-icon' item sm={3} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterCollabFriends} onChange={collabFriendsFilterChanged}/></Grid>
+                  </Grid>
+                  <Grid id='allowlist' container alignItems='center' pb={3}>
+                    <Grid id='filter' item sm={3} xs={6}><Typography variant='body1'>Allowlists</Typography></Grid>
+                    <Grid id='filter-icon' item sm={3} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterAllowlists} onChange={allowlistsFilterChanged}/></Grid>
+                  </Grid>
+                  <Grid id='nfts' container alignItems='center' pb={3}>
+                    <Grid id='filter' item sm={3} xs={6}><Typography variant='body1'>NFTs</Typography></Grid>
+                    <Grid id='filter-icon' item sm={3} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterNfts} onChange={nftsFilterChanged}/></Grid>
+                  </Grid>
+                  <Grid id='raffles' container alignItems='center' pb={3}>
+                    <Grid id='filter' item sm={3} xs={6}><Typography variant='body1'>Raffles</Typography></Grid>
+                    <Grid id='filter-icon' item sm={3} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterRaffles} onChange={rafflesFilterChanged}/></Grid>
+                  </Grid>
+                  <Grid id='merch' container alignItems='center' pb={3}>
+                    <Grid id='filter' item sm={3} xs={6}><Typography variant='body1'>Merch</Typography></Grid>
+                    <Grid id='filter-icon' item sm={3} xs={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterMerch} onChange={merchFilterChanged}/></Grid>
+                  </Grid>
+                </Grid>
+              </AccordionDetails>
+            </Accordion>
+          }
           <Grid id='search-and-items' container item direction='column' xl={10} lg={10} md={10} sm={12} xs={12}>
             <Grid id='controls' container item justifyContent='end' pb={5}>
               <Grid id='refresh' container item xl={1} lg={1} md={2} sm={3} xs={12} pb={2}>
@@ -358,31 +450,36 @@ export default function Market() {
               </Grid>
               <Grid id='sort' item xl={2} lg={2} md={3} sm={4} xs={12} pb={2}>
                 <Select value={sort} onChange={onSortSelect}>
-                  <MenuItem value='low-price' color='secondary'>Price: Low to High</MenuItem>
-                  <MenuItem value='high-price'>Price: High to Low</MenuItem>
+                  <MenuItem value='low-high' color='secondary'>Price: Low to High</MenuItem>
+                  <MenuItem value='high-low'>Price: High to Low</MenuItem>
                 </Select>
               </Grid>
               <Grid id='search' item xl={4} lg={4} md={5} sm={5} xs={12} pb={2}>
                 <TextField placeholder='Search items by name' fullWidth 
                   InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}
+                  value={search} onChange={onSearch}
                 />
               </Grid>
             </Grid>
             <Grid id='items' container item>
               {
-                items.length > 0 ? 
+                !items.length && 
+                new Array(20).fill('').map((item, index) => {
+                  return <Grid key={index} item xl={2.4} lg={2.4} md={3} sm={6} xs={isDown425 ? 12 : 6} pl={2} pb={2}>
+                    <Skeleton variant='rectangular' animation='wave' height={300}/>  
+                  </Grid>
+                })
+              }
+              {
+                filteredItems.length > 0 ? 
                 (
-                  items.map((item: RibbitItem) => {
-                    return <Grid key={item.name} item xl={2.4} lg={2.4} md={3} sm={6} xs={12} pl={2} pb={2}>
+                  filteredItems.map((item: RibbitItem) => {
+                    return <Grid key={item.name} item xl={2.4} lg={2.4} md={3} sm={4} xs={isDown425 ? 12 : 6} pl={2} pb={2}>
                       <Item item={item} selected={false}/>
                     </Grid>
                   })
                 ) : (
-                  new Array(20).fill('').map((item, index) => {
-                    return <Grid key={index} item xl={2.4} lg={2.4} md={3} sm={6} xs={12} pl={2} pb={2}>
-                      <Skeleton variant='rectangular' animation='wave' height={300}/>  
-                    </Grid>
-                  })
+                  <Typography variant='h6' pl={isXs ? 2 : 5}>No items found matching the selected filters try removing filters to see results.</Typography>
                 )
               }
           </Grid>
