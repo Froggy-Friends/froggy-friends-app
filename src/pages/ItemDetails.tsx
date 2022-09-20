@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
 import { ArrowBack, Close, Search } from "@mui/icons-material";
-import { createStyles, Button, Chip, Container, Grid, IconButton, Snackbar, SnackbarContent, Stack, TextField, Theme, Typography, useMediaQuery, useTheme, Paper, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
+import { createStyles, Button, Chip, Container, Grid, IconButton, Snackbar, SnackbarContent, Stack, TextField, Theme, Typography, useMediaQuery, useTheme, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Skeleton } from "@mui/material";
 import { RibbitItem } from "../models/RibbitItem";
 import axios from "axios";
 import ribbitToken from '../images/ribbit.gif';
@@ -94,11 +94,24 @@ export default function ItemDetails() {
             <Container maxWidth='lg'>
                 <Grid id='top-row' container justifyContent='space-between' pb={10}>
                     <Grid id='image' item xl={4} lg={4} md={4} sm={4} xs={12} pb={isXs ? 5 : 0}>
-                        <img src={item?.image} width='100%' style={{borderRadius: 5}}/>
+                        {
+                            item ? (
+                                <img src={item?.image} width='100%' style={{borderRadius: 5}}/>
+                            ) : (
+                                <Skeleton variant='rectangular' animation='wave' height={400}/>
+                            )
+                        }
                     </Grid>
                     <Grid id='info' container item direction='column' justifyContent='space-between' xl={7} lg={7} md={7} sm={7} xs={12}>
                         <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center' pb={5}>
-                            <Typography variant='h5' fontWeight='bold'>{item?.name}</Typography>
+                            {
+                                item ? (
+                                    <Typography variant='h5' fontWeight='bold'>{item?.name}</Typography>
+                                ) : (
+                                    <Skeleton variant='text' animation='wave' height={35} width={200}/>
+                                )
+                            }
+                            
                             <Paper elevation={3} sx={{borderRadius: 25}}>
                                 <IconButton className="cta" size="large" onClick={onItemDetailsClose}>   
                                     <ArrowBack/>

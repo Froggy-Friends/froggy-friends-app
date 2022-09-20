@@ -80,7 +80,7 @@ export default function FrogDetails() {
                             frog ? (
                                 <img src={frog?.image} width='100%' style={{borderRadius: 5}}/>
                             ) : (
-                                <Skeleton variant='rectangular' animation='wave' height={350}/>
+                                <Skeleton variant='rectangular' animation='wave' height={400}/>
                             )
                         }
                     </Grid>
