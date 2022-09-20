@@ -314,7 +314,7 @@ export default function Staking() {
             <Grid container p={isBelow320 ? 0 : 3}>
               <Grid id='stats' container item alignItems='end' xl={9} lg={9} md={9} sm={12} xs={12} pb={3}>
                 <Grid id='all-staked' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
-                  <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Froggies Staked</Typography>
+                  <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Collection Staked</Typography>
                   <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                     <img src={think} style={{height: 50, width: 50}} alt='Total'/>
                     <Typography variant='h6' color='secondary' pl={2}>{froggiesStakedPercentage()}</Typography>
