@@ -7,7 +7,8 @@ const configs = {
   gold: '#fece07',
   disabled: "#b3b6bb",
   white: '#ffffff',
-  error: '#73161D'
+  error: '#73161D',
+  gray: '#3C3C3C'
 }
 
 export default function getTheme(isDarkMode: boolean) {
@@ -212,6 +213,7 @@ export default function getTheme(isDarkMode: boolean) {
       MuiChip: {
         styleOverrides: {
           root: {
+            backgroundColor: configs.gray,
             textTransform: 'capitalize'
           }
         }
