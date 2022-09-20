@@ -1,9 +1,8 @@
 import { makeStyles } from '@mui/styles';
-import { Container, createStyles, Grid, IconButton, InputBase, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Container, createStyles, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography, useTheme } from "@mui/material";
 import skyscrapers from "../images/skyscrapers.png";
 import { useEffect, useState } from 'react';
 import { Leaderboard } from '../models/Leaderboard';
-import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import ribbit from '../images/ribbit.gif';
 
@@ -20,11 +19,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
       '& th, h5': {
         fontWeight: 'bold'
       }
-    },
-    leaderboardSearch: {
-      border: '1px solid white',
-      borderRadius: '0.5rem',
-    },
+    }
   })
 );
 
@@ -57,16 +52,6 @@ export default function Board() {
         <Grid item container wrap='nowrap' justifyContent='space-between' alignItems='center'>
           <Grid item>
             <Typography variant="h4" sx={{fontWeight: 'bold'}}>Ribbit Leaderboard</Typography>
-          </Grid>
-          <Grid item container className={classes.leaderboardSearch} width='30%' sx={{px: 2}}>
-            <InputBase
-              sx={{ ml: 1, flex: 1 }}
-              placeholder="Search by address"
-              inputProps={{ 'aria-label': 'search leaderboard' }}
-            />
-            <IconButton type="button" aria-label="search">
-              <SearchIcon />
-            </IconButton>
           </Grid>
         </Grid>
         <TableContainer component={Paper} sx={{mt: 5, height: "700px"}}>
