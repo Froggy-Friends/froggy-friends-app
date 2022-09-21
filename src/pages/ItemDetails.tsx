@@ -11,6 +11,7 @@ import ribbitToken from '../images/ribbit.gif';
 import twitter from '../images/twitter.svg';
 import discord from '../images/discord.svg';
 import opensea from '../images/opensea.svg';
+import useDebounce from '../hooks/useDebounce';
 const {REACT_APP_RIBBIT_ITEM_CONTRACT} = process.env;
 
 const useStyles: any = makeStyles(() => 
@@ -41,6 +42,8 @@ export default function ItemDetails() {
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
     const [itemOwners, setItemOwners] = useState<string[]>([]);
+    const [tickets, setTickets] = useState('');
+    const debouncedTickets = useDebounce(tickets, 500);
 
     useEffect(() => {
         getItem(`${params.id}`);
@@ -89,14 +92,19 @@ export default function ItemDetails() {
         setShowAlert(false);
     };
 
-    const onBuyItem = (item: RibbitItem | undefined) => {
-        if (item) {
-            const itemWithAmount: RibbitItem = {...item, amount: 1};
-            dispatch(add(itemWithAmount));
-            setAlertMessage(`Added 1 item to your cart!`);
-            setShowAlert(true);
-        }
-      }
+    const onBuyItem = (item: RibbitItem) => {
+        const itemWithAmount: RibbitItem = {
+            ...item, 
+            amount: item.category === 'raffles' ? +debouncedTickets : 1
+        };
+        dispatch(add(itemWithAmount));
+        setAlertMessage('Added item to your cart!');
+        setShowAlert(true);
+    }
+
+    const onTicketsEntered = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTickets(event.target.value.replace(/\D/,''));
+    };
 
     return (
         <Grid id='item-details' container direction='column' bgcolor={theme.palette.background.default} pt={20} pb={20}>
@@ -170,11 +178,15 @@ export default function ItemDetails() {
                             <Typography fontWeight='bold'>Description</Typography>
                             <Typography>{item?.description}</Typography>
                         </Stack>
-                        <Grid id='buttons' container>
-                            <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)}>
-                                <Typography>Add to cart</Typography>
-                            </Button>
-                        </Grid>
+                        {
+                            item && 
+                            <Grid id='buttons' container alignItems='end'>
+                                <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)}>
+                                    <Typography>Add to cart</Typography>
+                                </Button>
+                                <TextField placeholder='Number of tickets' value={tickets} onChange={onTicketsEntered} sx={{pl: 5}}/>
+                            </Grid>
+                        }
                     </Grid>
                 </Grid>
                 <Grid id='bottom-row' container justifyContent='space-between'>
