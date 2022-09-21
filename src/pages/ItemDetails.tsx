@@ -4,6 +4,8 @@ import { makeStyles } from '@mui/styles';
 import { ArrowBack, Close, Search } from "@mui/icons-material";
 import { createStyles, Button, Chip, Container, Grid, IconButton, Snackbar, SnackbarContent, Stack, TextField, Theme, Typography, useMediaQuery, useTheme, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Skeleton } from "@mui/material";
 import { RibbitItem } from "../models/RibbitItem";
+import { useAppDispatch } from "../redux/hooks";
+import { add } from '../redux/cartSlice';
 import axios from "axios";
 import ribbitToken from '../images/ribbit.gif';
 import twitter from '../images/twitter.svg';
@@ -33,6 +35,7 @@ export default function ItemDetails() {
     const theme = useTheme();
     const navigate = useNavigate();
     const params = useParams();
+    const dispatch = useAppDispatch();
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const [item, setItem] = useState<RibbitItem>();
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
@@ -88,6 +91,15 @@ export default function ItemDetails() {
     
         setShowAlert(false);
     };
+
+    const onBuyItem = (item: RibbitItem | undefined) => {
+        if (item) {
+            const itemWithAmount: RibbitItem = {...item, amount: 1};
+            dispatch(add(itemWithAmount));
+            setAlertMessage(`Added 1 item to your cart!`);
+            setShowAlert(true);
+        }
+      }
 
     return (
         <Grid id='item-details' container direction='column' bgcolor={theme.palette.background.default} pt={20} pb={20}>
@@ -162,7 +174,7 @@ export default function ItemDetails() {
                             <Typography>{item?.description}</Typography>
                         </Stack>
                         <Grid id='buttons' container>
-                            <Button variant='contained' sx={{height: 50}}>
+                            <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)}>
                                 <Typography>Add to cart</Typography>
                             </Button>
                         </Grid>

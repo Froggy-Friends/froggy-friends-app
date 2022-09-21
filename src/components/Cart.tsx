@@ -141,6 +141,10 @@ export default function Cart() {
     return commify(number.toFixed(2));
   }
 
+  const formatPrice = (item: RibbitItem) => {
+    return commify(item.price * item.amount);
+  }
+
   const onPurchaseModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason !== 'backdropClick') {
       setShowPurchaseModal(false);
@@ -237,7 +241,7 @@ export default function Cart() {
                       </Grid>
                       <Grid item display='flex' justifyContent='center' p={1} xl={2} lg={2} md={3} sm={3} xs={4}>
                         <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                        <Typography variant='subtitle1'>{commify(item.price * item.amount)}</Typography>
+                        <Typography variant='subtitle1'>{formatPrice(item)}</Typography>
                       </Grid>
                       <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={2}>
                         <IconButton size='small' color='primary' onClick={() => onRemoveItem(item)}>
