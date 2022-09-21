@@ -73,8 +73,8 @@ export default function getTheme(isDarkMode: boolean) {
       MuiSnackbarContent: {
         styleOverrides: {
           root: {
-            color: isDarkMode ? configs.light : configs.dark,
-            backgroundColor: isDarkMode ? configs.dark : configs.light
+            color: isDarkMode ? configs.dark : configs.light,
+            backgroundColor: isDarkMode ? configs.light : configs.dark
           }
         }
       },
