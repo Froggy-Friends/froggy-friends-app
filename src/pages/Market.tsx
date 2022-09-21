@@ -82,8 +82,8 @@ export default function Market() {
   const maxItemAmounts = 1000;
 
   useEffect(() => {
+    getItems();
     if (account) {
-      getItems();
       getOwnedNfts();
     }
   }, [account])
@@ -113,7 +113,9 @@ export default function Market() {
       let items = response.data;
       setItems(items);
       setItemAmounts(new Map(items.map(item => [item.id, 0])));
-      setFilteredItems(filterItems(items, debouncedSearch));
+      const filtered = filterItems(items, debouncedSearch);
+      const filteredAndSorted = sortItems(filtered, sort);
+      setFilteredItems(filteredAndSorted);
     } catch (error) {
       setAlertMessage("Failed to get items");
       setShowAlert(true);
@@ -347,7 +349,7 @@ export default function Market() {
               </Grid>
               <Grid id='owned' container pb={3}>
                 <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Owned</Typography></Grid>
-                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={filterOwned} onChange={ownedFilterChanged}/></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={filterOwned} disabled={ownedNfts.length === 0} onChange={ownedFilterChanged}/></Grid>
               </Grid>
               <Grid id='categories-title' container pt={5} pb={3}>
                 <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='h6' fontWeight='bold'>Categories</Typography></Grid>
