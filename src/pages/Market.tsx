@@ -1,18 +1,10 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Checkbox, LinearProgress, Modal, Box, IconButton, Link, Snackbar, useMediaQuery, useTheme, TextField, SnackbarContent, Paper, Container, Switch, Select, MenuItem, SelectChangeEvent, Skeleton, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import { createStyles, Theme, Grid, Typography, Checkbox, Modal, Box, IconButton, Snackbar, useMediaQuery, useTheme, TextField, SnackbarContent, Paper, Container, Switch, Select, MenuItem, SelectChangeEvent, Skeleton, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers } from '@usedapp/core';
-import { useApproveSpender, useCollabBuy, useSpendingApproved } from '../client';
-import { useAppDispatch, } from '../redux/hooks';
-import { add } from '../redux/cartSlice';
-import { AddShoppingCart, Check, Close, ExpandMore, FilterList, Refresh, Search, Warning } from '@mui/icons-material';
+import { Close, ExpandMore, FilterList, Refresh, Search } from '@mui/icons-material';
 import axios from 'axios';
-import { formatDistance } from 'date-fns';
-import ribbit from '../images/ribbit.gif';
-import please from '../images/plz.png';
-import hype from '../images/hype.png';
-import uhhh from '../images/uhhh.png';
 import market from '../images/market.png';
 import Item from '../components/Item';
 import useDebounce from '../hooks/useDebounce';
@@ -52,7 +44,6 @@ export default function Market() {
   const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const isXs = useMediaQuery(theme.breakpoints.down('sm'));
   const isDown425 = useMediaQuery(theme.breakpoints.down(425));
-  const dispatch = useAppDispatch();
   const [sort, setSort] = useState<SortCriteria>('low-high');
   const [items, setItems] = useState<RibbitItem[]>([]);
   const [ownedNfts, setOwnedNfts] = useState([]);
@@ -67,23 +58,18 @@ export default function Market() {
   const [filterNfts, setFilterNfts] = useState<boolean>(true);
   const [filterRaffles, setFilterRaffles] = useState<boolean>(true);
   const [filterMerch, setFilterMerch] = useState<boolean>(true);
-  const [itemAmounts, setItemAmounts] = useState(new Map<number,number>());
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showAlert, setShowAlert] = useState(false);
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [itemOwners, setItemOwners] = useState<string[]>([]);
   const [itemName, setItemName] = useState<string>('');
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const { account } = useEthers();
-  const { collabBuy, collabBuyState } = useCollabBuy();
-  const { approveSpender, approveSpenderState } = useApproveSpender();
-  const isSpendingApproved = useSpendingApproved(account ?? '');
-  const maxItemAmounts = 1000;
+  
 
   useEffect(() => {
+    getItems();
     if (account) {
-      getItems();
       getOwnedNfts();
     }
   }, [account])
@@ -112,8 +98,9 @@ export default function Market() {
       const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
       let items = response.data;
       setItems(items);
-      setItemAmounts(new Map(items.map(item => [item.id, 0])));
-      setFilteredItems(filterItems(items, debouncedSearch));
+      const filtered = filterItems(items, debouncedSearch);
+      const filteredAndSorted = sortItems(filtered, sort);
+      setFilteredItems(filteredAndSorted);
     } catch (error) {
       setAlertMessage("Failed to get items");
       setShowAlert(true);
@@ -131,34 +118,6 @@ export default function Market() {
       setOwnedNfts([]);
     }
   }
-  
-  useEffect(() => {
-    if (approveSpenderState.status === "Exception" || approveSpenderState.status === "Fail") {
-      if (approveSpenderState.errorMessage?.includes("execution reverted")) {
-        setAlertMessage(approveSpenderState.errorMessage.replace(/^execution reverted:/i, ''));
-      } else {
-        setAlertMessage(approveSpenderState.errorMessage);
-      }
-
-      setShowAlert(true);
-    } else if (approveSpenderState.status === "Mining") {
-      setShowPurchaseModal(true);
-    }
-  }, [approveSpenderState])
-
-  useEffect(() => {
-    if (collabBuyState.status === "Exception" || collabBuyState.status === "Fail") {
-      if (collabBuyState.errorMessage?.includes("execution reverted")) {
-        setAlertMessage(collabBuyState.errorMessage.replace(/^execution reverted:/i, ''));
-      } else {
-        setAlertMessage(collabBuyState.errorMessage);
-      }
-
-      setShowAlert(true);
-    } else if (collabBuyState.status === "Mining") {
-      setShowPurchaseModal(true);
-    }
-  }, [collabBuyState])
 
   const onItemRefresh = () => {
     setItems([]);
@@ -196,46 +155,6 @@ export default function Market() {
     })
   }
 
-  const updateItemAmounts = (key: number, value: number) => {
-    setItemAmounts(map => new Map(map.set(key, value)));
-  }
-
-  const onRaffleTicketChange = (event: Event, amount: number | number[], item: RibbitItem) => {
-    updateItemAmounts(item.id, amount as number);
-  }
-
-  const onBuyItem = (item: RibbitItem) => {
-    const ribbitItem = {...item};
-    ribbitItem.amount = itemAmounts.get(ribbitItem.id) || 1;
-    dispatch(add(ribbitItem));
-    updateItemAmounts(ribbitItem.id, 0);
-    setAlertMessage(`Added ${ribbitItem.amount} item(s) to your cart!`);
-    setShowAlert(true);
-  }
-
-  const onBuyCollabItem = async (item: RibbitItem) => {
-    // buy collab item directly
-    try {
-      // check ribbit item is granted approval to spend ribbit
-      if (!isSpendingApproved) {
-        // request unlimited spending approval
-        await approveSpender(process.env.REACT_APP_RIBBIT_ITEM_CONTRACT, '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-      }
-
-      // buy bundle items
-      await collabBuy(item.id, 1, item.collabId);
-    } catch (error) {
-      setAlertMessage("Buy collab item error");
-      setShowAlert(true);
-    }
-  }
-
-  const onPurchaseModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason !== 'backdropClick') {
-      setShowPurchaseModal(false);
-    }
-  }
-
   const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -249,36 +168,6 @@ export default function Market() {
       setItemOwners([]);
       setItemName('');
     }
-  }
-
-  const onTicketDecrement = (item: RibbitItem) => {
-    const value = itemAmounts.get(item.id) || 0;
-    if (value === 0) {
-      return;
-    }
-    updateItemAmounts(item.id, value-1);
-  }
-
-  const onTicketIncrement = (item: RibbitItem) => {
-    const value = itemAmounts.get(item.id) || 0;
-    if (value === maxItemAmounts) {
-      return;
-    }
-    updateItemAmounts(item.id, value+1);
-  }
-
-  const onItemAmountsChange = (event: React.ChangeEvent<HTMLInputElement>, item: RibbitItem) => {
-    const value = +event.target.value;
-    if (isNaN(value) || value > maxItemAmounts) {
-      return;
-    }
-    updateItemAmounts(item.id, value);
-  }
-
-  const onRaffleTicketsClick = async (id: number, name: string) => {
-    const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/tickets`);
-    setItemOwners(response.data);
-    setItemName(name);
   }
 
   const onSortSelect = (event: SelectChangeEvent) => {
@@ -347,7 +236,7 @@ export default function Market() {
               </Grid>
               <Grid id='owned' container pb={3}>
                 <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Owned</Typography></Grid>
-                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={filterOwned} onChange={ownedFilterChanged}/></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={filterOwned} disabled={ownedNfts.length === 0} onChange={ownedFilterChanged}/></Grid>
               </Grid>
               <Grid id='categories-title' container pt={5} pb={3}>
                 <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='h6' fontWeight='bold'>Categories</Typography></Grid>
@@ -486,66 +375,7 @@ export default function Market() {
           </Grid>
         </Grid>
       </Container>
-      <Modal open={showPurchaseModal} onClose={onPurchaseModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
-        <Box className={classes.modal}>
-          <Grid container justifyContent='space-between' alignItems='center' pb={5}>
-            {
-              !isSpendingApproved && 
-              <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
-                <Typography id='modal-title' variant="h4" p={3}>Granting Permissions...</Typography>
-              </Grid>
-            }
-            {
-              isSpendingApproved && 
-              <Grid item xl={10} lg={10} md={10} sm={10} xs={10}>
-                { collabBuyState.status === "None" && <Typography id='modal-title' variant="h4" p={3}>Sign Purchase</Typography>}
-                { collabBuyState.status === "PendingSignature" && <Typography id='modal-title' variant="h4" p={3}>Sign Purchase</Typography>}
-                { collabBuyState.status === "Mining" && <Typography id='modal-title' variant="h4" p={3}>Purchase Pending</Typography>}
-                { collabBuyState.status === "Success" && <Typography id='modal-title' variant="h4" p={3}>Ribbit Items Purchased!</Typography>}
-                { collabBuyState.status === "Fail" && <Typography id='modal-title' variant="h4" p={3}>Purchase Failed</Typography>}
-                { collabBuyState.status === "Exception" && <Typography id='modal-title' variant="h4" p={3}>Purchase Failed</Typography>}
-              </Grid>
-            }
-            <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={2}>
-              <IconButton size='medium' color='inherit' onClick={onPurchaseModalClose}>
-                <Close fontSize='medium'/>
-              </IconButton>
-            </Grid>
-          </Grid>
-          <Grid container justifyContent='center' p={3}>
-            <Grid item>
-              { collabBuyState.status === "Success" && <img src={hype} style={{height: 100, width: 100}} alt='hype'/> }
-              { collabBuyState.status === "Mining" && <img src={please} style={{height: 100, width: 100}} alt='please'/> }
-              { collabBuyState.status === "Fail" && <img src={uhhh} style={{height: 100, width: 100}} alt='uhhh'/> }
-            </Grid>
-          </Grid>
-          {
-            !isSpendingApproved && 
-            <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${approveSpenderState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
-              <Typography id='modal-description' variant="h6" p={3}>
-                Grant Ribbit Market Permissions {approveSpenderState.status === "Success" && <Check/>} {approveSpenderState.status === "Fail" && <Warning/>}
-              </Typography>
-            </Link>
-          }
-          {
-            isSpendingApproved && 
-            <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${collabBuyState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
-              <Typography id='modal-description' variant="h6" p={3}>
-                Purchase transaction {collabBuyState.status === "Success" && <Check/>} {collabBuyState.status === "Fail" && <Warning/>}
-              </Typography>
-            </Link>
-          }
-          { (approveSpenderState.status === "Mining" || collabBuyState.status === "Mining") && <LinearProgress  sx={{margin: 2}}/>}
-        </Box>
-      </Modal>
-      <Snackbar
-        open={showAlert} 
-        autoHideDuration={5000} 
-        message={alertMessage} 
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        onClose={onAlertClose}
-        
-      >
+      <Snackbar open={showAlert} autoHideDuration={5000} message={alertMessage} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={onAlertClose}>
         <SnackbarContent 
           message={alertMessage}
           action={

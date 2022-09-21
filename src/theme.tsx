@@ -73,8 +73,8 @@ export default function getTheme(isDarkMode: boolean) {
       MuiSnackbarContent: {
         styleOverrides: {
           root: {
-            color: isDarkMode ? configs.light : configs.dark,
-            backgroundColor: isDarkMode ? configs.dark : configs.light
+            color: isDarkMode ? configs.dark : configs.light,
+            backgroundColor: isDarkMode ? configs.light : configs.dark
           }
         }
       },
@@ -132,6 +132,7 @@ export default function getTheme(isDarkMode: boolean) {
         styleOverrides: {
           root: {
             overflowY: 'scroll',
+            overflowWrap: 'anywhere',
             backgroundColor: isDarkMode ? configs.dark : configs.white,
             "::-webkit-scrollbar": {
               width: 8,
