@@ -241,12 +241,20 @@ export default function ItemDetails() {
                             <Typography>{item?.description}</Typography>
                         </Stack>
                         {
-                            item && 
+                            item && !item.collabId &&
                             <Grid id='buttons' container alignItems='end'>
                                 <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)}>
                                     <Typography>Add to cart</Typography>
                                 </Button>
                                 <TextField placeholder='Number of tickets' value={tickets} onChange={onTicketsEntered} sx={{pl: 5}}/>
+                            </Grid>
+                        }
+                        {
+                            item && item.collabId > 0 &&
+                            <Grid id='buttons' container alignItems='end'>
+                                <Button variant='contained' sx={{height: 50}} onClick={() => onBuyCollabItem(item)}>
+                                    <Typography>Buy Now</Typography>
+                                </Button>
                             </Grid>
                         }
                     </Grid>
