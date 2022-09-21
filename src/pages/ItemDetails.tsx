@@ -52,10 +52,7 @@ export default function ItemDetails() {
           const response = await axios.get<RibbitItem>(`${process.env.REACT_APP_API}/items/${id}`);
           let item = response.data;
           setItem(item);
-
-          if (item.category == 'allowlists') {
-            getItemOwners(item.id, item.name);
-          }
+          getItemOwners(item.id, item.name);
         } catch (error) {
           setAlertMessage("Failed to get items");
           setShowAlert(true);
@@ -195,11 +192,11 @@ export default function ItemDetails() {
                         itemOwners.length > 0 && 
                         <Grid id='owners' item xl={7} lg={7} md={7} sm={12} xs={12}>
                             <Stack spacing={3}>
-                                <Stack direction='row' justifyContent='space-between'>
-                                    <Typography fontWeight='bold'>Allowlist Owners</Typography>
+                                <Stack direction={isXs ? 'column' : 'row'} justifyContent='space-between'>
+                                    <Typography fontWeight='bold' pb={3}>Item Owners</Typography>
                                     <TextField placeholder='Search by wallet' InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}/>
                                 </Stack>
-                                <TableContainer component={Paper} elevation={3} sx={{p: 3, height: 300}}>
+                                <TableContainer component={Paper} elevation={3} sx={{p: 3, height: isXs ? 500 : 350}}>
                                     <Table stickyHeader aria-label="simple table">
                                         <TableBody>
                                         {itemOwners.map((owner, index) => (
