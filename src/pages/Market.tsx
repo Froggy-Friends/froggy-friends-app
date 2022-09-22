@@ -48,7 +48,7 @@ export default function Market() {
   const [items, setItems] = useState<RibbitItem[]>([]);
   const [ownedNfts, setOwnedNfts] = useState([]);
   const [filteredItems, setFilteredItems] = useState<RibbitItem[]>([]);
-  const [filterAvailable, setFilterAvailable] = useState<boolean>(false);
+  const [filterAvailable, setFilterAvailable] = useState<boolean>(true);
   const [filterCommunity, setFilterCommunity] = useState<boolean>(false);
   const [filterOwned, setFilterOwned] = useState<boolean>(false);
   const [filterGLP, setFilterGLP] = useState<boolean>(true);
@@ -331,9 +331,9 @@ export default function Market() {
             </Accordion>
           }
           <Grid id='search-and-items' container item direction='column' xl={10} lg={10} md={10} sm={12} xs={12}>
-            <Grid id='controls' container item justifyContent='end' pb={5}>
+            <Grid id='controls' container item justifyContent='end' alignItems='center' pb={5}>
               <Grid id='refresh' container item xl={1} lg={1} md={2} sm={3} xs={12} pb={2}>
-                <IconButton sx={{height: 35}} onClick={onItemRefresh}>
+                <IconButton onClick={onItemRefresh}>
                   <Refresh fontSize='large'/>
                 </IconButton>
               </Grid>
