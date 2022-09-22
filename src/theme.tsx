@@ -144,6 +144,19 @@ export default function getTheme(isDarkMode: boolean) {
               borderRadius: 5,
               height: 50,
               width: 50
+            },
+            "&.hidden-scrollbar": {
+              "::-webkit-scrollbar": {
+                width: 0,
+                height: 0,
+                backgroundColor: "none"
+              },
+              "::-webkit-scrollbar-thumb": {
+                backgroundColor: "none",
+                borderRadius: 0,
+                height: 0,
+                width: 0
+              }
             }
           }
         }
