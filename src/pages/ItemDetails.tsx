@@ -246,7 +246,10 @@ export default function ItemDetails() {
                                 <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)}>
                                     <Typography>Add to cart</Typography>
                                 </Button>
-                                <TextField placeholder='Number of tickets' value={tickets} onChange={onTicketsEntered} sx={{pl: 5}}/>
+                                {
+                                    item.category === 'raffles' &&
+                                    <TextField placeholder='Number of tickets' value={tickets} onChange={onTicketsEntered} sx={{pl: 5}}/>
+                                }
                             </Grid>
                         }
                         {
