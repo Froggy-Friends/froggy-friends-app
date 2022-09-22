@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Fade, Grid, Typography, CardMedia, IconButton, Button, createStyles, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar, useTheme, useMediaQuery } from "@mui/material";
+import { Fade, Grid, Typography, IconButton, Button, createStyles, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar, useTheme, useMediaQuery, Paper, Stack, TableContainer, Table, TableBody, TableRow, TableCell } from "@mui/material";
 import { BigNumber } from 'ethers';
 import { commify, formatEther } from "ethers/lib/utils";
 import { cartItems, cartOpen, empty, remove, toggle } from '../redux/cartSlice';
@@ -22,13 +22,20 @@ const useStyles: any = makeStyles((theme: Theme) =>
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
-      backgroundColor: '#181818',
-      color: '#ebedf1',
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.secondary.main,
       borderRadius: 5,
       boxShadow: 24,
       p: 4,
-      height: '90vh',
+      height: '90%',
+      width: '40%',
+      [theme.breakpoints.down('lg')]: {
+        width: '50%'
+      },
       [theme.breakpoints.down('md')]: {
+        width: '60%'
+      },
+      [theme.breakpoints.down('sm')]: {
         top: '0%',
         left: '0%',
         transform: 'none',
@@ -36,11 +43,36 @@ const useStyles: any = makeStyles((theme: Theme) =>
         width: '100%'
       }
     },
-    cartItem: {
-      backgroundColor: '#333333',
-      color: '#ebedf1',
-      alignItems: 'center',
-      borderRadius: 5
+    items: {
+      height: '60%'
+    },
+    itemImage: {
+      borderRadius: 5,
+      height: 120,
+      width: 120,
+      [theme.breakpoints.down(425)]: {
+        height: 80,
+        width: 80,
+      },
+    },
+    removeButton: {
+      height: 30,
+      width: 100
+    },
+    summary: {
+      height: '100%'
+    },
+    row: {
+      padding: 0,
+      border: 0,
+      '& td, th': {
+        padding: '1rem 0',
+        border: 0
+      },
+
+      '& th, h5': {
+        fontWeight: 'bold'
+      }
     },
     modal: {
       position: 'absolute' as 'absolute',
@@ -48,9 +80,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: 500,
-      backgroundColor: '#cfdcae',
-      color: theme.palette.background.default,
-      border: '2px solid #000',
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.secondary.main,
       borderRadius: 5,
       padding: 4,
       [theme.breakpoints.down('sm')]: {
@@ -67,6 +98,9 @@ export default function Cart() {
   const dispatch = useAppDispatch();
   const isCartOpen = useAppSelector(cartOpen);
   const items = useAppSelector(cartItems);
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+  const isBelow425 = useMediaQuery(theme.breakpoints.down(425));
+  const isBelow375 = useMediaQuery(theme.breakpoints.down(375));
   const [total, setTotal] = useState(0);
   const [remaining, setRemaining] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
@@ -77,7 +111,6 @@ export default function Cart() {
   const isSpendingApproved = useSpendingApproved(account ?? '');
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const { bundleBuy, bundleBuyState } = useBundleBuy();
-  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
   
   useEffect(() => {
     if (approveSpenderState.status === "Exception" || approveSpenderState.status === "Fail") {
@@ -138,7 +171,7 @@ export default function Cart() {
   const formatBalance = (balance: BigNumber) => {
     const etherFormat = formatEther(balance);
     const number = +etherFormat;
-    return commify(number.toFixed(2));
+    return commify(number.toFixed(0));
   }
 
   const formatPrice = (item: RibbitItem) => {
@@ -201,86 +234,99 @@ export default function Cart() {
             timeout: 500,
           }}
         >
-        <Fade id='cart' in={isCartOpen}>
-          <Grid className={classes.cart} item xl={4} lg={6} md={8} sm={12} xs={12} container direction="column" justifyContent='space-between' p={2}>
-            <Grid id='title' item xl={1} lg={1} md={1} sm={1} xs={1} container justifyContent='space-between' alignItems='center' pb={2}>
+        <Fade id='cart' in={isCartOpen} style={{overflowY: 'scroll'}}>
+          <Stack className={classes.cart} direction="column" p={isXs ? 2 : 5}>
+            <Grid id='title' container item justifyContent='space-between' alignItems='center' pb={5}>
               <Grid item>
                 <Typography variant='h4' fontWeight='bold'>Ribbit Cart</Typography>
               </Grid>
               <Grid item>
-                <IconButton size='large' color='secondary' onClick={handleClose}>
-                  <Close/>
-                </IconButton>
+                <Paper elevation={3} sx={{borderRadius: 25}}>
+                  <IconButton className="cta" size='small' onClick={handleClose}>
+                    <Close/>
+                  </IconButton>
+                </Paper>
               </Grid>
             </Grid>
-            <Grid id='items' item xl={8} lg={8} md={8} sm={8} xs={8} maxHeight='50vh' overflow='scroll' 
-              sx={{
-                  "::-webkit-scrollbar": { width: 0, height: 0, backgroundColor: "transparent"}, 
-                  
-              }}>
+            <Stack id='items' className={classes.items} spacing={1} pb={2}>
               {
                 items.length === 0 && 
                 <Typography variant='h6' color='secondary'>
-                  Click the add to cart button
-                  <Button variant='contained' size='small' color='success' sx={{marginLeft: theme.spacing(1), marginRight: theme.spacing(1)}}>
-                    <AddShoppingCart/>
-                  </Button>
-                  on any item to see it here
+                  Click the <Button variant='contained'>Add to cart</Button> button on any item to place it in your cart.
                 </Typography>
               }
-              {
-                items.map((item, index) => {
-                  return <Grid className={classes.cartItem} key={index} container item mb={1} xl={12} lg={12} md={12} sm={12} xs={12}>
-                      <Grid id='item-image' display={isXs ? "none" : "flex"} item p={1} xl={2} lg={2} md={1} sm={1}>
-                        <CardMedia component="img" image={item.image} alt={item.name}/>
-                      </Grid>
-                      <Grid id='item-title' item justifySelf="start" xl={6} lg={6} md={6} sm={6} xs={6}>
-                        <Typography variant='subtitle1' color='secondary' pl={1}>
-                          { item.category === 'raffles' ? `${item.name} (${item.amount} tickets)` : item.name }
-                        </Typography>
-                      </Grid>
-                      <Grid item display='flex' justifyContent='center' p={1} xl={2} lg={2} md={3} sm={3} xs={4}>
-                        <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                        <Typography variant='subtitle1'>{formatPrice(item)}</Typography>
-                      </Grid>
-                      <Grid item textAlign='center' xl={2} lg={2} md={2} sm={2} xs={2}>
-                        <IconButton size='small' color='primary' onClick={() => onRemoveItem(item)}>
-                          <CancelIcon/>
-                        </IconButton>
-                      </Grid>
-                  </Grid>
-                })
-              }
-            </Grid>
-            <Grid id="total" item xl={2} lg={2} md={2} sm={2} xs={2} className={classes.cartItem} mt={2}>
-              <Grid container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Typography variant='h6' color='secondary' p={1} pl={2}>Ribbit</Typography>
-                <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
-                  <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                  <Typography>{formatBalance(ribbitBalance)}</Typography>
-                </Grid>
-              </Grid>
-              <Grid container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Typography variant='h6' color='secondary' p={1} pl={2}>Cart total</Typography>
-                <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
-                  <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                  <Typography>{commify(total.toFixed(2))}</Typography>
-                </Grid>
-              </Grid>
-              <Grid container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Typography variant='h6' color='secondary' p={1} pl={2}>Remaining</Typography>
-                <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
-                  <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                  <Typography>{commify(remaining.toFixed(2))}</Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid id='checkout' item xl={1} lg={1} md={1} sm={1} xs={1} alignSelf='center' pt={2}>
-              <Button variant='contained' color='success' fullWidth disabled={isCheckoutDisabled()} onClick={checkout}>
-                <Typography variant='subtitle1' color='secondary'>Checkout</Typography>
-              </Button>
-            </Grid>
-          </Grid>
+              <TableContainer className="hidden-scrollbar" component={Paper} elevation={0}>
+                <Table aria-label='items-table'>
+                  <TableBody>
+                    {items.map((item,index) => (
+                      <TableRow key={index} className={classes.row}>
+                        <TableCell>
+                          <Stack direction='row' spacing={isXs ? 2 : 5}>
+                            <img className={classes.itemImage} src={item.image} alt={item.name}/>
+                            
+                            <Stack id='row-info' width='100%' justifyContent='space-between'>
+                              <Typography>{ item.name }</Typography>
+                              {
+                                isBelow375 && item.category === 'raffles' && <Typography>{`${item.amount} tickets`}</Typography>
+                              }
+                              <Stack direction='row' justifyContent='space-between' alignItems='center'>
+                                <Stack direction='row' alignItems='center'>
+                                  <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                                  <Typography variant='subtitle1' pr={2}>{formatPrice(item)}</Typography>
+                                  {
+                                    !isBelow375 && item.category === 'raffles' && <Typography>{`${item.amount} tickets`}</Typography>
+                                  }
+                                </Stack>
+                                {
+                                  isBelow425 && 
+                                  <IconButton size='small' color='secondary' onClick={() => onRemoveItem(item)}>
+                                    <CancelIcon/>
+                                  </IconButton>
+                                }
+                              </Stack>
+                              {
+                                !isBelow425 && 
+                                <Button className={classes.removeButton} variant='contained' color='inherit' onClick={() => onRemoveItem(item)}>
+                                  <Typography>Remove</Typography>
+                                </Button>
+                              }
+                            </Stack>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+
+              </TableContainer>
+            </Stack>
+
+            {
+              !isCheckoutDisabled() &&
+              <Stack className={classes.summary} id="summary" pb={5} spacing={3}>
+                <Typography variant='h6' fontWeight='bold'>Order Summary</Typography>
+                <Stack> 
+                  <Stack direction='row'>
+                    <Typography width={150}>{items.length + ' items'}</Typography>
+                    <Stack direction='row'>
+                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                      <Typography id='balance'>{formatBalance(ribbitBalance)} {isBelow375 ? 'Bal.' : 'Balance'}</Typography>
+                    </Stack>
+                  </Stack>
+                  <Stack direction='row'>
+                    <Typography width={150}>{commify(total.toFixed(0))} Ribbit Total</Typography>
+                    <Stack direction='row'>
+                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                      <Typography id='remaining'>{commify(remaining.toFixed(0))} {isBelow375 ? 'Rem.' : 'Remaining'}</Typography>
+                    </Stack>
+                  </Stack>
+                </Stack>
+                <Button variant='contained' disabled={isCheckoutDisabled()} onClick={checkout} sx={{width: 120, height: 35}}>
+                  <Typography>Order</Typography>
+                </Button>
+              </Stack>
+            }
+          </Stack>
         </Fade> 
       </Modal>
       <Modal open={showPurchaseModal} onClose={onPurchaseModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
@@ -335,18 +381,12 @@ export default function Cart() {
           { (approveSpenderState.status === "Mining" || bundleBuyState.status === "Mining") && <LinearProgress  sx={{margin: 2}}/>}
         </Box>
       </Modal>
-      <Snackbar
-        open={showAlert} 
-        autoHideDuration={5000} 
-        message={alertMessage} 
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        onClose={onAlertClose}
+      <Snackbar open={showAlert} autoHideDuration={5000} message={alertMessage} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={onAlertClose}
         action={
           <IconButton size='small' aria-label='close' color='inherit' onClick={onAlertClose}>
             <Close fontSize='small' />
           </IconButton>
-        }
-      />
+        }/>
     </Fragment>
   )
 }
