@@ -53,7 +53,7 @@ export default function Board() {
             <Typography variant="h4" sx={{fontWeight: 'bold'}}>Ribbit Leaderboard</Typography>
           </Grid>
         </Grid>
-        <TableContainer component={Paper} sx={{mt: 5, height: "700px"}}>
+        <TableContainer component={Paper} sx={{pl: 2, pr: 2, mt: 5, height: "700px"}}>
           <Table stickyHeader aria-label="simple table">
             <TableHead>
               <TableRow className={classes.leaderboardRow}>
