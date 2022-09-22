@@ -326,6 +326,10 @@ export default function Cart() {
                 </Button>
               </Stack>
             }
+            {
+              !account && items.length > 0 &&
+              <Typography>Login to checkout.</Typography>
+            }
           </Stack>
         </Fade> 
       </Modal>
