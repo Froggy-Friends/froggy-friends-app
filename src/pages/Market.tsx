@@ -46,6 +46,7 @@ export default function Market() {
   const isDown425 = useMediaQuery(theme.breakpoints.down(425));
   const [sort, setSort] = useState<SortCriteria>('low-high');
   const [items, setItems] = useState<RibbitItem[]>([]);
+  const [loadingItems, setLoadingItems] = useState<boolean>(false);
   const [ownedNfts, setOwnedNfts] = useState([]);
   const [filteredItems, setFilteredItems] = useState<RibbitItem[]>([]);
   const [filterAvailable, setFilterAvailable] = useState<boolean>(true);
@@ -95,13 +96,16 @@ export default function Market() {
 
   async function getItems() {
     try {
+      setLoadingItems(true);
       const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
       let items = response.data;
       setItems(items);
+      setLoadingItems(false);
       const filtered = filterItems(items, debouncedSearch);
       const filteredAndSorted = sortItems(filtered, sort);
       setFilteredItems(filteredAndSorted);
     } catch (error) {
+      setLoadingItems(false);
       setAlertMessage("Failed to get items");
       setShowAlert(true);
     }
@@ -360,16 +364,16 @@ export default function Market() {
                 })
               }
               {
-                filteredItems.length > 0 ? 
-                (
-                  filteredItems.map((item: RibbitItem) => {
-                    return <Grid key={item.name} item xl={2.4} lg={2.4} md={3} sm={4} xs={isDown425 ? 12 : 6} pl={2} pb={2}>
-                      <Item item={item} selected={false}/>
-                    </Grid>
-                  })
-                ) : (
-                  <Typography variant='h6' pl={isXs ? 2 : 5}>No items found matching the selected filters try removing filters to see results.</Typography>
-                )
+                filteredItems.length > 0 &&
+                filteredItems.map((item: RibbitItem) => {
+                  return <Grid key={item.name} item xl={2.4} lg={2.4} md={3} sm={4} xs={isDown425 ? 12 : 6} pl={2} pb={2}>
+                    <Item item={item} selected={false}/>
+                  </Grid>
+                })
+              }
+              {
+                loadingItems === false && filteredItems.length === 0 &&
+                <Typography variant='h6' pl={isXs ? 2 : 5}>No items found matching the selected filters try removing filters to see results.</Typography>
               }
           </Grid>
           </Grid>
