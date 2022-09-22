@@ -59,6 +59,16 @@ const useStyles: any = makeStyles((theme: Theme) =>
       height: 30,
       width: 100
     },
+    summary: {
+      height: '100%',
+      justifyContent: 'space-between',
+      [theme.breakpoints.up('xl')]: {
+        maxHeight: '20%'
+      },
+      [theme.breakpoints.down('sm')]: {
+        maxHeight: '20%'
+      }
+    },
     row: {
       padding: 0,
       border: 0,
@@ -168,7 +178,7 @@ export default function Cart() {
   const formatBalance = (balance: BigNumber) => {
     const etherFormat = formatEther(balance);
     const number = +etherFormat;
-    return commify(number.toFixed(2));
+    return commify(number.toFixed(0));
   }
 
   const formatPrice = (item: RibbitItem) => {
@@ -232,7 +242,7 @@ export default function Cart() {
           }}
         >
         <Fade id='cart' in={isCartOpen}>
-          <Stack className={classes.cart} direction="column" p={isXs ? 2 : 5}>
+          <Stack className={classes.cart} direction="column" p={isXs ? 2 : 3}>
             <Grid id='title' container item justifyContent='space-between' alignItems='center' pb={10}>
               <Grid item>
                 <Typography variant='h4' fontWeight='bold'>Ribbit Cart</Typography>
@@ -245,7 +255,7 @@ export default function Cart() {
                 </Paper>
               </Grid>
             </Grid>
-            <Stack id='items' className={classes.items} spacing={1}>
+            <Stack id='items' className={classes.items} spacing={1} pb={2}>
               {
                 items.length === 0 && 
                 <Typography variant='h6' color='secondary'>
@@ -301,34 +311,29 @@ export default function Cart() {
 
               </TableContainer>
             </Stack>
-            <Grid id="total" item className={classes.cartItem}>
-              <Grid container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Typography variant='h6' color='secondary' p={1} pl={2}>Ribbit</Typography>
-                <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
-                  <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                  <Typography>{formatBalance(ribbitBalance)}</Typography>
-                </Grid>
-              </Grid>
-              <Grid container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Typography variant='h6' color='secondary' p={1} pl={2}>Cart total</Typography>
-                <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
-                  <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                  <Typography>{commify(total.toFixed(2))}</Typography>
-                </Grid>
-              </Grid>
-              <Grid container item justifyContent='space-between' xl={12} lg={12} md={12} sm={12} xs={12}>
-                <Typography variant='h6' color='secondary' p={1} pl={2}>Remaining</Typography>
-                <Grid item display='flex' justifyContent='center' alignItems='center' p={1} pr={2}>
-                  <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                  <Typography>{commify(remaining.toFixed(2))}</Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid id='checkout' item xl={1} lg={1} md={1} sm={1} xs={1} alignSelf='center' pt={2}>
-              <Button variant='contained' color='success' fullWidth disabled={isCheckoutDisabled()} onClick={checkout}>
+
+            <Stack className={classes.summary} id="summary">
+              <Typography variant='h6' fontWeight='bold'>Order Summary</Typography>
+              <Stack> 
+                <Stack direction='row'>
+                  <Typography width={150}>{items.length + ' items'}</Typography>
+                  <Stack direction='row'>
+                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                    <Typography id='balance'>{formatBalance(ribbitBalance)} Bal.</Typography>
+                  </Stack>
+                </Stack>
+                <Stack direction='row'>
+                  <Typography width={150}>{commify(total.toFixed(0))} Ribbit Total</Typography>
+                  <Stack direction='row'>
+                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                    <Typography id='remaining'>{commify(remaining.toFixed(0))} Rem.</Typography>
+                  </Stack>
+                </Stack>
+              </Stack>
+              <Button variant='contained' color='success' disabled={isCheckoutDisabled()} onClick={checkout} sx={{width: 120, height: 35}}>
                 <Typography variant='subtitle1' color='secondary'>Checkout</Typography>
               </Button>
-            </Grid>
+            </Stack>
           </Stack>
         </Fade> 
       </Modal>
