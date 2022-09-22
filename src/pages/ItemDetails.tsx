@@ -243,12 +243,12 @@ export default function ItemDetails() {
                         {
                             item && !item.collabId &&
                             <Grid id='buttons' container alignItems='end'>
-                                <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)}>
+                                <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)} disabled={+debouncedTickets < 1}>
                                     <Typography>Add to cart</Typography>
                                 </Button>
                                 {
                                     item.category === 'raffles' &&
-                                    <TextField placeholder='Number of tickets' value={tickets} onChange={onTicketsEntered} sx={{pl: 5}}/>
+                                    <TextField placeholder="Number of tickets" value={tickets} onChange={onTicketsEntered} sx={{pl: 5, width: 230}}/>
                                 }
                             </Grid>
                         }
