@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Fade, Grid, Typography, CardMedia, IconButton, Button, createStyles, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar, useTheme, useMediaQuery } from "@mui/material";
+import { Fade, Grid, Typography, CardMedia, IconButton, Button, createStyles, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar, useTheme, useMediaQuery, Paper, Stack } from "@mui/material";
 import { BigNumber } from 'ethers';
 import { commify, formatEther } from "ethers/lib/utils";
 import { cartItems, cartOpen, empty, remove, toggle } from '../redux/cartSlice';
@@ -22,13 +22,20 @@ const useStyles: any = makeStyles((theme: Theme) =>
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
-      backgroundColor: '#181818',
-      color: '#ebedf1',
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.secondary.main,
       borderRadius: 5,
       boxShadow: 24,
       p: 4,
-      height: '90vh',
+      height: '90%',
+      width: '40%',
+      [theme.breakpoints.down('lg')]: {
+        width: '50%'
+      },
       [theme.breakpoints.down('md')]: {
+        width: '60%'
+      },
+      [theme.breakpoints.down('sm')]: {
         top: '0%',
         left: '0%',
         transform: 'none',
@@ -36,21 +43,14 @@ const useStyles: any = makeStyles((theme: Theme) =>
         width: '100%'
       }
     },
-    cartItem: {
-      backgroundColor: '#333333',
-      color: '#ebedf1',
-      alignItems: 'center',
-      borderRadius: 5
-    },
     modal: {
       position: 'absolute' as 'absolute',
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: 500,
-      backgroundColor: '#cfdcae',
-      color: theme.palette.background.default,
-      border: '2px solid #000',
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.secondary.main,
       borderRadius: 5,
       padding: 4,
       [theme.breakpoints.down('sm')]: {
@@ -202,15 +202,17 @@ export default function Cart() {
           }}
         >
         <Fade id='cart' in={isCartOpen}>
-          <Grid className={classes.cart} item xl={4} lg={6} md={8} sm={12} xs={12} container direction="column" justifyContent='space-between' p={2}>
-            <Grid id='title' item xl={1} lg={1} md={1} sm={1} xs={1} container justifyContent='space-between' alignItems='center' pb={2}>
+          <Stack className={classes.cart} direction="column" p={5}>
+            <Grid id='title' container item justifyContent='space-between' alignItems='center' pb={10}>
               <Grid item>
                 <Typography variant='h4' fontWeight='bold'>Ribbit Cart</Typography>
               </Grid>
               <Grid item>
-                <IconButton size='large' color='secondary' onClick={handleClose}>
-                  <Close/>
-                </IconButton>
+                <Paper elevation={3} sx={{borderRadius: 25}}>
+                  <IconButton className="cta" size='small' onClick={handleClose}>
+                    <Close/>
+                  </IconButton>
+                </Paper>
               </Grid>
             </Grid>
             <Grid id='items' item xl={8} lg={8} md={8} sm={8} xs={8} maxHeight='50vh' overflow='scroll' 
@@ -280,7 +282,7 @@ export default function Cart() {
                 <Typography variant='subtitle1' color='secondary'>Checkout</Typography>
               </Button>
             </Grid>
-          </Grid>
+          </Stack>
         </Fade> 
       </Modal>
       <Modal open={showPurchaseModal} onClose={onPurchaseModalClose} keepMounted aria-labelledby='confirmation-title' aria-describedby='confirmation-description'>
@@ -335,18 +337,12 @@ export default function Cart() {
           { (approveSpenderState.status === "Mining" || bundleBuyState.status === "Mining") && <LinearProgress  sx={{margin: 2}}/>}
         </Box>
       </Modal>
-      <Snackbar
-        open={showAlert} 
-        autoHideDuration={5000} 
-        message={alertMessage} 
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        onClose={onAlertClose}
+      <Snackbar open={showAlert} autoHideDuration={5000} message={alertMessage} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={onAlertClose}
         action={
           <IconButton size='small' aria-label='close' color='inherit' onClick={onAlertClose}>
             <Close fontSize='small' />
           </IconButton>
-        }
-      />
+        }/>
     </Fragment>
   )
 }
