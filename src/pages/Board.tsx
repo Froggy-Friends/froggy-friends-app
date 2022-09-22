@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import { Container, createStyles, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography, useTheme } from "@mui/material";
+import { Container, createStyles, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography } from "@mui/material";
 import skyscrapers from "../images/skyscrapers.png";
 import { useEffect, useState } from 'react';
 import { Leaderboard } from '../models/Leaderboard';
@@ -25,7 +25,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 export default function Board() {
   const classes = useStyles();
-  const theme = useTheme();
   const [leaders, setLeaders] = useState<Leaderboard[]>([]);
 
   useEffect(() => {
