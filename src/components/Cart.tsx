@@ -267,12 +267,15 @@ export default function Cart() {
                             
                             <Stack id='row-info' width='100%' justifyContent='space-between'>
                               <Typography>{ item.name }</Typography>
+                              {
+                                isBelow375 && item.category === 'raffles' && <Typography>{`${item.amount} tickets`}</Typography>
+                              }
                               <Stack direction='row' justifyContent='space-between' alignItems='center'>
                                 <Stack direction='row' alignItems='center'>
                                   <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                                   <Typography variant='subtitle1' pr={2}>{formatPrice(item)}</Typography>
                                   {
-                                    item.category === 'raffles' && <Typography>{`${item.amount} tickets`}</Typography>
+                                    !isBelow375 && item.category === 'raffles' && <Typography>{`${item.amount} tickets`}</Typography>
                                   }
                                 </Stack>
                                 {
