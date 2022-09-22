@@ -214,6 +214,7 @@ export default function getTheme(isDarkMode: boolean) {
       MuiChip: {
         styleOverrides: {
           root: {
+            color: configs.light,
             backgroundColor: configs.gray,
             textTransform: 'capitalize'
           }
