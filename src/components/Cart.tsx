@@ -60,14 +60,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
       width: 100
     },
     summary: {
-      height: '100%',
-      justifyContent: 'space-between',
-      [theme.breakpoints.up('xl')]: {
-        maxHeight: '20%'
-      },
-      [theme.breakpoints.down('sm')]: {
-        maxHeight: '20%'
-      }
+      height: '100%'
     },
     row: {
       padding: 0,
@@ -241,9 +234,9 @@ export default function Cart() {
             timeout: 500,
           }}
         >
-        <Fade id='cart' in={isCartOpen}>
-          <Stack className={classes.cart} direction="column" p={isXs ? 2 : 3}>
-            <Grid id='title' container item justifyContent='space-between' alignItems='center' pb={10}>
+        <Fade id='cart' in={isCartOpen} style={{overflowY: 'scroll'}}>
+          <Stack className={classes.cart} direction="column" p={isXs ? 2 : 5}>
+            <Grid id='title' container item justifyContent='space-between' alignItems='center' pb={5}>
               <Grid item>
                 <Typography variant='h4' fontWeight='bold'>Ribbit Cart</Typography>
               </Grid>
@@ -259,11 +252,7 @@ export default function Cart() {
               {
                 items.length === 0 && 
                 <Typography variant='h6' color='secondary'>
-                  Click the add to cart button
-                  <Button variant='contained' size='small' color='success' sx={{marginLeft: theme.spacing(1), marginRight: theme.spacing(1)}}>
-                    <AddShoppingCart/>
-                  </Button>
-                  on any item to see it here
+                  Click the <Button variant='contained'>Add to cart</Button> button on any item to place it in your cart.
                 </Typography>
               }
               <TableContainer className="hidden-scrollbar" component={Paper} elevation={0}>
@@ -312,28 +301,31 @@ export default function Cart() {
               </TableContainer>
             </Stack>
 
-            <Stack className={classes.summary} id="summary">
-              <Typography variant='h6' fontWeight='bold'>Order Summary</Typography>
-              <Stack> 
-                <Stack direction='row'>
-                  <Typography width={150}>{items.length + ' items'}</Typography>
+            {
+              !isCheckoutDisabled() &&
+              <Stack className={classes.summary} id="summary" pb={5} spacing={3}>
+                <Typography variant='h6' fontWeight='bold'>Order Summary</Typography>
+                <Stack> 
                   <Stack direction='row'>
-                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                    <Typography id='balance'>{formatBalance(ribbitBalance)} Bal.</Typography>
+                    <Typography width={150}>{items.length + ' items'}</Typography>
+                    <Stack direction='row'>
+                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                      <Typography id='balance'>{formatBalance(ribbitBalance)} {isBelow375 ? 'Bal.' : 'Balance'}</Typography>
+                    </Stack>
+                  </Stack>
+                  <Stack direction='row'>
+                    <Typography width={150}>{commify(total.toFixed(0))} Ribbit Total</Typography>
+                    <Stack direction='row'>
+                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                      <Typography id='remaining'>{commify(remaining.toFixed(0))} {isBelow375 ? 'Rem.' : 'Remaining'}</Typography>
+                    </Stack>
                   </Stack>
                 </Stack>
-                <Stack direction='row'>
-                  <Typography width={150}>{commify(total.toFixed(0))} Ribbit Total</Typography>
-                  <Stack direction='row'>
-                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                    <Typography id='remaining'>{commify(remaining.toFixed(0))} Rem.</Typography>
-                  </Stack>
-                </Stack>
+                <Button variant='contained' color='success' disabled={isCheckoutDisabled()} onClick={checkout} sx={{width: 120, height: 35}}>
+                  <Typography variant='subtitle1' color='secondary'>Checkout</Typography>
+                </Button>
               </Stack>
-              <Button variant='contained' color='success' disabled={isCheckoutDisabled()} onClick={checkout} sx={{width: 120, height: 35}}>
-                <Typography variant='subtitle1' color='secondary'>Checkout</Typography>
-              </Button>
-            </Stack>
+            }
           </Stack>
         </Fade> 
       </Modal>
