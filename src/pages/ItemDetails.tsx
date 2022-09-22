@@ -106,6 +106,10 @@ export default function ItemDetails() {
         setItemOwners(response.data);
     }
 
+    const getAvailable = (item: RibbitItem) => {
+        return `${item.supply - item.minted} / ${item.supply} Available`;
+    }
+
     const scroll = () => {
         const itemDetails = document.querySelector('#item-details');
         itemDetails?.scrollIntoView({ behavior: 'smooth'});
@@ -185,7 +189,7 @@ export default function ItemDetails() {
                         <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center' pb={5}>
                             {
                                 item ? (
-                                    <Typography variant='h5' fontWeight='bold'>{item?.name}</Typography>
+                                    <Typography variant='h5' fontWeight='bold'>{item.name}</Typography>
                                 ) : (
                                     <Skeleton variant='text' animation='wave' height={35} width={200}/>
                                 )
@@ -196,6 +200,15 @@ export default function ItemDetails() {
                                     <ArrowBack/>
                                 </IconButton>
                             </Paper>
+                        </Grid>
+                        <Grid id='available' pb={5}>
+                            {
+                                item ? (
+                                    <Typography>{getAvailable(item)}</Typography>
+                                ) : (
+                                    <Skeleton variant='text' animation='wave' height={35} width={100}/>
+                                )
+                            }
                         </Grid>
                         <Grid id='price-and-socials' container pb={5}> 
                             <Grid id='price' item xl={2} lg={2} md={2} sm={3} xs={4}>
