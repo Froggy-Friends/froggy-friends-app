@@ -286,7 +286,7 @@ export default function Cart() {
                               </Stack>
                               {
                                 !isBelow425 && 
-                                <Button className={classes.removeButton} variant='contained' color='secondary' onClick={() => onRemoveItem(item)}>
+                                <Button className={classes.removeButton} variant='contained' color='inherit' onClick={() => onRemoveItem(item)}>
                                   <Typography>Remove</Typography>
                                 </Button>
                               }
@@ -321,8 +321,8 @@ export default function Cart() {
                     </Stack>
                   </Stack>
                 </Stack>
-                <Button variant='contained' color='success' disabled={isCheckoutDisabled()} onClick={checkout} sx={{width: 120, height: 35}}>
-                  <Typography variant='subtitle1' color='secondary'>Checkout</Typography>
+                <Button variant='contained' disabled={isCheckoutDisabled()} onClick={checkout} sx={{width: 120, height: 35}}>
+                  <Typography>Order</Typography>
                 </Button>
               </Stack>
             }
