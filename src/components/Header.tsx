@@ -172,9 +172,6 @@ export default function Header() {
               <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => {navigate("/market"); setSidemenuOpen(false)}}>Market</Typography>
             </Grid>
             <Grid item pb={3}>
-              <Typography className="link" variant="h5" color={getLinkColor('/items')} onClick={() => {navigate("/items"); setSidemenuOpen(false)}}>Items</Typography>
-            </Grid>
-            <Grid item pb={3}>
               <Typography className="link" variant="h5" color={getLinkColor('/leaderboard')} onClick={() => {navigate("/leaderboard"); setSidemenuOpen(false)}}>Board</Typography>
             </Grid>
             <Grid id='account' container item alignItems='center'>
