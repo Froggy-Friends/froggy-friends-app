@@ -25,6 +25,10 @@ const useStyles: any = makeStyles((theme: Theme) =>
     itemImage: {
         height: 370,
         width: 370,
+        [theme.breakpoints.down('xl')]: {
+            height: 320,
+            width: 320,
+        },
         [theme.breakpoints.down('md')]: {
             height: 250,
             width: 250,
@@ -55,6 +59,7 @@ export default function ItemDetails() {
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const [item, setItem] = useState<RibbitItem>();
     const [itemEnded, setItemEnded] = useState<boolean>(false);
+    const [soldOut, setSoldOut] = useState<boolean>(false);
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
     const [showPurchaseModal, setShowPurchaseModal] = useState(false);
@@ -104,6 +109,7 @@ export default function ItemDetails() {
           let item = response.data;
           setItem(item);
           const ended = compareAsc(item.endDate, Date.now()) === -1;
+          setSoldOut(item.minted === item.supply);
           setItemEnded(ended);
           getItemOwners(item.id, item.name);
         } catch (error) {
@@ -223,15 +229,18 @@ export default function ItemDetails() {
                                 </IconButton>
                             </Paper>
                         </Grid>
-                        <Grid id='available' container pb={3}>
-                            {
-                                item && !itemEnded && <Typography pr={isXs ? 3 : 5}>{getAvailable(item)}</Typography>
-                            }
-                            {
-                                item && item.category === 'raffles' && 
-                                <Typography>{getEndDate(item)}</Typography>
-                            }
-                        </Grid>
+                        {
+                            !soldOut &&
+                            <Grid id='available' container pb={3}>
+                                {
+                                    item && !itemEnded && <Typography pr={isXs ? 3 : 5}>{getAvailable(item)}</Typography>
+                                }
+                                {
+                                    item && item.category === 'raffles' && 
+                                    <Typography>{getEndDate(item)}</Typography>
+                                }
+                            </Grid>
+                        }
                         <Grid id='price-and-socials' container pb={3}> 
                             <Grid id='price' item xl={2} lg={2} md={2} sm={3} xs={4}>
                                 <Stack spacing={1}>
@@ -276,7 +285,7 @@ export default function ItemDetails() {
                             <Typography>{item?.description}</Typography>
                         </Stack>
                         {
-                            item && !item.collabId && !itemEnded &&
+                            item && !item.collabId && !itemEnded && !soldOut &&
                             <Grid id='buttons' container alignItems='end'>
                                 <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)} disabled={getAddToCartDisabled(item)}>
                                     <Typography>Add to cart</Typography>
