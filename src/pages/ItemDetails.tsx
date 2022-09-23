@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
 import { ArrowBack, Check, Close, Search, Warning } from "@mui/icons-material";
-import { createStyles, Button, Chip, Container, Grid, IconButton, Link, Snackbar, SnackbarContent, Stack, TextField, Typography, useMediaQuery, useTheme, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Skeleton, Modal, Box, LinearProgress } from "@mui/material";
+import { createStyles, Button, Chip, Container, Grid, IconButton, Link, Snackbar, SnackbarContent, Stack, TextField, Typography, useMediaQuery, useTheme, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Skeleton, Modal, Box, LinearProgress, Theme } from "@mui/material";
 import { RibbitItem } from "../models/RibbitItem";
 import { useAppDispatch } from "../redux/hooks";
 import { add } from '../redux/cartSlice';
@@ -20,8 +20,16 @@ import { useEthers } from "@usedapp/core";
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from "../client";
 const {REACT_APP_RIBBIT_ITEM_CONTRACT} = process.env;
 
-const useStyles: any = makeStyles(() => 
+const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
+    itemImage: {
+        height: 370,
+        width: 370,
+        [theme.breakpoints.down('md')]: {
+            height: 250,
+            width: 250,
+        }
+    },
     row: {
       padding: 0,
       border: 0,
@@ -190,10 +198,10 @@ export default function ItemDetails() {
         <Grid id='item-details' container direction='column' bgcolor={theme.palette.background.default} pt={20} pb={20}>
             <Container maxWidth='lg'>
                 <Grid id='top-row' container justifyContent='space-between' pb={10}>
-                    <Grid id='image' item xl={4} lg={4} md={4} sm={4} xs={12} pb={isXs ? 5 : 0}>
+                    <Grid id='image' container item justifyContent='center' xl={4} lg={4} md={4} sm={4} xs={12} pb={isXs ? 5 : 0}>
                         {
                             item ? (
-                                <img src={item.image} width='100%' style={{borderRadius: 5}}/>
+                                <img className={classes.itemImage} src={item.image} style={{borderRadius: 5}}/>
                             ) : (
                                 <Skeleton variant='rectangular' animation='wave' height={400}/>
                             )
@@ -210,7 +218,7 @@ export default function ItemDetails() {
                             }
                             
                             <Paper elevation={3} sx={{borderRadius: 25}}>
-                                <IconButton className="cta" size="large" onClick={onItemDetailsClose}>   
+                                <IconButton className="cta" size={isXs ? 'medium' : 'large'} onClick={onItemDetailsClose}>   
                                     <ArrowBack/>
                                 </IconButton>
                             </Paper>
