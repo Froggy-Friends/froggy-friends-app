@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { makeStyles, createStyles } from '@mui/styles';
 import { Grid, Avatar, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Fade, Button, useTheme, Container } from "@mui/material";
-import { Close, ShoppingCart, Menu, Headphones, DarkMode, LightMode } from "@mui/icons-material";
+import { Close, ShoppingCart, Menu, Headphones, DarkMode, LightMode, Paid } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
 import { ColorModeContext } from "../App";
@@ -100,6 +100,11 @@ export default function Header() {
                   <Grid item display="flex" pr={1}>
                     <Fab size='small' onClick={colorMode.toggleColorMode}>
                       { theme.palette.mode === 'dark' ? <LightMode fontSize="medium"/> : <DarkMode fontSize="medium"/>}
+                    </Fab>
+                  </Grid>
+                  <Grid item display="flex" pr={1}>
+                    <Fab size='small' onClick={() => window.open('https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x46898f15f99b8887d87669ab19d633f579939ad9&chain=mainnet', '_blank')}>
+                      <Paid fontSize='medium'/>
                     </Fab>
                   </Grid>
                   {/* <Grid item display="flex" pr={1}>
