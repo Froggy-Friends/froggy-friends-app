@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
-import { makeStyles } from '@mui/styles';
-import { createStyles, Theme, Grid, Typography, Checkbox, Modal, Box, IconButton, Snackbar, useMediaQuery, useTheme, TextField, SnackbarContent, Paper, Container, Switch, Select, MenuItem, SelectChangeEvent, Skeleton, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import { makeStyles, createStyles } from '@mui/styles';
+import { Theme, Grid, Typography, Checkbox, Modal, Box, IconButton, Snackbar, useMediaQuery, useTheme, TextField, SnackbarContent, Paper, Container, Switch, Select, MenuItem, SelectChangeEvent, Skeleton, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import { RibbitItem } from '../models/RibbitItem';
 import { useEthers } from '@usedapp/core';
 import { Close, ExpandMore, FilterList, Refresh, Search } from '@mui/icons-material';
@@ -46,6 +46,7 @@ export default function Market() {
   const isDown425 = useMediaQuery(theme.breakpoints.down(425));
   const [sort, setSort] = useState<SortCriteria>('low-high');
   const [items, setItems] = useState<RibbitItem[]>([]);
+  const [loadingItems, setLoadingItems] = useState<boolean>(false);
   const [ownedNfts, setOwnedNfts] = useState([]);
   const [filteredItems, setFilteredItems] = useState<RibbitItem[]>([]);
   const [filterAvailable, setFilterAvailable] = useState<boolean>(true);
@@ -95,13 +96,16 @@ export default function Market() {
 
   async function getItems() {
     try {
+      setLoadingItems(true);
       const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
       let items = response.data;
       setItems(items);
+      setLoadingItems(false);
       const filtered = filterItems(items, debouncedSearch);
       const filteredAndSorted = sortItems(filtered, sort);
       setFilteredItems(filteredAndSorted);
     } catch (error) {
+      setLoadingItems(false);
       setAlertMessage("Failed to get items");
       setShowAlert(true);
     }
@@ -131,14 +135,14 @@ export default function Market() {
       }
       if (filterAvailable && (!item.isOnSale || item.minted === item.supply)) return false;
       if (filterCommunity && !item.community) return false;
-      if (filterOwned && !ownedNfts.find((nft: any) => +nft.tokenId == item.id)) return false;
-      if (!filterGLP && item.category == 'lilies') return false;
-      if (!filterFriends && item.category == 'friends') return false;
-      if (!filterCollabFriends && item.category == 'collabs') return false;
-      if (!filterAllowlists && item.category == 'allowlists') return false;
-      if (!filterNfts && item.category == 'nfts') return false;
-      if (!filterRaffles && item.category == 'raffles') return false;
-      if (!filterMerch && item.category == 'merch') return false;
+      if (filterOwned && !ownedNfts.find((nft: any) => +nft.tokenId === item.id)) return false;
+      if (!filterGLP && item.category === 'lilies') return false;
+      if (!filterFriends && item.category === 'friends') return false;
+      if (!filterCollabFriends && item.category === 'collabs') return false;
+      if (!filterAllowlists && item.category === 'allowlists') return false;
+      if (!filterNfts && item.category === 'nfts') return false;
+      if (!filterRaffles && item.category === 'raffles') return false;
+      if (!filterMerch && item.category === 'merch') return false;
       return true;
     });
   }
@@ -360,16 +364,16 @@ export default function Market() {
                 })
               }
               {
-                filteredItems.length > 0 ? 
-                (
-                  filteredItems.map((item: RibbitItem) => {
-                    return <Grid key={item.name} item xl={2.4} lg={2.4} md={3} sm={4} xs={isDown425 ? 12 : 6} pl={2} pb={2}>
-                      <Item item={item} selected={false}/>
-                    </Grid>
-                  })
-                ) : (
-                  <Typography variant='h6' pl={isXs ? 2 : 5}>No items found matching the selected filters try removing filters to see results.</Typography>
-                )
+                filteredItems.length > 0 &&
+                filteredItems.map((item: RibbitItem) => {
+                  return <Grid key={item.name} item xl={2.4} lg={2.4} md={3} sm={4} xs={isDown425 ? 12 : 6} pl={2} pb={2}>
+                    <Item item={item} selected={false}/>
+                  </Grid>
+                })
+              }
+              {
+                loadingItems === false && filteredItems.length === 0 &&
+                <Typography variant='h6' pl={isXs ? 2 : 5}>No items found matching the selected filters try removing filters to see results.</Typography>
               }
           </Grid>
           </Grid>

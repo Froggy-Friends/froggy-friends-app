@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { makeStyles } from '@mui/styles';
+import { makeStyles, createStyles } from '@mui/styles';
 import { ArrowBack, Check, Close, Search, Warning } from "@mui/icons-material";
-import { createStyles, Button, Chip, Container, Grid, IconButton, Link, Snackbar, SnackbarContent, Stack, TextField, Typography, useMediaQuery, useTheme, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Skeleton, Modal, Box, LinearProgress } from "@mui/material";
+import {  Button, Chip, Container, Grid, IconButton, Link, Snackbar, SnackbarContent, Stack, TextField, Typography, useMediaQuery, useTheme, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Skeleton, Modal, Box, LinearProgress, Theme } from "@mui/material";
 import { RibbitItem } from "../models/RibbitItem";
 import { useAppDispatch } from "../redux/hooks";
 import { add } from '../redux/cartSlice';
@@ -15,13 +15,25 @@ import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import useDebounce from '../hooks/useDebounce';
-import { formatDistance } from 'date-fns';
+import { compareAsc, formatDistanceStrict } from 'date-fns';
 import { useEthers } from "@usedapp/core";
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from "../client";
 const {REACT_APP_RIBBIT_ITEM_CONTRACT} = process.env;
 
-const useStyles: any = makeStyles(() => 
+const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
+    itemImage: {
+        height: 370,
+        width: 370,
+        [theme.breakpoints.down('xl')]: {
+            height: 320,
+            width: 320,
+        },
+        [theme.breakpoints.down('md')]: {
+            height: 250,
+            width: 250,
+        }
+    },
     row: {
       padding: 0,
       border: 0,
@@ -46,6 +58,7 @@ export default function ItemDetails() {
     const dispatch = useAppDispatch();
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const [item, setItem] = useState<RibbitItem>();
+    const [itemEnded, setItemEnded] = useState<boolean>(false);
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
     const [showPurchaseModal, setShowPurchaseModal] = useState(false);
@@ -94,6 +107,7 @@ export default function ItemDetails() {
           const response = await axios.get<RibbitItem>(`${process.env.REACT_APP_API}/items/${id}`);
           let item = response.data;
           setItem(item);
+          setItemEnded(compareAsc(item.endDate, Date.now()) === -1);
           getItemOwners(item.id, item.name);
         } catch (error) {
           setAlertMessage("Failed to get items");
@@ -104,6 +118,31 @@ export default function ItemDetails() {
     const getItemOwners = async (id: number, name: string) => {
         const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/owners`);
         setItemOwners(response.data);
+    }
+
+    const getAvailable = (item: RibbitItem) => {
+        return `${item.supply - item.minted} / ${item.supply} Available`;
+    }
+
+    const getEndDate = (item: RibbitItem) => {
+        if (item && item.endDate) {
+            const result = formatDistanceStrict(item.endDate, Date.now(), {
+                addSuffix: true
+            })
+            return `${itemEnded ? 'Ended ' : 'Ends '} ${result}`;
+        } else {
+            return '';
+        }
+        
+    }
+
+    const getRarity = (item: RibbitItem) => {
+        const attribute = item.attributes.find(attribute => attribute.trait_type === 'Rarity');
+        return attribute ? attribute.value : '';
+    }
+
+    const getAddToCartDisabled = (item: RibbitItem) => {
+        return item.category === 'raffles' && +debouncedTickets < 1;
     }
 
     const scroll = () => {
@@ -172,37 +211,48 @@ export default function ItemDetails() {
         <Grid id='item-details' container direction='column' bgcolor={theme.palette.background.default} pt={20} pb={20}>
             <Container maxWidth='lg'>
                 <Grid id='top-row' container justifyContent='space-between' pb={10}>
-                    <Grid id='image' item xl={4} lg={4} md={4} sm={4} xs={12} pb={isXs ? 5 : 0}>
+                    <Grid id='image' container item justifyContent='center' xl={4} lg={4} md={4} sm={4} xs={12} pb={isXs ? 5 : 0}>
                         {
                             item ? (
-                                <img src={item?.image} width='100%' style={{borderRadius: 5}}/>
+                                <img className={classes.itemImage} src={item.image} alt='' style={{borderRadius: 5}}/>
                             ) : (
                                 <Skeleton variant='rectangular' animation='wave' height={400}/>
                             )
                         }
                     </Grid>
                     <Grid id='info' container item direction='column' justifyContent='space-between' xl={7} lg={7} md={7} sm={7} xs={12}>
-                        <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center' pb={5}>
+                        <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center' pb={3}>
                             {
                                 item ? (
-                                    <Typography variant='h5' fontWeight='bold'>{item?.name}</Typography>
+                                    <Typography variant='h5' fontWeight='bold'>{item.name}</Typography>
                                 ) : (
                                     <Skeleton variant='text' animation='wave' height={35} width={200}/>
                                 )
                             }
                             
                             <Paper elevation={3} sx={{borderRadius: 25}}>
-                                <IconButton className="cta" size="large" onClick={onItemDetailsClose}>   
+                                <IconButton className="cta" size={isXs ? 'medium' : 'large'} onClick={onItemDetailsClose}>   
                                     <ArrowBack/>
                                 </IconButton>
                             </Paper>
                         </Grid>
-                        <Grid id='price-and-socials' container pb={5}> 
+                        {
+                            item && item.isOnSale && item.minted !== item.supply &&
+                            <Grid id='available' container pb={3}>
+                                {
+                                    !itemEnded && <Typography pr={isXs ? 3 : 5}>{getAvailable(item)}</Typography>
+                                }
+                                {
+                                    item.category === 'raffles' && <Typography>{getEndDate(item)}</Typography>
+                                }
+                            </Grid>
+                        }
+                        <Grid id='price-and-socials' container pb={3}> 
                             <Grid id='price' item xl={2} lg={2} md={2} sm={3} xs={4}>
                                 <Stack spacing={1}>
                                     <Typography variant='body1' fontWeight='bold'>Price</Typography>
                                     <Typography display='flex' alignItems='center'> 
-                                        <img src={ribbitToken} style={{height: 30, width: 30}} alt='Ribbit'/>
+                                        <img src={ribbitToken} alt='' style={{height: 30, width: 30}}/>
                                         {kFormatter(item?.price || 0)}
                                     </Typography>
                                 </Stack>
@@ -215,7 +265,7 @@ export default function ItemDetails() {
                                             item?.twitter &&
                                             <Paper elevation={3} sx={{borderRadius: 25}}>
                                                 <IconButton className="cta" href={item.twitter} target='_blank'>
-                                                    <img src={twitter} style={{height: 24, width: 24}}/>
+                                                    <img src={twitter} alt='' style={{height: 24, width: 24}}/>
                                                 </IconButton>
                                             </Paper>
                                         }
@@ -223,13 +273,13 @@ export default function ItemDetails() {
                                             item?.discord && 
                                             <Paper elevation={3} sx={{borderRadius: 25}}>
                                                 <IconButton className="cta" href={item.discord} target='_blank'>
-                                                    <img src={discord} style={{height: 24, width: 24}}/>
+                                                    <img src={discord} alt='' style={{height: 24, width: 24}}/>
                                                 </IconButton>
                                             </Paper>
                                         }
                                         <Paper elevation={3} sx={{borderRadius: 25}}>
                                             <IconButton className="cta" href={`https://opensea.io/assets/ethereum/${REACT_APP_RIBBIT_ITEM_CONTRACT}/${item?.id}`} target='_blank'>
-                                                <img src={opensea} style={{height: 24, width: 24}}/>
+                                                <img src={opensea} alt='' style={{height: 24, width: 24}}/>
                                             </IconButton>
                                         </Paper>
                                     </Stack>
@@ -241,13 +291,13 @@ export default function ItemDetails() {
                             <Typography>{item?.description}</Typography>
                         </Stack>
                         {
-                            item && !item.collabId &&
+                            item && !item.collabId && item.isOnSale && item.minted !== item.supply &&
                             <Grid id='buttons' container alignItems='end'>
-                                <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)} disabled={item.category === 'raffles' && +debouncedTickets < 1}>
+                                <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)} disabled={getAddToCartDisabled(item)}>
                                     <Typography>Add to cart</Typography>
                                 </Button>
                                 {
-                                    item.category === 'raffles' &&
+                                    item.category === 'raffles' && !itemEnded &&
                                     <TextField placeholder="Number of tickets" value={tickets} onChange={onTicketsEntered} sx={{pl: 5, width: 230}}/>
                                 }
                             </Grid>
@@ -266,11 +316,16 @@ export default function ItemDetails() {
                     <Grid id='tags' item xl={4} lg={4} md={4} sm={12} xs={12} pb={5}>
                         <Stack spacing={1}>
                             <Typography fontWeight='bold'>Tags</Typography>
-                            <Grid container spacing={2}>
-                                <Grid item ml={-2}><Chip label='Allowlist'/></Grid>
-                                <Grid item><Chip label='Allowlist'/></Grid>
-                                <Grid item><Chip label='Allowlist'/></Grid>
-                            </Grid>
+                            {
+                                item && 
+                                <Grid container spacing={2}>
+                                    <Grid item ml={-2}><Chip label={item.category}/></Grid>
+                                    <Grid item><Chip label={item.isOnSale && item.minted !== item.supply ? 'On Sale' : 'Off Sale'}/></Grid>
+                                    { item.isBoost && <Grid item><Chip label={`${item.percentage}% Boost`}/></Grid>}
+                                    { item.community && <Grid item><Chip label='Community'/></Grid>}
+                                    <Grid item><Chip label={getRarity(item)}/></Grid>
+                                </Grid>
+                            }
                         </Stack>
                     </Grid>
                     {

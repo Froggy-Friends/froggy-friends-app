@@ -29,7 +29,7 @@ export default function FrogDetails() {
         if (account) {
             getFroggy(`${params.id}`);
         }
-    }, [account]);
+    }, [account, params.id]);
 
     async function getFroggy(id: string) {
         try {
@@ -78,7 +78,7 @@ export default function FrogDetails() {
                     <Grid id='image' item xl={4} lg={4} md={5} sm={5} xs={12} pb={isXs ? 5 : 0}>
                         {
                             frog ? (
-                                <img src={frog?.image} width='100%' style={{borderRadius: 5}}/>
+                                <img src={frog?.image} alt='' width='100%' style={{borderRadius: 5}}/>
                             ) : (
                                 <Skeleton variant='rectangular' animation='wave' height={400}/>
                             )
@@ -115,17 +115,17 @@ export default function FrogDetails() {
                                     <Stack direction='row' spacing={2}>
                                             <Paper elevation={3} sx={{borderRadius: 25}}>
                                                 <IconButton className="cta" href='' target='_blank'>
-                                                    <img src={twitter} style={{height: 24, width: 24}}/>
+                                                    <img src={twitter} alt='' style={{height: 24, width: 24}}/>
                                                 </IconButton>
                                             </Paper>
                                             <Paper elevation={3} sx={{borderRadius: 25}}>
                                                 <IconButton className="cta" href='' target='_blank'>
-                                                    <img src={discord} style={{height: 24, width: 24}}/>
+                                                    <img src={discord} alt='' style={{height: 24, width: 24}}/>
                                                 </IconButton>
                                             </Paper>
                                         <Paper elevation={3} sx={{borderRadius: 25}}>
                                             <IconButton className="cta" href='https://opensea.io/collection/froggyfriendsnft' target='_blank'>
-                                                <img src={opensea} style={{height: 24, width: 24}}/>
+                                                <img src={opensea} alt='' style={{height: 24, width: 24}}/>
                                             </IconButton>
                                         </Paper>
                                     </Stack>
@@ -177,21 +177,21 @@ export default function FrogDetails() {
                                     {
                                         frog.image && 
                                         <Stack alignItems='center' spacing={5} pb={5}>
-                                            <img src={frog.image} width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
+                                            <img src={frog.image} alt='' width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
                                             <Button variant='contained' color="primary" sx={{height: 50, width: 130}}onClick={() => downloadAsset(frog.image, `${frog.edition}.png`)}>Download</Button>
                                         </Stack>
                                     }
                                     {
                                         frog.imagePixel && 
                                         <Stack alignItems='center' spacing={5} pb={5}>
-                                            <img src={frog.imagePixel} width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
+                                            <img src={frog.imagePixel} alt='' width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
                                             <Button variant='contained' color="primary" sx={{height: 50, width: 130}} onClick={() => downloadAsset(frog.imagePixel, `${frog.edition}-pixel.png`)}>Download</Button>
                                         </Stack>
                                     }
                                     {
                                         frog.image3d && 
                                         <Stack alignItems='center' spacing={5} pb={5}>
-                                            <img src={frog.image3d} width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
+                                            <img src={frog.image3d} alt='' width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
                                             <Button variant='contained' color="primary" sx={{height: 50, width: 130}} onClick={() => downloadAsset(frog.image3d, `${frog.edition}-3d.png`)}>Download</Button>
                                         </Stack>
                                     }

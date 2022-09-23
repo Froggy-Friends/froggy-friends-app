@@ -4,7 +4,7 @@ import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import { CssBaseline, PaletteMode, ThemeProvider } from '@mui/material';
 import { DAppProvider } from '@usedapp/core';
 import { store } from "./redux/store";
-import { ErrorBoundaryGlobal } from './components/ErrorBoundaryGlobal';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import getTheme from './theme';
 import config from './config';
 import Admin from "./pages/Admin";
@@ -32,7 +32,7 @@ export default function App() {
   const theme = useMemo(() => getTheme(mode === 'dark'), [mode]);
 
   return (
-    <ErrorBoundaryGlobal>
+    <ErrorBoundary>
       <Provider store={store}>
         <ColorModeContext.Provider value={colorMode}>
           <ThemeProvider theme={theme}>
@@ -55,6 +55,6 @@ export default function App() {
           </ThemeProvider>
         </ColorModeContext.Provider>
       </Provider>
-    </ErrorBoundaryGlobal>
+    </ErrorBoundary>
   )
 }

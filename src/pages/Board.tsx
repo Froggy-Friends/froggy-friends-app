@@ -1,5 +1,5 @@
-import { makeStyles } from '@mui/styles';
-import { Container, createStyles, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography } from "@mui/material";
+import { makeStyles, createStyles } from '@mui/styles';
+import { Container, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography } from "@mui/material";
 import skyscrapers from "../images/skyscrapers.png";
 import { useEffect, useState } from 'react';
 import { Leaderboard } from '../models/Leaderboard';
