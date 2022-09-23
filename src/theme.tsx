@@ -3,7 +3,7 @@ import { createTheme, responsiveFontSizes } from '@mui/material';
 const configs = {
   dark: '#181818',
   light: '#ebedf1',
-  primary: '#5ea14e',
+  primary: '#0339ec',
   gold: '#fece07',
   disabled: "#b3b6bb",
   white: '#ffffff',
