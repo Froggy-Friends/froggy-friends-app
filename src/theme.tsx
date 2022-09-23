@@ -4,7 +4,7 @@ const configs = {
   dark: '#181818',
   light: '#ebedf1',
   primary: '#0339ec',
-  gold: '#fece07',
+  gold: '#fffb14',
   disabled: "#b3b6bb",
   white: '#ffffff',
   error: '#73161D',
@@ -19,7 +19,7 @@ export default function getTheme(isDarkMode: boolean) {
         default: isDarkMode ? configs.dark : configs.white
       },
       primary: {
-        main: configs.primary
+        main: isDarkMode ? configs.gold : configs.primary
       },
       secondary: {
         main: isDarkMode ? configs.white : configs.dark
