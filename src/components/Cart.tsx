@@ -287,7 +287,7 @@ export default function Cart() {
                               </Stack>
                               {
                                 !isBelow425 && 
-                                <Button className={classes.removeButton} variant='contained' color='inherit' onClick={() => onRemoveItem(item)}>
+                                <Button className={classes.removeButton} variant='contained' color='secondary' onClick={() => onRemoveItem(item)}>
                                   <Typography>Remove</Typography>
                                 </Button>
                               }
@@ -302,31 +302,28 @@ export default function Cart() {
               </TableContainer>
             </Stack>
 
-            {
-              !isCheckoutDisabled() &&
-              <Stack className={classes.summary} id="summary" pb={5} spacing={3}>
-                <Typography variant='h6' fontWeight='bold'>Order Summary</Typography>
-                <Stack> 
+            <Stack className={classes.summary} id="summary" pb={5} spacing={3}>
+              <Typography variant='h6' fontWeight='bold'>Order Summary</Typography>
+              <Stack> 
+                <Stack direction='row'>
+                  <Typography width={150}>{items.length + ' items'}</Typography>
                   <Stack direction='row'>
-                    <Typography width={150}>{items.length + ' items'}</Typography>
-                    <Stack direction='row'>
-                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                      <Typography id='balance'>{formatBalance(ribbitBalance)} {isBelow375 ? 'Bal.' : 'Balance'}</Typography>
-                    </Stack>
-                  </Stack>
-                  <Stack direction='row'>
-                    <Typography width={150}>{commify(total.toFixed(0))} Ribbit Total</Typography>
-                    <Stack direction='row'>
-                      <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                      <Typography id='remaining'>{commify(remaining.toFixed(0))} {isBelow375 ? 'Rem.' : 'Remaining'}</Typography>
-                    </Stack>
+                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                    <Typography id='balance'>{formatBalance(ribbitBalance)} {isBelow375 ? 'Bal.' : 'Balance'}</Typography>
                   </Stack>
                 </Stack>
-                <Button variant='contained' disabled={isCheckoutDisabled()} onClick={checkout} sx={{width: 120, height: 35}}>
-                  <Typography>Order</Typography>
-                </Button>
+                <Stack direction='row'>
+                  <Typography width={150}>{commify(total.toFixed(0))} Ribbit Total</Typography>
+                  <Stack direction='row'>
+                    <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                    <Typography id='remaining'>{commify(remaining.toFixed(0))} {isBelow375 ? 'Rem.' : 'Remaining'}</Typography>
+                  </Stack>
+                </Stack>
               </Stack>
-            }
+              <Button variant='contained' disabled={isCheckoutDisabled()} onClick={checkout} sx={{width: 120, height: 35}}>
+                <Typography>Order</Typography>
+              </Button>
+            </Stack>
             {
               !account && items.length > 0 &&
               <Typography>Login to checkout.</Typography>
