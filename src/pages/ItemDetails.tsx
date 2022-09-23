@@ -265,7 +265,7 @@ export default function ItemDetails() {
                                             item?.twitter &&
                                             <Paper elevation={3} sx={{borderRadius: 25}}>
                                                 <IconButton className="cta" href={item.twitter} target='_blank'>
-                                                    <img src={twitter} alt='' style={{height: 24, width: 24}}/>
+                                                    <img src={twitter} alt='' style={{height: 20, width: 20}}/>
                                                 </IconButton>
                                             </Paper>
                                         }
@@ -273,13 +273,13 @@ export default function ItemDetails() {
                                             item?.discord && 
                                             <Paper elevation={3} sx={{borderRadius: 25}}>
                                                 <IconButton className="cta" href={item.discord} target='_blank'>
-                                                    <img src={discord} alt='' style={{height: 24, width: 24}}/>
+                                                    <img src={discord} alt='' style={{height: 20, width: 20}}/>
                                                 </IconButton>
                                             </Paper>
                                         }
                                         <Paper elevation={3} sx={{borderRadius: 25}}>
                                             <IconButton className="cta" href={`https://opensea.io/assets/ethereum/${REACT_APP_RIBBIT_ITEM_CONTRACT}/${item?.id}`} target='_blank'>
-                                                <img src={opensea} alt='' style={{height: 24, width: 24}}/>
+                                                <img src={opensea} alt='' style={{height: 20, width: 20}}/>
                                             </IconButton>
                                         </Paper>
                                     </Stack>

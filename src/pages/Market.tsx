@@ -5,7 +5,7 @@ import { RibbitItem } from '../models/RibbitItem';
 import { useEthers } from '@usedapp/core';
 import { Close, ExpandMore, FilterList, Refresh, Search } from '@mui/icons-material';
 import axios from 'axios';
-import market from '../images/market.png';
+import market from '../images/randoms.jpg';
 import Item from '../components/Item';
 import useDebounce from '../hooks/useDebounce';
 const { REACT_APP_RIBBIT_ITEM_CONTRACT } = process.env;
@@ -44,7 +44,7 @@ export default function Market() {
   const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const isXs = useMediaQuery(theme.breakpoints.down('sm'));
   const isDown425 = useMediaQuery(theme.breakpoints.down(425));
-  const [sort, setSort] = useState<SortCriteria>('low-high');
+  const [sort, setSort] = useState<SortCriteria>('high-low');
   const [items, setItems] = useState<RibbitItem[]>([]);
   const [loadingItems, setLoadingItems] = useState<boolean>(false);
   const [ownedNfts, setOwnedNfts] = useState([]);
