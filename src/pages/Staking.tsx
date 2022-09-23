@@ -1,6 +1,6 @@
 import { useEthers, useTokenBalance } from '@usedapp/core';
-import { makeStyles } from '@mui/styles';
-import { Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack } from "@mui/material";
+import { makeStyles, createStyles } from '@mui/styles';
+import { Box, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Launch, Warning } from '@mui/icons-material';
@@ -17,6 +17,8 @@ import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import hi from '../images/hi.png';
 import pond from '../images/pond.png';
+import logo from '../images/logo.png';
+import biz from '../images/biz.png'
 import { useNavigate } from 'react-router-dom';
 
 interface Owned {
@@ -74,7 +76,6 @@ export default function Staking() {
   const classes = useStyles();
   const theme = useTheme();
   const navigate = useNavigate();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isBelow320 = useMediaQuery(theme.breakpoints.down(321));
@@ -226,23 +227,26 @@ export default function Staking() {
     }
   }
 
-  const onSelectFroggyToStake = (tokenId: number) => {
-    if (froggiesToStake.includes(tokenId)) {
-      const newFroggiesToStake = froggiesToStake.filter(token => token !== tokenId);
-      setFroggiesToStake(newFroggiesToStake);
+  const onSelectFroggy = (froggy: Froggy) => {
+    const tokenId = froggy.edition;
+    if (froggy.isStaked) {
+      // select frog to unstake
+      if (froggiesToUnstake.includes(tokenId)) {
+        const newFroggiesToUnstake = froggiesToUnstake.filter(token => token !== tokenId);
+        setFroggiesToUnstake(newFroggiesToUnstake);
+      } else {
+        const newFroggiesToUnstake = [...froggiesToUnstake, tokenId];
+        setFroggiesToUnstake(newFroggiesToUnstake);
+      }
     } else {
-      const newFroggiesToStake = [...froggiesToStake, tokenId];
-      setFroggiesToStake(newFroggiesToStake);
-    }
-  }
-
-  const onSelectFroggyToUnstake = (tokenId: number) => {
-    if (froggiesToUnstake.includes(tokenId)) {
-      const newFroggiesToUnstake = froggiesToUnstake.filter(token => token !== tokenId);
-      setFroggiesToUnstake(newFroggiesToUnstake);
-    } else {
-      const newFroggiesToUnstake = [...froggiesToUnstake, tokenId];
-      setFroggiesToUnstake(newFroggiesToUnstake);
+      // select frog to stake
+      if (froggiesToStake.includes(tokenId)) {
+        const newFroggiesToStake = froggiesToStake.filter(token => token !== tokenId);
+        setFroggiesToStake(newFroggiesToStake);
+      } else {
+        const newFroggiesToStake = [...froggiesToStake, tokenId];
+        setFroggiesToStake(newFroggiesToStake);
+      }
     }
   }
 
@@ -258,7 +262,7 @@ export default function Staking() {
 
   const getBorderWidth = (tokenId: number): string => {
     if (froggiesToStake.includes(tokenId) || froggiesToUnstake.includes(tokenId)) {
-      return '5px solid';
+      return '10px solid';
     } else {
       return '0px';
     }
@@ -309,31 +313,45 @@ export default function Staking() {
             <Grid container p={isBelow320 ? 0 : 3}>
               <Grid id='stats' container item alignItems='end' xl={9} lg={9} md={9} sm={12} xs={12} pb={3}>
                 <Grid id='all-staked' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
-                  <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Froggies Staked</Typography>
+                  <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Collection Staked</Typography>
                   <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
-                    <img src={think} style={{height: 50, width: 50}} alt='think'/>
+                    <img src={think} style={{height: 50, width: 50}} alt='Total'/>
                     <Typography variant='h6' color='secondary' pl={2}>{froggiesStakedPercentage()}</Typography>
                   </Grid>
                 </Grid>
                 <Grid id='balance' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
                   <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit Balance</Typography>
                   <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
-                    <img src={chest} style={{height: 50, width: 50}} alt='think'/>
+                    <img src={chest} style={{height: 50, width: 50}} alt='Balance'/>
                     <Typography variant='h6' color='secondary' pl={2}>{formatBalance(ribbitBalance)}</Typography>
                   </Grid>
                 </Grid>
                 <Grid id='staked' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
                   <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit Staked</Typography>
                   <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
-                    <img src={rain} style={{height: 50, width: 50}} alt='think'/>
+                    <img src={rain} style={{height: 50, width: 50}} alt='Staked'/>
                     <Typography variant='h6' color='secondary' pl={2}>{formatBalance(stakingBalance)}</Typography>
                   </Grid>
                 </Grid>
                 <Grid id='ribbit-per-day' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
                   <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit / Day</Typography>
                   <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
-                    <img src={ribbit} style={{height: 50, width: 50}} alt='think'/>
+                    <img src={ribbit} style={{height: 50, width: 50}} alt='Day'/>
                     <Typography variant='h6' color='secondary'>{owned.totalRibbit}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid id='frogs-owned' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
+                  <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Frogs Owned</Typography>
+                  <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
+                    <img src={logo} style={{height: 50, width: 50}} alt='Owned'/>
+                    <Typography variant='h6' color='secondary' pl={1}>{owned.froggies.length}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid id='frogs-staked' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
+                  <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Frogs Staked</Typography>
+                  <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
+                    <img src={biz} style={{height: 50, width: 50}} alt='Owned'/>
+                    <Typography variant='h6' color='secondary' pl={1}>{owned.froggies.reduce((acc, frog) => frog.isStaked ? acc + 1 : 0, 0)}</Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -364,7 +382,7 @@ export default function Staking() {
               !account && <Typography variant='h6' pl={3} pt={5}>Login to view staked frogs</Typography>
             }
             {
-              account && owned.froggies.length == 0 && 
+              account && owned.froggies.length === 0 && 
               <Stack spacing={1} direction={isMobile ? 'column' : 'row'} alignItems='center' pt={5}>
                 <Typography pl={3} display='flex' alignItems='center'>Purchase Froggy Friends on Opensea to begin staking</Typography>
                 <Paper elevation={3} sx={{borderRadius: 25, width: 34, height: 34}}>
@@ -377,15 +395,21 @@ export default function Staking() {
             {
               owned.froggies.map((froggy: Froggy) => {
                 return <Grid key={froggy.edition} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
-                  <Card sx={{height: '100%', border: getBorderWidth(froggy.edition), borderColor: getBorderColor(froggy.edition)}}>
+                  <Card sx={{height: '100%', border: getBorderWidth(froggy.edition), borderColor: getBorderColor(froggy.edition)}} onClick={() => onSelectFroggy(froggy)}>
                     <CardMedia component='img' image={froggy.image} alt='Froggy'/>
                     <CardContent sx={{bgcolor: theme.palette.common.white, paddingBottom: 0}}>
                       <Typography variant='body1' fontWeight='bold' pb={1} pt={1}>{froggy.name}</Typography>
                       <Grid container item justifyContent='space-between'>
-                        <Typography display='flex' alignItems='center'> 
-                          <img src={ribbit} style={{height: 30, width: 30}} alt='think'/>
-                          {froggy.ribbit} day
-                        </Typography>
+                        {
+                          froggy.isStaked ? (
+                            <Typography display='flex' alignItems='center'> 
+                              <img src={ribbit} style={{height: 30, width: 30}} alt='think'/>
+                              {froggy.ribbit} day
+                            </Typography>
+                          ) : (
+                            <Chip label='unstaked'/>
+                          )
+                        }
                         <Button variant='outlined' color='inherit' onClick={() => onItemClick(froggy)}>
                           <Typography variant='body2'>MORE</Typography>
                         </Button>

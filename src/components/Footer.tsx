@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { Avatar, Grid, Link, Typography, Theme, createStyles, useTheme, useMediaQuery, Fab, Paper } from "@mui/material";
-import { makeStyles } from '@mui/styles';
+import { Avatar, Grid, Link, Typography, Theme, useTheme, useMediaQuery, Fab, Paper } from "@mui/material";
+import { makeStyles, createStyles } from '@mui/styles';
 import logo from '../images/logo.png';
 import twitter from '../images/twitter.svg';
 import opensea from '../images/opensea.svg';
@@ -23,7 +23,6 @@ export default function Footer() {
   const classes = useStyles();
   const navigate = useNavigate();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(400));
 
   return (

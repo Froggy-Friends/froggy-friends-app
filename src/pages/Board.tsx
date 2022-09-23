@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { makeStyles } from '@mui/styles';
 import { Card, CardContent, Container, createStyles, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
+=======
+import { makeStyles, createStyles } from '@mui/styles';
+import { Container, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography } from "@mui/material";
+>>>>>>> develop
 import skyscrapers from "../images/skyscrapers.png";
 import { useEffect, useState } from 'react';
 import { Leaderboard } from '../models/Leaderboard';
@@ -19,6 +24,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
       '& th, h5': {
         fontWeight: 'bold'
       }
+<<<<<<< HEAD
     },
     leaderboardCard: {
       margin: "1rem 0",
@@ -30,13 +36,14 @@ const useStyles: any = makeStyles((theme: Theme) =>
         backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
       },
+=======
+>>>>>>> develop
     }
   })
 );
 
 export default function Board() {
   const classes = useStyles();
-  const theme = useTheme();
   const [leaders, setLeaders] = useState<Leaderboard[]>([]);
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const numFormatter = Intl.NumberFormat('en', {notation: 'compact'});

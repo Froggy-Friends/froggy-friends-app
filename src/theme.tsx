@@ -3,11 +3,12 @@ import { createTheme, responsiveFontSizes } from '@mui/material';
 const configs = {
   dark: '#181818',
   light: '#ebedf1',
-  primary: '#5ea14e',
-  gold: '#fece07',
+  primary: '#0339ec',
+  gold: '#fffb14',
   disabled: "#b3b6bb",
   white: '#ffffff',
-  error: '#73161D'
+  error: '#73161D',
+  gray: '#3C3C3C'
 }
 
 export default function getTheme(isDarkMode: boolean) {
@@ -18,7 +19,7 @@ export default function getTheme(isDarkMode: boolean) {
         default: isDarkMode ? configs.dark : configs.white
       },
       primary: {
-        main: configs.primary
+        main: isDarkMode ? configs.gold : configs.primary
       },
       secondary: {
         main: isDarkMode ? configs.white : configs.dark
@@ -31,7 +32,7 @@ export default function getTheme(isDarkMode: boolean) {
       }
     },
     typography: {
-      fontFamily: 'nunito'
+      fontFamily: 'DMSans'
     },
     transitions: {
       duration: {
@@ -72,8 +73,8 @@ export default function getTheme(isDarkMode: boolean) {
       MuiSnackbarContent: {
         styleOverrides: {
           root: {
-            color: isDarkMode ? configs.light : configs.dark,
-            backgroundColor: isDarkMode ? configs.dark : configs.light
+            color: isDarkMode ? configs.dark : configs.light,
+            backgroundColor: isDarkMode ? configs.light : configs.dark
           }
         }
       },
@@ -131,6 +132,7 @@ export default function getTheme(isDarkMode: boolean) {
         styleOverrides: {
           root: {
             overflowY: 'scroll',
+            overflowWrap: 'anywhere',
             backgroundColor: isDarkMode ? configs.dark : configs.white,
             "::-webkit-scrollbar": {
               width: 8,
@@ -142,6 +144,19 @@ export default function getTheme(isDarkMode: boolean) {
               borderRadius: 5,
               height: 50,
               width: 50
+            },
+            "&.hidden-scrollbar": {
+              "::-webkit-scrollbar": {
+                width: 0,
+                height: 0,
+                backgroundColor: "none"
+              },
+              "::-webkit-scrollbar-thumb": {
+                backgroundColor: "none",
+                borderRadius: 0,
+                height: 0,
+                width: 0
+              }
             }
           }
         }
@@ -212,6 +227,8 @@ export default function getTheme(isDarkMode: boolean) {
       MuiChip: {
         styleOverrides: {
           root: {
+            color: configs.light,
+            backgroundColor: configs.gray,
             textTransform: 'capitalize'
           }
         }
