@@ -59,7 +59,6 @@ export default function ItemDetails() {
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const [item, setItem] = useState<RibbitItem>();
     const [itemEnded, setItemEnded] = useState<boolean>(false);
-    const [soldOut, setSoldOut] = useState<boolean>(false);
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
     const [showPurchaseModal, setShowPurchaseModal] = useState(false);
@@ -108,9 +107,7 @@ export default function ItemDetails() {
           const response = await axios.get<RibbitItem>(`${process.env.REACT_APP_API}/items/${id}`);
           let item = response.data;
           setItem(item);
-          const ended = compareAsc(item.endDate, Date.now()) === -1;
-          setSoldOut(item.minted === item.supply);
-          setItemEnded(ended);
+          setItemEnded(compareAsc(item.endDate, Date.now()) === -1);
           getItemOwners(item.id, item.name);
         } catch (error) {
           setAlertMessage("Failed to get items");
@@ -128,10 +125,20 @@ export default function ItemDetails() {
     }
 
     const getEndDate = (item: RibbitItem) => {
-        const result = formatDistanceStrict(item.endDate, Date.now(), {
-            addSuffix: true
-        })
-        return `${itemEnded ? 'Ended ' : 'Ends '} ${result}`;
+        if (item && item.endDate) {
+            const result = formatDistanceStrict(item.endDate, Date.now(), {
+                addSuffix: true
+            })
+            return `${itemEnded ? 'Ended ' : 'Ends '} ${result}`;
+        } else {
+            return '';
+        }
+        
+    }
+
+    const getRarity = (item: RibbitItem) => {
+        const attribute = item.attributes.find(attribute => attribute.trait_type === 'Rarity');
+        return attribute ? attribute.value : '';
     }
 
     const getAddToCartDisabled = (item: RibbitItem) => {
@@ -230,14 +237,13 @@ export default function ItemDetails() {
                             </Paper>
                         </Grid>
                         {
-                            !soldOut &&
+                            item && item.isOnSale && item.minted !== item.supply &&
                             <Grid id='available' container pb={3}>
                                 {
-                                    item && !itemEnded && <Typography pr={isXs ? 3 : 5}>{getAvailable(item)}</Typography>
+                                    !itemEnded && <Typography pr={isXs ? 3 : 5}>{getAvailable(item)}</Typography>
                                 }
                                 {
-                                    item && item.category === 'raffles' && 
-                                    <Typography>{getEndDate(item)}</Typography>
+                                    item.category === 'raffles' && <Typography>{getEndDate(item)}</Typography>
                                 }
                             </Grid>
                         }
@@ -285,7 +291,7 @@ export default function ItemDetails() {
                             <Typography>{item?.description}</Typography>
                         </Stack>
                         {
-                            item && !item.collabId && !itemEnded && !soldOut &&
+                            item && !item.collabId && item.isOnSale && item.minted !== item.supply &&
                             <Grid id='buttons' container alignItems='end'>
                                 <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)} disabled={getAddToCartDisabled(item)}>
                                     <Typography>Add to cart</Typography>
@@ -310,11 +316,16 @@ export default function ItemDetails() {
                     <Grid id='tags' item xl={4} lg={4} md={4} sm={12} xs={12} pb={5}>
                         <Stack spacing={1}>
                             <Typography fontWeight='bold'>Tags</Typography>
-                            <Grid container spacing={2}>
-                                <Grid item ml={-2}><Chip label='Allowlist'/></Grid>
-                                <Grid item><Chip label='Allowlist'/></Grid>
-                                <Grid item><Chip label='Allowlist'/></Grid>
-                            </Grid>
+                            {
+                                item && 
+                                <Grid container spacing={2}>
+                                    <Grid item ml={-2}><Chip label={item.category}/></Grid>
+                                    <Grid item><Chip label={item.isOnSale && item.minted !== item.supply ? 'On Sale' : 'Off Sale'}/></Grid>
+                                    { item.isBoost && <Grid item><Chip label={`${item.percentage}% Boost`}/></Grid>}
+                                    { item.community && <Grid item><Chip label='Community'/></Grid>}
+                                    <Grid item><Chip label={getRarity(item)}/></Grid>
+                                </Grid>
+                            }
                         </Stack>
                     </Grid>
                     {
