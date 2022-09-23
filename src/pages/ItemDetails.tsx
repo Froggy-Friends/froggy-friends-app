@@ -15,7 +15,7 @@ import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import useDebounce from '../hooks/useDebounce';
-import { formatDistance } from 'date-fns';
+import { compareAsc, formatDistanceStrict } from 'date-fns';
 import { useEthers } from "@usedapp/core";
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from "../client";
 const {REACT_APP_RIBBIT_ITEM_CONTRACT} = process.env;
@@ -46,6 +46,7 @@ export default function ItemDetails() {
     const dispatch = useAppDispatch();
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const [item, setItem] = useState<RibbitItem>();
+    const [itemEnded, setItemEnded] = useState<boolean>(false);
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
     const [showPurchaseModal, setShowPurchaseModal] = useState(false);
@@ -94,6 +95,8 @@ export default function ItemDetails() {
           const response = await axios.get<RibbitItem>(`${process.env.REACT_APP_API}/items/${id}`);
           let item = response.data;
           setItem(item);
+          const ended = compareAsc(item.endDate, Date.now()) === -1;
+          setItemEnded(ended);
           getItemOwners(item.id, item.name);
         } catch (error) {
           setAlertMessage("Failed to get items");
@@ -108,6 +111,17 @@ export default function ItemDetails() {
 
     const getAvailable = (item: RibbitItem) => {
         return `${item.supply - item.minted} / ${item.supply} Available`;
+    }
+
+    const getEndDate = (item: RibbitItem) => {
+        const result = formatDistanceStrict(item.endDate, Date.now(), {
+            addSuffix: true
+        })
+        return `${itemEnded ? 'Ended ' : 'Ends '} ${result}`;
+    }
+
+    const getAddToCartDisabled = (item: RibbitItem) => {
+        return item.category === 'raffles' && +debouncedTickets < 1;
     }
 
     const scroll = () => {
@@ -179,14 +193,14 @@ export default function ItemDetails() {
                     <Grid id='image' item xl={4} lg={4} md={4} sm={4} xs={12} pb={isXs ? 5 : 0}>
                         {
                             item ? (
-                                <img src={item?.image} width='100%' style={{borderRadius: 5}}/>
+                                <img src={item.image} width='100%' style={{borderRadius: 5}}/>
                             ) : (
                                 <Skeleton variant='rectangular' animation='wave' height={400}/>
                             )
                         }
                     </Grid>
                     <Grid id='info' container item direction='column' justifyContent='space-between' xl={7} lg={7} md={7} sm={7} xs={12}>
-                        <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center' pb={5}>
+                        <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center' pb={3}>
                             {
                                 item ? (
                                     <Typography variant='h5' fontWeight='bold'>{item.name}</Typography>
@@ -201,16 +215,16 @@ export default function ItemDetails() {
                                 </IconButton>
                             </Paper>
                         </Grid>
-                        <Grid id='available' pb={5}>
+                        <Grid id='available' container pb={3}>
                             {
-                                item ? (
-                                    <Typography>{getAvailable(item)}</Typography>
-                                ) : (
-                                    <Skeleton variant='text' animation='wave' height={35} width={100}/>
-                                )
+                                item && !itemEnded && <Typography pr={isXs ? 3 : 5}>{getAvailable(item)}</Typography>
+                            }
+                            {
+                                item && item.category === 'raffles' && 
+                                <Typography>{getEndDate(item)}</Typography>
                             }
                         </Grid>
-                        <Grid id='price-and-socials' container pb={5}> 
+                        <Grid id='price-and-socials' container pb={3}> 
                             <Grid id='price' item xl={2} lg={2} md={2} sm={3} xs={4}>
                                 <Stack spacing={1}>
                                     <Typography variant='body1' fontWeight='bold'>Price</Typography>
@@ -254,13 +268,13 @@ export default function ItemDetails() {
                             <Typography>{item?.description}</Typography>
                         </Stack>
                         {
-                            item && !item.collabId &&
+                            item && !item.collabId && !itemEnded &&
                             <Grid id='buttons' container alignItems='end'>
-                                <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)} disabled={item.category === 'raffles' && +debouncedTickets < 1}>
+                                <Button variant='contained' sx={{height: 50}} onClick={() => onBuyItem(item)} disabled={getAddToCartDisabled(item)}>
                                     <Typography>Add to cart</Typography>
                                 </Button>
                                 {
-                                    item.category === 'raffles' &&
+                                    item.category === 'raffles' && !itemEnded &&
                                     <TextField placeholder="Number of tickets" value={tickets} onChange={onTicketsEntered} sx={{pl: 5, width: 230}}/>
                                 }
                             </Grid>
