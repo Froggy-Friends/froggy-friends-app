@@ -2,15 +2,12 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
-import { makeStyles } from '@mui/styles';
-import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Fade, Button, useTheme, Container } from "@mui/material";
-import { Close, ShoppingCart, Menu, Headphones, MonetizationOn, DarkMode, LightMode } from "@mui/icons-material";
+import { makeStyles, createStyles } from '@mui/styles';
+import { Grid, Avatar, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Fade, Button, useTheme, Container } from "@mui/material";
+import { Close, ShoppingCart, Menu, Headphones, DarkMode, LightMode } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
-import { darkTheme, SwapWidget } from '@uniswap/widgets';
-import { uniswapConfig } from '../config';
 import { ColorModeContext } from "../App";
-import '@uniswap/widgets/fonts.css';
 import logo from '../images/logo.png';
 import MusicPlayer from "./MusicPlayer";
 import Cart from "./Cart";
@@ -32,14 +29,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
       position: 'absolute',
       inset: '80px 10px auto auto',
       maxWidth: 350
-    },
-    swap: {
-      position: 'absolute' as 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      padding: 4,
-      justifyContent: 'center'
     }
   })
 );
@@ -59,7 +48,6 @@ export default function Header() {
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(321));
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
   const [musicOpen, setMusicOpen] = useState<boolean>(false);
-  const [swapOpen, setSwapOpen] = useState<boolean>(false);
   const { activateBrowserWallet, account } = useEthers();
   const ens = useLookupAddress();
   const [displayName, setDisplayName] = useState<string>("");
@@ -71,10 +59,6 @@ export default function Header() {
       setDisplayName(shortenAddress(account));
     }
   }, [account, ens]);
-
-  const onSwapClick = () => {
-    setSwapOpen(!swapOpen);
-  }
 
   const onMusicClick = () => {
     setMusicOpen(!musicOpen);
@@ -115,11 +99,6 @@ export default function Header() {
                   <Grid item display="flex" pr={1}>
                     <Fab size='small' onClick={colorMode.toggleColorMode}>
                       { theme.palette.mode === 'dark' ? <LightMode fontSize="medium"/> : <DarkMode fontSize="medium"/>}
-                    </Fab>
-                  </Grid>
-                  <Grid item display="flex" pr={1}>
-                    <Fab size='small' onClick={onSwapClick}>
-                      <MonetizationOn color={swapOpen ? "primary" : "inherit"} fontSize="medium"/>
                     </Fab>
                   </Grid>
                   <Grid item display="flex" pr={1}>
@@ -188,15 +167,6 @@ export default function Header() {
         <Fade in={musicOpen}>
           <Grid id='player' className={classes.musicPlayer} container zIndex={1}>
             <MusicPlayer/>
-          </Grid>
-        </Fade>
-        <Fade in={swapOpen}>
-          <Grid id='swap' className={classes.swap} container zIndex={1}>
-              <SwapWidget
-                theme={darkTheme} 
-                jsonRpcUrlMap={uniswapConfig.jsonRpcUrlMap}
-                tokenList={uniswapConfig.tokenList}
-              />
           </Grid>
         </Fade>
         <Cart />

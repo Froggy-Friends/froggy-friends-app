@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useEthers, useTokenBalance } from '@usedapp/core';
-import { makeStyles } from '@mui/styles';
-import { Fade, Grid, Typography, IconButton, Button, createStyles, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar, useTheme, useMediaQuery, Paper, Stack, TableContainer, Table, TableBody, TableRow, TableCell } from "@mui/material";
+import { makeStyles, createStyles } from '@mui/styles';
+import { Fade, Grid, Typography, IconButton, Button, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar, useTheme, useMediaQuery, Paper, Stack, TableContainer, Table, TableBody, TableRow, TableCell } from "@mui/material";
 import { BigNumber } from 'ethers';
 import { commify, formatEther } from "ethers/lib/utils";
 import { cartItems, cartOpen, empty, remove, toggle } from '../redux/cartSlice';
@@ -25,7 +25,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.default,
       color: theme.palette.secondary.main,
       borderRadius: 5,
-      boxShadow: 24,
       p: 4,
       height: '90%',
       width: '40%',
