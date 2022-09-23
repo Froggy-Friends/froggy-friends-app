@@ -14,6 +14,8 @@ import ribbit from '../images/ribbit.gif';
 import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
+import box from '../images/box.png';
+import clock from '../images/clock.png';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -360,8 +362,8 @@ export default function Cart() {
           </Grid>
           <Grid container justifyContent='center' p={3}>
             <Grid item>
-              { bundleBuyState.status === "Success" && <img src={hype} style={{height: 100, width: 100}} alt='hype'/> }
-              { bundleBuyState.status === "Mining" && <img src={please} style={{height: 100, width: 100}} alt='please'/> }
+              { bundleBuyState.status === "Success" && <img src={box} style={{height: 100, width: 100}} alt='hype'/> }
+              { bundleBuyState.status === "Mining" && <img src={clock} style={{height: 100, width: 100}} alt='please'/> }
               { bundleBuyState.status === "Fail" && <img src={uhhh} style={{height: 100, width: 100}} alt='uhhh'/> }
             </Grid>
           </Grid>
