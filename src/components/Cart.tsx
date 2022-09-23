@@ -8,7 +8,7 @@ import { cartItems, cartOpen, empty, remove, toggle } from '../redux/cartSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { RibbitItem } from '../models/RibbitItem';
 import { useSpendingApproved, useApproveSpender, useBundleBuy } from '../client';
-import { AddShoppingCart, Check, Close, Warning } from '@mui/icons-material';
+import { Check, Close, Warning } from '@mui/icons-material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ribbit from '../images/ribbit.gif';
 import please from '../images/plz.png';
@@ -126,7 +126,7 @@ export default function Cart() {
       setShowPurchaseModal(true);
       dispatch(toggle(false));
     }
-  }, [approveSpenderState])
+  }, [approveSpenderState, dispatch])
 
   useEffect(() => {
     if (bundleBuyState.status === "Exception" || bundleBuyState.status === "Fail") {
@@ -146,7 +146,7 @@ export default function Cart() {
       dispatch(empty());
       dispatch(toggle(false));
     }
-  }, [bundleBuyState])
+  }, [bundleBuyState, dispatch])
 
   useEffect(() => {
     if (items) {
@@ -158,7 +158,7 @@ export default function Cart() {
       const remaining = number - total;
       setRemaining(remaining);
     }
-  }, [items]);
+  }, [items, ribbitBalance]);
 
   const onRemoveItem = (item: RibbitItem) => {
     dispatch(remove(item));

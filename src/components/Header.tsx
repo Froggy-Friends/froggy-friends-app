@@ -86,7 +86,7 @@ export default function Header() {
   }
 
   const getLinkColor = (link: string) => {
-    return location.pathname == link ? "primary" : "secondary";
+    return location.pathname === link ? "primary" : "secondary";
   }
 
   return (

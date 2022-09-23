@@ -135,14 +135,14 @@ export default function Market() {
       }
       if (filterAvailable && (!item.isOnSale || item.minted === item.supply)) return false;
       if (filterCommunity && !item.community) return false;
-      if (filterOwned && !ownedNfts.find((nft: any) => +nft.tokenId == item.id)) return false;
-      if (!filterGLP && item.category == 'lilies') return false;
-      if (!filterFriends && item.category == 'friends') return false;
-      if (!filterCollabFriends && item.category == 'collabs') return false;
-      if (!filterAllowlists && item.category == 'allowlists') return false;
-      if (!filterNfts && item.category == 'nfts') return false;
-      if (!filterRaffles && item.category == 'raffles') return false;
-      if (!filterMerch && item.category == 'merch') return false;
+      if (filterOwned && !ownedNfts.find((nft: any) => +nft.tokenId === item.id)) return false;
+      if (!filterGLP && item.category === 'lilies') return false;
+      if (!filterFriends && item.category === 'friends') return false;
+      if (!filterCollabFriends && item.category === 'collabs') return false;
+      if (!filterAllowlists && item.category === 'allowlists') return false;
+      if (!filterNfts && item.category === 'nfts') return false;
+      if (!filterRaffles && item.category === 'raffles') return false;
+      if (!filterMerch && item.category === 'merch') return false;
       return true;
     });
   }

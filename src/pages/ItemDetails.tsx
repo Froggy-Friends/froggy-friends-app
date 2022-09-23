@@ -214,7 +214,7 @@ export default function ItemDetails() {
                     <Grid id='image' container item justifyContent='center' xl={4} lg={4} md={4} sm={4} xs={12} pb={isXs ? 5 : 0}>
                         {
                             item ? (
-                                <img className={classes.itemImage} src={item.image} style={{borderRadius: 5}}/>
+                                <img className={classes.itemImage} src={item.image} alt='' style={{borderRadius: 5}}/>
                             ) : (
                                 <Skeleton variant='rectangular' animation='wave' height={400}/>
                             )
@@ -252,7 +252,7 @@ export default function ItemDetails() {
                                 <Stack spacing={1}>
                                     <Typography variant='body1' fontWeight='bold'>Price</Typography>
                                     <Typography display='flex' alignItems='center'> 
-                                        <img src={ribbitToken} style={{height: 30, width: 30}} alt='Ribbit'/>
+                                        <img src={ribbitToken} alt='' style={{height: 30, width: 30}}/>
                                         {kFormatter(item?.price || 0)}
                                     </Typography>
                                 </Stack>
@@ -265,7 +265,7 @@ export default function ItemDetails() {
                                             item?.twitter &&
                                             <Paper elevation={3} sx={{borderRadius: 25}}>
                                                 <IconButton className="cta" href={item.twitter} target='_blank'>
-                                                    <img src={twitter} style={{height: 24, width: 24}}/>
+                                                    <img src={twitter} alt='' style={{height: 24, width: 24}}/>
                                                 </IconButton>
                                             </Paper>
                                         }
@@ -273,13 +273,13 @@ export default function ItemDetails() {
                                             item?.discord && 
                                             <Paper elevation={3} sx={{borderRadius: 25}}>
                                                 <IconButton className="cta" href={item.discord} target='_blank'>
-                                                    <img src={discord} style={{height: 24, width: 24}}/>
+                                                    <img src={discord} alt='' style={{height: 24, width: 24}}/>
                                                 </IconButton>
                                             </Paper>
                                         }
                                         <Paper elevation={3} sx={{borderRadius: 25}}>
                                             <IconButton className="cta" href={`https://opensea.io/assets/ethereum/${REACT_APP_RIBBIT_ITEM_CONTRACT}/${item?.id}`} target='_blank'>
-                                                <img src={opensea} style={{height: 24, width: 24}}/>
+                                                <img src={opensea} alt='' style={{height: 24, width: 24}}/>
                                             </IconButton>
                                         </Paper>
                                     </Stack>

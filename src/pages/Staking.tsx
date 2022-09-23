@@ -1,6 +1,6 @@
 import { useEthers, useTokenBalance } from '@usedapp/core';
 import { makeStyles } from '@mui/styles';
-import { Box, createStyles, Grid, IconButton, LinearProgress, CircularProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip } from "@mui/material";
+import { Box, createStyles, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Launch, Warning } from '@mui/icons-material';
@@ -76,7 +76,6 @@ export default function Staking() {
   const classes = useStyles();
   const theme = useTheme();
   const navigate = useNavigate();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isBelow320 = useMediaQuery(theme.breakpoints.down(321));
@@ -383,7 +382,7 @@ export default function Staking() {
               !account && <Typography variant='h6' pl={3} pt={5}>Login to view staked frogs</Typography>
             }
             {
-              account && owned.froggies.length == 0 && 
+              account && owned.froggies.length === 0 && 
               <Stack spacing={1} direction={isMobile ? 'column' : 'row'} alignItems='center' pt={5}>
                 <Typography pl={3} display='flex' alignItems='center'>Purchase Froggy Friends on Opensea to begin staking</Typography>
                 <Paper elevation={3} sx={{borderRadius: 25, width: 34, height: 34}}>
