@@ -1,269 +1,242 @@
 import { createTheme, responsiveFontSizes } from '@mui/material';
 
-let theme = createTheme({
-  palette: {
-    background: {
-      default: '#000000'
-    },
-    primary: {
-      main: '#5ea14e'
-    },
-    secondary: {
-      main: '#ebedf1'
-    },
-    success: {
-      main: '#cfdcae'
-    },
-    info: {
-      main: '#181818'
-    },
-    warning: {
-      main: '#BFB85D'
-    }
-  },
-  typography: {
-    fontFamily: 'nunito'
-  },
-  transitions: {
-    duration: {
-      enteringScreen: 750,
-      leavingScreen: 750
-    }
-  },
-  components: {
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "black",
-        }
+const configs = {
+  dark: '#181818',
+  light: '#ebedf1',
+  primary: '#0339ec',
+  gold: '#fffb14',
+  disabled: "#b3b6bb",
+  white: '#ffffff',
+  error: '#73161D',
+  gray: '#3C3C3C'
+}
+
+export default function getTheme(isDarkMode: boolean) {
+  let theme = createTheme({
+    palette: {
+      mode: isDarkMode ? 'dark' : 'light',
+      background: {
+        default: isDarkMode ? configs.dark : configs.white
+      },
+      primary: {
+        main: isDarkMode ? configs.gold : configs.primary
+      },
+      secondary: {
+        main: isDarkMode ? configs.white : configs.dark
+      },
+      text: {
+        primary: isDarkMode ? configs.light : configs.dark
+      },
+      error: {
+        main: configs.error
       }
     },
-    MuiContainer: {
-      styleOverrides: {
-        root: {
-          minHeight: 1500
-        }
+    typography: {
+      fontFamily: 'DMSans'
+    },
+    transitions: {
+      duration: {
+        enteringScreen: 750,
+        leavingScreen: 750
       }
     },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          color: '#ebedf1',
-          backgroundColor: '#5ea14e',
-          borderRadius: 25,
-          height: 35,
-          fontWeight: 'bold',
-          ":hover": {
-            backgroundColor: '#48793c'
-          },
-          ":disabled": {
-            backgroundColor: "#b3b6bb",
-            cursor: "not-allowed",
-            pointerEvents: "auto"
-          },
-          "&.transparent": {
-            backgroundColor: "#000000d1",
-            borderRadius: 5,
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 25,
+            height: 35,
+            fontWeight: 'bold',
             textTransform: 'capitalize',
-            ":hover": {
-              color: "#5ea14e"
-            }
-          },
-          "&.inverted": {
-            backgroundColor: '#ebedf1',
-            color: '#181818'
-          },
-          "&.inverted:hover": {
-            color: '#5ea14e'
-          }
-        }
-      }
-    },
-    MuiSnackbarContent: {
-      styleOverrides: {
-        root: {
-          fontSize: '1.3rem',
-          backgroundColor: '#BFB85D',
-          color: '#181818'
-        }
-      }
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          backgroundColor: 'black',
-          color: '#ebedf1',
-          width: '100%',
-          textAlign: 'center',
-          "&.disabled": {
-            backgroundColor: "#ebedf145"
-          },
-          "&.inverted": {
-            backgroundColor: "#ebedf1",
-            color: "#181818",
-            width: 350
-          }
-        }
-      }
-    },
-    MuiTypography: {
-      styleOverrides: {
-        root: {
-          "&.link": {
-            cursor: "pointer",
-            ":hover": {
-              color: "#5ea14e"
+            ":disabled": {
+              backgroundColor: configs.disabled,
+              cursor: "not-allowed",
+              pointerEvents: "auto"
             }
           }
         }
-      }
-    },
-    MuiLink: {
-      styleOverrides: {
-        root: {
-          ":hover": {
-            color: '#5ea14e'
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: {
+            "&.cta": {
+              backgroundColor: configs.white,
+              color: configs.dark,
+            },
+            "&.cta:hover": {
+              backgroundColor: configs.white,
+              color: configs.primary
+            }
           }
         }
-      }
-    },
-    MuiToggleButtonGroup: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "#00000099"
-        }
-      }
-    },
-    MuiToggleButton: {
-      styleOverrides: {
-        root: {
-          color: "#ebedf1",
-          fontWeight: "bold",
-          "&.Mui-selected": {
-            color: "#5ea14e"
+      },
+      MuiSnackbarContent: {
+        styleOverrides: {
+          root: {
+            color: isDarkMode ? configs.dark : configs.light,
+            backgroundColor: isDarkMode ? configs.light : configs.dark
           }
         }
-      }
-    },
-    MuiTab: {
-      styleOverrides: {
-        root: {
-          color: "#ebedf1",
-          fontSize: '1rem',
-          alignItems: 'start',
-          padding: 24,
-          "&.Mui-selected": {
-            color: "#5ea14e",
-            fontWeight: 'bold'
-          },
-        },
-      }
-    },
-    MuiTabs: {
-      styleOverrides: {
-        root: {
-          minWidth: 200,
-          color: '#5ea14e'
-        }
-      }
-    },
-    MuiFab: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "#ebedf1",
-          color: "#181818",
-          ":hover": {
-            backgroundColor: "#ebedf1",
-            color: "#5ea14e"
-          }
-        }
-      }
-    },
-    MuiTableContainer: {
-      styleOverrides: {
-        root: {
-          overflowY: 'scroll',
-          backgroundColor: 'black',
-          "::-webkit-scrollbar": {
-            width: 8,
-            height: 8,
-            backgroundColor: 'black'
-          },
-          "::-webkit-scrollbar-thumb": {
-            backgroundColor: "#5ea14e",
-            borderRadius: 5,
-            height: 50,
-            width: 50
-          }
-        }
-      }
-    },
-    MuiTableCell: {
-      styleOverrides: {
-        root: {
-          color: "#ebedf1"
-        }
-      }
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "#181818",
-          "&.MuiDrawer-paper": {
+      },
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            color: configs.dark,
+            backgroundColor: configs.white,
             width: '100%',
-            maxWidth: 425
-          } 
+            textAlign: 'center',
+            "&.disabled": {
+              backgroundColor: "#ebedf145"
+            },
+            "&.inverted": {
+              // backgroundColor: configs.secondary,
+              color: configs.dark,
+              width: 350
+            }
+          }
         }
-      }
-    },
-    MuiTooltip: {
-      styleOverrides: {
-        tooltipPlacementBottom: {
-          backgroundColor: '#181818',
-          color: '#ebedf1'
+      },
+      MuiTypography: {
+        styleOverrides: {
+          root: {
+            "&.link": {
+              cursor: "pointer",
+              ":hover": {
+                color: configs.primary
+              }
+            }
+          }
         }
-      }
-    },
-    MuiGrid: {
-      styleOverrides: {
-        root: {
-          "&.scrollable": {
+      },
+      MuiLink: {
+        styleOverrides: {
+          root: {
+            ":hover": {
+              color: configs.primary
+            }
+          }
+        }
+      },
+      MuiFab: {
+        styleOverrides: {
+          root: {
+            backgroundColor: configs.white,
+            color: configs.dark,
+            ":hover": {
+              color: configs.primary,
+            }
+          }
+        }
+      },
+      MuiTableContainer: {
+        styleOverrides: {
+          root: {
+            overflowY: 'scroll',
+            overflowWrap: 'anywhere',
+            backgroundColor: isDarkMode ? configs.dark : configs.white,
             "::-webkit-scrollbar": {
-              width: 5,
-              height: 5,
-              backgroundColor: "#181818"
+              width: 8,
+              height: 8,
+              backgroundColor: isDarkMode ? configs.dark : configs.white
             },
             "::-webkit-scrollbar-thumb": {
-              backgroundColor: "#5ea14e",
+              backgroundColor: configs.primary,
               borderRadius: 5,
               height: 50,
               width: 50
+            },
+            "&.hidden-scrollbar": {
+              "::-webkit-scrollbar": {
+                width: 0,
+                height: 0,
+                backgroundColor: "none"
+              },
+              "::-webkit-scrollbar-thumb": {
+                backgroundColor: "none",
+                borderRadius: 0,
+                height: 0,
+                width: 0
+              }
             }
           }
         }
-      }
-    },
-    MuiChip: {
-      styleOverrides: {
-        root: {
-          backgroundColor: '#fece07',
-          color: 'black'
+      },
+      MuiPaper: {
+        styleOverrides: {
+          root: {
+            backgroundColor: isDarkMode ? configs.dark : configs.white,
+            background: 'none',
+            "&.MuiDrawer-paper": {
+              backgroundColor: isDarkMode ? configs.dark : configs.white,
+              width: '100%',
+              maxWidth: 425
+            } 
+          }
         }
-      }
-    },
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          input: {
-            textAlign: 'center',
-            color: 'white'
+      },
+      MuiTooltip: {
+        styleOverrides: {
+          tooltipPlacementBottom: {
+            backgroundColor: configs.dark,
+            // color: configs.secondary
+          }
+        }
+      },
+      MuiGrid: {
+        styleOverrides: {
+          root: {
+            "&.scrollable": {
+              "::-webkit-scrollbar": {
+                width: 5,
+                height: 5,
+                backgroundColor: configs.dark
+              },
+              "::-webkit-scrollbar-thumb": {
+                backgroundColor: configs.primary,
+                borderRadius: 5,
+                height: 50,
+                width: 50
+              }
+            }
+          }
+        }
+      },
+      MuiMenuItem: {
+        styleOverrides: {
+          root: {
+            "&.Mui-selected": {
+              backgroundColor: isDarkMode ? configs.dark : configs.white
+            }
+          }
+        }
+      },
+      MuiList: {
+        styleOverrides: {
+          root: {
+            backgroundColor: isDarkMode ? configs.dark : configs.white
+          }
+        }
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            height: 35
+          }
+        }
+      },
+      MuiChip: {
+        styleOverrides: {
+          root: {
+            color: configs.light,
+            backgroundColor: configs.gray,
+            textTransform: 'capitalize'
           }
         }
       }
     }
-  }
-});
+  });
+  
+  theme = responsiveFontSizes(theme);
 
-theme = responsiveFontSizes(theme);
-
-export default theme;
+  return theme;
+}
