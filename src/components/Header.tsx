@@ -101,13 +101,13 @@ export default function Header() {
                       { theme.palette.mode === 'dark' ? <LightMode fontSize="medium"/> : <DarkMode fontSize="medium"/>}
                     </Fab>
                   </Grid>
-                  <Grid item display="flex" pr={1}>
+                  {/* <Grid item display="flex" pr={1}>
                     <Fab size='small' onClick={onMusicClick}>
                       <Badge invisible={!playing} badgeContent=" " color="primary">
                         <Headphones fontSize='medium'/>
                       </Badge>
                     </Fab>
-                  </Grid>
+                  </Grid> */}
                   <Grid item display="flex" pr={1}>
                     <Fab size='small' onClick={onCartClick}>
                       <Badge badgeContent={cartItemCount} color="primary">
