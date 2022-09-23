@@ -7,11 +7,10 @@ import { Grid, Avatar, Link, createStyles, Theme, useMediaQuery, Typography, Bad
 import { Close, ShoppingCart, Menu, Headphones, MonetizationOn, DarkMode, LightMode } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
-import { darkTheme, SwapWidget } from '@uniswap/widgets'
+import { darkTheme, SwapWidget } from '@uniswap/widgets';
 import { uniswapConfig } from '../config';
 import { ColorModeContext } from "../App";
-import { ErrorBoundaryLocal } from "./ErrorBoundaryLocal";
-import '@uniswap/widgets/fonts.css'
+import '@uniswap/widgets/fonts.css';
 import logo from '../images/logo.png';
 import MusicPlayer from "./MusicPlayer";
 import Cart from "./Cart";
@@ -193,15 +192,11 @@ export default function Header() {
         </Fade>
         <Fade in={swapOpen}>
           <Grid id='swap' className={classes.swap} container zIndex={1}>
-            <ErrorBoundaryLocal>
               <SwapWidget
                 theme={darkTheme} 
                 jsonRpcUrlMap={uniswapConfig.jsonRpcUrlMap}
-                tokenList={uniswapConfig.tokenList}  
-                defaultOutputAmount={uniswapConfig.outputAmount}
-                defaultOutputTokenAddress={uniswapConfig.outputTokenAddress}
+                tokenList={uniswapConfig.tokenList}
               />
-            </ErrorBoundaryLocal>
           </Grid>
         </Fade>
         <Cart />
