@@ -65,7 +65,7 @@ export default function ItemDetails() {
     const [itemOwners, setItemOwners] = useState<string[]>([]);
     const [tickets, setTickets] = useState('');
     const debouncedTickets = useDebounce(tickets, 500);
-    const isSpendingApproved = useSpendingApproved(account ?? '');
+    const isSpendingApproved = useSpendingApproved(`${account}`);
     const { collabBuy, collabBuyState } = useCollabBuy();
     const { approveSpender, approveSpenderState } = useApproveSpender();
 

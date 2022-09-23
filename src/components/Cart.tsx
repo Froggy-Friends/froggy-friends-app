@@ -107,7 +107,7 @@ export default function Cart() {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const { account } = useEthers();
   const ribbitBalance: BigNumber = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || BigNumber.from(0);
-  const isSpendingApproved = useSpendingApproved(account ?? '');
+  const isSpendingApproved = useSpendingApproved(`${account}`);
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const { bundleBuy, bundleBuyState } = useBundleBuy();
   
