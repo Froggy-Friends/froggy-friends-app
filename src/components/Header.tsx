@@ -8,15 +8,13 @@ import { Close, ShoppingCart, Menu, Headphones, DarkMode, LightMode } from "@mui
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
 import { ColorModeContext } from "../App";
-import logo from '../images/logo.png';
+import logo from '../images/randoms.png';
 import MusicPlayer from "./MusicPlayer";
 import Cart from "./Cart";
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
-    avatar: {
-      height: 100,
-      width: 100,
+    avatar: { 
       cursor: 'pointer',
       [theme.breakpoints.up('sm')]: {
         marginTop: '5px'
@@ -81,8 +79,11 @@ export default function Header() {
               <Grid id="header" container item justifyContent={isMobile ? 'end' : 'space-between'} alignItems="center" xl={12} lg={12} md={12} sm={12} xs={12} pl={1}>
                 <Grid id='logo' container item display={isTinyMobile ? 'none' : 'flex'} justifyContent="start" xl={3} lg={3} md={3} sm={4} xs={1}>
                   <Link href={'/staking'} underline='none'>
-                    <Avatar className={classes.avatar} alt='Home' src={logo} sx={{width: 65, height: 65}}/>
+                    <img className={classes.avatar} alt='Home' src={logo} width={45} height={55}/>
                   </Link>
+                  {
+                    isDesktop && <Typography variant='h6' alignSelf='center' fontWeight='bold' pl={2}>The Randoms Takeover</Typography>
+                  }
                 </Grid>
                 <Grid id='links' container item display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' xl={3} lg={3} md={4}>
                   <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>

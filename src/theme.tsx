@@ -32,7 +32,7 @@ export default function getTheme(isDarkMode: boolean) {
       }
     },
     typography: {
-      fontFamily: 'nunito'
+      fontFamily: 'DMSans'
     },
     transitions: {
       duration: {

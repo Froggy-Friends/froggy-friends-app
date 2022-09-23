@@ -3,6 +3,11 @@
   src: local('nunito'), url(./fonts/nunito/Nunito-Regular.ttf) format('truetype');
 }
 
+@font-face {
+  font-family: 'DMSans';
+  src: local('DMSans'), url(./fonts/DMSans-Regular.ttf) format('truetype');
+}
+
 html {
   height: 100%;
 }
