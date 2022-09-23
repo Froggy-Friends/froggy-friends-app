@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 import { makeStyles } from '@mui/styles';
 import { Card, CardContent, Container, createStyles, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
-=======
-import { makeStyles, createStyles } from '@mui/styles';
-import { Container, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography } from "@mui/material";
->>>>>>> develop
 import skyscrapers from "../images/skyscrapers.png";
 import { useEffect, useState } from 'react';
 import { Leaderboard } from '../models/Leaderboard';
@@ -24,7 +19,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
       '& th, h5': {
         fontWeight: 'bold'
       }
-<<<<<<< HEAD
     },
     leaderboardCard: {
       margin: "1rem 0",
@@ -36,14 +30,13 @@ const useStyles: any = makeStyles((theme: Theme) =>
         backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
       },
-=======
->>>>>>> develop
     }
   })
 );
 
 export default function Board() {
   const classes = useStyles();
+  const theme = useTheme();
   const [leaders, setLeaders] = useState<Leaderboard[]>([]);
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const numFormatter = Intl.NumberFormat('en', {notation: 'compact'});
@@ -94,7 +87,7 @@ export default function Board() {
                     <Grid item sx={{mb: 1}}>
                       <Typography variant='h5' fontWeight="bold">Rank #{index + 1}</Typography>
                     </Grid>
-                    <Grid container item flexDirection="row" alignItems="start" flexWrap="nowrap" justifyContent="space-between">
+                    <Grid container item flexDirection="row" alignItems="start" flexWrap="nowrap">
                       <Grid container item alignItems="center" xs={2} marginRight={4} flexWrap="nowrap">
                         <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
                         <Typography variant='h6' pl={1}>{numFormatter.format(Number(leader.ribbit))}</Typography>
