@@ -26,6 +26,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
       borderRadius: 0,
       fontWeight: "regular",
       backgroundColor: theme.palette.background.default,
+      overflow: "hidden",
       '& *': {
         backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
@@ -53,7 +54,7 @@ export default function Board() {
 
       setLeaders([
         {
-          account: "codedbyjordan.eth",
+          account: "asuperunusuallylongensname.eth",
           ribbit: "1400",
         },
         {
@@ -81,20 +82,22 @@ export default function Board() {
         ? (
           <Grid item container textAlign="left">
             {leaders.map((leader, index) => (
-              <Card sx={{ minWidth: "100%" }} className={classes.leaderboardCard}>
+              <Card sx={{ minWidth: "100%", borderRadius: 2 }} className={classes.leaderboardCard}>
                 <CardContent className={classes.leaderboardCardContent}>
-                  <Grid container minWidth="100%" justifyContent="left" sx={{px: 2, py: 1}}>
-                    <Grid item sx={{mb: 1}}>
-                      <Typography variant='h5' fontWeight="bold">Rank #{index + 1}</Typography>
-                    </Grid>
-                    <Grid container item flexDirection="row" alignItems="start" flexWrap="nowrap">
-                      <Grid container item alignItems="center" xs={2} marginRight={4} flexWrap="nowrap">
-                        <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                        <Typography variant='h6' pl={1}>{numFormatter.format(Number(leader.ribbit))}</Typography>
+                  <Grid container minWidth="100%" justifyContent="center">
+                    <Grid container item maxWidth="90%">
+                      <Grid item sx={{mb: 1}}>
+                        <Typography variant='h5' fontWeight="bold">Rank #{index + 1}</Typography>
                       </Grid>
-                      <Grid item maxWidth="90%" sx={{textOverflow: "ellipsis", overflow: leader.account.endsWith(".eth") ? "hidden" : "visible"}}>
-                        <Link href={`https://opensea.io/${leader.account}`} variant='h6' color='secondary' underline='none' target='_blank'>{leader.account}</Link>
-                      </Grid>
+                      <Grid container item flexDirection="row" alignItems="start" flexWrap="nowrap">
+                        <Grid container item alignItems="center" xs={2} marginRight={4} flexWrap="nowrap">
+                          <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
+                          <Typography variant='h6' pl={1}>{numFormatter.format(Number(leader.ribbit))}</Typography>
+                        </Grid>
+                        <Grid item overflow="hidden" maxWidth="90%" sx={{paddingRight: 5, textOverflow: "ellipsis", overflow: leader.account.endsWith(".eth") ? "visible" : "hidden", overflowWrap: leader.account.endsWith(".eth") ? "break-word": "normal"}}>
+                          <Link href={`https://opensea.io/${leader.account}`} variant='h6' color='secondary' underline='none' target='_blank'>{leader.account}</Link>
+                        </Grid>
+                      </Grid>  
                     </Grid>
                   </Grid>
                 </CardContent>
