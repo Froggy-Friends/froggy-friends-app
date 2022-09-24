@@ -11,6 +11,7 @@ import ribbitToken from '../images/ribbit.gif';
 import twitter from '../images/twitter.svg';
 import discord from '../images/discord.svg';
 import opensea from '../images/opensea.svg';
+import { kFormatter } from "../utils";
 
 export default function FrogDetails() {
     const theme = useTheme();
@@ -45,14 +46,6 @@ export default function FrogDetails() {
     const scroll = () => {
         const itemDetails = document.querySelector('#item-details');
         itemDetails?.scrollIntoView({ behavior: 'smooth'});
-    }
-
-    const kFormatter = (num: number): string => {
-        const fixed = ((Math.abs(num)/1000));
-        const format = Math.abs(num) > 999 
-        ?( Math.sign(num) * fixed).toFixed(0) + 'k' 
-        : Math.sign(num) * Math.abs(num) + '';
-        return format;
     }
 
     const onItemDetailsClose = () => {
