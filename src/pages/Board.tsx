@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { Leaderboard } from '../models/Leaderboard';
 import axios from 'axios';
 import ribbit from '../images/ribbit.gif';
+import { kFormatter, strToNum } from '../utils';
+import { useEthers, useLookupAddress } from '@usedapp/core';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -15,17 +17,11 @@ const useStyles: any = makeStyles((theme: Theme) =>
         padding: '1rem 0',
         border: 0
       },
-
-      '& th, h5': {
-        fontWeight: 'bold'
-      }
     },
     leaderboardCard: {
       margin: "1rem 0",
-      padding: 0,
+      padding: 2,
       borderRadius: 0,
-      fontWeight: "regular",
-      backgroundColor: theme.palette.background.default,
       overflow: "hidden",
       '& *': {
         backgroundColor: theme.palette.background.default,
@@ -39,35 +35,33 @@ export default function Board() {
   const classes = useStyles();
   const theme = useTheme();
   const [leaders, setLeaders] = useState<Leaderboard[]>([]);
+  const {account} = useEthers();
+  const ens = useLookupAddress();
+  const [userStats, setUserStats] = useState<Leaderboard & {rank: number}>({account: "", ribbit: "", rank: 0});
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const numFormatter = Intl.NumberFormat('en', {notation: 'compact'});
 
   useEffect(() => {
+    console.log(account)
     const getLeaderboard = async () => {
-      // try {
-      //   const response = await axios.get<Leaderboard[]>(`${process.env.REACT_APP_API}/leaderboard`);
-      //   setLeaders(response.data);
-      //   console.log(response.data)
-      // } catch (error) {
-      //   console.log("leaderboard error: ", error);
-      // }
-
-      setLeaders([
-        {
-          account: "asuperunusuallylongensname.eth",
-          ribbit: "1400",
-        },
-        {
-          account: "0x6D0c13585acF32B342867e6210040828D008E839",
-          ribbit: "2233332",
-        }
-      ])
+      try {
+        const response = await axios.get<Leaderboard[]>(`${process.env.REACT_APP_API}leaderboard`);
+        setLeaders(response.data);
+      } catch (error) {
+        console.log("leaderboard error: ", error);
+      }
     };
     
     if (leaders.length === 0) {
       getLeaderboard();
     }
   }, []);
+
+  useEffect(() => {
+    if(ens) {
+      const currUserStatsIdx = leaders.findIndex(leader => leader.account === ens);
+      setUserStats({...leaders[currUserStatsIdx], rank: currUserStatsIdx})
+    }
+  }, [ens, leaders])
 
   return (
     <Grid id="leaderboard" container direction="column" pb={20}>
@@ -78,11 +72,17 @@ export default function Board() {
         <Grid item container wrap='nowrap' justifyContent='space-between' alignItems='center'>
             <Typography variant="h4" sx={{fontWeight: 'bold'}}>Ribbit Leaderboard</Typography>
         </Grid>
+        {userStats.rank > 0 && (
+          <Grid item container wrap='nowrap' alignItems='center' sx={{py: 2}}>
+            <Typography variant="h6" sx={{fontWeight: 'bold', mr: 2}}>Rank #{userStats.rank}</Typography>
+            <Typography variant="h6">{userStats.account}</Typography>
+          </Grid>
+        )}
         {isMobile 
         ? (
           <Grid item container textAlign="left">
             {leaders.map((leader, index) => (
-              <Card sx={{ minWidth: "100%", borderRadius: 2 }} className={classes.leaderboardCard}>
+              <Card sx={{ minWidth: "100%", borderRadius: 2 }} className={classes.leaderboardCard} key={leader.account}>
                 <CardContent className={classes.leaderboardCardContent}>
                   <Grid container minWidth="100%" justifyContent="center">
                     <Grid container item maxWidth="90%">
@@ -92,10 +92,10 @@ export default function Board() {
                       <Grid container item flexDirection="row" alignItems="start" flexWrap="nowrap">
                         <Grid container item alignItems="center" xs={2} marginRight={4} flexWrap="nowrap">
                           <img src={ribbit} style={{height: 25, width: 25}} alt='ribbit'/>
-                          <Typography variant='h6' pl={1}>{numFormatter.format(Number(leader.ribbit))}</Typography>
+                          <Typography variant='h6' pl={1}>{kFormatter(strToNum(leader.ribbit))}</Typography>
                         </Grid>
                         <Grid item overflow="hidden" maxWidth="90%" sx={{paddingRight: 5, textOverflow: "ellipsis", overflow: leader.account.endsWith(".eth") ? "visible" : "hidden", overflowWrap: leader.account.endsWith(".eth") ? "break-word": "normal"}}>
-                          <Link href={`https://opensea.io/${leader.account}`} variant='h6' color='secondary' underline='none' target='_blank'>{leader.account}</Link>
+                          <Link href={`https://opensea.io/${leader.account}`} variant='h6' color='secondary' underline='none' target='_blank' textAlign="right">{leader.account}</Link>
                         </Grid>
                       </Grid>  
                     </Grid>
