@@ -88,9 +88,9 @@ export default function getTheme(isDarkMode: boolean) {
             "&.disabled": {
               backgroundColor: "#ebedf145"
             },
-            "&.inverted": {
-              // backgroundColor: configs.secondary,
-              color: configs.dark,
+            "&.blend": {
+              backgroundColor: isDarkMode ? configs.dark : configs.white,
+              color: isDarkMode ? configs.light : configs.dark,
               width: 350
             }
           }
