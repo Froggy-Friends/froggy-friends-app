@@ -1,10 +1,11 @@
-import { makeStyles, createStyles } from '@mui/styles';
-import { Container, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography } from "@mui/material";
+import { makeStyles } from '@mui/styles';
+import {  Container, createStyles, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography, useTheme } from "@mui/material";
 import skyscrapers from "../images/skyscrapers.png";
 import { useEffect, useState } from 'react';
 import { Leaderboard } from '../models/Leaderboard';
 import axios from 'axios';
 import ribbit from '../images/ribbit.gif';
+import { useEthers, useLookupAddress } from '@usedapp/core';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -15,17 +16,16 @@ const useStyles: any = makeStyles((theme: Theme) =>
         padding: '1rem 0',
         border: 0
       },
-
-      '& th, h5': {
-        fontWeight: 'bold'
-      }
-    }
+    },
   })
 );
 
 export default function Board() {
   const classes = useStyles();
   const [leaders, setLeaders] = useState<Leaderboard[]>([]);
+  const {account} = useEthers();
+  const ens = useLookupAddress();
+  const [userStats, setUserStats] = useState<Leaderboard>({account: "", ribbit: "", rank: 0});
 
   useEffect(() => {
     const getLeaderboard = async () => {
@@ -40,7 +40,14 @@ export default function Board() {
     if (leaders.length === 0) {
       getLeaderboard();
     }
-  }, [leaders]);
+  }, []);
+
+  useEffect(() => {
+    if(ens) {
+      const currUserStatsIdx = leaders.findIndex(leader => leader.account === ens);
+      setUserStats({...leaders[currUserStatsIdx], rank: currUserStatsIdx})
+    }
+  }, [ens, leaders])
 
   return (
     <Grid id="leaderboard" container direction="column" pb={20}>
@@ -48,12 +55,16 @@ export default function Board() {
         <Grid id='banner' container sx={{backgroundImage: `url(${skyscrapers})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 600}}/>
       </Paper>
       <Container maxWidth='lg' sx={{pt: 5}}>
-        <Grid item container wrap='nowrap' justifyContent='space-between' alignItems='center'>
-          <Grid item>
+        <Grid item container wrap='nowrap' justifyContent='space-between' alignItems='center' pb={3}>
             <Typography variant="h4" sx={{fontWeight: 'bold'}}>Ribbit Leaderboard</Typography>
-          </Grid>
         </Grid>
-        <TableContainer component={Paper} sx={{pl: 2, pr: 2, mt: 5, height: "700px"}}>
+        {(userStats.rank as Number) > 0 && (
+          <Grid item container wrap='nowrap' alignItems='center'>
+            <Typography variant="h6" sx={{fontWeight: 'bold', mr: 2}}>Rank #{userStats.rank}</Typography>
+            <Typography variant="h6">{userStats.account}</Typography>
+          </Grid>
+        )}
+        <TableContainer component={Paper} elevation={0} sx={{mt: 5, height: "700px"}}>
           <Table stickyHeader aria-label="simple table">
             <TableHead>
               <TableRow className={classes.leaderboardRow}>
@@ -64,12 +75,12 @@ export default function Board() {
             </TableHead>
             <TableBody>
               {leaders.map((leader, index) => (
-                <TableRow
+                  <TableRow
                   key={leader.account}
                   className={classes.leaderboardRow}
                 >
                   <TableCell>
-                    <Typography variant='h6' color='secondary'># {index+1}</Typography>
+                    <Typography variant='h6' color='secondary'># {index + 1}</Typography>
                   </TableCell>
                   <TableCell>
                     <Link href={`https://opensea.io/${leader.account}`} variant='h6' color='secondary' underline='none' target='_blank'>{leader.account}</Link>

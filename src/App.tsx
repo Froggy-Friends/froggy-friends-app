@@ -1,7 +1,7 @@
 import { createContext, useMemo, useState } from 'react';
 import { Provider } from 'react-redux';
 import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
-import { CssBaseline, PaletteMode, ThemeProvider } from '@mui/material';
+import { CssBaseline, PaletteMode, ThemeProvider, useMediaQuery } from '@mui/material';
 import { DAppProvider } from '@usedapp/core';
 import { store } from "./redux/store";
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -15,6 +15,7 @@ import Header from "./components/Header";
 import Board from "./pages/Board";
 import ItemDetails from './pages/ItemDetails';
 import FrogDetails from './pages/FrogDetails';
+import BoardMobile from './pages/BoardMobile';
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -28,8 +29,8 @@ export default function App() {
     }),
     [],
   );
-
-  const theme = useMemo(() => getTheme(mode === 'dark'), [mode]);
+  const theme = useMemo(() => getTheme(mode === 'dark'), [mode])
+  const isSm = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
     <ErrorBoundary>
@@ -44,7 +45,7 @@ export default function App() {
                   <Route path="/staking" element={<Staking/>} />
                   <Route path="/admin" element={<Admin/>} />
                   <Route path="/market" element={<Market/>}/>
-                  <Route path="/leaderboard" element={<Board/>} />
+                  <Route path="/leaderboard" element={isSm ? <BoardMobile/> : <Board/>} />
                   <Route path="/item/:id" element={<ItemDetails/>} />
                   <Route path='/frog/:id' element={<FrogDetails/>}/>
                   <Route path="*" element={ <Navigate to="/staking" replace />} />
