@@ -31,7 +31,7 @@ export default function BoardMobile() {
   const [leaders, setLeaders] = useState<Leaderboard[]>([]);
   const { account } = useEthers();
   const ens = useLookupAddress();
-  const [userStats, setUserStats] = useState<Leaderboard & { rank: number }>({
+  const [userStats, setUserStats] = useState<Leaderboard>({
     account: "",
     ribbit: "",
     rank: 0,
@@ -41,7 +41,7 @@ export default function BoardMobile() {
     const getLeaderboard = async () => {
       try {
         const response = await axios.get<Leaderboard[]>(
-          `${process.env.REACT_APP_API}leaderboard`
+          `${process.env.REACT_APP_API}/leaderboard`
         );
         setLeaders(response.data);
       } catch (error) {
