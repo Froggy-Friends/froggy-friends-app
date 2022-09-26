@@ -55,16 +55,16 @@ export default function Board() {
         <Grid id='banner' container sx={{backgroundImage: `url(${skyscrapers})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 600}}/>
       </Paper>
       <Container maxWidth='lg' sx={{pt: 5}}>
-        <Grid item container wrap='nowrap' justifyContent='space-between' alignItems='center'>
+        <Grid item container wrap='nowrap' justifyContent='space-between' alignItems='center' pb={3}>
             <Typography variant="h4" sx={{fontWeight: 'bold'}}>Ribbit Leaderboard</Typography>
         </Grid>
         {(userStats.rank as Number) > 0 && (
-          <Grid item container wrap='nowrap' alignItems='center' sx={{py: 2}}>
+          <Grid item container wrap='nowrap' alignItems='center'>
             <Typography variant="h6" sx={{fontWeight: 'bold', mr: 2}}>Rank #{userStats.rank}</Typography>
             <Typography variant="h6">{userStats.account}</Typography>
           </Grid>
         )}
-        <TableContainer component={Paper} sx={{mt: 5, height: "700px"}}>
+        <TableContainer component={Paper} elevation={0} sx={{mt: 5, height: "700px"}}>
           <Table stickyHeader aria-label="simple table">
             <TableHead>
               <TableRow className={classes.leaderboardRow}>

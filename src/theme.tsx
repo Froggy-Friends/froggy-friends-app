@@ -90,8 +90,7 @@ export default function getTheme(isDarkMode: boolean) {
             },
             "&.blend": {
               backgroundColor: isDarkMode ? configs.dark : configs.white,
-              color: isDarkMode ? configs.light : configs.dark,
-              width: 350
+              color: isDarkMode ? configs.light : configs.dark
             }
           }
         }

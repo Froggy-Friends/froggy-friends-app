@@ -1,23 +1,12 @@
-import { makeStyles } from "@mui/styles";
 import {
   Card,
   CardContent,
   Container,
-  createStyles,
   Grid,
   Link,
   Paper,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Theme,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import skyscrapers from "../images/skyscrapers.png";
 import { useEffect, useState } from "react";
@@ -57,7 +46,7 @@ export default function BoardMobile() {
   useEffect(() => {
     if (ens) {
       const currUserStatsIdx = leaders.findIndex(
-        (leader) => leader.account === ens
+        (leader) => leader.account === ens || leader.account === account
       );
       setUserStats({ ...leaders[currUserStatsIdx], rank: currUserStatsIdx });
     }
@@ -85,12 +74,12 @@ export default function BoardMobile() {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+          <Typography variant="h4" fontWeight="bold" pb={2}>
             Ribbit Leaderboard
           </Typography>
         </Grid>
-        {userStats.rank > 0 && (
-          <Grid item container wrap="nowrap" alignItems="center" sx={{ py: 2 }}>
+        {userStats.rank && userStats.rank > 0 && (
+          <Grid item container wrap="nowrap" alignItems="center" py={3}>
             <Typography variant="h6" sx={{ fontWeight: "bold", mr: 2 }}>
               Rank #{userStats.rank}
             </Typography>
@@ -100,13 +89,13 @@ export default function BoardMobile() {
         <Stack textAlign="left" spacing={2}>
           {leaders.map((leader, index) => (
             <Card
-              sx={{ maxWidth: "100%", borderRadius: 2 }}
+              sx={{ borderRadius: 2 }}
               className="blend"
               key={leader.account}
             >
               <CardContent>
-                <Grid container minWidth="100%" justifyContent="center">
-                  <Grid container item maxWidth="90%">
+                <Grid container width="100%" justifyContent="center">
+                  <Grid container item>
                     <Grid item sx={{ mb: 1 }}>
                       <Typography variant="h5" fontWeight="bold">
                         Rank #{index + 1}
