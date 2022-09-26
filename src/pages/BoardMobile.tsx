@@ -78,7 +78,7 @@ export default function BoardMobile() {
             Ribbit Leaderboard
           </Typography>
         </Grid>
-        {userStats.rank && userStats.rank > 0 && (
+        {userStats.rank > 0 && (
           <Grid item container wrap="nowrap" alignItems="center" py={3}>
             <Typography variant="h6" sx={{ fontWeight: "bold", mr: 2 }}>
               Rank #{userStats.rank}
