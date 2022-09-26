@@ -25,13 +25,12 @@ export default function Board() {
   const [leaders, setLeaders] = useState<Leaderboard[]>([]);
   const {account} = useEthers();
   const ens = useLookupAddress();
-  const [userStats, setUserStats] = useState<Leaderboard & {rank: number}>({account: "", ribbit: "", rank: 0});
+  const [userStats, setUserStats] = useState<Leaderboard>({account: "", ribbit: "", rank: 0});
 
   useEffect(() => {
-    console.log(account)
     const getLeaderboard = async () => {
       try {
-        const response = await axios.get<Leaderboard[]>(`${process.env.REACT_APP_API}leaderboard`);
+        const response = await axios.get<Leaderboard[]>(`${process.env.REACT_APP_API}/leaderboard`);
         setLeaders(response.data);
       } catch (error) {
         console.log("leaderboard error: ", error);
@@ -50,10 +49,6 @@ export default function Board() {
     }
   }, [ens, leaders])
 
-  useEffect(() => {
-    console.log(userStats)
-  }, [userStats]);
-
   return (
     <Grid id="leaderboard" container direction="column" pb={20}>
       <Paper elevation={3}>
@@ -63,7 +58,7 @@ export default function Board() {
         <Grid item container wrap='nowrap' justifyContent='space-between' alignItems='center'>
             <Typography variant="h4" sx={{fontWeight: 'bold'}}>Ribbit Leaderboard</Typography>
         </Grid>
-        {userStats.rank > 0 && (
+        {(userStats.rank as Number) > 0 && (
           <Grid item container wrap='nowrap' alignItems='center' sx={{py: 2}}>
             <Typography variant="h6" sx={{fontWeight: 'bold', mr: 2}}>Rank #{userStats.rank}</Typography>
             <Typography variant="h6">{userStats.account}</Typography>
