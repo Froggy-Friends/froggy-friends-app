@@ -2,6 +2,7 @@ import { Card, CardMedia, CardContent, Typography, Grid, Button, useTheme, useMe
 import { useNavigate } from "react-router-dom";
 import ribbitToken from '../images/ribbit.gif';
 import { RibbitItem } from "../models/RibbitItem";
+import { kFormatter } from "../utils";
 
 interface ItemProps {
     item: RibbitItem;
@@ -25,14 +26,6 @@ export default function Item (props: ItemProps) {
         } else {
             return "transparent";
         }
-    }
-
-    const kFormatter = (num: number): string => {
-        const fixed = ((Math.abs(num)/1000));
-        const format = Math.abs(num) > 999 
-        ?( Math.sign(num) * fixed).toFixed(0) + 'k' 
-        : Math.sign(num) * Math.abs(num) + '';
-        return format;
     }
 
     const onItemClick = (item: RibbitItem) => {

@@ -18,6 +18,7 @@ import useDebounce from '../hooks/useDebounce';
 import { compareAsc, formatDistanceStrict } from 'date-fns';
 import { useEthers } from "@usedapp/core";
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from "../client";
+import { kFormatter } from "../utils";
 const {REACT_APP_RIBBIT_ITEM_CONTRACT} = process.env;
 
 const useStyles: any = makeStyles((theme: Theme) => 
@@ -148,14 +149,6 @@ export default function ItemDetails() {
     const scroll = () => {
         const itemDetails = document.querySelector('#item-details');
         itemDetails?.scrollIntoView({ behavior: 'smooth'});
-    }
-
-    const kFormatter = (num: number): string => {
-        const fixed = ((Math.abs(num)/1000));
-        const format = Math.abs(num) > 999 
-        ?( Math.sign(num) * fixed).toFixed(0) + 'k' 
-        : Math.sign(num) * Math.abs(num) + '';
-        return format;
     }
 
     const onItemDetailsClose = () => {
