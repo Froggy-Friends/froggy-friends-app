@@ -1,10 +1,10 @@
 import { makeStyles } from '@mui/styles';
-import {  Container, createStyles, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography, useTheme } from "@mui/material";
-import skyscrapers from "../images/skyscrapers.png";
+import {  Container, createStyles, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Leaderboard } from '../models/Leaderboard';
 import axios from 'axios';
 import ribbit from '../images/ribbit.gif';
+import banner from "../images/skyscrapers.png";
 import { useEthers, useLookupAddress } from '@usedapp/core';
 
 const useStyles: any = makeStyles((theme: Theme) => 
@@ -22,6 +22,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 export default function Board() {
   const classes = useStyles();
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const [leaders, setLeaders] = useState<Leaderboard[]>([]);
   const {account} = useEthers();
   const ens = useLookupAddress();
@@ -44,15 +46,17 @@ export default function Board() {
 
   useEffect(() => {
     if(ens) {
-      const currUserStatsIdx = leaders.findIndex(leader => leader.account === ens);
-      setUserStats({...leaders[currUserStatsIdx], rank: currUserStatsIdx})
+      const currUserStatsIdx = leaders.findIndex(leader => leader.account === ens || leader.account === account);
+      if (currUserStatsIdx > -1) {
+        setUserStats({...leaders[currUserStatsIdx], rank: currUserStatsIdx+1})
+      }
     }
   }, [ens, leaders])
 
   return (
     <Grid id="leaderboard" container direction="column" pb={20}>
       <Paper elevation={3}>
-        <Grid id='banner' container sx={{backgroundImage: `url(${skyscrapers})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 600}}/>
+        <Grid id='banner' container sx={{backgroundImage: `url(${banner})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 600}}/>
       </Paper>
       <Container maxWidth='lg' sx={{pt: 5}}>
         <Grid item container wrap='nowrap' justifyContent='space-between' alignItems='center' pb={3}>

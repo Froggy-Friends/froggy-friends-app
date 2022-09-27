@@ -5,7 +5,7 @@ import { RibbitItem } from '../models/RibbitItem';
 import { useEthers } from '@usedapp/core';
 import { Close, ExpandMore, FilterList, Refresh, Search } from '@mui/icons-material';
 import axios from 'axios';
-import market from '../images/randoms.jpg';
+import banner from '../images/randoms.jpg';
 import Item from '../components/Item';
 import useDebounce from '../hooks/useDebounce';
 const { REACT_APP_RIBBIT_ITEM_CONTRACT } = process.env;
@@ -16,6 +16,11 @@ const useStyles: any = makeStyles((theme: Theme) =>
   createStyles({
     market: {
       backgroundColor: theme.palette.background.default
+    },
+    banner: {
+      backgroundImage: `url(${banner})`, 
+      backgroundSize: 'cover', 
+      backgroundPosition: 'center'
     },
     modal: {
       position: 'absolute' as 'absolute',
@@ -219,7 +224,7 @@ export default function Market() {
   return (
     <Grid id="market" className={classes.market} container direction="column" justifyContent="start">
       <Paper elevation={3}>
-        <Grid id='banner' container sx={{backgroundImage: `url(${market})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 600}}/>
+        <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
       <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
         <Grid container>

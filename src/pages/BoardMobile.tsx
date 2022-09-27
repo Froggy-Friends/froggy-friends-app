@@ -8,11 +8,11 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import skyscrapers from "../images/skyscrapers.png";
 import { useEffect, useState } from "react";
 import { Leaderboard } from "../models/Leaderboard";
 import axios from "axios";
 import ribbit from "../images/ribbit.gif";
+import banner from "../images/skyscrapers.png";
 import { kFormatter, strToNum } from "../utils";
 import { useEthers, useLookupAddress } from "@usedapp/core";
 
@@ -48,7 +48,9 @@ export default function BoardMobile() {
       const currUserStatsIdx = leaders.findIndex(
         (leader) => leader.account === ens || leader.account === account
       );
-      setUserStats({ ...leaders[currUserStatsIdx], rank: currUserStatsIdx });
+      if (currUserStatsIdx > -1) {
+        setUserStats({ ...leaders[currUserStatsIdx], rank: currUserStatsIdx+1});
+      }
     }
   }, [ens, leaders]);
 
@@ -59,10 +61,10 @@ export default function BoardMobile() {
           id="banner"
           container
           sx={{
-            backgroundImage: `url(${skyscrapers})`,
+            backgroundImage: `url(${banner})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            height: 600,
+            height: 300,
           }}
         />
       </Paper>
