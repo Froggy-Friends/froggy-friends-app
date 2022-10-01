@@ -5,7 +5,7 @@ import { RibbitItem } from '../models/RibbitItem';
 import { useEthers } from '@usedapp/core';
 import { Close, ExpandMore, FilterList, Refresh, Search } from '@mui/icons-material';
 import axios from 'axios';
-import banner from '../images/randoms.jpg';
+import banner from '../images/market.png';
 import Item from '../components/Item';
 import useDebounce from '../hooks/useDebounce';
 const { REACT_APP_RIBBIT_ITEM_CONTRACT } = process.env;

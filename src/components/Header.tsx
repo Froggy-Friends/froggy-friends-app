@@ -8,7 +8,7 @@ import { Close, ShoppingCart, Menu, Headphones, DarkMode, LightMode, Paid } from
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
 import { ColorModeContext } from "../App";
-import logo from '../images/randoms.png';
+import logo from '../images/logo.png';
 import MusicPlayer from "./MusicPlayer";
 import Cart from "./Cart";
 
@@ -79,10 +79,10 @@ export default function Header() {
               <Grid id="header" container item justifyContent={isMobile ? 'end' : 'space-between'} alignItems="center" xl={12} lg={12} md={12} sm={12} xs={12} pl={1}>
                 <Grid id='logo' container item display={isTinyMobile ? 'none' : 'flex'} justifyContent="start" xl={3} lg={3} md={3} sm={4} xs={1}>
                   <Link href={'/staking'} underline='none'>
-                    <img className={classes.avatar} alt='Home' src={logo} width={45} height={55}/>
+                    <img className={classes.avatar} alt='Home' src={logo} width={45} height={45}/>
                   </Link>
                   {
-                    isDesktop && <Typography variant='h6' alignSelf='center' fontWeight='bold' pl={2}>The Randoms Takeover</Typography>
+                    isDesktop && <Typography variant='h6' alignSelf='center' fontWeight='bold' pl={2}>Froggy Friends</Typography>
                   }
                 </Grid>
                 <Grid id='links' container item display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' xl={3} lg={3} md={4}>
