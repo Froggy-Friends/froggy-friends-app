@@ -64,7 +64,10 @@ export default function ItemDetails() {
     const [showAlert, setShowAlert] = useState(false);
     const [showPurchaseModal, setShowPurchaseModal] = useState(false);
     const [itemOwners, setItemOwners] = useState<string[]>([]);
+    const [filteredItemOwners, setFilteredItemOwners] = useState<string[]>([]);
     const [tickets, setTickets] = useState('');
+    const [search, setSearch] = useState('');
+    const debouncedSearch = useDebounce(search, 500);
     const debouncedTickets = useDebounce(tickets, 500);
     const isSpendingApproved = useSpendingApproved(`${account}`);
     const { collabBuy, collabBuyState } = useCollabBuy();
@@ -74,6 +77,11 @@ export default function ItemDetails() {
         getItem(`${params.id}`);
         scroll();
     }, [params]);
+
+    useEffect(() => {
+        const filtered = filterItems(itemOwners, debouncedSearch);
+        setFilteredItemOwners(filtered);
+   }, [debouncedSearch])
 
     useEffect(() => {
         if (approveSpenderState.status === "Exception" || approveSpenderState.status === "Fail") {
@@ -119,6 +127,18 @@ export default function ItemDetails() {
     const getItemOwners = async (id: number, name: string) => {
         const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${id}/owners`);
         setItemOwners(response.data);
+        const filtered = filterItems(response.data, debouncedSearch);
+        setFilteredItemOwners(filtered);
+    }
+
+    const filterItems = (owners: string[], debouncedSearch: string): string[] => {
+        return owners.filter(owner => {
+          if (debouncedSearch && owner.toLowerCase().includes(debouncedSearch.toLowerCase()) === false) {
+            return false;
+          }
+          
+          return true;
+        });
     }
 
     const getAvailable = (item: RibbitItem) => {
@@ -199,6 +219,10 @@ export default function ItemDetails() {
     const onTicketsEntered = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTickets(event.target.value.replace(/\D/,''));
     };
+
+    const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(event.target.value);
+      };
 
     return (
         <Grid id='item-details' container direction='column' bgcolor={theme.palette.background.default} pt={20} pb={20}>
@@ -327,12 +351,12 @@ export default function ItemDetails() {
                             <Stack spacing={3}>
                                 <Stack direction={isXs ? 'column' : 'row'} justifyContent='space-between'>
                                     <Typography fontWeight='bold' pb={3}>Item Owners</Typography>
-                                    <TextField placeholder='Search by wallet' InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}/>
+                                    <TextField placeholder='Search by wallet' value={search} onChange={onSearch} InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}/>
                                 </Stack>
-                                <TableContainer component={Paper} elevation={3} sx={{p: 3, height: isXs ? 500 : 350}}>
+                                <TableContainer component={Paper} elevation={0} sx={{height: isXs ? 500 : 350}}>
                                     <Table stickyHeader aria-label="simple table">
                                         <TableBody>
-                                        {itemOwners.map((owner, index) => (
+                                        {filteredItemOwners.map((owner, index) => (
                                             <TableRow key={index} className={classes.row}>
                                             <TableCell>
                                                 <Typography variant='h6' color='secondary'>{owner}</Typography>

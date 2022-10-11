@@ -16,7 +16,7 @@ import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import hi from '../images/hi.png';
-import pond from '../images/pond.png';
+import banner from '../images/pond.png';
 import logo from '../images/logo.png';
 import biz from '../images/biz.png'
 import { useNavigate } from 'react-router-dom';
@@ -38,6 +38,11 @@ const useStyles: any = makeStyles((theme: Theme) =>
   createStyles({
     app: {
       backgroundColor: theme.palette.background.default
+    },
+    banner: {
+      backgroundImage: `url(${banner})`, 
+      backgroundSize: 'cover', 
+      backgroundPosition: 'center'
     },
     modal: {
       position: 'absolute' as 'absolute',
@@ -76,7 +81,7 @@ export default function Staking() {
   const classes = useStyles();
   const theme = useTheme();
   const navigate = useNavigate();
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+  const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isBelow320 = useMediaQuery(theme.breakpoints.down(321));
   const [froggiesToStake, setFroggiesToStake] = useState<number[]>([]);
@@ -306,7 +311,7 @@ export default function Staking() {
   return (
     <Grid id='app' className={classes.app} container direction='column' pb={30}>
       <Paper elevation={3}>
-        <Grid id='banner' container sx={{backgroundImage: `url(${pond})`, backgroundSize: 'cover', backgroundPosition: 'center', height: 600}}/>
+        <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
       <Container maxWidth='xl' sx={{pt: 2}}>
         <Grid id='staking' container direction='column' textAlign='center'>
@@ -356,12 +361,12 @@ export default function Staking() {
                 </Grid>
               </Grid>
               {
-                owned.froggies.length > 0 && <Grid id='buttons' container item justifyContent={isTablet ? 'center' : 'end'} xl={3} lg={3} md={3} sm={12} xs={12} pb={2}>
+                owned.froggies.length > 0 && <Grid id='buttons' container item justifyContent={isSm ? 'center' : 'end'} xl={3} lg={3} md={3} sm={12} xs={12} pb={2}>
                   <ButtonGroup sx={{height: isMobile ? 'inherit' : 35, justifyContent: isMobile ? 'center' : 'end'}}>
-                    <Button variant='contained' onClick={() => onStake()}>
+                    <Button variant='contained' disabled={froggiesToStake.length === 0} onClick={() => onStake()}>
                       Stake {froggiesToStake.length || ''}
                     </Button>
-                    <Button variant='contained' onClick={() => onUnstake()}>
+                    <Button variant='contained' disabled={froggiesToUnstake.length === 0} onClick={() => onUnstake()}>
                       Unstake {froggiesToUnstake.length || ''}
                     </Button>
                     <Button variant='contained' onClick={() => onClaim()}>Claim</Button>
