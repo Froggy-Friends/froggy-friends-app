@@ -49,7 +49,7 @@ export default function Market() {
   const [loadingItems, setLoadingItems] = useState<boolean>(false);
   const [ownedNfts, setOwnedNfts] = useState([]);
   const [filteredItems, setFilteredItems] = useState<RibbitItem[]>([]);
-  const [filterAvailable, setFilterAvailable] = useState<boolean>(true);
+  const [filterAvailable, setFilterAvailable] = useState<boolean>(false);
   const [filterCommunity, setFilterCommunity] = useState<boolean>(false);
   const [filterOwned, setFilterOwned] = useState<boolean>(false);
   const [filterGLP, setFilterGLP] = useState<boolean>(true);
