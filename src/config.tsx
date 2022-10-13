@@ -1,4 +1,4 @@
-import { Mainnet, Rinkeby, Config } from '@usedapp/core'
+import { Mainnet, Goerli, Config } from '@usedapp/core'
 
 const prodConfig: Config = {
   readOnlyChainId: Mainnet.chainId,
@@ -8,9 +8,9 @@ const prodConfig: Config = {
 }
 
 const devConfig: Config = {
-  readOnlyChainId: Rinkeby.chainId,
+  readOnlyChainId: Goerli.chainId,
   readOnlyUrls: {
-    [Rinkeby.chainId]: `${process.env.REACT_APP_INFURA_KEY}`,
+    [Goerli.chainId]: `${process.env.REACT_APP_INFURA_KEY}`,
   }
 }
 
