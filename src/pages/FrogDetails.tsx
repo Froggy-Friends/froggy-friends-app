@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowBack, Close } from "@mui/icons-material";
-import { Button, Chip, Container, Grid, IconButton, Snackbar, SnackbarContent, Stack, Typography, useMediaQuery, useTheme, Paper, Skeleton } from "@mui/material";
+import { ArrowBack, Close, Warning } from "@mui/icons-material";
+import { Button, Chip, Container, Grid, IconButton, Snackbar, SnackbarContent, Stack, Typography, useMediaQuery, useTheme, Paper, Skeleton, Box, Modal, Theme, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { Froggy } from "../models/Froggy";
 import { useEthers } from "@usedapp/core";
 import { useStakingDeposits } from '../client';
@@ -12,8 +12,30 @@ import twitter from '../images/twitter.svg';
 import discord from '../images/discord.svg';
 import opensea from '../images/opensea.svg';
 import { kFormatter } from "../utils";
+import { createStyles, makeStyles } from "@mui/styles";
+import { RibbitItem } from "../models/RibbitItem";
+
+const useStyles: any = makeStyles((theme: Theme) => 
+  createStyles({
+    modal: {
+      position: 'absolute' as 'absolute',
+      top: '30%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 700,
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.secondary.main,
+      borderRadius: 5,
+      padding: 4,
+      [theme.breakpoints.down('sm')]: {
+        width: 300
+      }
+    }
+  })
+);
 
 export default function FrogDetails() {
+    const classes = useStyles();
     const theme = useTheme();
     const navigate = useNavigate();
     const params = useParams();
@@ -24,11 +46,15 @@ export default function FrogDetails() {
     const [frog, setFrog] = useState<Froggy>();
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
+    const [showPairingModal, setShowingPairingModal] = useState(false);
+    const [friends, setFriends] = useState<RibbitItem[]>([]);
+    const [selectedFriend, setSelectedFriend] = useState('');
 
     useEffect(() => {
         scroll();
         if (account) {
             getFroggy(`${params.id}`);
+            getFriends(account);
         }
     }, [account, params.id]);
 
@@ -40,6 +66,17 @@ export default function FrogDetails() {
         } catch (error) {
           setAlertMessage("Failed to get items");
           setShowAlert(true);
+        }
+    }
+
+    async function getFriends(account: string) {
+        try {
+            const response = await axios.post<RibbitItem[]>(`${process.env.REACT_APP_API}/owned/friends`, { account: account});
+            let friends = response.data;
+            setFriends(friends);
+        } catch (error) {
+            setAlertMessage("Failed to fetch owned friends");
+            setShowAlert(true);
         }
     }
 
@@ -62,6 +99,16 @@ export default function FrogDetails() {
 
     const downloadAsset = (asset: string, name: string) => {
         saveAs(asset, name);
+    }
+
+    const onPairClick = (frog: Froggy) => {
+        console.log("show pair modal...");
+        setShowingPairingModal(true);
+    }
+
+    const onFriendSelected = (event: SelectChangeEvent) => {
+        console.log("change: ", event.target.value);
+        setSelectedFriend(event.target.value);
     }
 
     return (
@@ -135,7 +182,7 @@ export default function FrogDetails() {
                         </Stack>
                         {
                             frog && deposits.includes(frog.edition) && <Grid id='buttons' container justifyContent={isXs ? 'center' : 'start'}>
-                                <Button variant='contained' disabled sx={{height: 50}}>
+                                <Button variant='contained' sx={{height: 50}} onClick={() => onPairClick(frog)}>
                                     <Typography color='secondary'>Pair Friend</Typography>
                                 </Button>
                             </Grid>
@@ -149,9 +196,9 @@ export default function FrogDetails() {
                                 <Typography variant='h5' fontWeight='bold'>Traits</Typography>
                                 <Grid container>
                                     {
-                                        frog.attributes.map(trait => {
+                                        frog.attributes.map((trait) => {
                                             return (
-                                                <Grid item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
+                                                <Grid key={trait.trait_type} item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
                                                     <Typography fontWeight='bold'>{trait.trait_type}</Typography>
                                                     <Typography>{trait.value}</Typography>
                                                 </Grid>
@@ -199,6 +246,38 @@ export default function FrogDetails() {
                     <IconButton size='small' aria-label='close' color='inherit' onClick={onAlertClose}><Close fontSize='small' /></IconButton>
                 }/>
             </Snackbar>
+            <Modal open={showPairingModal}>
+                <Box className={classes.modal}>
+                    <Stack p={5}>
+                        <Stack direction="row" justifyContent="space-between" pb={8}>
+                            <Typography id='modal-title' variant="h4">Pair a Friend</Typography>
+                            <IconButton size='medium' color='inherit' onClick={() => setShowingPairingModal(false)}>
+                            <Close fontSize='medium'/>
+                            </IconButton>
+                        </Stack>
+                        <Typography pb={3}>Select the friend you would like to pair your frog with.</Typography>
+                        {
+                            friends.length && 
+                            <Select labelId='friend-select' id='friends' value={selectedFriend} onChange={onFriendSelected}>
+                                {
+                                    friends.map(friend => {
+                                        return <MenuItem key={friend.id} value={friend.id}>{friend.name}</MenuItem>
+                                    })
+                                }
+                            </Select>
+                        }
+                        <Stack direction='row' pt={3} spacing={1} alignItems='center'>
+                            <Warning color="warning"/>
+                            <Typography>Pairing will apply your boost, update your metadata and burn your friend item</Typography>
+                        </Stack>
+                        <Stack pt={5}>
+                            <Button variant='contained' sx={{width: 140, height: 44, alignSelf: 'center'}}>
+                                <Typography>Pair</Typography>
+                            </Button>
+                        </Stack>
+                    </Stack>
+                </Box>
+            </Modal>
         </Grid>
 
     )
