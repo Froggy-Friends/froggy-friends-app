@@ -306,6 +306,11 @@ export default function Staking() {
     return isNaN(staked) ? '0' : staked.toFixed(2) + '%';
   }
 
+  const getFroggiesStaked = (froggies: Froggy[]) => {
+    return froggies.filter(frog => frog.isStaked).length;
+  }
+
+
   const onItemClick = (frog: Froggy) => {
     navigate(`/frog/${frog.edition}`);
   }
@@ -358,7 +363,7 @@ export default function Staking() {
                   <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Frogs Staked</Typography>
                   <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                     <img src={biz} style={{height: 50, width: 50}} alt='Owned'/>
-                    <Typography variant='h6' color='secondary' pl={1}>{owned.froggies.reduce((acc, frog) => frog.isStaked ? acc + 1 : 0, 0)}</Typography>
+                    <Typography variant='h6' color='secondary' pl={1}>{getFroggiesStaked(owned.froggies)}</Typography>
                   </Grid>
                 </Grid>
               </Grid>
