@@ -152,7 +152,9 @@ export default function Staking() {
     } else if (stakeState.status === "Mining") {
       setShowStakeModal(true);
     } else if (stakeState.status === "Success") {
-      fetchFroggies();
+      setTimeout(() => {
+        fetchFroggies();
+      }, 5000);
     }
   }, [stakeState, account])
 
