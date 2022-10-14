@@ -47,6 +47,7 @@ export default function FrogDetails() {
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
     const [showPairingModal, setShowingPairingModal] = useState(false);
+    const [isPairingComplete, setIsPairingComplete] = useState(false);
     const [friends, setFriends] = useState<RibbitItem[]>([]);
     const [selectedFriend, setSelectedFriend] = useState('');
 
@@ -106,9 +107,21 @@ export default function FrogDetails() {
         setShowingPairingModal(true);
     }
 
+    const onPair = async () => {
+        if (frog) {
+            const proof = (await axios.post(`${process.env.REACT_APP_API}/stake`, [frog.edition])).data;
+            // await pair(frog.edition, proof, selectedFriend);
+        }
+    }
+
     const onFriendSelected = (event: SelectChangeEvent) => {
         console.log("change: ", event.target.value);
         setSelectedFriend(event.target.value);
+    }
+
+    const getFriendName = (friendId: number) => {
+        const friend = friends.findIndex(f => f.id === friendId);
+        return friend > -1 ? friends[friend].name : '';
     }
 
     return (
@@ -250,14 +263,29 @@ export default function FrogDetails() {
                 <Box className={classes.modal} minHeight={500}>
                     <Stack p={5}>
                         <Stack direction="row" justifyContent="space-between" pb={8}>
-                            <Typography id='modal-title' variant="h4">Pair a Friend</Typography>
-                            <IconButton size='medium' color='inherit' onClick={() => setShowingPairingModal(false)}>
-                            <Close fontSize='medium'/>
+                            <Typography id='modal-title' variant="h4">
+                                { isPairingComplete ? 'Pairing Complete' : 'Pair a Friend'}
+                            </Typography>
+                            <IconButton className="cta" size='medium' color='inherit' onClick={() => setShowingPairingModal(false)}>
+                                <Close fontSize='medium'/>
                             </IconButton>
                         </Stack>
-                        <Typography pb={3}>Select the friend boost you would like to apply and pair with your frog</Typography>
+                        { !isPairingComplete && <Typography pb={3}>Select the friend boost you would like to apply and pair with your frog</Typography>}
                         {
-                            friends.length && 
+                            isPairingComplete && 
+                            <Stack spacing={2}>
+                                <Typography>
+                                    Your frog is successfully paired with the {getFriendName(+selectedFriend)} friend.
+                                    Your boost hast started and your metadata updated.
+                                </Typography>
+                                <Typography>
+                                    Your friend item is burned and will no longer appear in your investory.
+                                    Your pfp will update shortly showing your frog and friend paired.
+                                </Typography>
+                            </Stack>
+                        }
+                        {
+                            !isPairingComplete && friends.length && 
                             <Select labelId='friend-select' id='friends' value={selectedFriend} onChange={onFriendSelected}>
                                 {
                                     friends.map(friend => {
@@ -267,17 +295,20 @@ export default function FrogDetails() {
                             </Select>
                         }
                         {
-                            selectedFriend && 
+                            !isPairingComplete && selectedFriend && 
                             <Stack direction='row' pt={3} spacing={1} alignItems='center'>
                                 <Info color="secondary"/>
                                 <Typography>Pairing will burn your friend item</Typography>
                             </Stack>
                         }
-                        <Stack pt={10}>
-                            <Button variant='contained' disabled={!selectedFriend} sx={{width: 140, height: 44, alignSelf: 'center'}}>
-                                <Typography>Pair</Typography>
-                            </Button>
-                        </Stack>
+                        {
+                            !isPairingComplete &&
+                            <Stack pt={10}>
+                                <Button variant='contained' disabled={!selectedFriend} onClick={onPair} sx={{width: 140, height: 44, alignSelf: 'center'}}>
+                                    <Typography>Pair</Typography>
+                                </Button>
+                            </Stack>
+                        }
                     </Stack>
                 </Box>
             </Modal>
