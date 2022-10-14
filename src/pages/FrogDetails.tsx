@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowBack, Close, Warning } from "@mui/icons-material";
+import { ArrowBack, Close, Info, Warning } from "@mui/icons-material";
 import { Button, Chip, Container, Grid, IconButton, Snackbar, SnackbarContent, Stack, Typography, useMediaQuery, useTheme, Paper, Skeleton, Box, Modal, Theme, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { Froggy } from "../models/Froggy";
 import { useEthers } from "@usedapp/core";
@@ -19,7 +19,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
   createStyles({
     modal: {
       position: 'absolute' as 'absolute',
-      top: '30%',
+      top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: 700,
@@ -247,7 +247,7 @@ export default function FrogDetails() {
                 }/>
             </Snackbar>
             <Modal open={showPairingModal}>
-                <Box className={classes.modal}>
+                <Box className={classes.modal} minHeight={500}>
                     <Stack p={5}>
                         <Stack direction="row" justifyContent="space-between" pb={8}>
                             <Typography id='modal-title' variant="h4">Pair a Friend</Typography>
@@ -255,7 +255,7 @@ export default function FrogDetails() {
                             <Close fontSize='medium'/>
                             </IconButton>
                         </Stack>
-                        <Typography pb={3}>Select the friend you would like to pair your frog with.</Typography>
+                        <Typography pb={3}>Select the friend boost you would like to apply and pair with your frog</Typography>
                         {
                             friends.length && 
                             <Select labelId='friend-select' id='friends' value={selectedFriend} onChange={onFriendSelected}>
@@ -266,12 +266,15 @@ export default function FrogDetails() {
                                 }
                             </Select>
                         }
-                        <Stack direction='row' pt={3} spacing={1} alignItems='center'>
-                            <Warning color="warning"/>
-                            <Typography>Pairing will apply your boost, update your metadata and burn your friend item</Typography>
-                        </Stack>
-                        <Stack pt={5}>
-                            <Button variant='contained' sx={{width: 140, height: 44, alignSelf: 'center'}}>
+                        {
+                            selectedFriend && 
+                            <Stack direction='row' pt={3} spacing={1} alignItems='center'>
+                                <Info color="secondary"/>
+                                <Typography>Pairing will burn your friend item</Typography>
+                            </Stack>
+                        }
+                        <Stack pt={10}>
+                            <Button variant='contained' disabled={!selectedFriend} sx={{width: 140, height: 44, alignSelf: 'center'}}>
                                 <Typography>Pair</Typography>
                             </Button>
                         </Stack>
