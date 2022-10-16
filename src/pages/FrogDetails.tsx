@@ -177,7 +177,7 @@ export default function FrogDetails() {
                                                 </IconButton>
                                             </Paper>
                                         <Paper elevation={3} sx={{borderRadius: 25}}>
-                                            <IconButton className="cta" href='https://opensea.io/collection/froggyfriendsnft' target='_blank'>
+                                            <IconButton className="cta" href={`${process.env.REACT_APP_OPENSEA}/assets/ethereum/${frog?.edition}`} target='_blank'>
                                                 <img src={opensea} alt='' style={{height: 24, width: 24}}/>
                                             </IconButton>
                                         </Paper>
