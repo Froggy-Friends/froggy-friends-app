@@ -42,7 +42,6 @@ export default function FrogDetails() {
     const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const { account } = useEthers();
-    const deposits = useStakingDeposits(`${account}`);
     const [frog, setFrog] = useState<Froggy>();
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
@@ -122,21 +121,10 @@ export default function FrogDetails() {
     }
 
     const onPair = async (frog: Froggy) => {
-        if (frog.isStaked) {
-            console.log("frog is staked: ", frog);
-            // unstake
-
-            // pair
-            const proof = (await axios.post(`${process.env.REACT_APP_API}/stake`, [frog.edition])).data;
-            console.log("proof: ", proof);
-            await pair(frog.edition, proof[0], selectedFriend);
-        } else {
-            console.log("frog is not staked: ", frog);
-            // pair then stake
-            const proof = (await axios.post(`${process.env.REACT_APP_API}/stake`, [frog.edition])).data;
-            console.log("proof: ", proof);
-            // await pair(frog.edition, proof[0], selectedFriend);
-        }
+        // pair then stake
+        const proof = (await axios.post(`${process.env.REACT_APP_API}/stake`, [frog.edition])).data;
+        console.log("proof: ", proof);
+        await pair(frog.edition, proof[0], selectedFriend);
     }
 
     const onFriendSelected = (event: SelectChangeEvent) => {
@@ -219,7 +207,7 @@ export default function FrogDetails() {
                             </Grid>
                         </Stack>
                         {
-                            frog && deposits.includes(frog.edition) && 
+                            frog && 
                             <Fragment>
                                 <Stack direction='row' spacing={1}>
                                     <Info color="secondary"/>
