@@ -71,7 +71,7 @@ export default function FrogDetails() {
                     <Grid id='image' item xl={4} lg={4} md={5} sm={5} xs={12} pb={isXs ? 5 : 0}>
                         {
                             frog ? (
-                                <img src={frog?.image} alt='' width='100%' style={{borderRadius: 5}}/>
+                                <img src={frog?.image3d} alt='' width='100%' style={{borderRadius: 5}}/>
                             ) : (
                                 <Skeleton variant='rectangular' animation='wave' height={400}/>
                             )
