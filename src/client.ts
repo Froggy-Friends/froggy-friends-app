@@ -28,6 +28,14 @@ export function usePair() {
   }
 }
 
+export function useUnpair() {
+  const { send, state } = useContractFunction(stakingContract, 'unpairFriend');
+  return {
+    unpair: send,
+    unpairState: state
+  }
+}
+
 export function useBundleBuy() {
   const { send, state } = useContractFunction(ribbitItemContract, 'bundleBuy');
   return {
