@@ -46,6 +46,7 @@ export default function FrogDetails() {
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
     const [showPairingModal, setShowingPairingModal] = useState(false);
+    const [showUnpairingModal, setShowUnpairingModal] = useState(false);
     const [friends, setFriends] = useState<RibbitItem[]>([]);
     const [selectedFriend, setSelectedFriend] = useState('');
     const { pair, pairState } = usePair();
@@ -70,11 +71,14 @@ export default function FrogDetails() {
     }, [pairState])
 
     useEffect(() => {
-        if (unpairState.status === "Success") {
-            setAlertMessage("Unpaired friend");
-            setShowAlert(true);
-        }
-    })
+        if (unpairState.status === "Exception" || unpairState.status === "Fail") {
+            console.log("pair error: ", unpairState.errorMessage);
+            if (unpairState.errorMessage?.includes("execution reverted")) {
+              setAlertMessage(unpairState.errorMessage.replace(/^execution reverted:/i, ''));
+              setShowAlert(true);
+            }
+          }
+    }, [unpairState])
 
     async function getFroggy(id: string) {
         try {
@@ -123,7 +127,11 @@ export default function FrogDetails() {
         setShowingPairingModal(true);
     }
 
-    const onUnpairClick = async (frog: Froggy) => {
+    const onUnpairClick = (frog: Froggy) => {
+        setShowUnpairingModal(true);
+    }
+
+    const onUnpair = async (frog: Froggy) => {
         await unpair(frog.edition);
     }
 
@@ -320,21 +328,31 @@ export default function FrogDetails() {
                             <Stack direction='row' pt={3} spacing={1} alignItems='center'>
                                 <Info color="secondary"/>
                                 <Typography>Pairing will burn your friend item</Typography>
-                                {
-                                    pairState && pairState.transaction &&
-                                    <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${pairState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
-                                        <Typography id='modal-description' variant="h6" p={3}>
-                                        Pair Friend {pairState.status === "Success" && <Check/>} {pairState.status === "Fail" && <Warning/>}
-                                        </Typography>
-                                    </Link>
-                                }
                             </Stack>
                         }
                         {
-                            frog &&
+                            pairState && pairState.transaction &&
+                            <Stack>
+                                <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${pairState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+                                    <Typography id='modal-description' variant="h6" p={3}>
+                                    Pair Friend {pairState.status === "Success" && <Check/>} {pairState.status === "Fail" && <Warning/>}
+                                    </Typography>
+                                </Link>
+                            </Stack>
+                        }
+                        {
+                            frog && pairState.status !== 'Success' &&
                             <Stack pt={10}>
                                 <Button variant='contained' disabled={!selectedFriend} onClick={() => onPair(frog)} sx={{width: 140, height: 44, alignSelf: 'center'}}>
-                                    <Typography>Pair</Typography>
+                                    <Typography>Confirm</Typography>
+                                </Button>
+                            </Stack>
+                        }
+                        {
+                            frog && pairState.status === 'Success' &&
+                            <Stack pt={10}>
+                                <Button variant='contained' onClick={() => setShowingPairingModal(false)} sx={{width: 140, height: 44, alignSelf: 'center'}}>
+                                    <Typography>Done</Typography>
                                 </Button>
                             </Stack>
                         }
@@ -344,7 +362,54 @@ export default function FrogDetails() {
                     </Stack>
                 </Box>
             </Modal>
-</Grid>
+            <Modal open={showUnpairingModal}>
+                <Box className={classes.modal} minHeight={500}>
+                    <Stack p={5}>
+                        <Stack direction="row" justifyContent="space-between" pb={8}>
+                            <Typography id='modal-title' variant="h4">Unpairing Friend</Typography>
+                            <IconButton className="cta" size='medium' color='inherit' onClick={() => setShowUnpairingModal(false)}>
+                                <Close fontSize='medium'/>
+                            </IconButton>
+                        </Stack>
+                        <Stack direction='row' pt={3} spacing={1} alignItems='center'>
+                            <Info color="secondary"/>
+                            <Typography>Unpairing will remove your staking boost and friend</Typography>
+                        </Stack>
+                        
+                        {
+                            unpairState && unpairState.transaction &&
+                            <Stack>
+                                <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${unpairState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
+                                    <Typography id='modal-description' variant="h6" p={3}>
+                                    Unpair Friend {unpairState.status === "Success" && <Check/>} {unpairState.status === "Fail" && <Warning/>}
+                                    </Typography>
+                                </Link>
+                            </Stack>
+                        }
+                        
+                        {
+                            frog && unpairState.status !== 'Success' &&
+                            <Stack pt={10}>
+                                <Button variant='contained' onClick={() => onUnpair(frog)} sx={{width: 140, height: 44, alignSelf: 'center'}}>
+                                    <Typography>Confirm</Typography>
+                                </Button>
+                            </Stack>
+                        }
+                        {
+                            frog && unpairState.status === 'Success' &&
+                            <Stack pt={10}>
+                                <Button variant='contained' onClick={() => setShowUnpairingModal(false)} sx={{width: 140, height: 44, alignSelf: 'center'}}>
+                                    <Typography>Done</Typography>
+                                </Button>
+                            </Stack>
+                        }
+                        {
+                            unpairState.status === "Mining" && <LinearProgress  sx={{margin: 2}}/>
+                        }
+                    </Stack>
+                </Box>
+            </Modal>
+        </Grid>
 
     )
 }
