@@ -159,7 +159,7 @@ export default function Studio() {
         <Grid id='panel' container spacing={theme.spacing(8)}>
           <Grid id='selections' item xl={4}>
             <Stack>
-              <Accordion defaultExpanded>
+              <Accordion elevation={0} defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMore/>}>
                   <Stack>
                   <Typography color='secondary' variant='h5'>Unstaked Frogs</Typography>
@@ -186,7 +186,7 @@ export default function Studio() {
               </Accordion>
             </Stack>
             <Stack>
-              <Accordion defaultExpanded>
+              <Accordion elevation={0} defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMore/>}>
                   <Stack>
                   <Typography color='secondary' variant='h5'>Owned Friends</Typography>
@@ -210,7 +210,7 @@ export default function Studio() {
             </Stack>
           </Grid>
           <Grid id='preview' item xl={8}>
-            <Paper sx={{padding: 2}}>
+            <Paper elevation={0} sx={{padding: 2}}>
               <Stack minHeight={500} spacing={4}>
                 <Typography color='secondary' variant='h5'>Preview</Typography>
                 <img src={preview} alt='' height={400} width={400}/>
