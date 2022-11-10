@@ -1,5 +1,5 @@
 import { CheckCircle, Close, ExpandMore, HourglassBottom, Info, Search, Warning } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Container, Grid, IconButton, LinearProgress, Link, MenuItem, Modal, Paper, Select, Snackbar, Stack, TextField, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Container, Grid, IconButton, LinearProgress, Link, MenuItem, Modal, Paper, Select, Skeleton, Snackbar, Stack, TextField, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useEthers } from "@usedapp/core";
 import { useEffect, useState } from "react";
 import { Owned } from '../models/Owned';
@@ -37,6 +37,8 @@ export default function Studio() {
   const [search, setSearch] = useState('');
   const [frogs, setFrogs] = useState<Froggy[]>([]);
   const [friends, setFriends] = useState<RibbitItem[]>([]);
+  const [loadingFrogs, setLoadingFrogs] = useState(false);
+  const [loadingFriends, setLoadingFriends] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
@@ -53,13 +55,19 @@ export default function Studio() {
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
       try {
+        setLoadingFrogs(true);
+        setLoadingFriends(true);
         const owned = (await axios.get<Owned>(`${process.env.REACT_APP_API}/owned/${address}`)).data;
         const friends = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/owned/friends/${account}`)).data;
         setFrogs(owned.froggies.filter(frog => !frog.isStaked));
         setFriends(friends);
+        setLoadingFrogs(false);
+        setLoadingFriends(false);
       } catch (error) {
         setAlertMessage("Issue fetching froggies owned");
         setShowAlert(true);
+        setLoadingFrogs(false);
+        setLoadingFriends(false);
       }
     }
 
@@ -74,16 +82,19 @@ export default function Studio() {
       setPreview(b64);
     }
 
+    // only show prevew of existing paired frog
     if (selectedFrog && selectedFrog.isPaired) {
       layerImages([selectedFrog.image]);
       return;
     }
 
+    // show preview of unpaired frog and friend
     if (selectedFrog && selectedFriend) {
       layerImages([selectedFrog.image, selectedFriend.imageTransparent]);
       return;
     }
 
+    // switch frog in preview
     if (selectedFrog) {
       layerImages([selectedFrog.image]);
       return;
@@ -174,16 +185,28 @@ export default function Studio() {
                     value={search} onChange={onSearch}
                   />
                   <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
-                  {
-                    frogs.map(frog => {
-                      return <Grid key={frog.edition} item xl={3}>
-                        <Card onClick={() => onFrogClick(frog)}>
-                          <CardMedia component='img' src={frog.image} height={100} alt=''/>
-                        </Card>
-                      </Grid>
-                    })
-                  }
+                    {
+                      frogs.map(frog => {
+                        return <Grid key={frog.edition} item xl={3}>
+                          <Card onClick={() => onFrogClick(frog)}>
+                            <CardMedia component='img' src={frog.image} height={100} alt=''/>
+                          </Card>
+                        </Grid>
+                      })
+                    }
                   </Grid>
+                  {
+                    loadingFrogs && 
+                    <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
+                      {
+                        new Array(10).fill('').map((item, index) => {
+                          return <Grid key={index} item xl={2.4}>
+                            <Skeleton variant='rectangular' animation='wave' height={100}/>  
+                          </Grid>
+                        })
+                      }
+                    </Grid>
+                  }
                 </AccordionDetails>
               </Accordion>
             </Stack>
@@ -197,16 +220,28 @@ export default function Studio() {
                 </AccordionSummary>
                 <AccordionDetails sx={{p: 0}}>
                   <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
-                  {
-                    friends.map(friend => {
-                      return <Grid key={friend.id} item xl={3}>
-                        <Card onClick={() => onFriendClick(friend)}>
-                          <CardMedia component='img' src={friend.image} height={100} alt=''/>
-                        </Card>
-                      </Grid>
-                    })
-                  }
+                    {
+                      friends.map(friend => {
+                        return <Grid key={friend.id} item xl={3}>
+                          <Card onClick={() => onFriendClick(friend)}>
+                            <CardMedia component='img' src={friend.image} height={100} alt=''/>
+                          </Card>
+                        </Grid>
+                      })
+                    }
                   </Grid>
+                  {
+                    loadingFriends && 
+                    <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
+                      {
+                        new Array(10).fill('').map((item, index) => {
+                          return <Grid key={index} item xl={2.4}>
+                            <Skeleton variant='rectangular' animation='wave' height={100}/>  
+                          </Grid>
+                        })
+                      }
+                    </Grid>
+                  }
                 </AccordionDetails>
               </Accordion>
             </Stack>
