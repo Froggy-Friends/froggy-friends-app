@@ -9,6 +9,7 @@ import { RibbitItem } from "../models/RibbitItem";
 import { Froggy } from "../models/Froggy";
 import { usePair, useUnpair } from "../client";
 import { createStyles, makeStyles } from "@mui/styles";
+import mergeImages from 'merge-images';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -39,8 +40,11 @@ export default function Studio() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
+  const [selectedFriend, setSelectedFriend] = useState<RibbitItem>();
   const debouncedSearch = useDebounce(search, 500);
   const [showUnpairingModal, setShowUnpairingModal] = useState(false);
+  const [layers, setLayers] = useState<string[]>([]);
+  const [preview, setPreview] = useState<string>();
   const { pair, pairState } = usePair();
   const { unpair, unpairState } = useUnpair();
 
@@ -61,6 +65,17 @@ export default function Studio() {
       getFroggiesOwned(account);
     }
   }, [account])
+
+  useEffect(() => {
+    async function layerImages(frog: Froggy, friend: RibbitItem) {
+      const b64 = await mergeImages([frog.image, friend.image], { crossOrigin: 'anonymous'})
+      setPreview(b64);
+    }
+    
+    if (selectedFrog && selectedFriend) {
+      layerImages(selectedFrog, selectedFriend);
+    }
+  }, [selectedFrog, selectedFriend]);
 
   useEffect(() => {
     if (pairState.status === "Exception" || pairState.status === "Fail") {
@@ -96,6 +111,16 @@ export default function Studio() {
 
   const onFrogClick = (frog: Froggy) => {
     setSelectedFrog(frog);
+    const newLayers = [...layers];
+    newLayers.push(frog.image);
+    setLayers(newLayers);
+  }
+
+  const onFriendClick = (friend: RibbitItem) => {
+    setSelectedFriend(friend);
+    const newLayers = [...layers];
+    newLayers.push(friend.image);
+    setLayers(newLayers);
   }
 
   const onUnpairClick = (frog: Froggy) => {
@@ -122,7 +147,7 @@ export default function Studio() {
                   </Stack>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <TextField placeholder='Search items by name' fullWidth sx={{pb: 5}}
+                  <TextField placeholder='Search frog ID' fullWidth sx={{pb: 5}}
                     InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}
                     value={search} onChange={onSearch}
                   />
@@ -132,9 +157,29 @@ export default function Studio() {
                       return <Grid key={frog.edition} item spacing={2} xl={3}>
                         <Card onClick={() => onFrogClick(frog)}>
                           <CardMedia component='img' src={frog.image} height={100} alt=''/>
-                          <CardContent sx={{padding: 2}}>
-                            <Typography variant="body1">#{frog.edition}</Typography>
-                          </CardContent>
+                        </Card>
+                      </Grid>
+                    })
+                  }
+                  </Grid>
+                </AccordionDetails>
+              </Accordion>
+            </Stack>
+            <Stack>
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMore/>}>
+                  <Stack>
+                  <Typography color='secondary' variant='h5'>Owned Friends</Typography>
+                  <Typography color='secondary' variant='subtitle1'>Select a friend to pair with</Typography>
+                  </Stack>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
+                  {
+                    friends.map(friend => {
+                      return <Grid key={friend.id} item spacing={2} xl={3}>
+                        <Card onClick={() => onFriendClick(friend)}>
+                          <CardMedia component='img' src={friend.image} height={100} alt=''/>
                         </Card>
                       </Grid>
                     })
@@ -148,7 +193,7 @@ export default function Studio() {
             <Paper sx={{padding: 2}}>
               <Stack minHeight={500} spacing={4}>
                 <Typography color='secondary' variant='h5'>Preview</Typography>
-                <img src={selectedFrog?.image} alt='' height={400} width={400}/>
+                <img src={preview} alt='' height={400} width={400}/>
                 {
                   selectedFrog && selectedFrog.isPaired &&
                   <Grid id='buttons' container>
