@@ -1,5 +1,5 @@
 import { Close, ExpandMore, Search } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, CardMedia, Container, Grid, IconButton, Snackbar, Stack, TextField, Typography, useTheme } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, CardMedia, Container, Grid, IconButton, Paper, Snackbar, Stack, TextField, Typography, useTheme } from "@mui/material";
 import { useEthers } from "@usedapp/core";
 import { useEffect, useState } from "react";
 import { Owned } from '../models/Owned';
@@ -53,11 +53,11 @@ export default function Studio() {
   return (
     <Grid id='studio' container direction='column' justifyContent='start' minHeight={800} pt={10}>
       <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
-        <Typography color='secondary' variant='h3'>Froggy Studio</Typography>
+        <Typography color='secondary' variant='h3' pb={5}>Froggy Studio</Typography>
 
         <Grid id='panel' container spacing={theme.spacing(8)}>
           <Grid id='selections' item xl={4}>
-            <Stack pt={5}>
+            <Stack>
               <Accordion defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMore/>}>
                   <Stack>
@@ -66,17 +66,17 @@ export default function Studio() {
                   </Stack>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <TextField placeholder='Search items by name' fullWidth 
+                  <TextField placeholder='Search items by name' fullWidth sx={{pb: 5}}
                     InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}
                     value={search} onChange={onSearch}
                   />
-                  <Grid container spacing={2} pt={2}>
+                  <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
                   {
                     frogs.froggies.map(frog => {
-                      return <Grid key={frog.edition} item spacing={2} xl={2}>
+                      return <Grid key={frog.edition} item spacing={2} xl={3}>
                         <Card>
-                          <CardMedia component='img' src={frog.image} height={50} width={50} alt=''/>
-                          <CardContent sx={{padding: 0}}>
+                          <CardMedia component='img' src={frog.image} height={100} alt=''/>
+                          <CardContent sx={{padding: 2}}>
                             <Typography variant="body1">#{frog.edition}</Typography>
                           </CardContent>
                         </Card>
@@ -89,9 +89,11 @@ export default function Studio() {
             </Stack>
           </Grid>
           <Grid id='preview' item xl={8}>
-            <Stack pt={5}>
-              <Typography color='secondary' variant='h5'>Preview</Typography>
-            </Stack>
+            <Paper sx={{padding: 2}}>
+              <Stack minHeight={500}>
+                <Typography color='secondary' variant='h5'>Preview</Typography>
+              </Stack>
+            </Paper>
           </Grid>
         </Grid>
       </Container>
