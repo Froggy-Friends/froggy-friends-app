@@ -274,7 +274,7 @@ export default function Studio() {
                       </Stack>
                       {
                       selectedFrog && selectedFrog.isPaired &&
-                      <Stack spacing={4} pt={5}>
+                      <Stack spacing={4} pt={2}>
                           <Stack direction='row' spacing={1} alignItems='center'>
                             <Info color="secondary"/>
                             <Typography>Friend preview unavailable for paired frogs</Typography>
