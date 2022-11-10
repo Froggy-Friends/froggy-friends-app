@@ -162,7 +162,7 @@ export default function Studio() {
               <Accordion elevation={0} defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMore/>}>
                   <Stack>
-                  <Typography color='secondary' variant='h5'>Unstaked Frogs</Typography>
+                  <Typography color='secondary' variant='h4'>Unstaked Frogs</Typography>
                   <Typography color='secondary' variant='subtitle1'>Select a frog to get started</Typography>
                   </Stack>
                 </AccordionSummary>
@@ -189,7 +189,7 @@ export default function Studio() {
               <Accordion elevation={0} defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMore/>}>
                   <Stack>
-                  <Typography color='secondary' variant='h5'>Owned Friends</Typography>
+                  <Typography color='secondary' variant='h4'>Owned Friends</Typography>
                   <Typography color='secondary' variant='subtitle1'>Select a friend to pair</Typography>
                   </Stack>
                 </AccordionSummary>
@@ -210,10 +210,27 @@ export default function Studio() {
             </Stack>
           </Grid>
           <Grid id='preview' item xl={8}>
-            <Paper elevation={0} sx={{padding: 2}}>
-              <Stack minHeight={500} spacing={4}>
-                <Typography color='secondary' variant='h5'>Preview</Typography>
-                <img src={preview} alt='' height={400} width={400}/>
+            <Paper elevation={0} sx={{padding: 2, minHeight: 500}}>
+              <Stack spacing={4}>
+                <Typography color='secondary' variant='h4'>Preview</Typography>
+                <Stack direction='row' spacing={4}>
+                  <img src={preview} alt='' height={400} width={400}/>
+                  <Stack>
+                    <Typography variant='h5' fontWeight='bold' pb={3}>{selectedFrog?.name} Traits</Typography>
+                    <Grid container>
+                        {
+                            selectedFrog?.attributes.map((trait) => {
+                                return (
+                                    <Grid key={trait.trait_type} item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
+                                        <Typography fontWeight='bold'>{trait.trait_type}</Typography>
+                                        <Typography>{trait.value}</Typography>
+                                    </Grid>
+                                )
+                            })
+                        }
+                    </Grid>
+                  </Stack>
+                </Stack>
                 {
                   selectedFrog && selectedFrog.isPaired &&
                   <Stack spacing={4}>
