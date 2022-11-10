@@ -47,7 +47,8 @@ export default function Studio() {
   const [preview, setPreview] = useState<string>();
   const { pair, pairState } = usePair();
   const { unpair, unpairState } = useUnpair();
-  const isSm = useMediaQuery(theme.breakpoints.down('md'));
+  const isMd = useMediaQuery(theme.breakpoints.down('lg'));
+  const isTablet = useMediaQuery(theme.breakpoints.between(500, 900));
 
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
@@ -158,7 +159,7 @@ export default function Studio() {
         <Typography color='secondary' variant='h3' pb={5}>Froggy Studio Beta</Typography>
 
         <Grid id='panel' container spacing={theme.spacing(8)}>
-          <Grid id='selections' item xl={4}>
+          <Grid id='selections' item xl={4} lg={4} md={6} sm={12}>
             <Stack pb={5}>
               <Accordion elevation={0} defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMore/>} sx={{p: 0}}>
@@ -209,22 +210,18 @@ export default function Studio() {
                 </AccordionDetails>
               </Accordion>
             </Stack>
-            <Stack pb={5}>
-              <Typography color='secondary' variant='h4'>Owned Traits</Typography>
-              <Typography color='secondary' variant='subtitle1'>Coming Soon</Typography>
-            </Stack>
           </Grid>
           {
             selectedFrog &&
-            <Grid id='preview' item xl={8}>
+            <Grid id='preview' item xl={8} lg={8} md={6} sm={12}>
               <Paper elevation={0} sx={{ minHeight: 500}}>
                 <Stack spacing={4}>
                   <Typography color='secondary' variant='h4'>Preview</Typography>
-                  <Grid container direction={isSm ? 'column' : 'row'} justifyContent='space-between'>
-                    <Grid item xl={6} pb={3}>
-                      <img src={preview} alt='' width='100%'/>
+                  <Grid container direction={isMd ? 'column' : 'row'} justifyContent='space-between'>
+                    <Grid item xl={6} lg={6} md={6} sm={6} pb={3}>
+                      <img src={preview} alt='' width={isTablet ? '50%' : '100%'}/>
                     </Grid>
-                    <Grid item xl={5}>
+                    <Grid item xl={5} lg={5} md={5} sm={5}>
                       <Stack>
                         <Typography variant='h5' fontWeight='bold' pb={5}>{selectedFrog.name}</Typography>
                         <Grid container>
