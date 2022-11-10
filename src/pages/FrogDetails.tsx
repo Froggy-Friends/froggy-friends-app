@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowBack, Check, Close, Info, Warning } from "@mui/icons-material";
+import { ArrowBack, Check, CheckCircle, Close, HourglassBottom, Info, Warning } from "@mui/icons-material";
 import { Button, Chip, Container, Grid, IconButton, Snackbar, SnackbarContent, Stack, Typography, useMediaQuery, useTheme, Paper, Skeleton, Box, Modal, Theme, Select, MenuItem, SelectChangeEvent, Link, LinearProgress } from "@mui/material";
 import { Froggy } from "../models/Froggy";
 import { useEthers } from "@usedapp/core";
@@ -137,12 +137,10 @@ export default function FrogDetails() {
 
     const onPair = async (frog: Froggy) => {
         const proof = (await axios.post(`${process.env.REACT_APP_API}/stake`, [frog.edition])).data;
-        console.log("proof: ", proof);
         await pair(frog.edition, proof[0], selectedFriend);
     }
 
     const onFriendSelected = (event: SelectChangeEvent) => {
-        console.log("change: ", event.target.value);
         setSelectedFriend(event.target.value);
     }
 
@@ -332,16 +330,19 @@ export default function FrogDetails() {
                         }
                         {
                             pairState && pairState.transaction &&
-                            <Stack>
-                                <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${pairState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
-                                    <Typography id='modal-description' variant="h6" p={3}>
-                                    Pair Friend {pairState.status === "Success" && <Check/>} {pairState.status === "Fail" && <Warning/>}
+                            <Stack pt={3}>
+                                <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${pairState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>
+                                    <Typography id='modal-description' variant="h6">
+                                    {pairState.status === "Success" && <CheckCircle/>} 
+                                    {pairState.status === "Fail" && <Warning/>} 
+                                    {pairState.status === 'Mining' && <HourglassBottom/>}
+                                    Pair friend transaction
                                     </Typography>
                                 </Link>
                             </Stack>
                         }
                         {
-                            frog && pairState.status !== 'Success' &&
+                            frog && pairState.status !== 'Success' && pairState.status !== 'Mining' &&
                             <Stack pt={10}>
                                 <Button variant='contained' disabled={!selectedFriend} onClick={() => onPair(frog)} sx={{width: 140, height: 44, alignSelf: 'center'}}>
                                     <Typography>Confirm</Typography>
@@ -378,17 +379,20 @@ export default function FrogDetails() {
                         
                         {
                             unpairState && unpairState.transaction &&
-                            <Stack>
-                                <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${unpairState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer'}}>
-                                    <Typography id='modal-description' variant="h6" p={3}>
-                                    Unpair Friend {unpairState.status === "Success" && <Check/>} {unpairState.status === "Fail" && <Warning/>}
+                            <Stack pt={3}>
+                                <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${unpairState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>
+                                    <Typography id='modal-description' variant="h6">
+                                    {unpairState.status === "Success" && <CheckCircle/>} 
+                                    {unpairState.status === "Fail" && <Warning/>} 
+                                    {unpairState.status === 'Mining' && <HourglassBottom/>}
+                                    Unpair Friend
                                     </Typography>
                                 </Link>
                             </Stack>
                         }
                         
                         {
-                            frog && unpairState.status !== 'Success' &&
+                            frog && unpairState.status !== 'Success' && unpairState.status !== 'Mining' &&
                             <Stack pt={10}>
                                 <Button variant='contained' onClick={() => onUnpair(frog)} sx={{width: 140, height: 44, alignSelf: 'center'}}>
                                     <Typography>Confirm</Typography>
