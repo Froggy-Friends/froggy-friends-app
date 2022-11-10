@@ -1,5 +1,5 @@
 import { Close, ExpandMore, Search } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionSummary, Container, Grid, IconButton, Snackbar, Stack, TextField, Typography, useTheme } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Card, CardContent, CardMedia, Container, Grid, IconButton, Snackbar, Stack, TextField, Typography, useTheme } from "@mui/material";
 import { useEthers } from "@usedapp/core";
 import { useEffect, useState } from "react";
 import { Owned } from '../models/Owned';
@@ -60,14 +60,30 @@ export default function Studio() {
             <Stack pt={5}>
               <Accordion defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMore/>}>
+                  <Stack>
                   <Typography color='secondary' variant='h5'>Owned Frogs</Typography>
+                  <Typography color='secondary' variant='subtitle1'>Select a frog to get started</Typography>
+                  </Stack>
                 </AccordionSummary>
                 <AccordionDetails>
                   <TextField placeholder='Search items by name' fullWidth 
                     InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}
                     value={search} onChange={onSearch}
                   />
-
+                  <Grid container spacing={2} pt={2}>
+                  {
+                    frogs.froggies.map(frog => {
+                      return <Grid key={frog.edition} item spacing={2} xl={2}>
+                        <Card>
+                          <CardMedia component='img' src={frog.image} height={50} width={50} alt=''/>
+                          <CardContent sx={{padding: 0}}>
+                            <Typography variant="body1">#{frog.edition}</Typography>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    })
+                  }
+                  </Grid>
                 </AccordionDetails>
               </Accordion>
             </Stack>

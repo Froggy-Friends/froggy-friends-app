@@ -85,7 +85,7 @@ export default function Header() {
                     isDesktop && <Typography variant='h6' alignSelf='center' fontWeight='bold' pl={2}>Froggy Friends</Typography>
                   }
                 </Grid>
-                <Grid id='links' container item display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' xl={3} lg={3} md={4}>
+                <Grid id='links' container item display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' xl={4} lg={4} md={5}>
                   <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                     <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => navigate("/staking")}>Stake</Typography>
                   </Grid>
