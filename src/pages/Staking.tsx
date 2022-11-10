@@ -107,7 +107,7 @@ export default function Staking() {
     async function getFroggiesOwned(address: string) {
       try {
         setLoading(true);
-        const response = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: address});
+        const response = await axios.get(`${process.env.REACT_APP_API}/owned/${address}`);
         setOwned(response.data);
         setLoading(false);
       } catch (error) {
@@ -138,7 +138,7 @@ export default function Staking() {
   useEffect(() => {
     async function fetchFroggies() {
       setLoading(true);
-      const ownedResponse = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: account});
+      const ownedResponse = await axios.get(`${process.env.REACT_APP_API}/owned${account}`);
       setOwned(ownedResponse.data);
       setLoading(false);
     }
@@ -214,7 +214,7 @@ export default function Staking() {
       setFroggiesToUnstake([]);
 
       setLoading(true);
-      const ownedResponse = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: account});
+      const ownedResponse = await axios.get(`${process.env.REACT_APP_API}/owned/${account}`);
       setOwned(ownedResponse.data);
       setLoading(false);
     } catch (error) {

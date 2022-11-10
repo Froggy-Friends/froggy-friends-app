@@ -29,6 +29,9 @@ export default function getTheme(isDarkMode: boolean) {
       },
       error: {
         main: configs.error
+      },
+      warning: {
+        main: configs.gold
       }
     },
     typography: {
