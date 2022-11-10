@@ -248,7 +248,7 @@ export default function Studio() {
           </Grid>
           {
             selectedFrog &&
-            <Grid id='preview' item xl={8} lg={8} md={6} sm={12}>
+            <Grid id='preview' item xl={8} lg={8} md={6} sm={12} mt={3}>
               <Paper elevation={0} sx={{ minHeight: 500}}>
                 <Stack spacing={4}>
                   <Typography color='secondary' variant='h4'>Preview</Typography>
