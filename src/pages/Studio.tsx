@@ -1,5 +1,5 @@
 import { CheckCircle, Close, ExpandMore, HourglassBottom, Info, Search, Warning } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, CardMedia, Container, Grid, IconButton, LinearProgress, Link, Modal, Paper, Snackbar, Stack, TextField, Theme, Typography, useTheme } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Container, Grid, IconButton, LinearProgress, Link, MenuItem, Modal, Paper, Select, Snackbar, Stack, TextField, Theme, Typography, useTheme } from "@mui/material";
 import { useEthers } from "@usedapp/core";
 import { useEffect, useState } from "react";
 import { Owned } from '../models/Owned';
@@ -35,13 +35,14 @@ export default function Studio() {
   const theme = useTheme();
   const { account } = useEthers();
   const [search, setSearch] = useState('');
-  const [frogs, setFrogs] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
+  const [frogs, setFrogs] = useState<Froggy[]>([]);
   const [friends, setFriends] = useState<RibbitItem[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
   const [selectedFriend, setSelectedFriend] = useState<RibbitItem>();
   const debouncedSearch = useDebounce(search, 500);
+  const [showPairingModal, setShowPairingModal] = useState(false);
   const [showUnpairingModal, setShowUnpairingModal] = useState(false);
   const [preview, setPreview] = useState<string>();
   const { pair, pairState } = usePair();
@@ -50,9 +51,9 @@ export default function Studio() {
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
       try {
-        const frogs = (await axios.get(`${process.env.REACT_APP_API}/owned/${address}`)).data;
+        const owned = (await axios.get<Owned>(`${process.env.REACT_APP_API}/owned/${address}`)).data;
         const friends = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/owned/friends/${account}`)).data;
-        setFrogs(frogs);
+        setFrogs(owned.froggies.filter(frog => !frog.isStaked));
         setFriends(friends);
       } catch (error) {
         setAlertMessage("Issue fetching froggies owned");
@@ -69,6 +70,11 @@ export default function Studio() {
     async function layerImages(sources: any[]) {
       const b64 = await mergeImages(sources, { crossOrigin: 'anonymous'})
       setPreview(b64);
+    }
+
+    if (selectedFrog && selectedFrog.isPaired) {
+      layerImages([selectedFrog.image]);
+      return;
     }
 
     if (selectedFrog && selectedFriend) {
@@ -122,18 +128,33 @@ export default function Studio() {
     setSelectedFriend(friend);
   }
 
+  const onPairClick = (frog: Froggy) => {
+    setShowPairingModal(true);
+  }
+
   const onUnpairClick = (frog: Froggy) => {
     setShowUnpairingModal(true);
   }
+
+  const onPair = async (frog: Froggy, friendId: number) => {
+    const proof = (await axios.post(`${process.env.REACT_APP_API}/stake`, [frog.edition])).data;
+    await pair(frog.edition, proof[0], friendId);
+}
 
   const onUnpair = async (frog: Froggy) => {
     await unpair(frog.edition);
   }
 
+  const onPairingComplete = () => {
+    setShowPairingModal(false);
+    setSelectedFrog(undefined);
+    setSelectedFriend(undefined);
+  }
+
   return (
     <Grid id='studio' container direction='column' justifyContent='start' minHeight={800} pt={10}>
       <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
-        <Typography color='secondary' variant='h3' pb={5}>Froggy Studio</Typography>
+        <Typography color='secondary' variant='h3' pb={5}>Froggy Studio (Beta)</Typography>
 
         <Grid id='panel' container spacing={theme.spacing(8)}>
           <Grid id='selections' item xl={4}>
@@ -141,7 +162,7 @@ export default function Studio() {
               <Accordion defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMore/>}>
                   <Stack>
-                  <Typography color='secondary' variant='h5'>Owned Frogs</Typography>
+                  <Typography color='secondary' variant='h5'>Unstaked Frogs</Typography>
                   <Typography color='secondary' variant='subtitle1'>Select a frog to get started</Typography>
                   </Stack>
                 </AccordionSummary>
@@ -152,8 +173,8 @@ export default function Studio() {
                   />
                   <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
                   {
-                    frogs.froggies.map(frog => {
-                      return <Grid key={frog.edition} item spacing={2} xl={3}>
+                    frogs.map(frog => {
+                      return <Grid key={frog.edition} item xl={3}>
                         <Card onClick={() => onFrogClick(frog)}>
                           <CardMedia component='img' src={frog.image} height={100} alt=''/>
                         </Card>
@@ -165,7 +186,7 @@ export default function Studio() {
               </Accordion>
             </Stack>
             <Stack>
-              <Accordion>
+              <Accordion defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMore/>}>
                   <Stack>
                   <Typography color='secondary' variant='h5'>Owned Friends</Typography>
@@ -176,7 +197,7 @@ export default function Studio() {
                   <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
                   {
                     friends.map(friend => {
-                      return <Grid key={friend.id} item spacing={2} xl={3}>
+                      return <Grid key={friend.id} item xl={3}>
                         <Card onClick={() => onFriendClick(friend)}>
                           <CardMedia component='img' src={friend.image} height={100} alt=''/>
                         </Card>
@@ -195,9 +216,23 @@ export default function Studio() {
                 <img src={preview} alt='' height={400} width={400}/>
                 {
                   selectedFrog && selectedFrog.isPaired &&
+                  <Stack spacing={4}>
+                      <Stack direction='row' spacing={1} alignItems='center'>
+                        <Info color="secondary"/>
+                        <Typography>Friend preview unavailable for paired frogs</Typography>
+                    </Stack>
+                    <Grid id='buttons' container>
+                        <Button variant='contained' sx={{height: 50}} onClick={() => onUnpairClick(selectedFrog)}>
+                            <Typography>Unpair Friend</Typography>
+                        </Button>
+                    </Grid>
+                  </Stack>
+                }
+                {
+                  selectedFrog && selectedFriend && !selectedFrog.isPaired &&
                   <Grid id='buttons' container>
-                      <Button variant='contained' sx={{height: 50}} onClick={() => onUnpairClick(selectedFrog)}>
-                          <Typography>Unpair Friend</Typography>
+                      <Button variant='contained' sx={{height: 50}} onClick={() => onPairClick(selectedFrog)}>
+                          <Typography>Pair Friend</Typography>
                       </Button>
                   </Grid>
                 }
@@ -218,6 +253,58 @@ export default function Studio() {
           </IconButton>
         }
       />
+      <Modal open={showPairingModal}>
+          <Box className={classes.modal} minHeight={500}>
+              <Stack p={5}>
+                  <Stack direction="row" justifyContent="space-between" pb={8}>
+                      <Typography id='modal-title' variant="h4">Pairing a Friend</Typography>
+                      <IconButton className="cta" size='medium' color='inherit' onClick={() => setShowPairingModal(false)}>
+                          <Close fontSize='medium'/>
+                      </IconButton>
+                  </Stack>
+                  {
+                      selectedFriend && 
+                      <Stack direction='row' pt={3} spacing={1} alignItems='center'>
+                          <Info color="secondary"/>
+                          <Typography>Pairing will burn your friend item</Typography>
+                      </Stack>
+                  }
+                  {
+                      pairState && pairState.transaction &&
+                      <Stack pt={3}>
+                          <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${pairState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>
+                              <Typography id='modal-description' variant="h6">
+                              {pairState.status === "Success" && <CheckCircle/>} 
+                              {pairState.status === "Fail" && <Warning/>} 
+                              {pairState.status === 'Mining' && <HourglassBottom/>}
+                              Pair friend transaction
+                              </Typography>
+                          </Link>
+                      </Stack>
+                  }
+                  {
+                      selectedFrog && selectedFriend && pairState.status !== 'Success' && pairState.status !== 'Mining' &&
+                      <Stack pt={10}>
+                          <Button variant='contained' disabled={!selectedFriend} onClick={() => onPair(selectedFrog, selectedFriend.id)} sx={{width: 140, height: 44, alignSelf: 'center'}}>
+                              <Typography>Confirm</Typography>
+                          </Button>
+                      </Stack>
+                  }
+                  {
+                      selectedFrog && pairState.status === 'Success' &&
+                      <Stack pt={10}>
+                        <Typography pb={5}>Your frog and friend are paired now. Your metadata will refresh shortly.</Typography>
+                          <Button variant='contained' onClick={onPairingComplete} sx={{width: 140, height: 44, alignSelf: 'center'}}>
+                              <Typography>Done</Typography>
+                          </Button>
+                      </Stack>
+                  }
+                  {
+                      pairState.status === "Mining" && <LinearProgress  sx={{margin: 2}}/>
+                  }
+              </Stack>
+          </Box>
+      </Modal>
       <Modal open={showUnpairingModal}>
           <Box className={classes.modal} minHeight={500}>
               <Stack p={5}>
