@@ -6,6 +6,7 @@ import { Owned } from '../models/Owned';
 import useDebounce from "../hooks/useDebounce";
 import axios from "axios";
 import { RibbitItem } from "../models/RibbitItem";
+import { Froggy } from "../models/Froggy";
 
 
 export default function Studio() {
@@ -16,6 +17,7 @@ export default function Studio() {
   const [friends, setFriends] = useState<RibbitItem[]>([]);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
+  const [selectedFrog, setSelectedFrog] = useState<Froggy>();
   const debouncedSearch = useDebounce(search, 500);
   console.log("owned: ", frogs);
   console.log("friends: ", friends);
@@ -50,6 +52,10 @@ export default function Studio() {
     setShowAlert(false);
   };
 
+  const onFrogClick = (frog: Froggy) => {
+    setSelectedFrog(frog);
+  }
+
   return (
     <Grid id='studio' container direction='column' justifyContent='start' minHeight={800} pt={10}>
       <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
@@ -74,7 +80,7 @@ export default function Studio() {
                   {
                     frogs.froggies.map(frog => {
                       return <Grid key={frog.edition} item spacing={2} xl={3}>
-                        <Card>
+                        <Card onClick={() => onFrogClick(frog)}>
                           <CardMedia component='img' src={frog.image} height={100} alt=''/>
                           <CardContent sx={{padding: 2}}>
                             <Typography variant="body1">#{frog.edition}</Typography>
@@ -90,8 +96,9 @@ export default function Studio() {
           </Grid>
           <Grid id='preview' item xl={8}>
             <Paper sx={{padding: 2}}>
-              <Stack minHeight={500}>
+              <Stack minHeight={500} spacing={4}>
                 <Typography color='secondary' variant='h5'>Preview</Typography>
+                <img src={selectedFrog?.image} alt='' height={400} width={400}/>  
               </Stack>
             </Paper>
           </Grid>
