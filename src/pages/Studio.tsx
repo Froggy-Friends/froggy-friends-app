@@ -57,6 +57,8 @@ export default function Studio() {
       try {
         setLoadingFrogs(true);
         setLoadingFriends(true);
+        setFrogs([]);
+        setFriends([]);
         const owned = (await axios.get<Owned>(`${process.env.REACT_APP_API}/owned/${address}`)).data;
         const friends = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/owned/friends/${account}`)).data;
         setFrogs(owned.froggies.filter(frog => !frog.isStaked));
@@ -184,7 +186,7 @@ export default function Studio() {
                     InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}
                     value={search} onChange={onSearch}
                   />
-                  <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
+                  <Grid className="scrollable" container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
                     {
                       frogs.map(frog => {
                         return <Grid key={frog.edition} item xl={3}>
@@ -197,7 +199,7 @@ export default function Studio() {
                   </Grid>
                   {
                     loadingFrogs && 
-                    <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
+                    <Grid className="scrollable" container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
                       {
                         new Array(10).fill('').map((item, index) => {
                           return <Grid key={index} item xl={2.4}>
@@ -219,7 +221,7 @@ export default function Studio() {
                   </Stack>
                 </AccordionSummary>
                 <AccordionDetails sx={{p: 0}}>
-                  <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
+                  <Grid className="scrollable" container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
                     {
                       friends.map(friend => {
                         return <Grid key={friend.id} item xl={3}>
@@ -232,7 +234,7 @@ export default function Studio() {
                   </Grid>
                   {
                     loadingFriends && 
-                    <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
+                    <Grid className="scrollable" container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
                       {
                         new Array(10).fill('').map((item, index) => {
                           return <Grid key={index} item xl={2.4}>

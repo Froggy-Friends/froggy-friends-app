@@ -198,6 +198,9 @@ export default function getTheme(isDarkMode: boolean) {
                 borderRadius: 5,
                 height: 50,
                 width: 50
+              },
+              "::-webkit-scrollbar-corner": {
+                backgroundColor: 'transparent'
               }
             }
           }
