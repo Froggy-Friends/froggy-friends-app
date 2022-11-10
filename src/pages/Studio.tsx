@@ -272,30 +272,30 @@ export default function Studio() {
                             }
                         </Grid>
                       </Stack>
-                    </Grid>
-                  </Grid>
-                  {
-                    selectedFrog && selectedFrog.isPaired &&
-                    <Stack spacing={4}>
-                        <Stack direction='row' spacing={1} alignItems='center'>
-                          <Info color="secondary"/>
-                          <Typography>Friend preview unavailable for paired frogs</Typography>
+                      {
+                      selectedFrog && selectedFrog.isPaired &&
+                      <Stack spacing={4} pt={5}>
+                          <Stack direction='row' spacing={1} alignItems='center'>
+                            <Info color="secondary"/>
+                            <Typography>Friend preview unavailable for paired frogs</Typography>
+                        </Stack>
+                        <Grid id='buttons' container>
+                            <Button variant='contained' sx={{height: 50}} onClick={() => onUnpairClick(selectedFrog)}>
+                                <Typography>Unpair Friend</Typography>
+                            </Button>
+                        </Grid>
                       </Stack>
-                      <Grid id='buttons' container>
-                          <Button variant='contained' sx={{height: 50}} onClick={() => onUnpairClick(selectedFrog)}>
-                              <Typography>Unpair Friend</Typography>
+                    }
+                    {
+                      selectedFrog && selectedFriend && !selectedFrog.isPaired &&
+                      <Grid id='buttons' container pt={5}>
+                          <Button variant='contained' sx={{height: 50}} onClick={() => onPairClick(selectedFrog)}>
+                              <Typography>Pair Friend</Typography>
                           </Button>
                       </Grid>
-                    </Stack>
-                  }
-                  {
-                    selectedFrog && selectedFriend && !selectedFrog.isPaired &&
-                    <Grid id='buttons' container>
-                        <Button variant='contained' sx={{height: 50}} onClick={() => onPairClick(selectedFrog)}>
-                            <Typography>Pair Friend</Typography>
-                        </Button>
+                    }
                     </Grid>
-                  }
+                  </Grid>
                 </Stack>
               </Paper>
             </Grid>
