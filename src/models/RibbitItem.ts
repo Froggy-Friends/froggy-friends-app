@@ -10,6 +10,7 @@ export interface RibbitItem {
   community: boolean;
   endDate: number;
   image: string;
+  imageTransparent: string;
   previewImage: string;
   price: number;
   percentage: number;

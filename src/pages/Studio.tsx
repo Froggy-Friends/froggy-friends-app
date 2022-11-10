@@ -43,7 +43,6 @@ export default function Studio() {
   const [selectedFriend, setSelectedFriend] = useState<RibbitItem>();
   const debouncedSearch = useDebounce(search, 500);
   const [showUnpairingModal, setShowUnpairingModal] = useState(false);
-  const [layers, setLayers] = useState<string[]>([]);
   const [preview, setPreview] = useState<string>();
   const { pair, pairState } = usePair();
   const { unpair, unpairState } = useUnpair();
@@ -67,13 +66,19 @@ export default function Studio() {
   }, [account])
 
   useEffect(() => {
-    async function layerImages(frog: Froggy, friend: RibbitItem) {
-      const b64 = await mergeImages([frog.image, friend.image], { crossOrigin: 'anonymous'})
+    async function layerImages(sources: any[]) {
+      const b64 = await mergeImages(sources, { crossOrigin: 'anonymous'})
       setPreview(b64);
     }
-    
+
     if (selectedFrog && selectedFriend) {
-      layerImages(selectedFrog, selectedFriend);
+      layerImages([selectedFrog.image, selectedFriend.imageTransparent]);
+      return;
+    }
+
+    if (selectedFrog) {
+      layerImages([selectedFrog.image]);
+      return;
     }
   }, [selectedFrog, selectedFriend]);
 
@@ -111,16 +116,10 @@ export default function Studio() {
 
   const onFrogClick = (frog: Froggy) => {
     setSelectedFrog(frog);
-    const newLayers = [...layers];
-    newLayers.push(frog.image);
-    setLayers(newLayers);
   }
 
   const onFriendClick = (friend: RibbitItem) => {
     setSelectedFriend(friend);
-    const newLayers = [...layers];
-    newLayers.push(friend.image);
-    setLayers(newLayers);
   }
 
   const onUnpairClick = (frog: Froggy) => {
@@ -170,7 +169,7 @@ export default function Studio() {
                 <AccordionSummary expandIcon={<ExpandMore/>}>
                   <Stack>
                   <Typography color='secondary' variant='h5'>Owned Friends</Typography>
-                  <Typography color='secondary' variant='subtitle1'>Select a friend to pair with</Typography>
+                  <Typography color='secondary' variant='subtitle1'>Select a friend to pair</Typography>
                   </Stack>
                 </AccordionSummary>
                 <AccordionDetails>
