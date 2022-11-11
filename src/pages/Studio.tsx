@@ -14,9 +14,17 @@ import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import hi from '../images/hi.png';
+import banner from '../images/friends.png';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
+    banner: {
+      backgroundImage: `url(${banner})`, 
+      backgroundSize: 'cover',
+      [theme.breakpoints.up('xl')]: {
+        backgroundPositionY: -800
+      }
+    },
     modal: {
       position: 'absolute' as 'absolute',
       top: '50%',
@@ -187,10 +195,11 @@ export default function Studio() {
   }
 
   return (
-    <Grid id='studio' container direction='column' justifyContent='start' minHeight={800} pt={10}>
+    <Grid id='studio' container direction='column' justifyContent='start' minHeight={800} pt={8}>
+      <Paper elevation={3}>
+        <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
+      </Paper>
       <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
-        <Typography color='secondary' variant='h3' pb={5}>Froggy Studio Beta</Typography>
-
         <Grid id='panel' container spacing={theme.spacing(8)}>
           <Grid id='selections' item xl={4} lg={4} md={6} sm={12}>
             <Stack pb={5}>
