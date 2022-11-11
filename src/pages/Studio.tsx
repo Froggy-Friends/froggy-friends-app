@@ -186,10 +186,10 @@ export default function Studio() {
                     InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}
                     value={search} onChange={onSearch}
                   />
-                  <Grid className="scrollable" container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
+                  <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
                     {
                       frogs.map(frog => {
-                        return <Grid key={frog.edition} item xl={3}>
+                        return <Grid key={frog.edition} item p={1} xl={3}>
                           <Card onClick={() => onFrogClick(frog)}>
                             <CardMedia component='img' src={frog.image} height={100} alt=''/>
                           </Card>
@@ -199,10 +199,10 @@ export default function Studio() {
                   </Grid>
                   {
                     loadingFrogs && 
-                    <Grid className="scrollable" container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
+                    <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
                       {
                         new Array(10).fill('').map((item, index) => {
-                          return <Grid key={index} item xl={2.4}>
+                          return <Grid key={index} item p={1} xl={2.4}>
                             <Skeleton variant='rectangular' animation='wave' height={100}/>  
                           </Grid>
                         })
@@ -221,10 +221,10 @@ export default function Studio() {
                   </Stack>
                 </AccordionSummary>
                 <AccordionDetails sx={{p: 0}}>
-                  <Grid className="scrollable" container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
+                  <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
                     {
                       friends.map(friend => {
-                        return <Grid key={friend.id} item xl={3}>
+                        return <Grid key={friend.id} item p={1} xl={3}>
                           <Card onClick={() => onFriendClick(friend)}>
                             <CardMedia component='img' src={friend.image} height={100} alt=''/>
                           </Card>
@@ -234,10 +234,10 @@ export default function Studio() {
                   </Grid>
                   {
                     loadingFriends && 
-                    <Grid className="scrollable" container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
+                    <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
                       {
                         new Array(10).fill('').map((item, index) => {
-                          return <Grid key={index} item xl={2.4}>
+                          return <Grid key={index} item p={1} xl={2.4}>
                             <Skeleton variant='rectangular' animation='wave' height={100}/>  
                           </Grid>
                         })
