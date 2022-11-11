@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowBack, Close } from "@mui/icons-material";
-import { Button, Chip, Container, Grid, IconButton, Snackbar, SnackbarContent, Stack, Typography, useMediaQuery, useTheme, Paper, Skeleton } from "@mui/material";
+import { Button, Chip, Container, Grid, IconButton, Snackbar, SnackbarContent, Stack, Typography, useMediaQuery, useTheme, Paper, Skeleton, Theme, SelectChangeEvent } from "@mui/material";
 import { Froggy } from "../models/Froggy";
 import { useEthers } from "@usedapp/core";
-import { useStakingDeposits } from '../client';
 import { saveAs } from 'file-saver';
 import axios from "axios";
 import ribbitToken from '../images/ribbit.gif';
@@ -20,7 +19,6 @@ export default function FrogDetails() {
     const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const { account } = useEthers();
-    const deposits = useStakingDeposits(`${account}`);
     const [frog, setFrog] = useState<Froggy>();
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
@@ -34,7 +32,7 @@ export default function FrogDetails() {
 
     async function getFroggy(id: string) {
         try {
-          const response = await axios.post<Froggy>(`${process.env.REACT_APP_API}/frog/${id}`);
+          const response = await axios.get<Froggy>(`${process.env.REACT_APP_API}/frog/${id}`);
           let item = response.data;
           setFrog(item);
         } catch (error) {
@@ -77,8 +75,8 @@ export default function FrogDetails() {
                             )
                         }
                     </Grid>
-                    <Grid id='info' container item direction='column' justifyContent='space-between' minHeight={isSm ? 400 : 'inherit'} xl={7} lg={7} md={6} sm={6} xs={12}>
-                        <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center'>
+                    <Grid id='info' container item direction='column' minHeight={isSm ? 400 : 'inherit'} xl={7} lg={7} md={6} sm={6} xs={12}>
+                        <Grid id='title-and-exit' container justifyContent='space-between' alignItems='center' pb={5}>
                             {
                                 frog ? (
                                     <Typography variant='h5' fontWeight='bold'>{frog?.name}</Typography>
@@ -92,10 +90,10 @@ export default function FrogDetails() {
                                 </IconButton>
                             </Paper>
                         </Grid>
-                        <Grid id='price-and-socials' container> 
+                        <Grid id='price-and-socials' container pb={3}> 
                             <Grid id='price' item xl={2} lg={2} md={2} sm={3} xs={4}>
                                 <Stack spacing={1}>
-                                    <Typography variant='body1' fontWeight='bold'>Price</Typography>
+                                    <Typography variant='body1' fontWeight='bold'>Ribbit</Typography>
                                     <Typography display='flex' alignItems='center'> 
                                         <img src={ribbitToken} style={{height: 30, width: 30}} alt='Ribbit'/>
                                         {kFormatter(frog?.ribbit || 0)}
@@ -117,7 +115,7 @@ export default function FrogDetails() {
                                                 </IconButton>
                                             </Paper>
                                         <Paper elevation={3} sx={{borderRadius: 25}}>
-                                            <IconButton className="cta" href='https://opensea.io/collection/froggyfriendsnft' target='_blank'>
+                                            <IconButton className="cta" href={`${process.env.REACT_APP_OPENSEA}/assets/${process.env.REACT_APP_CONTRACT}/${frog?.edition}`} target='_blank'>
                                                 <img src={opensea} alt='' style={{height: 24, width: 24}}/>
                                             </IconButton>
                                         </Paper>
@@ -133,13 +131,6 @@ export default function FrogDetails() {
                                 <Grid item><Chip label={frog?.isPaired ? 'paired' : 'unpaired'}/></Grid>
                             </Grid>
                         </Stack>
-                        {
-                            frog && deposits.includes(frog.edition) && <Grid id='buttons' container justifyContent={isXs ? 'center' : 'start'}>
-                                <Button variant='contained' disabled sx={{height: 50}}>
-                                    <Typography color='secondary'>Pair Friend</Typography>
-                                </Button>
-                            </Grid>
-                        }
                     </Grid>
                 </Grid>
                 <Grid id='bottom-row' container justifyContent='space-between'>
@@ -149,9 +140,9 @@ export default function FrogDetails() {
                                 <Typography variant='h5' fontWeight='bold'>Traits</Typography>
                                 <Grid container>
                                     {
-                                        frog.attributes.map(trait => {
+                                        frog.attributes.map((trait) => {
                                             return (
-                                                <Grid item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
+                                                <Grid key={trait.trait_type} item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
                                                     <Typography fontWeight='bold'>{trait.trait_type}</Typography>
                                                     <Typography>{trait.value}</Typography>
                                                 </Grid>

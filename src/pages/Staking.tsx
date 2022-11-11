@@ -7,6 +7,7 @@ import { Check, Close, Launch, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted, useFroggiesStaked } from '../client';
 import { formatEther, commify } from '@ethersproject/units';
 import { Froggy } from '../models/Froggy';
+import { Owned } from '../models/Owned';
 import axios from 'axios';
 import ribbit from '../images/ribbit.gif';
 import think from '../images/think.png';
@@ -20,13 +21,6 @@ import banner from '../images/pond.png';
 import logo from '../images/logo.png';
 import biz from '../images/biz.png'
 import { useNavigate } from 'react-router-dom';
-
-interface Owned {
-  froggies: Froggy[];
-  totalRibbit: number;
-  allowance: number;
-  isStakingApproved: boolean;
-}
 
 const formatBalance = (balance: any) => {
   const etherFormat = formatEther(balance);
@@ -107,7 +101,7 @@ export default function Staking() {
     async function getFroggiesOwned(address: string) {
       try {
         setLoading(true);
-        const response = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: address});
+        const response = await axios.get(`${process.env.REACT_APP_API}/owned/${address}`);
         setOwned(response.data);
         setLoading(false);
       } catch (error) {
@@ -138,7 +132,7 @@ export default function Staking() {
   useEffect(() => {
     async function fetchFroggies() {
       setLoading(true);
-      const ownedResponse = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: account});
+      const ownedResponse = await axios.get(`${process.env.REACT_APP_API}/owned${account}`);
       setOwned(ownedResponse.data);
       setLoading(false);
     }
@@ -214,7 +208,7 @@ export default function Staking() {
       setFroggiesToUnstake([]);
 
       setLoading(true);
-      const ownedResponse = await axios.post(`${process.env.REACT_APP_API}/owned`, { account: account});
+      const ownedResponse = await axios.get(`${process.env.REACT_APP_API}/owned/${account}`);
       setOwned(ownedResponse.data);
       setLoading(false);
     } catch (error) {

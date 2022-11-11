@@ -20,6 +20,22 @@ console.log("ribbit address: ", ribbitContract.address);
 console.log("staking address: ", stakingContract.address);
 console.log("ribbit item address: ", ribbitItemContract.address);
 
+export function usePair() {
+  const { send, state } = useContractFunction(stakingContract, 'pairFriend');
+  return {
+    pair: send,
+    pairState: state
+  }
+}
+
+export function useUnpair() {
+  const { send, state } = useContractFunction(stakingContract, 'unpairFriend');
+  return {
+    unpair: send,
+    unpairState: state
+  }
+}
+
 export function useBundleBuy() {
   const { send, state } = useContractFunction(ribbitItemContract, 'bundleBuy');
   return {

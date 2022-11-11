@@ -85,7 +85,7 @@ export default function Header() {
                     isDesktop && <Typography variant='h6' alignSelf='center' fontWeight='bold' pl={2}>Froggy Friends</Typography>
                   }
                 </Grid>
-                <Grid id='links' container item display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' xl={3} lg={3} md={4}>
+                <Grid id='links' container item display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' xl={4} lg={4} md={5}>
                   <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                     <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => navigate("/staking")}>Stake</Typography>
                   </Grid>
@@ -94,6 +94,9 @@ export default function Header() {
                   </Grid>
                   <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                     <Typography className="link" variant="h5" color={getLinkColor('/leaderboard')} onClick={() => navigate("/leaderboard")}>Board</Typography>
+                  </Grid>
+                  <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                    <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => navigate("/studio")}>Studio</Typography>
                   </Grid> 
                 </Grid>
                 <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={5} lg={4} md={4} sm={8} xs={isTinyMobile ? 12 : 11}>
@@ -157,6 +160,9 @@ export default function Header() {
             </Grid>
             <Grid item pb={3}>
               <Typography className="link" variant="h5" color={getLinkColor('/leaderboard')} onClick={() => {navigate("/leaderboard"); setSidemenuOpen(false)}}>Board</Typography>
+            </Grid>
+            <Grid item pb={3}>
+              <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => {navigate("/studio"); setSidemenuOpen(false)}}>Studio</Typography>
             </Grid>
             <Grid id='account' container item alignItems='center'>
               <Grid item display={!account ? "flex" : "none"} pr={2}>
