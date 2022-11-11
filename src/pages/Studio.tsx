@@ -10,6 +10,10 @@ import { Froggy } from "../models/Froggy";
 import { usePair, useUnpair } from "../client";
 import { createStyles, makeStyles } from "@mui/styles";
 import mergeImages from 'merge-images';
+import please from '../images/plz.png';
+import hype from '../images/hype.png';
+import uhhh from '../images/uhhh.png';
+import hi from '../images/hi.png';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -330,6 +334,11 @@ export default function Studio() {
                     <Typography>Pairing will burn your friend item and apply a staking boost.</Typography>
                 </Stack>
             }
+            <Stack alignItems='center'>
+              { isPairingProcessing && pairState.status === "Success" && <img src={hype} style={{height: 100, width: 100}} alt='hype'/> }
+              { isPairingProcessing && pairState.status === "Mining" && <img src={please} style={{height: 100, width: 100}} alt='please'/> }
+              { isPairingProcessing && pairState.status === "Fail" && <img src={uhhh} style={{height: 100, width: 100}} alt='uhhh'/> }
+            </Stack>
             {
                 isPairingProcessing && pairState.status === 'Success' && 
                 <Stack>
@@ -385,6 +394,11 @@ export default function Studio() {
                   <Typography>Unpairing will remove your staking boost and friend</Typography>
                 </Stack>
             }
+            <Stack alignItems='center'>
+              { isUnpairProcessing && unpairState.status === "Success" && <img src={hi} style={{height: 100, width: 100}} alt='hype'/> }
+              { isUnpairProcessing && unpairState.status === "Mining" && <img src={please} style={{height: 100, width: 100}} alt='please'/> }
+              { isUnpairProcessing && unpairState.status === "Fail" && <img src={uhhh} style={{height: 100, width: 100}} alt='uhhh'/> }
+            </Stack>
             {
                 isUnpairProcessing && unpairState.status === 'Success' && 
                 <Stack>
