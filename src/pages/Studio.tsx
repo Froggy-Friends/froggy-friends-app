@@ -75,7 +75,7 @@ export default function Studio() {
         setLoadingFriends(true);
         setFrogs([]);
         setFriends([]);
-        const owned = (await axios.get<Owned>(`${process.env.REACT_APP_API}/owned/${address}`)).data;
+        const owned = (await axios.get<Owned>(`${process.env.REACT_APP_API}/owned/unstaked/${address}`)).data;
         const friends = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/owned/friends/${account}`)).data;
         setFrogs(owned.froggies.filter(frog => !frog.isStaked));
         setFriends(friends);
@@ -211,10 +211,12 @@ export default function Studio() {
                   </Stack>
                 </AccordionSummary>
                 <AccordionDetails sx={{p: 0}}>
-                  <TextField placeholder='Search frog ID' fullWidth sx={{pb: 5}}
-                    InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}
-                    value={search} onChange={onSearch}
-                  />
+                  {
+                    !loadingFrogs && !frogs.length &&
+                    <Typography color='secondary' variant='body1'>
+                      No frogs in your wallet but you can purchase them on <Link href="https://opensea.io/collection/froggyfriendsnft" target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>Opensea</Link>
+                    </Typography>
+                  }
                   <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
                     {
                       frogs.map(frog => {
@@ -250,6 +252,12 @@ export default function Studio() {
                   </Stack>
                 </AccordionSummary>
                 <AccordionDetails sx={{p: 0}}>
+                  {
+                    !loadingFriends && !friends.length &&
+                    <Typography color='secondary' variant='body1'>
+                      No friends in your wallet but you can purchase them on <Link href="https://opensea.io/collection/ribbit-items" target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>Opensea</Link>
+                    </Typography>
+                  }
                   <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
                     {
                       friends.map(friend => {
