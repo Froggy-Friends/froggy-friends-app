@@ -51,6 +51,7 @@ export default function Studio() {
   const [showUnpairingModal, setShowUnpairingModal] = useState(false);
   const [preview, setPreview] = useState<string>();
   const [isPairingProcessing, setIsPairingProcessing] = useState<boolean>(false);
+  const [isUnpairProcessing, setIsUnpairProcessing] = useState<boolean>(false);
   const { pair, pairState } = usePair();
   const { unpair, unpairState } = useUnpair();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -125,7 +126,9 @@ export default function Studio() {
             setAlertMessage(unpairState.errorMessage.replace(/^execution reverted:/i, ''));
             setShowAlert(true);
           }
-        }
+      } else if (unpairState.status === 'Mining') {
+        setIsUnpairProcessing(true);
+      }
   }, [unpairState])
 
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,6 +173,13 @@ export default function Studio() {
     setSelectedFrog(undefined);
     setSelectedFriend(undefined);
     setIsPairingProcessing(false);
+  }
+
+  const onUnpairComplete = () => {
+    setShowUnpairingModal(false);
+    setSelectedFrog(undefined);
+    setSelectedFriend(undefined);
+    setIsUnpairProcessing(false);
   }
 
   return (
@@ -364,41 +374,49 @@ export default function Studio() {
         <Stack className={classes.modal}>
             <Stack direction="row" justifyContent="space-between" pb={8}>
                 <Typography id='modal-title' variant="h4">Unpair Friend</Typography>
-                <IconButton className="cta" size={isSm ? 'small' : 'medium'} color='inherit' onClick={() => setShowUnpairingModal(false)}>
+                <IconButton className="cta" size={isSm ? 'small' : 'medium'} color='inherit' onClick={onUnpairComplete}>
                     <Close fontSize={isSm ? 'small' : 'medium'}/>
                 </IconButton>
             </Stack>
-            <Stack direction='row' pt={3} spacing={1} alignItems='center'>
-                <Info color="secondary"/>
-                <Typography>Unpairing will remove your staking boost and friend</Typography>
-            </Stack>
-            
             {
-                unpairState && unpairState.transaction &&
-                <Stack pt={3}>
-                    <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${unpairState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>
-                        <Typography id='modal-description' variant="h6">
-                        {unpairState.status === "Success" && <CheckCircle/>} 
-                        {unpairState.status === "Fail" && <Warning/>} 
-                        {unpairState.status === 'Mining' && <HourglassBottom/>}
-                        Unpair Friend
-                        </Typography>
-                    </Link>
+                selectedFrog && !isUnpairProcessing && 
+                <Stack direction='row' pt={3} spacing={1} alignItems='center'>
+                  <Info color="secondary"/>
+                  <Typography>Unpairing will remove your staking boost and friend</Typography>
+                </Stack>
+            }
+            {
+                isUnpairProcessing && unpairState.status === 'Success' && 
+                <Stack>
+                  <Typography>Your friend is unpaired now and your metadata will update shortly on opensea.</Typography>
+                </Stack>
+            }
+            {
+                isUnpairProcessing && unpairState && unpairState.transaction &&
+                <Stack direction='row' spacing={1} alignItems='center'>
+                  {unpairState.status === "Success" && <CheckCircle/>} 
+                  {unpairState.status === "Fail" && <Warning/>} 
+                  {unpairState.status === 'Mining' && <HourglassBottom/>}
+                  <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${unpairState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>
+                      <Typography id='modal-description' variant="h6">
+                      Unpair Friend
+                      </Typography>
+                  </Link>
                 </Stack>
             }
             
             {
-                selectedFrog && unpairState.status !== 'Success' && unpairState.status !== 'Mining' &&
-                <Stack pt={10}>
+                selectedFrog && !isUnpairProcessing &&
+                <Stack pb={3}>
                     <Button variant='contained' onClick={() => onUnpair(selectedFrog)} sx={{width: 140, height: 44, alignSelf: 'center'}}>
                         <Typography>Confirm</Typography>
                     </Button>
                 </Stack>
             }
             {
-                selectedFrog && unpairState.status === 'Success' &&
-                <Stack pt={3}>
-                    <Button variant='contained' onClick={() => setShowUnpairingModal(false)} sx={{width: 140, height: 44, alignSelf: 'center'}}>
+                selectedFrog && isUnpairProcessing && unpairState.status === 'Success' &&
+                <Stack>
+                    <Button variant='contained' onClick={onUnpairComplete} sx={{width: 140, height: 44, alignSelf: 'center'}}>
                         <Typography>Done</Typography>
                     </Button>
                 </Stack>
