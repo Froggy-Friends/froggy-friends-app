@@ -200,6 +200,7 @@ export default function Studio() {
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
       <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
+        <Typography variant='h3' pb={5}>Froggy Studio</Typography>
         <Grid id='panel' container spacing={theme.spacing(8)}>
           <Grid id='selections' item xl={4} lg={4} md={6} sm={12}>
             <Stack pb={5}>
