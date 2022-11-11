@@ -1,5 +1,5 @@
 import { CheckCircle, Close, ExpandMore, HourglassBottom, Info, Search, Warning } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Container, Grid, IconButton, LinearProgress, Link, MenuItem, Modal, Paper, Select, Snackbar, Stack, TextField, Theme, Typography, useTheme } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Container, Grid, IconButton, LinearProgress, Link, MenuItem, Modal, Paper, Select, Skeleton, Snackbar, Stack, TextField, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useEthers } from "@usedapp/core";
 import { useEffect, useState } from "react";
 import { Owned } from '../models/Owned';
@@ -37,6 +37,8 @@ export default function Studio() {
   const [search, setSearch] = useState('');
   const [frogs, setFrogs] = useState<Froggy[]>([]);
   const [friends, setFriends] = useState<RibbitItem[]>([]);
+  const [loadingFrogs, setLoadingFrogs] = useState(false);
+  const [loadingFriends, setLoadingFriends] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
@@ -47,17 +49,27 @@ export default function Studio() {
   const [preview, setPreview] = useState<string>();
   const { pair, pairState } = usePair();
   const { unpair, unpairState } = useUnpair();
+  const isMd = useMediaQuery(theme.breakpoints.down('lg'));
+  const isTablet = useMediaQuery(theme.breakpoints.between(500, 900));
 
   useEffect(() => {
     async function getFroggiesOwned(address: string) {
       try {
+        setLoadingFrogs(true);
+        setLoadingFriends(true);
+        setFrogs([]);
+        setFriends([]);
         const owned = (await axios.get<Owned>(`${process.env.REACT_APP_API}/owned/${address}`)).data;
         const friends = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/owned/friends/${account}`)).data;
         setFrogs(owned.froggies.filter(frog => !frog.isStaked));
         setFriends(friends);
+        setLoadingFrogs(false);
+        setLoadingFriends(false);
       } catch (error) {
         setAlertMessage("Issue fetching froggies owned");
         setShowAlert(true);
+        setLoadingFrogs(false);
+        setLoadingFriends(false);
       }
     }
 
@@ -72,16 +84,19 @@ export default function Studio() {
       setPreview(b64);
     }
 
+    // only show prevew of existing paired frog
     if (selectedFrog && selectedFrog.isPaired) {
       layerImages([selectedFrog.image]);
       return;
     }
 
+    // show preview of unpaired frog and friend
     if (selectedFrog && selectedFriend) {
       layerImages([selectedFrog.image, selectedFriend.imageTransparent]);
       return;
     }
 
+    // switch frog in preview
     if (selectedFrog) {
       layerImages([selectedFrog.image]);
       return;
@@ -154,91 +169,139 @@ export default function Studio() {
   return (
     <Grid id='studio' container direction='column' justifyContent='start' minHeight={800} pt={10}>
       <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
-        <Typography color='secondary' variant='h3' pb={5}>Froggy Studio (Beta)</Typography>
+        <Typography color='secondary' variant='h3' pb={5}>Froggy Studio Beta</Typography>
 
         <Grid id='panel' container spacing={theme.spacing(8)}>
-          <Grid id='selections' item xl={4}>
-            <Stack>
+          <Grid id='selections' item xl={4} lg={4} md={6} sm={12}>
+            <Stack pb={5}>
               <Accordion elevation={0} defaultExpanded>
-                <AccordionSummary expandIcon={<ExpandMore/>}>
+                <AccordionSummary expandIcon={<ExpandMore/>} sx={{p: 0}}>
                   <Stack>
-                  <Typography color='secondary' variant='h5'>Unstaked Frogs</Typography>
+                  <Typography color='secondary' variant='h4'>Unstaked Frogs</Typography>
                   <Typography color='secondary' variant='subtitle1'>Select a frog to get started</Typography>
                   </Stack>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{p: 0}}>
                   <TextField placeholder='Search frog ID' fullWidth sx={{pb: 5}}
                     InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}
                     value={search} onChange={onSearch}
                   />
-                  <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
-                  {
-                    frogs.map(frog => {
-                      return <Grid key={frog.edition} item xl={3}>
-                        <Card onClick={() => onFrogClick(frog)}>
-                          <CardMedia component='img' src={frog.image} height={100} alt=''/>
-                        </Card>
-                      </Grid>
-                    })
-                  }
+                  <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
+                    {
+                      frogs.map(frog => {
+                        return <Grid key={frog.edition} item p={1} xl={3}>
+                          <Card onClick={() => onFrogClick(frog)}>
+                            <CardMedia component='img' src={frog.image} height={100} alt=''/>
+                          </Card>
+                        </Grid>
+                      })
+                    }
                   </Grid>
+                  {
+                    loadingFrogs && 
+                    <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
+                      {
+                        new Array(10).fill('').map((item, index) => {
+                          return <Grid key={index} item p={1} xl={2.4}>
+                            <Skeleton variant='rectangular' animation='wave' height={100}/>  
+                          </Grid>
+                        })
+                      }
+                    </Grid>
+                  }
                 </AccordionDetails>
               </Accordion>
             </Stack>
-            <Stack>
+            <Stack pb={5}>
               <Accordion elevation={0} defaultExpanded>
-                <AccordionSummary expandIcon={<ExpandMore/>}>
+                <AccordionSummary expandIcon={<ExpandMore/>} sx={{p: 0}}>
                   <Stack>
-                  <Typography color='secondary' variant='h5'>Owned Friends</Typography>
+                  <Typography color='secondary' variant='h4'>Owned Friends</Typography>
                   <Typography color='secondary' variant='subtitle1'>Select a friend to pair</Typography>
                   </Stack>
                 </AccordionSummary>
-                <AccordionDetails>
-                  <Grid container spacing={2} pb={5} maxHeight={300} overflow='scroll'>
-                  {
-                    friends.map(friend => {
-                      return <Grid key={friend.id} item xl={3}>
-                        <Card onClick={() => onFriendClick(friend)}>
-                          <CardMedia component='img' src={friend.image} height={100} alt=''/>
-                        </Card>
-                      </Grid>
-                    })
-                  }
+                <AccordionDetails sx={{p: 0}}>
+                  <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
+                    {
+                      friends.map(friend => {
+                        return <Grid key={friend.id} item p={1} xl={3}>
+                          <Card onClick={() => onFriendClick(friend)}>
+                            <CardMedia component='img' src={friend.image} height={100} alt=''/>
+                          </Card>
+                        </Grid>
+                      })
+                    }
                   </Grid>
+                  {
+                    loadingFriends && 
+                    <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
+                      {
+                        new Array(10).fill('').map((item, index) => {
+                          return <Grid key={index} item p={1} xl={2.4}>
+                            <Skeleton variant='rectangular' animation='wave' height={100}/>  
+                          </Grid>
+                        })
+                      }
+                    </Grid>
+                  }
                 </AccordionDetails>
               </Accordion>
             </Stack>
           </Grid>
-          <Grid id='preview' item xl={8}>
-            <Paper elevation={0} sx={{padding: 2}}>
-              <Stack minHeight={500} spacing={4}>
-                <Typography color='secondary' variant='h5'>Preview</Typography>
-                <img src={preview} alt='' height={400} width={400}/>
-                {
-                  selectedFrog && selectedFrog.isPaired &&
-                  <Stack spacing={4}>
-                      <Stack direction='row' spacing={1} alignItems='center'>
-                        <Info color="secondary"/>
-                        <Typography>Friend preview unavailable for paired frogs</Typography>
-                    </Stack>
-                    <Grid id='buttons' container>
-                        <Button variant='contained' sx={{height: 50}} onClick={() => onUnpairClick(selectedFrog)}>
-                            <Typography>Unpair Friend</Typography>
-                        </Button>
+          {
+            selectedFrog &&
+            <Grid id='preview' item xl={8} lg={8} md={6} sm={12} mt={3}>
+              <Paper elevation={0} sx={{ minHeight: 500}}>
+                <Stack spacing={4}>
+                  <Typography color='secondary' variant='h4'>Preview</Typography>
+                  <Grid container direction={isMd ? 'column' : 'row'} justifyContent='space-between'>
+                    <Grid item xl={6} lg={6} md={6} sm={6} pb={3}>
+                      <img src={preview} alt='' width={isTablet ? '50%' : '100%'}/>
                     </Grid>
-                  </Stack>
-                }
-                {
-                  selectedFrog && selectedFriend && !selectedFrog.isPaired &&
-                  <Grid id='buttons' container>
-                      <Button variant='contained' sx={{height: 50}} onClick={() => onPairClick(selectedFrog)}>
-                          <Typography>Pair Friend</Typography>
-                      </Button>
+                    <Grid item xl={5} lg={5} md={5} sm={5}>
+                      <Stack>
+                        <Typography variant='h5' fontWeight='bold' pb={5}>{selectedFrog.name}</Typography>
+                        <Grid container>
+                            {
+                                selectedFrog.attributes.map((trait) => {
+                                    return (
+                                        <Grid key={trait.trait_type} item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
+                                            <Typography fontWeight='bold'>{trait.trait_type}</Typography>
+                                            <Typography>{trait.value}</Typography>
+                                        </Grid>
+                                    )
+                                })
+                            }
+                        </Grid>
+                      </Stack>
+                      {
+                      selectedFrog && selectedFrog.isPaired &&
+                      <Stack spacing={4} pt={2}>
+                          <Stack direction='row' spacing={1} alignItems='center'>
+                            <Info color="secondary"/>
+                            <Typography>Friend preview unavailable for paired frogs</Typography>
+                        </Stack>
+                        <Grid id='buttons' container>
+                            <Button variant='contained' sx={{height: 50}} onClick={() => onUnpairClick(selectedFrog)}>
+                                <Typography>Unpair Friend</Typography>
+                            </Button>
+                        </Grid>
+                      </Stack>
+                    }
+                    {
+                      selectedFrog && selectedFriend && !selectedFrog.isPaired &&
+                      <Grid id='buttons' container pt={5}>
+                          <Button variant='contained' sx={{height: 50}} onClick={() => onPairClick(selectedFrog)}>
+                              <Typography>Pair Friend</Typography>
+                          </Button>
+                      </Grid>
+                    }
+                    </Grid>
                   </Grid>
-                }
-              </Stack>
-            </Paper>
-          </Grid>
+                </Stack>
+              </Paper>
+            </Grid>
+          }
         </Grid>
       </Container>
       <Snackbar

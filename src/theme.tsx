@@ -191,13 +191,16 @@ export default function getTheme(isDarkMode: boolean) {
               "::-webkit-scrollbar": {
                 width: 5,
                 height: 5,
-                backgroundColor: configs.dark
+                backgroundColor: isDarkMode ? configs.dark : configs.white
               },
               "::-webkit-scrollbar-thumb": {
                 backgroundColor: configs.primary,
                 borderRadius: 5,
                 height: 50,
                 width: 50
+              },
+              "::-webkit-scrollbar-corner": {
+                backgroundColor: 'transparent'
               }
             }
           }
