@@ -1,11 +1,12 @@
-import { CheckCircle, Close, ExpandMore, HourglassBottom, Info, Search, Warning } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardMedia, Container, Grid, IconButton, LinearProgress, Link, MenuItem, Modal, Paper, Select, Skeleton, Snackbar, Stack, TextField, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { CheckCircle, Close, ExpandMore, HourglassBottom, Info, Launch, Warning } from "@mui/icons-material";
+import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Container, Grid, IconButton, LinearProgress, Link, Modal, Paper, Skeleton, Snackbar, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useEthers } from "@usedapp/core";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Owned } from '../models/Owned';
 import useDebounce from "../hooks/useDebounce";
 import axios from "axios";
 import { RibbitItem } from "../models/RibbitItem";
+import { History } from "../models/History";
 import { Froggy } from "../models/Froggy";
 import { usePair, useUnpair } from "../client";
 import { createStyles, makeStyles } from "@mui/styles";
@@ -15,6 +16,7 @@ import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import hi from '../images/hi.png';
 import banner from '../images/friends.png';
+import { formatDistanceStrict } from "date-fns";
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -52,6 +54,7 @@ export default function Studio() {
   const [search, setSearch] = useState('');
   const [frogs, setFrogs] = useState<Froggy[]>([]);
   const [friends, setFriends] = useState<RibbitItem[]>([]);
+  const [history, setHistory] = useState<History[]>([]);
   const [loadingFrogs, setLoadingFrogs] = useState(false);
   const [loadingFriends, setLoadingFriends] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -69,16 +72,19 @@ export default function Studio() {
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    async function getFroggiesOwned(address: string) {
+    async function loadAccountData(address: string) {
       try {
         setLoadingFrogs(true);
         setLoadingFriends(true);
         setFrogs([]);
         setFriends([]);
+        setHistory([]);
         const owned = (await axios.get<Owned>(`${process.env.REACT_APP_API}/owned/unstaked/${address}`)).data;
         const friends = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/owned/friends/${account}`)).data;
+        const history = (await axios.get<History[]>(`${process.env.REACT_APP_API}/history/${account}`)).data;
         setFrogs(owned.froggies.filter(frog => !frog.isStaked));
         setFriends(friends);
+        setHistory(history);
         setLoadingFrogs(false);
         setLoadingFriends(false);
       } catch (error) {
@@ -90,7 +96,7 @@ export default function Studio() {
     }
 
     if (account) {
-      getFroggiesOwned(account);
+      loadAccountData(account);
     }
   }, [account])
 
@@ -194,12 +200,21 @@ export default function Studio() {
     setIsUnpairProcessing(false);
   }
 
+  const getDate = (dateUtc: string) => {
+    const date = new Date(dateUtc);
+    const result = formatDistanceStrict(date, Date.now(), {
+      addSuffix: true
+    })
+    return result;
+  }
+
   return (
     <Grid id='studio' container direction='column' justifyContent='start' minHeight={800} pt={8}>
       <Paper elevation={3}>
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
       <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
+        <Typography variant='h3' pb={5}>Froggy Studio</Typography>
         <Grid id='panel' container spacing={theme.spacing(8)}>
           <Grid id='selections' item xl={4} lg={4} md={6} sm={12}>
             <Stack pb={5}>
@@ -285,43 +300,68 @@ export default function Studio() {
               </Accordion>
             </Stack>
           </Grid>
-          {
-            selectedFrog &&
-            <Grid id='preview' item xl={4} lg={4} md={6} sm={12} mt={3}>
-              <Paper elevation={0} sx={{ minHeight: 500}}>
+          <Grid id='preview' item xl={4} lg={4} md={6} sm={12} mt={3}>
+            <Paper elevation={0} sx={{ minHeight: 500}}>
+              {
+                selectedFrog &&
                 <Stack spacing={4}>
-                  <Typography color='secondary' variant='h4'>Preview {selectedFrog.name}</Typography>
-                  <Grid container direction='column' justifyContent='space-between'>
-                    <Grid item xl={3} lg={3} md={3} sm={6} pb={3}>
-                      <img src={preview} alt='' width='100%'/>
-                      {
-                        selectedFrog && selectedFrog.isPaired &&
-                        <Stack spacing={4} pt={2}>
-                            <Stack direction='row' spacing={1} alignItems='center'>
-                              <Info color="secondary"/>
-                              <Typography>Friend preview unavailable for paired frogs</Typography>
-                          </Stack>
-                          <Grid id='buttons' container>
-                              <Button variant='contained' sx={{height: 50}} onClick={() => onUnpairClick(selectedFrog)}>
-                                  <Typography>Unpair Friend</Typography>
-                              </Button>
-                          </Grid>
-                        </Stack>
-                    }
+                <Typography color='secondary' variant='h4'>Preview {selectedFrog.name}</Typography>
+                <Grid container direction='column' justifyContent='space-between'>
+                  <Grid item xl={3} lg={3} md={3} sm={6} pb={3}>
+                    <img src={preview} alt='' width='100%'/>
                     {
-                      selectedFrog && selectedFriend && !selectedFrog.isPaired &&
-                      <Grid id='buttons' container pt={5}>
-                          <Button variant='contained' sx={{height: 50}} onClick={() => onPairClick(selectedFrog)}>
-                              <Typography>Pair Friend</Typography>
-                          </Button>
-                      </Grid>
-                    }
+                      selectedFrog && selectedFrog.isPaired &&
+                      <Stack spacing={4} pt={2}>
+                          <Stack direction='row' spacing={1} alignItems='center'>
+                            <Info color="secondary"/>
+                            <Typography>Friend preview unavailable for paired frogs</Typography>
+                        </Stack>
+                        <Grid id='buttons' container>
+                            <Button variant='contained' sx={{height: 50}} onClick={() => onUnpairClick(selectedFrog)}>
+                                <Typography>Unpair Friend</Typography>
+                            </Button>
+                        </Grid>
+                      </Stack>
+                  }
+                  {
+                    selectedFrog && selectedFriend && !selectedFrog.isPaired &&
+                    <Grid id='buttons' container pt={5}>
+                        <Button variant='contained' sx={{height: 50}} onClick={() => onPairClick(selectedFrog)}>
+                            <Typography>Pair Friend</Typography>
+                        </Button>
                     </Grid>
+                  }
                   </Grid>
+                </Grid>
+              </Stack>
+              }
+            </Paper>
+          </Grid>
+          <Grid id='history' item xl={4} lg={4} md={6} sm={12} mt={3}>
+            {
+              history && history.length > 0 &&
+              <Fragment>
+                <Typography color='secondary' variant='h4' pb={5}>Activity Log</Typography>
+                <Stack>
+                  {
+                    history.map(activity => {
+                      return (
+                        <Stack key={activity.id} direction='row' spacing={4} pb={2}>
+                          { activity.isPairing && <Typography>Pairing</Typography>}
+                          { activity.isUnpairing && <Typography>Unpairing</Typography>}
+                          <Typography>Frog #{activity.frogId}</Typography>
+                          { activity.isPairing && <Typography>Friend #{activity.friendId}</Typography>}
+                          <Typography>{getDate(activity.date)}</Typography>
+                          { activity.isPairing && <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${activity.pairTx}`} target='_blank' sx={{cursor: 'pointer'}}><Launch/></Link>}
+                          { activity.isUnpairing && <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${activity.unpairTx}`} target='_blank' sx={{cursor: 'pointer'}}><Launch/></Link>}
+                        </Stack>
+                      )
+                    })
+                  }
                 </Stack>
-              </Paper>
-            </Grid>
-          }
+              </Fragment>
+            }
+          </Grid>
         </Grid>
       </Container>
       <Snackbar
