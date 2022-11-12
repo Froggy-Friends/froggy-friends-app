@@ -215,7 +215,7 @@ export default function Studio() {
       </Paper>
       <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
         <Typography variant='h3' pb={5}>Froggy Studio</Typography>
-        <Grid id='panel' container spacing={theme.spacing(8)}>
+        <Grid id='panel' container spacing={theme.spacing(isSm ? 1 : 8)}>
           <Grid id='selections' item xl={4} lg={4} md={6} sm={12}>
             <Stack pb={5}>
               <Accordion elevation={0} defaultExpanded>
@@ -346,7 +346,7 @@ export default function Studio() {
                   {
                     history.map(activity => {
                       return (
-                        <Stack key={activity.id} direction='row' spacing={4} pb={2}>
+                        <Stack key={activity.id} direction='row' spacing={isSm ? 2 : 4} pb={2}>
                           { activity.isPairing && <Typography>Pairing</Typography>}
                           { activity.isUnpairing && <Typography>Unpairing</Typography>}
                           <Typography>Frog #{activity.frogId}</Typography>
