@@ -106,7 +106,7 @@ export const spaces: Space[] = [
     host: 'Bek',
     hostAvatar: 'https://froggyfriends.mypinata.cloud/ipfs/Qmakmum943LT7Brf1C6G9rVoswhUZk65Renyav2zfPB5s2',
     twitter: 'https://twitter.com/SleepyBek',
-    name: 'Demon Time',
+    name: 'Late Night with Bek',
     day: 'Monday',
     timePST: '1pm PST',
     timeEST: '4pm EST',
