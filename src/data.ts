@@ -100,7 +100,7 @@ export const spaces: Space[] = [
     timePST: '9am PST',
     timeEST: '12pm EST',
     timeBST: '5pm BST',
-    timeAEST: '3am AEST (Tuesday)'
+    timeAEST: '3am AEST (Tue)'
   },
   {
     host: 'Bek',
@@ -111,7 +111,7 @@ export const spaces: Space[] = [
     timePST: '1pm PST',
     timeEST: '4pm EST',
     timeBST: '9pm BST',
-    timeAEST: '8am AEDT (Tuesday)'
+    timeAEST: '8am AEDT (Tue)'
   },
   {
     host: 'Fonzy',
@@ -122,6 +122,6 @@ export const spaces: Space[] = [
     timePST: '9am PST',
     timeEST: '12pm EST',
     timeBST: '5pm BST',
-    timeAEST: '3am AEST (Saturday)'
+    timeAEST: '3am AEST (Sat)'
   }
 ]
