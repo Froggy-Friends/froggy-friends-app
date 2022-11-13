@@ -17,6 +17,7 @@ import ItemDetails from './pages/ItemDetails';
 import FrogDetails from './pages/FrogDetails';
 import BoardMobile from './pages/BoardMobile';
 import Studio from './pages/Studio';
+import Spaces from './pages/Spaces';
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -47,6 +48,7 @@ export default function App() {
                   <Route path="/admin" element={<Admin/>} />
                   <Route path="/market" element={<Market/>}/>
                   <Route path="/studio" element={<Studio/>}/>
+                  <Route path="/spaces" element={<Spaces/>}/>
                   <Route path="/leaderboard" element={isSm ? <BoardMobile/> : <Board/>} />
                   <Route path="/item/:id" element={<ItemDetails/>} />
                   <Route path='/frog/:id' element={<FrogDetails/>}/>
