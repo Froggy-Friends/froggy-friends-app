@@ -36,7 +36,8 @@ export default function Spaces() {
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
       <Container maxWidth='xl' sx={{pt: 5, pb: 10}}>
-        <Typography variant='h3' pb={5}>Community Spaces</Typography>
+        <Typography variant='h3'>Community Spaces</Typography>
+        <Typography variant='subtitle1' pb={5}>Weekly twitter spaces hosted by community members.</Typography>
         { 
           mondayShows && mondayShows.length > 0 &&
           <Fragment>

@@ -107,11 +107,11 @@ export const spaces: Space[] = [
     hostAvatar: 'https://froggyfriends.mypinata.cloud/ipfs/Qmakmum943LT7Brf1C6G9rVoswhUZk65Renyav2zfPB5s2',
     twitter: 'https://twitter.com/SleepyBek',
     name: 'Demon Time',
-    day: 'Wednesday',
-    timePST: '9am PST',
-    timeEST: '12pm EST',
-    timeBST: '5pm BST',
-    timeAEST: '3am AEST (Tuesday)'
+    day: 'Monday',
+    timePST: '1pm PST',
+    timeEST: '4pm EST',
+    timeBST: '9pm BST',
+    timeAEST: '8am AEDT (Tuesday)'
   },
   {
     host: 'Fonzy',
@@ -122,6 +122,6 @@ export const spaces: Space[] = [
     timePST: '9am PST',
     timeEST: '12pm EST',
     timeBST: '5pm BST',
-    timeAEST: '3am AEST (Tuesday)'
+    timeAEST: '3am AEST (Saturday)'
   }
 ]
