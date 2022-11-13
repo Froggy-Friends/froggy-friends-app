@@ -3,13 +3,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { makeStyles, createStyles } from '@mui/styles';
-import { Grid, Avatar, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Fade, Button, useTheme, Container } from "@mui/material";
-import { Close, ShoppingCart, Menu, Headphones, DarkMode, LightMode, Paid } from "@mui/icons-material";
+import { Grid, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Button, useTheme, Container } from "@mui/material";
+import { Close, ShoppingCart, Menu, DarkMode, LightMode, Paid } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
 import { ColorModeContext } from "../App";
 import logo from '../images/logo.png';
-import MusicPlayer from "./MusicPlayer";
 import Cart from "./Cart";
 
 const useStyles: any = makeStyles((theme: Theme) => 
@@ -22,11 +21,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('lg')]: {
         marginTop: '10px'
       }
-    },
-    musicPlayer: {
-      position: 'absolute',
-      inset: '80px 10px auto auto',
-      maxWidth: 350
     }
   })
 );
@@ -182,11 +176,6 @@ export default function Header() {
             </Grid>
           </Grid>
         </Drawer>
-        <Fade in={musicOpen}>
-          <Grid id='player' className={classes.musicPlayer} container zIndex={1}>
-            <MusicPlayer/>
-          </Grid>
-        </Fade>
         <Cart />
       </Fragment>
   )
