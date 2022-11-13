@@ -1,5 +1,6 @@
 import { Track } from "./models/Track";
 import { SpriteMap } from 'use-sound/dist/types';
+import { Space } from "./models/Space";
 
 export const stakeUrl = "https://froggyfriends.mypinata.cloud/ipfs/QmWh3P7tFJ3inUWKDC63331Fc9pAjPY7uALQobQG3fNT9H";
 export const marketplaceUrl = 'https://froggyfriends.mypinata.cloud/ipfs/QmdeDd4KWirXgxQBpVq1MaDhowQwsf3tjRqQUreCXYpG6z';
@@ -88,3 +89,39 @@ export const sprite: SpriteMap = {
   noodle: [1282000, 168000],
   dreamer: [1459000, 111000]
 }
+
+export const spaces: Space[] = [
+  {
+    host: 'Ollie',
+    hostAvatar: 'https://froggyfriends.mypinata.cloud/ipfs/QmdJoB8xdVieoCxgh34mF23TA6RFqdEZ1aRHZBcm1zVi7W',
+    twitter: 'https://twitter.com/ollliieeeeee',
+    name: 'Forg Hour',
+    day: 'Monday',
+    timePST: '9am PST',
+    timeEST: '12pm EST',
+    timeBST: '5pm BST',
+    timeAEST: '3am AEST (Tuesday)'
+  },
+  {
+    host: 'Bek',
+    hostAvatar: 'https://froggyfriends.mypinata.cloud/ipfs/Qmakmum943LT7Brf1C6G9rVoswhUZk65Renyav2zfPB5s2',
+    twitter: 'https://twitter.com/SleepyBek',
+    name: 'Demon Time',
+    day: 'Wednesday',
+    timePST: '9am PST',
+    timeEST: '12pm EST',
+    timeBST: '5pm BST',
+    timeAEST: '3am AEST (Tuesday)'
+  },
+  {
+    host: 'Fonzy',
+    hostAvatar: 'https://froggyfriends.mypinata.cloud/ipfs/QmXMsHpgPJ47mL9Wjt4Ld8hmHrZhCcvk4Kcxpxx3HTRZE3',
+    twitter: 'https://twitter.com/0xFonzy',
+    name: 'Froggy Friday',
+    day: 'Friday',
+    timePST: '9am PST',
+    timeEST: '12pm EST',
+    timeBST: '5pm BST',
+    timeAEST: '3am AEST (Tuesday)'
+  }
+]

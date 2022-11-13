@@ -1,7 +1,13 @@
+export type SpaceDay = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+
 export interface Space {
   host: string;
+  hostAvatar: string;
   twitter: string;
-  showName: string;
-  showHour: number;
-  showTimezone: string;
+  name: string;
+  day: SpaceDay;
+  timePST: string;
+  timeEST: string;
+  timeBST: string;
+  timeAEST: string;
 }
