@@ -12,7 +12,6 @@ export default function SpacesShow(props: SpacesShowProps) {
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-  const isXs = useMediaQuery(theme.breakpoints.down('xs'));
 
   return (
     <Stack key={key} direction='row' spacing={8} alignItems='center' pb={5}>
