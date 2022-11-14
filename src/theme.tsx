@@ -234,11 +234,7 @@ export default function getTheme(isDarkMode: boolean) {
           root: {
             color: configs.light,
             backgroundColor: configs.gray,
-            textTransform: 'capitalize',
-            "&.inverted": {
-              color: isDarkMode ? configs.dark : configs.light,
-              backgroundColor: isDarkMode ? configs.light : configs.gray
-            }
+            textTransform: 'capitalize'
           }
         }
       }
