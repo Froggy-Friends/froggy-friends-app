@@ -24,11 +24,12 @@ export default function SpacesShow(props: SpacesShowProps) {
         <Stack id='titles'>
           <Typography variant='h4'>{space.name}</Typography>
           <Typography variant='subtitle1'>Hosted by {space.host}</Typography>
-          <Stack direction={isSm ? 'column' : 'row'} pt={2} spacing={2}>
+          <Stack id='times' direction={isSm ? 'column' : 'row'} pt={2} spacing={2} width='fit-content'>
             <Chip className="inverted" label={space.timePST} size='medium' variant="outlined"/>
             <Chip className="inverted" label={space.timeEST} size='medium' variant="outlined"/>
             <Chip className="inverted" label={space.timeBST} size='medium' variant="outlined"/>
             <Chip className="inverted" label={space.timeAEST} size='medium' variant="outlined"/>
+            <Chip className="inverted" label={space.timeKST} size='medium' variant="outlined"/>
           </Stack>
         </Stack>
       </Stack>
