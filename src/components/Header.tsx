@@ -3,13 +3,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { makeStyles, createStyles } from '@mui/styles';
-import { Grid, Avatar, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Fade, Button, useTheme, Container } from "@mui/material";
-import { Close, ShoppingCart, Menu, Headphones, DarkMode, LightMode, Paid } from "@mui/icons-material";
+import { Grid, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Button, useTheme, Container } from "@mui/material";
+import { Close, ShoppingCart, Menu, DarkMode, LightMode, Paid } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
 import { ColorModeContext } from "../App";
 import logo from '../images/logo.png';
-import MusicPlayer from "./MusicPlayer";
 import Cart from "./Cart";
 
 const useStyles: any = makeStyles((theme: Theme) => 
@@ -22,11 +21,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('lg')]: {
         marginTop: '10px'
       }
-    },
-    musicPlayer: {
-      position: 'absolute',
-      inset: '80px 10px auto auto',
-      maxWidth: 350
     }
   })
 );
@@ -98,6 +92,9 @@ export default function Header() {
                   <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                     <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => navigate("/studio")}>Studio</Typography>
                   </Grid> 
+                  <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                    <Typography className="link" variant="h5" color={getLinkColor('/spaces')} onClick={() => navigate("/spaces")}>Spaces</Typography>
+                  </Grid> 
                 </Grid>
                 <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={5} lg={4} md={4} sm={8} xs={isTinyMobile ? 12 : 11}>
                   <Grid item display="flex" pr={1}>
@@ -164,6 +161,9 @@ export default function Header() {
             <Grid item pb={3}>
               <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => {navigate("/studio"); setSidemenuOpen(false)}}>Studio</Typography>
             </Grid>
+            <Grid item pb={3}>
+              <Typography className="link" variant="h5" color={getLinkColor('/spaces')} onClick={() => {navigate("/spaces"); setSidemenuOpen(false)}}>Spaces</Typography>
+            </Grid>
             <Grid id='account' container item alignItems='center'>
               <Grid item display={!account ? "flex" : "none"} pr={2}>
                 <Button variant='contained' onClick={() => activateBrowserWallet()}>
@@ -176,11 +176,6 @@ export default function Header() {
             </Grid>
           </Grid>
         </Drawer>
-        <Fade in={musicOpen}>
-          <Grid id='player' className={classes.musicPlayer} container zIndex={1}>
-            <MusicPlayer/>
-          </Grid>
-        </Fade>
         <Cart />
       </Fragment>
   )
