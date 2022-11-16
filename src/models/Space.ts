@@ -4,6 +4,7 @@ export interface Space {
   host: string;
   hostAvatar: string;
   twitter: string;
+  handle: string;
   name: string;
   day: SpaceDay;
   timePST: string;

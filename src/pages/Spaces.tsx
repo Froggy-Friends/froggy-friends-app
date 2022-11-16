@@ -1,5 +1,4 @@
-import { Twitter } from "@mui/icons-material";
-import { Grid, Paper, useTheme, Theme, useMediaQuery, Container, Typography, Divider, Stack, Avatar, Link } from "@mui/material";
+import { Grid, Paper, useTheme, Theme, useMediaQuery, Container, Typography, Divider, Avatar } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 import banner from '../images/community.png';
 import { spaces } from '../data';
