@@ -35,7 +35,7 @@ export default function Spaces() {
       <Paper elevation={3}>
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
-      <Container maxWidth='xl' sx={{pt: 5, pb: 10}}>
+      <Container maxWidth='lg' sx={{pt: 5, pb: 10}}>
         <Typography variant='h3'>Community Spaces</Typography>
         <Typography variant='subtitle1' pb={5}>Weekly twitter spaces hosted by community members.</Typography>
         { 
