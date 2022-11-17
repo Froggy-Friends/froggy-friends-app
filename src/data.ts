@@ -107,9 +107,9 @@ export const spaces: Space[] = [
     twitter: 'https://twitter.com/_Steezyfresh_',
     name: "Steezy's Space",
     day: 'Tuesday',
-    timePST: '8pm PST',
-    timeEST: '11pm EST',
-    timeBST: '4am BST'
+    timePST: '7:30pm PST',
+    timeEST: '10:30pm EST',
+    timeBST: '3:30am BST'
   },
   {
     host: 'Ollie',
