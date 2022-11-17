@@ -27,8 +27,6 @@ export default function SpacesShow(props: SpacesShowProps) {
             <Chip label={space.timePST}/>
             <Chip label={space.timeEST}/>
             <Chip label={space.timeBST}/>
-            <Chip label={space.timeAEST}/>
-            <Chip label={space.timeKST}/>
           </Stack>
         </Stack>
       </Stack>

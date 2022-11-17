@@ -92,18 +92,6 @@ export const sprite: SpriteMap = {
 
 export const spaces: Space[] = [
   {
-    host: 'Ollie',
-    hostAvatar: 'https://froggyfriends.mypinata.cloud/ipfs/QmdJoB8xdVieoCxgh34mF23TA6RFqdEZ1aRHZBcm1zVi7W',
-    twitter: 'https://twitter.com/ollliieeeeee',
-    name: 'Ollies Space',
-    day: 'Wednesday',
-    timePST: '1pm PST',
-    timeEST: '4pm EST',
-    timeBST: '9pm BST',
-    timeAEST: '8am AEDT (Tue)',
-    timeKST: '6am KST (Tue)'
-  },
-  {
     host: 'Bek',
     hostAvatar: 'https://froggyfriends.mypinata.cloud/ipfs/Qmakmum943LT7Brf1C6G9rVoswhUZk65Renyav2zfPB5s2',
     twitter: 'https://twitter.com/SleepyBek',
@@ -111,9 +99,37 @@ export const spaces: Space[] = [
     day: 'Monday',
     timePST: '1pm PST',
     timeEST: '4pm EST',
-    timeBST: '9pm BST',
-    timeAEST: '8am AEDT (Tue)',
-    timeKST: '6am KST (Tue)'
+    timeBST: '9pm BST'
+  },
+  {
+    host: 'Steezy',
+    hostAvatar: 'https://froggyfriends.mypinata.cloud/ipfs/Qmc2DqfauwBpCKvopfc8HQ1wzEeuH1gqcz2h72Dac9rekz',
+    twitter: 'https://twitter.com/_Steezyfresh_',
+    name: "Steezy's Space",
+    day: 'Tuesday',
+    timePST: '8pm PST',
+    timeEST: '11pm EST',
+    timeBST: '4am BST'
+  },
+  {
+    host: 'Ollie',
+    hostAvatar: 'https://froggyfriends.mypinata.cloud/ipfs/QmdJoB8xdVieoCxgh34mF23TA6RFqdEZ1aRHZBcm1zVi7W',
+    twitter: 'https://twitter.com/ollliieeeeee',
+    name: 'Ollies Space',
+    day: 'Wednesday',
+    timePST: '12pm PST',
+    timeEST: '3pm EST',
+    timeBST: '8pm BST'
+  },
+  {
+    host: 'DegenDaddy',
+    hostAvatar: 'https://froggyfriends.mypinata.cloud/ipfs/QmQ84djuQEEFUJuu66Lt3ehNk7PYJYpS9thvxVACaqjy17',
+    twitter: 'https://twitter.com/realdegendad',
+    name: "Degen Vibes",
+    day: 'Thursday',
+    timePST: '9am PST',
+    timeEST: '12pm EST',
+    timeBST: '5pm BST'
   },
   {
     host: 'Fonzy',
@@ -123,8 +139,6 @@ export const spaces: Space[] = [
     day: 'Friday',
     timePST: '9am PST',
     timeEST: '12pm EST',
-    timeBST: '5pm BST',
-    timeAEST: '4am AEDT (Sat)',
-    timeKST: '2am KST (Sat)'
+    timeBST: '5pm BST'
   }
 ]
