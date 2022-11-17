@@ -9,6 +9,4 @@ export interface Space {
   timePST: string;
   timeEST: string;
   timeBST: string;
-  timeAEST: string;
-  timeKST: string;
 }
