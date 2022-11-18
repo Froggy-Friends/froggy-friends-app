@@ -23,6 +23,7 @@ export default function Spaces() {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const [calendar, setCalendar] = useState<SpacesCalendar>();
+  const [shows, setShows] = useState<ScheduledSpace[]>([]);
 
   useEffect(() => {
     async function getSpacesCalendar() {
@@ -36,7 +37,7 @@ export default function Spaces() {
   useEffect(() => {
     async function getScheduledShows() {
       const shows = (await axios.get<ScheduledSpace[]>(`${process.env.REACT_APP_API}/spaces/scheduled`)).data;
-      console.log("shows: ", shows);
+      setShows(shows);
     }
     
     getScheduledShows();
