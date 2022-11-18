@@ -1,34 +1,46 @@
 import { Twitter } from "@mui/icons-material";
-import { Stack, Avatar, Typography, Link, useTheme, useMediaQuery, Chip } from "@mui/material";
-import { Space } from "../models/Space";
+import { Stack, Avatar, Typography, Link, useTheme, useMediaQuery, Chip, Box } from "@mui/material";
+import { formatRelative } from "date-fns";
+import { ScheduledSpace } from "../models/Spaces";
 
 interface SpacesShowProps {
-  key: number;
-  space: Space;
+  scheduled?: ScheduledSpace;
+  name: string;
+  hostName: string;
+  bannerUrl?: string;
+  avatar: string;
+  twitterUrl: string;
+  pst: string;
+  est: string;
+  gmt: string;
 }
 
 export default function SpacesShow(props: SpacesShowProps) {
-  const { key, space } = props;
+  const { scheduled } = props;
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Stack key={key} direction='row' spacing={8} alignItems='center' pb={5}>
+    <Stack direction={isSm ? 'column' : 'row'} spacing={4} justifyContent='center' alignItems='center' pb={5}>
       <Stack id='pfp' alignItems='center' spacing={2}>
-        <Avatar alt={space.host} src={space.hostAvatar} sx={{ width: 80, height: 80 }}/>
-        <Link href={space.twitter} target="_blank" color='secondary'><Twitter/></Link>
+        <Avatar alt={props.name} src={props.avatar} sx={{ width: 80, height: 80 }}/>
+        <Link href={props.twitterUrl} target="_blank" color='secondary'><Twitter/></Link>
       </Stack>
-      <Stack direction={isMd ? 'column' : 'row'} spacing={isSm ? 2 : 8} alignItems={isSm ? 'start' : 'center'} pb={2}>
-        <Stack id='titles'>
-          <Typography variant='h4'>{space.name}</Typography>
-          <Typography variant='subtitle1'>Hosted by {space.host}</Typography>
-          <Stack id='times' direction={isSm ? 'column' : 'row'} pt={2} spacing={2} width='fit-content'>
-            <Chip label={space.timePST}/>
-            <Chip label={space.timeEST}/>
-            <Chip label={space.timeBST}/>
+      <Stack direction={isMd ? 'column' : 'row'} spacing={isSm ? 2 : 8} pb={2} minWidth={300}>
+        <Stack id='titles' alignItems='center'>
+          <Typography variant='h4'>{props.name}</Typography>
+          <Typography variant='subtitle1'>Hosted by {props.hostName}</Typography>
+          <Stack id='times' direction='row' pt={2} spacing={2} width='fit-content'>
+            <Chip label={props.pst}/>
+            <Chip label={props.est}/>
+            <Chip label={props.gmt}/>
           </Stack>
         </Stack>
+      </Stack>
+      <Stack id='banner' alignItems='center' width='100%' sx={{display: isMd ? 'none' : 'default'}}>
+        <Box component='img' src={props.bannerUrl} height={250} minWidth={500}/>
+        { scheduled && <Link variant='subtitle1' href={`https://twitter.com/i/spaces/${scheduled.id}/peek`} target='_blank'>{formatRelative(new Date(scheduled.scheduledStart), new Date())}</Link>}
       </Stack>
     </Stack>
   )
