@@ -14,6 +14,7 @@ interface SpacesShowProps {
 
 export default function SpacesShow(props: SpacesShowProps) {
   const theme = useTheme();
+  const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -34,8 +35,8 @@ export default function SpacesShow(props: SpacesShowProps) {
           </Stack>
         </Stack>
       </Stack>
-      <Stack id='banner' alignItems='center' width='100%' sx={{display: isMd ? 'none' : 'default'}}>
-        <Box component='img' src={props.bannerUrl} height={250}/>
+      <Stack id='banner' alignItems='center' width='100%' sx={{display: isLg ? 'none' : 'default'}}>
+        <Box component='img' src={props.bannerUrl} height={250} minWidth={500}/>
       </Stack>
     </Stack>
   )

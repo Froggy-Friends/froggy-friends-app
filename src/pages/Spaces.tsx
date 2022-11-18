@@ -57,7 +57,7 @@ export default function Spaces() {
             {
               calendar.monday.map((space, index) => {
                 return (
-                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name} bannerUrl={space.bannerUrl} avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
                 )
               })
             }
@@ -70,7 +70,7 @@ export default function Spaces() {
             {
               calendar.tuesday.map((space, index) => {
                 return (
-                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name} bannerUrl={space.bannerUrl} avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
                 )
               })
             }
@@ -83,7 +83,7 @@ export default function Spaces() {
             {
               calendar.wednesday.map((space, index) => {
                 return (
-                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name} bannerUrl={space.bannerUrl} avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
                 )
               })
             }
@@ -109,7 +109,7 @@ export default function Spaces() {
             {
               calendar.friday.map((space, index) => {
                 return (
-                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name} bannerUrl={space.bannerUrl} avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
                 )
               })
             }
@@ -122,7 +122,7 @@ export default function Spaces() {
             {
               calendar.saturday.map((space, index) => {
                 return (
-                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name} bannerUrl={space.bannerUrl} avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
                 )
               })
             }
@@ -135,7 +135,7 @@ export default function Spaces() {
             {
               calendar.sunday.map((space, index) => {
                 return (
-                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name} bannerUrl={space.bannerUrl} avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
                 )
               })
             }
