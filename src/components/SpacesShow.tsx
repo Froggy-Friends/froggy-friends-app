@@ -1,7 +1,10 @@
 import { Twitter } from "@mui/icons-material";
 import { Stack, Avatar, Typography, Link, useTheme, useMediaQuery, Chip, Box } from "@mui/material";
+import { formatRelative } from "date-fns";
+import { ScheduledSpace } from "../models/Spaces";
 
 interface SpacesShowProps {
+  scheduled?: ScheduledSpace;
   name: string;
   hostName: string;
   bannerUrl?: string;
@@ -13,8 +16,8 @@ interface SpacesShowProps {
 }
 
 export default function SpacesShow(props: SpacesShowProps) {
+  const { scheduled } = props;
   const theme = useTheme();
-  const isLg = useMediaQuery(theme.breakpoints.down('lg'));
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -37,6 +40,7 @@ export default function SpacesShow(props: SpacesShowProps) {
       </Stack>
       <Stack id='banner' alignItems='center' width='100%' sx={{display: isMd ? 'none' : 'default'}}>
         <Box component='img' src={props.bannerUrl} height={250} minWidth={500}/>
+        { scheduled && <Link variant='subtitle1' href={`https://twitter.com/i/spaces/${scheduled.id}/peek`} target='_blank'>{formatRelative(new Date(scheduled.scheduledStart), new Date())}</Link>}
       </Stack>
     </Stack>
   )

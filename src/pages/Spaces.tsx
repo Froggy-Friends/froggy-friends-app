@@ -43,6 +43,10 @@ export default function Spaces() {
     getScheduledShows();
   }, []);
 
+  const getScheduledShow = (host: string) => {
+    return shows.find(show => show.space.host.name.toLowerCase() === host.toLowerCase());
+  }
+
   return (
     <Grid id='spaces' container direction='column' justifyContent='start' minHeight={800} pt={8}>
       <Paper elevation={3}>
@@ -110,7 +114,7 @@ export default function Spaces() {
             {
               calendar.friday.map((space, index) => {
                 return (
-                  <SpacesShow key={index} name={space.name} hostName={space.host.name} bannerUrl={space.bannerUrl} avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                  <SpacesShow key={index} scheduled={getScheduledShow(space.host.name)} name={space.name} hostName={space.host.name} bannerUrl={space.bannerUrl} avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
                 )
               })
             }
