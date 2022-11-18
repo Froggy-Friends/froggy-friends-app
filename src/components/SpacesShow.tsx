@@ -39,7 +39,7 @@ export default function SpacesShow(props: SpacesShowProps) {
         </Stack>
       </Stack>
       <Stack id='banner' alignItems='center' width='100%' sx={{display: isMd ? 'none' : 'default'}}>
-        <Box component='img' src={props.bannerUrl} height={250} minWidth={500}/>
+        <Box component='img' src={props.bannerUrl} height={250} width={500}/>
         { scheduled && <Link variant='subtitle1' href={`https://twitter.com/i/spaces/${scheduled.id}/peek`} target='_blank'>{formatRelative(new Date(scheduled.scheduledStart), new Date())}</Link>}
       </Stack>
     </Stack>
