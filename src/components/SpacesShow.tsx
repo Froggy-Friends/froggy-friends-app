@@ -1,13 +1,17 @@
 import { Twitter } from "@mui/icons-material";
 import { Stack, Avatar, Typography, Link, useTheme, useMediaQuery, Chip } from "@mui/material";
-import { Space } from "../models/Spaces";
 
 interface SpacesShowProps {
-  space: Space;
+  name: string;
+  hostName: string;
+  avatar: string;
+  twitterUrl: string;
+  pst: string;
+  est: string;
+  gmt: string;
 }
 
 export default function SpacesShow(props: SpacesShowProps) {
-  const { space } = props;
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -15,17 +19,17 @@ export default function SpacesShow(props: SpacesShowProps) {
   return (
     <Stack direction='row' spacing={8} alignItems='center' pb={5}>
       <Stack id='pfp' alignItems='center' spacing={2}>
-        <Avatar alt={space.host.name} src={space.host.avatar} sx={{ width: 80, height: 80 }}/>
-        <Link href={space.host.twitterUrl} target="_blank" color='secondary'><Twitter/></Link>
+        <Avatar alt={props.name} src={props.avatar} sx={{ width: 80, height: 80 }}/>
+        <Link href={props.twitterUrl} target="_blank" color='secondary'><Twitter/></Link>
       </Stack>
       <Stack direction={isMd ? 'column' : 'row'} spacing={isSm ? 2 : 8} alignItems={isSm ? 'start' : 'center'} pb={2}>
         <Stack id='titles'>
-          <Typography variant='h4'>{space.name}</Typography>
-          <Typography variant='subtitle1'>Hosted by {space.host}</Typography>
+          <Typography variant='h4'>{props.name}</Typography>
+          <Typography variant='subtitle1'>Hosted by {props.hostName}</Typography>
           <Stack id='times' direction={isSm ? 'column' : 'row'} pt={2} spacing={2} width='fit-content'>
-            <Chip label={space.times.pst}/>
-            <Chip label={space.times.est}/>
-            <Chip label={space.times.gmt}/>
+            <Chip label={props.pst}/>
+            <Chip label={props.est}/>
+            <Chip label={props.gmt}/>
           </Stack>
         </Stack>
       </Stack>

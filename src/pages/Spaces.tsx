@@ -31,7 +31,7 @@ export default function Spaces() {
     }
 
     getSpacesCalendar();
-  })
+  }, [])
 
   useEffect(() => {
     async function getScheduledShows() {
@@ -40,7 +40,7 @@ export default function Spaces() {
     }
     
     getScheduledShows();
-  });
+  }, []);
 
   return (
     <Grid id='spaces' container direction='column' justifyContent='start' minHeight={800} pt={8}>
@@ -50,98 +50,97 @@ export default function Spaces() {
       <Container maxWidth='xl' sx={{pt: 5, pb: 10}}>
         <Typography variant='h3'>Community Spaces</Typography>
         <Typography variant='subtitle1' pb={5}>Weekly twitter spaces hosted by community members.</Typography>
-        {/* {
-          calendar && Object.keys(calendar).map((cal, index) => (
-            <Fragment>
-              <Divider sx={{pb: 5}}>Monday</Divider>
-              {
-                calendar[`${cal}`].map((space, index) => (
-                  <SpacesShow key={index} space={space}/>
-                ))
-              }
-            </Fragment>
-          ))
-        } */}
         { 
-          calendar?.monday &&
+          calendar && calendar.monday.length > 0 &&
           <Fragment>
             <Divider sx={{pb: 5}}>Monday</Divider>
             {
               calendar.monday.map((space, index) => {
                 return (
-                  // <SpacesShow key={index} space={space}/>
-                  <div>Hello</div>
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
                 )
               })
             }
           </Fragment>        
         }
-        {/* { 
-          calendar?.tuesday &&
+        { 
+          calendar && calendar.tuesday.length > 0 &&
           <Fragment>
             <Divider sx={{pb: 5}}>Tuesday</Divider>
             {
-              calendar.tuesday.map((space, index) => (
-                <SpacesShow key={index} space={space}/>
-              ))
+              calendar.tuesday.map((space, index) => {
+                return (
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                )
+              })
             }
           </Fragment>        
         }
         { 
-          calendar?.wednesday &&
+          calendar && calendar.wednesday.length > 0 &&
           <Fragment>
             <Divider sx={{pb: 5}}>Wednesday</Divider>
             {
-              calendar.wednesday.map((space, index) => (
-                <SpacesShow key={index} space={space}/>
-              ))
+              calendar.wednesday.map((space, index) => {
+                return (
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                )
+              })
             }
           </Fragment>        
         }
         { 
-          calendar?.thursday &&
+          calendar && calendar.thursday.length > 0 &&
           <Fragment>
             <Divider sx={{pb: 5}}>Thursday</Divider>
             {
-              calendar.thursday.map((space, index) => (
-                <SpacesShow key={index} space={space}/>
-              ))
+              calendar.thursday.map((space, index) => {
+                return (
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                )
+              })
             }
           </Fragment>        
         }
         { 
-          calendar?.friday &&
+          calendar && calendar.friday.length > 0 &&
           <Fragment>
             <Divider sx={{pb: 5}}>Friday</Divider>
             {
-              calendar.friday.map((space, index) => (
-                <SpacesShow key={index} space={space}/>
-              ))
+              calendar.friday.map((space, index) => {
+                return (
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                )
+              })
             }
           </Fragment>        
         }
         { 
-          calendar?.saturday &&
+          calendar && calendar.saturday.length > 0 &&
           <Fragment>
             <Divider sx={{pb: 5}}>Saturday</Divider>
             {
-              calendar.saturday.map((space, index) => (
-                <SpacesShow key={index} space={space}/>
-              ))
+              calendar.saturday.map((space, index) => {
+                return (
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                )
+              })
             }
           </Fragment>        
         }
         { 
-          calendar?.sunday &&
+          calendar && calendar.sunday.length > 0 &&
           <Fragment>
             <Divider sx={{pb: 5}}>Sunday</Divider>
             {
-              calendar.sunday.map((space, index) => (
-                <SpacesShow key={index} space={space}/>
-              ))
+              calendar.sunday.map((space, index) => {
+                return (
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                )
+              })
             }
           </Fragment>        
-        } */}
+        }
       </Container>
     </Grid>
   )
