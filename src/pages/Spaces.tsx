@@ -96,7 +96,7 @@ export default function Spaces() {
             {
               calendar.thursday.map((space, index) => {
                 return (
-                  <SpacesShow key={index} name={space.name} hostName={space.host.name}avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
+                  <SpacesShow key={index} name={space.name} hostName={space.host.name} bannerUrl={space.bannerUrl} avatar={space.host.avatar}twitterUrl={space.host.twitterUrl}pst={space.times.pst}est={space.times.est}gmt={space.times.gmt}/>
                 )
               })
             }

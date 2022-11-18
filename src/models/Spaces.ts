@@ -21,6 +21,7 @@ export interface Host {
 
 export interface Space {
   name: string;
+  bannerUrl: string;
   host: Host;
   times: Times;
 }
