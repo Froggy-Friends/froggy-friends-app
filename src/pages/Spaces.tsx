@@ -4,7 +4,7 @@ import banner from '../images/community.png';
 import { Fragment, useEffect, useState } from "react";
 import SpacesShow from "../components/SpacesShow";
 import axios from "axios";
-import { ScheduledSpace, Space, SpacesCalendar } from "../models/Spaces";
+import { ScheduledSpace, SpacesCalendar } from "../models/Spaces";
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
