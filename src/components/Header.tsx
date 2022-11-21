@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { makeStyles, createStyles } from '@mui/styles';
-import { Grid, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Button, useTheme, Container } from "@mui/material";
+import { Grid, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Button, useTheme, Container, Stack } from "@mui/material";
 import { Close, ShoppingCart, Menu, DarkMode, LightMode, Paid } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
@@ -37,7 +37,7 @@ export default function Header() {
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   const isAboveTablet = useMediaQuery(theme.breakpoints.up('md'));
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTinyMobile = useMediaQuery(theme.breakpoints.down(321));
+  const isXs = useMediaQuery(theme.breakpoints.down(321));
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
   const [musicOpen, setMusicOpen] = useState<boolean>(false);
   const { activateBrowserWallet, account } = useEthers();
@@ -70,38 +70,28 @@ export default function Header() {
         <AppBar position="fixed" color="inherit">
           <Toolbar sx={{bgcolor: theme.palette.background.default, pb: theme.spacing(1)}}>
             <Container maxWidth='xl' disableGutters={isMobile}>
-              <Grid id="header" container item justifyContent={isMobile ? 'end' : 'space-between'} alignItems="center" xl={12} lg={12} md={12} sm={12} xs={12} pl={1}>
-                <Grid id='logo' container item display={isTinyMobile ? 'none' : 'flex'} justifyContent="start" xl={3} lg={3} md={3} sm={4} xs={1}>
+              <Stack id="header" direction='row' justifyContent={isXs ? 'end' : 'space-between'} alignItems="center" p={0.5}>
+                <Stack id='logo' direction='row' display={isXs ? 'none' : 'flex'} alignSelf='end'>
                   <Link href={'/staking'} underline='none'>
-                    <img className={classes.avatar} alt='Home' src={logo} width={45} height={45}/>
-                  </Link>
+                    <img className={classes.avatar} alt='Home' src={logo} width={55} height={55}/>
+                  </Link> 
                   {
                     isDesktop && <Typography variant='h6' alignSelf='center' fontWeight='bold' pl={2}>Froggy Friends</Typography>
                   }
-                </Grid>
-                <Grid id='links' container item display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' xl={4} lg={4} md={5}>
-                  <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
+                </Stack>
+                <Stack id='links' direction='row' display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' spacing={2}>
                     <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => navigate("/staking")}>Stake</Typography>
-                  </Grid>
-                  <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                     <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => navigate("/market")}>Market</Typography>
-                  </Grid>
-                  <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                     <Typography className="link" variant="h5" color={getLinkColor('/leaderboard')} onClick={() => navigate("/leaderboard")}>Board</Typography>
-                  </Grid>
-                  <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                     <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => navigate("/studio")}>Studio</Typography>
-                  </Grid> 
-                  <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
                     <Typography className="link" variant="h5" color={getLinkColor('/spaces')} onClick={() => navigate("/spaces")}>Spaces</Typography>
-                  </Grid> 
-                </Grid>
-                <Grid id='buttons' container item justifyContent="end" alignItems='center' p={1} xl={5} lg={4} md={4} sm={8} xs={isTinyMobile ? 12 : 11}>
-                  <Grid item display="flex" pr={1}>
+                </Stack>
+                <Stack id='buttons' direction='row' justifyContent="end" alignItems='center' p={1}>
+                  <Stack direction='row' pr={1}>
                     <Fab size='small' onClick={colorMode.toggleColorMode}>
                       { theme.palette.mode === 'dark' ? <LightMode fontSize="medium"/> : <DarkMode fontSize="medium"/>}
                     </Fab>
-                  </Grid>
+                  </Stack>
                   <Grid item display="flex" pr={1}>
                     <Fab size='small' onClick={() => window.open('https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x46898f15f99b8887d87669ab19d633f579939ad9&chain=mainnet', '_blank')}>
                       <Paid fontSize='medium'/>
@@ -134,8 +124,8 @@ export default function Header() {
                       <Menu/>
                     </IconButton>
                   </Grid>
-                </Grid>
-              </Grid>
+                </Stack>
+              </Stack>
             </Container>
           </Toolbar>
         </AppBar>
