@@ -3,13 +3,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { makeStyles, createStyles } from '@mui/styles';
-import { Grid, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Button, useTheme, Container, Stack } from "@mui/material";
+import { Grid, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Button, useTheme, Container, Stack, Modal, Box } from "@mui/material";
 import { Close, ShoppingCart, Menu, DarkMode, LightMode, Paid } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
 import { ColorModeContext } from "../App";
 import logo from '../images/logo.png';
+import metamask from '../images/metamask.webp';
+import brave from '../images/brave.svg';
 import Cart from "./Cart";
+
+declare var window: any;
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -20,6 +24,20 @@ const useStyles: any = makeStyles((theme: Theme) =>
       },
       [theme.breakpoints.up('lg')]: {
         marginTop: '10px'
+      }
+    },
+    modal: {
+      position: 'absolute' as 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 500,
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.secondary.main,
+      borderRadius: 5,
+      padding: 4,
+      [theme.breakpoints.down('sm')]: {
+        width: 300
       }
     }
   })
@@ -43,6 +61,8 @@ export default function Header() {
   const { activateBrowserWallet, account } = useEthers();
   const ens = useLookupAddress();
   const [displayName, setDisplayName] = useState<string>("");
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const ethereum = window.ethereum;
 
   useEffect(() => {
     if (ens) {
@@ -51,6 +71,12 @@ export default function Header() {
       setDisplayName(shortenAddress(account));
     }
   }, [account, ens]);
+
+  useEffect(() => {
+    if (showLoginModal && account) {
+      setShowLoginModal(false);
+    }
+  }, [account])
 
   const onMusicClick = () => {
     setMusicOpen(!musicOpen);
@@ -63,6 +89,14 @@ export default function Header() {
 
   const getLinkColor = (link: string) => {
     return location.pathname === link ? "primary" : "secondary";
+  }
+
+  const onLoginClicked = () => {
+    setShowLoginModal(true);
+  }
+
+  const onLoginModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    setShowLoginModal(false);
   }
 
   return (
@@ -112,8 +146,8 @@ export default function Header() {
                     </Fab>
                   </Grid>
                   <Grid item display={isDesktop && !account ? "flex" : "none"}>
-                    <Button variant='contained' onClick={() => activateBrowserWallet()}>
-                      <Typography variant='h5'>Login</Typography>  
+                    <Button variant='contained' onClick={onLoginClicked}>
+                      <Typography variant='h5'>Connect</Typography> 
                     </Button>
                   </Grid>
                   <Grid item display={isDesktop && account ? "flex" : "none"} pl={1}>
@@ -156,8 +190,8 @@ export default function Header() {
             </Grid>
             <Grid id='account' container item alignItems='center'>
               <Grid item display={!account ? "flex" : "none"} pr={2}>
-                <Button variant='contained' onClick={() => activateBrowserWallet()}>
-                  <Typography variant='h5'>Login</Typography>  
+                <Button variant='contained' onClick={onLoginClicked}>
+                  <Typography variant='h5'>Connect</Typography>  
                 </Button>
               </Grid>
             </Grid>
@@ -167,6 +201,43 @@ export default function Header() {
           </Grid>
         </Drawer>
         <Cart />
+        <Modal open={showLoginModal} onClose={onLoginModalClose}>
+          <Box className={classes.modal}>
+            <Stack p={3} spacing={3}>
+              <Typography variant='h5'>Connect Wallet</Typography>
+              <Typography>Choose a wallet to connect.</Typography>
+              <Stack
+                  direction='row' 
+                  p={2} 
+                  spacing={1} 
+                  alignItems='center' 
+                  border='2px solid grey' 
+                  borderRadius={2} 
+                  sx={{cursor: 'pointer'}}
+                  onClick={() => activateBrowserWallet()}
+              >
+                <img src={metamask} height={35} width={35}/>
+                <Typography>Metamask</Typography>
+              </Stack>
+              { 
+                ethereum.isBraveWallet && 
+                <Stack
+                  direction='row' 
+                  p={2} 
+                  spacing={1} 
+                  alignItems='center' 
+                  border='2px solid grey' 
+                  borderRadius={2} 
+                  sx={{cursor: 'pointer'}}
+                  onClick={() => activateBrowserWallet()}
+                >
+                  <img src={brave} height={35} width={35}/>
+                  <Typography>Brave</Typography>
+                </Stack>
+              }
+            </Stack>
+          </Box>
+        </Modal>
       </Fragment>
   )
 }
