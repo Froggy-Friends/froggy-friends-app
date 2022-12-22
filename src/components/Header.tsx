@@ -220,7 +220,7 @@ export default function Header() {
                 <Typography>Metamask</Typography>
               </Stack>
               { 
-                ethereum.isBraveWallet && 
+                ethereum && ethereum.isBraveWallet && 
                 <Stack
                   direction='row' 
                   p={2} 
