@@ -157,11 +157,6 @@ export default function ItemDetails() {
         
     }
 
-    const getRarity = (item: RibbitItem) => {
-        const attribute = item.attributes.find(attribute => attribute.trait_type === 'Rarity');
-        return attribute ? attribute.value : '';
-    }
-
     const getAddToCartDisabled = (item: RibbitItem) => {
         return item.category === 'raffles' && +debouncedTickets < 1;
     }
@@ -338,9 +333,9 @@ export default function ItemDetails() {
                                 <Grid container spacing={2}>
                                     <Grid item ml={-2}><Chip label={item.category}/></Grid>
                                     <Grid item><Chip label={item.isOnSale && item.minted !== item.supply ? 'On Sale' : 'Off Sale'}/></Grid>
-                                    { item.isBoost && <Grid item><Chip label={`${item.percentage}% Boost`}/></Grid>}
-                                    { item.community && <Grid item><Chip label='Community'/></Grid>}
-                                    <Grid item><Chip label={getRarity(item)}/></Grid>
+                                    { item.isBoost && <Grid item><Chip label={`${item.percent}% Boost`}/></Grid>}
+                                    { item.isCommunity && <Grid item><Chip label='Community'/></Grid>}
+                                    <Grid item><Chip label={item.rarity}/></Grid>
                                 </Grid>
                             }
                         </Stack>

@@ -7,18 +7,24 @@ export interface RibbitItem {
   collabId: number;
   twitter: string;
   discord: string;
-  community: boolean;
+  website: string;
   endDate: number;
   image: string;
   imageTransparent: string;
   previewImage: string;
   price: number;
-  percentage: number;
+  percent: number;
   minted: number;
   supply: number;
+  rarity: string;
   walletLimit: number;
   isBoost: boolean;
   isOnSale: boolean;
+  isCommunity: boolean;
+  isAllowlist: boolean;
+  isPhysical: boolean;
+  isTrait: boolean;
   amount: number;
-  attributes: Attribute[];
+  traitLayer: string;
+  friendOrigin: string;
 }
