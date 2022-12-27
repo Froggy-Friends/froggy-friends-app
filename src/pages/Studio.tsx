@@ -79,7 +79,7 @@ export default function Studio() {
         setFrogs([]);
         setFriends([]);
         setHistory([]);
-        const owned = (await axios.get<Owned>(`${process.env.REACT_APP_API}/owned/unstaked/${address}`)).data;
+        const owned = (await axios.get<Owned>(`${process.env.REACT_APP_API}/frog/owned/unstaked/${address}`)).data;
         const friends = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/owned/friends/${account}`)).data;
         const history = (await axios.get<History[]>(`${process.env.REACT_APP_API}/history/${account}`)).data;
         setFrogs(owned.froggies.filter(frog => !frog.isStaked));
@@ -108,19 +108,19 @@ export default function Studio() {
 
     // only show prevew of existing paired frog
     if (selectedFrog && selectedFrog.isPaired) {
-      layerImages([selectedFrog.image]);
+      layerImages([selectedFrog.cid2d]);
       return;
     }
 
     // show preview of unpaired frog and friend
     if (selectedFrog && selectedFriend) {
-      layerImages([selectedFrog.image, selectedFriend.imageTransparent]);
+      layerImages([selectedFrog.cid2d, selectedFriend.imageTransparent]);
       return;
     }
 
     // switch frog in preview
     if (selectedFrog) {
-      layerImages([selectedFrog.image]);
+      layerImages([selectedFrog.cid2d]);
       return;
     }
   }, [selectedFrog, selectedFriend]);
@@ -237,7 +237,7 @@ export default function Studio() {
                       frogs.map(frog => {
                         return <Grid key={frog.edition} item p={1} xl={3}>
                           <Card onClick={() => onFrogClick(frog)}>
-                            <CardMedia component='img' src={frog.image} height={100} alt=''/>
+                            <CardMedia component='img' src={frog.cid2d} height={100} alt=''/>
                           </Card>
                         </Grid>
                       })
