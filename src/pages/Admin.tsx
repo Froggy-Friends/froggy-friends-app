@@ -28,8 +28,10 @@ export default function Admin() {
   const [presets, setPresets] = useState<ItemPresets>();
   const [itemName, setItemName] = useState('');
   const [itemOnSale, setItemOnSale] = useState(false);
-  const [itemCategory, setItemCategory] = useState('');
-  const [itemFriendOrigin, setItemFriendOrigin] = useState('');
+  const [itemCategory, setItemCategory] = useState<string>();
+  const [itemFriendOrigin, setItemFriendOrigin] = useState<string>();
+  const [itemCollabId, setItemCollabId] = useState<number>();
+  const [itemBoost, setItemBoost] = useState<number>();
 
   useEffect(() => {
     async function getPresets() {
@@ -81,7 +83,15 @@ export default function Admin() {
   }
 
   const onItemFriendOriginChange = (event: SelectChangeEvent) => {
-    setItemFriendOrigin(event.target.value as string);
+    setItemFriendOrigin(event.target.value);
+  }
+
+  const onItemCollabIdChange = (event: SelectChangeEvent) => {
+    setItemCollabId(+event.target.value);
+  }
+
+  const onItemBoostChange = (event: SelectChangeEvent) => {
+    setItemBoost(+event.target.value);
   }
 
   return (
@@ -134,25 +144,28 @@ export default function Admin() {
           {
             task === 'list' &&
             <Stack>
-              <FormControl component='fieldset' variant='standard'>
-                <Stack direction='row'>
-                  <TextField label="Name" variant="outlined" value='itemName' onChange={onItemNameChange}/>
-                  <FormControlLabel
-                    control={
-                      <Switch checked={itemOnSale} onChange={onItemSaleChanged}/>
-                    }
-                    label='On Sale'
-                    labelPlacement="top"
-                  />
+                <Stack direction='row' pb={5}>
+                  <FormControl component='fieldset' variant='standard'>
+                    <TextField label="Name" variant="outlined" value='itemName' onChange={onItemNameChange}/>
+                  </FormControl>
+                  <FormControl>
+                    <FormControlLabel
+                        control={
+                          <Switch checked={itemOnSale} onChange={onItemSaleChanged}/>
+                        }
+                        label='On Sale'
+                        labelPlacement="top"
+                      />  
+                  </FormControl>
                 </Stack>
-                <Stack direction='row' spacing={2}>
+                <Stack direction='row' spacing={2} pb={5}>
                   <Stack minWidth={100}>
                     <FormControl fullWidth>
                       <InputLabel id="category-label">Category</InputLabel>
                       <Select
                         labelId="category-label"
                         id="category"
-                        value={itemCategory}
+                        value={`${itemCategory}`}
                         label="Category"
                         onChange={onItemCategoryChange}
                       >
@@ -170,7 +183,7 @@ export default function Admin() {
                       <Select
                         labelId="friendOrigin-label"
                         id="friendOrigin"
-                        value={itemFriendOrigin}
+                        value={`${itemFriendOrigin}`}
                         label="friendOrigin"
                         onChange={onItemFriendOriginChange}
                       >
@@ -182,8 +195,43 @@ export default function Admin() {
                       </Select>
                     </FormControl>
                   </Stack>
+                  <Stack minWidth={100}>
+                    <FormControl fullWidth>
+                      <InputLabel id="collabId-label">Collab ID</InputLabel>
+                      <Select
+                        labelId="collabId-label"
+                        id="collabId"
+                        value={`${itemCollabId}`}
+                        label="collabId"
+                        onChange={onItemCollabIdChange}
+                      >
+                        {
+                          presets?.collabIds.map((collabId, index) => (
+                            <MenuItem key={index} value={collabId}>{collabId}</MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </FormControl>
+                  </Stack>
+                  <Stack minWidth={100}>
+                    <FormControl fullWidth>
+                      <InputLabel id="boost-label">Boost</InputLabel>
+                      <Select
+                        labelId="boost-label"
+                        id="boost"
+                        value={`${itemBoost}`}
+                        label="Boost"
+                        onChange={onItemBoostChange}
+                      >
+                        {
+                          presets?.boosts.map((boost, index) => (
+                            <MenuItem key={index} value={boost}>{boost}</MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </FormControl>
+                  </Stack>
                 </Stack>
-              </FormControl>
             </Stack>
           }
         </Grid>
