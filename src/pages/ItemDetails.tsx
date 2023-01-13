@@ -113,7 +113,7 @@ export default function ItemDetails() {
 
     async function getItem(id: string) {
         try {
-          const response = await axios.get<RibbitItem>(`${process.env.REACT_APP_API}/items/${id}`);
+          const response = await axios.get<RibbitItem>(`${process.env.REACT_APP_API}/items/${id}/details`);
           let item = response.data;
           setItem(item);
           setItemEnded(compareAsc(item.endDate, Date.now()) === -1);
