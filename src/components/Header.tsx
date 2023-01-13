@@ -162,13 +162,6 @@ export default function Header() {
                       <Paid fontSize='medium'/>
                     </Fab>
                   </Grid>
-                  {/* <Grid item display="flex" pr={1}>
-                    <Fab size='small' onClick={onMusicClick}>
-                      <Badge invisible={!playing} badgeContent=" " color="primary">
-                        <Headphones fontSize='medium'/>
-                      </Badge>
-                    </Fab>
-                  </Grid> */}
                   <Grid item display="flex" pr={1}>
                     <Fab size='small' onClick={onCartClick}>
                       <Badge badgeContent={cartItemCount} color="primary">
@@ -221,7 +214,10 @@ export default function Header() {
                       >
                       <Typography pl={2}>{displayName}</Typography>
                       {
-                        isAdmin && <MenuItem><Assignment fontSize="small"/> Admins</MenuItem>
+                        isAdmin && 
+                        <MenuItem onClick={() => navigate("/admin")}>
+                          <Assignment fontSize="small"/> Admin
+                        </MenuItem>
                       }
                       <Divider />
                       <MenuItem disabled>
