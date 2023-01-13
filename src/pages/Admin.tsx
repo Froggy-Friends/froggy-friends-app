@@ -32,6 +32,8 @@ export default function Admin() {
   const [itemFriendOrigin, setItemFriendOrigin] = useState<string>();
   const [itemCollabId, setItemCollabId] = useState<number>();
   const [itemBoost, setItemBoost] = useState<number>();
+  const [itemRarity, setItemRarity] = useState<string>();
+  const [itemTraitLayer, setItemTraitLayer] = useState<string>();
 
   useEffect(() => {
     async function getPresets() {
@@ -94,6 +96,14 @@ export default function Admin() {
     setItemBoost(+event.target.value);
   }
 
+  const onItemRarityChange = (event: SelectChangeEvent) => {
+    setItemRarity(event.target.value);
+  }
+
+  const onItemTraitLayerChange = (event: SelectChangeEvent) => {
+    setItemTraitLayer(event.target.value);
+  }
+
   return (
     <Grid id="admin" className={classes.market} container direction="column" justifyContent="start">
       <Paper elevation={3}>
@@ -101,7 +111,7 @@ export default function Admin() {
       </Paper>
       <Container maxWidth='xl'  sx={{pt: 15, pb: 25}}>
         <Grid container spacing={5}>
-          <Stack>
+          <Stack pr={5}>
             <FormControl>
               <FormLabel id="demo-controlled-radio-buttons-group">Admin Tasks</FormLabel>
               <RadioGroup
@@ -146,7 +156,7 @@ export default function Admin() {
             <Stack>
                 <Stack direction='row' pb={5}>
                   <FormControl component='fieldset' variant='standard'>
-                    <TextField label="Name" variant="outlined" value='itemName' onChange={onItemNameChange}/>
+                    <TextField label="Name" variant="outlined" placeholder="Item name here" value={itemName} onChange={onItemNameChange}/>
                   </FormControl>
                   <FormControl>
                     <FormControlLabel
@@ -226,6 +236,42 @@ export default function Admin() {
                         {
                           presets?.boosts.map((boost, index) => (
                             <MenuItem key={index} value={boost}>{boost}</MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </FormControl>
+                  </Stack>
+                  <Stack minWidth={100}>
+                    <FormControl fullWidth>
+                      <InputLabel id="rarity-label">Rarity</InputLabel>
+                      <Select
+                        labelId="rarity-label"
+                        id="rarity"
+                        value={`${itemRarity}`}
+                        label="rarity"
+                        onChange={onItemRarityChange}
+                      >
+                        {
+                          presets?.rarities.map((rarity, index) => (
+                            <MenuItem key={index} value={rarity}>{rarity}</MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </FormControl>
+                  </Stack>
+                  <Stack minWidth={100}>
+                    <FormControl fullWidth>
+                      <InputLabel id="traitLayer-label">Trait Layer</InputLabel>
+                      <Select
+                        labelId="traitLayer-label"
+                        id="traitLayer"
+                        value={`${itemTraitLayer}`}
+                        label="traitLayer"
+                        onChange={onItemTraitLayerChange}
+                      >
+                        {
+                          presets?.traitLayers.map((traitLayer, index) => (
+                            <MenuItem key={index} value={traitLayer}>{traitLayer}</MenuItem>
                           ))
                         }
                       </Select>
