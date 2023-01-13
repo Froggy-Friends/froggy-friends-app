@@ -10,6 +10,7 @@ import { isPlaying } from "../redux/musicSlice";
 import { ColorModeContext } from "../App";
 import logo from '../images/logo.png';
 import Cart from "./Cart";
+import axios from "axios";
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -53,6 +54,26 @@ export default function Header() {
   const closeAccountMenu = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    async function getAdmins(account: string) {
+      try {
+        
+        const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/admins`);
+        const admins = response.data;
+        if (admins.includes(account)) {
+          setIsAdmin(true);
+        }
+      } catch (error) {
+        console.log("get admins error: ", error);
+      }
+    }
+
+    if (account) {
+      getAdmins(account);
+    }
+
+  }, [account]);
 
   useEffect(() => {
     if (ens) {
