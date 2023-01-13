@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { makeStyles, createStyles } from '@mui/styles';
-import { Grid, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Button, useTheme, Container } from "@mui/material";
-import { Close, ShoppingCart, Menu, DarkMode, LightMode, Paid } from "@mui/icons-material";
+import { Grid, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Button, useTheme, Container, Tooltip, Avatar, Divider, ListItemIcon, MenuItem, Menu } from "@mui/material";
+import { Close, ShoppingCart, Menu as MenuIcon, DarkMode, LightMode, Paid, Logout, PersonAdd, Settings, AccountCircle, Assignment } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
 import { isPlaying } from "../redux/musicSlice";
 import { ColorModeContext } from "../App";
@@ -40,9 +40,19 @@ export default function Header() {
   const isTinyMobile = useMediaQuery(theme.breakpoints.down(321));
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
   const [musicOpen, setMusicOpen] = useState<boolean>(false);
-  const { activateBrowserWallet, account } = useEthers();
+  const { activateBrowserWallet, account, deactivate } = useEthers();
   const ens = useLookupAddress();
   const [displayName, setDisplayName] = useState<string>("");
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isAccountMenuOpen = Boolean(anchorEl);
+  const onAccountMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const closeAccountMenu = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     if (ens) {
@@ -127,11 +137,65 @@ export default function Header() {
                     </Button>
                   </Grid>
                   <Grid item display={isDesktop && account ? "flex" : "none"} pl={1}>
-                    <Typography variant='h5'>{displayName}</Typography>
+                    <Fab size='small' onClick={onAccountMenuClick}>
+                      <AccountCircle fontSize='medium'/>
+                    </Fab>
+                    <Menu
+                      anchorEl={anchorEl}
+                      id="account-menu"
+                      open={isAccountMenuOpen}
+                      onClose={closeAccountMenu}
+                      onClick={closeAccountMenu}
+                      PaperProps={{
+                          elevation: 0,
+                          sx: {
+                            overflow: 'visible',
+                            mt: 1.5,
+                            '& .MuiAvatar-root': {
+                              width: 32,
+                              height: 32,
+                              ml: -0.5,
+                              mr: 1,
+                            },
+                            '&:before': {
+                              content: '""',
+                              display: 'block',
+                              position: 'absolute',
+                              top: 0,
+                              right: 14,
+                              width: 10,
+                              height: 10,
+                              bgcolor: 'background.paper',
+                              transform: 'translateY(-50%) rotate(45deg)',
+                              zIndex: 0,
+                            },
+                          },
+                        }}
+                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                      >
+                      <Typography pl={2}>{displayName}</Typography>
+                      {
+                        isAdmin && <MenuItem><Assignment fontSize="small"/> Admins</MenuItem>
+                      }
+                      <Divider />
+                      <MenuItem disabled>
+                        <ListItemIcon>
+                          <Settings fontSize="small" />
+                        </ListItemIcon>
+                        Settings
+                      </MenuItem>
+                      <MenuItem onClick={() => deactivate()}>
+                        <ListItemIcon>
+                          <Logout fontSize="small" />
+                        </ListItemIcon>
+                        Logout
+                      </MenuItem>
+                    </Menu>
                   </Grid>
                   <Grid item display={!isAboveTablet ? "flex" : "none"} justifyContent="end" pl={1}>
                     <IconButton size="large" color="inherit" aria-label="menu" onClick={() => setSidemenuOpen(!sidemenuOpen)}>
-                      <Menu/>
+                      <MenuIcon/>
                     </IconButton>
                   </Grid>
                 </Grid>

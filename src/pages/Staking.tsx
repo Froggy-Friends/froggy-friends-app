@@ -113,6 +113,8 @@ export default function Staking() {
 
     if (account) {
       getFroggiesOwned(account);
+    } else {
+      setOwned({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
     }
   }, [account])
 
@@ -375,7 +377,7 @@ export default function Staking() {
                 </Grid>
               }
             </Grid>
-          <Typography align='left' p={2} display='flex'><Info fontSize='small' sx={{mr: 1}}/> Click on froggy friends you wish to stake or unstake.</Typography>
+          { account && <Typography align='left' p={2} display='flex'><Info fontSize='small' sx={{mr: 1}}/> Click on froggy friends you wish to stake or unstake.</Typography> }
           <Grid id='froggies' container item xl={12} lg={12} md={12} sm={12} xs={12}>
             {
               loading && 
