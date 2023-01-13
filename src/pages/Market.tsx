@@ -102,7 +102,7 @@ export default function Market() {
   async function getItems() {
     try {
       setLoadingItems(true);
-      const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
+      const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items`);
       let items = response.data;
       setItems(items);
       setLoadingItems(false);
@@ -139,7 +139,7 @@ export default function Market() {
         return false;
       }
       if (filterAvailable && (!item.isOnSale || item.minted === item.supply)) return false;
-      if (filterCommunity && !item.community) return false;
+      if (filterCommunity && !item.isCommunity) return false;
       if (filterOwned && !ownedNfts.find((nft: any) => +nft.tokenId === item.id)) return false;
       if (!filterGLP && item.category === 'lilies') return false;
       if (!filterFriends && item.category === 'friends') return false;

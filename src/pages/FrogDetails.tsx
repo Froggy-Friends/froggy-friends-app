@@ -69,7 +69,7 @@ export default function FrogDetails() {
                     <Grid id='image' item xl={4} lg={4} md={5} sm={5} xs={12} pb={isXs ? 5 : 0}>
                         {
                             frog ? (
-                                <img src={frog?.image3d} alt='' width='100%' style={{borderRadius: 5}}/>
+                                <img src={frog.cid2d} alt='' width='100%' style={{borderRadius: 5}}/>
                             ) : (
                                 <Skeleton variant='rectangular' animation='wave' height={400}/>
                             )
@@ -139,15 +139,35 @@ export default function FrogDetails() {
                             <Stack spacing={3}>
                                 <Typography variant='h5' fontWeight='bold'>Traits</Typography>
                                 <Grid container>
+                                    <Grid item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
+                                        <Typography fontWeight='bold'>Background</Typography>
+                                        <Typography>{frog.background}</Typography>
+                                    </Grid>
+                                    <Grid item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
+                                        <Typography fontWeight='bold'>Body</Typography>
+                                        <Typography>{frog.body}</Typography>
+                                    </Grid>
+                                    <Grid item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
+                                        <Typography fontWeight='bold'>Eyes</Typography>
+                                        <Typography>{frog.eyes}</Typography>
+                                    </Grid>
+                                    <Grid item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
+                                        <Typography fontWeight='bold'>Mouth</Typography>
+                                        <Typography>{frog.mouth}</Typography>
+                                    </Grid>
+                                    <Grid item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
+                                        <Typography fontWeight='bold'>Shirt</Typography>
+                                        <Typography>{frog.shirt}</Typography>
+                                    </Grid>
+                                    <Grid item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
+                                        <Typography fontWeight='bold'>Hat</Typography>
+                                        <Typography>{frog.hat}</Typography>
+                                    </Grid>
                                     {
-                                        frog.attributes.map((trait) => {
-                                            return (
-                                                <Grid key={trait.trait_type} item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
-                                                    <Typography fontWeight='bold'>{trait.trait_type}</Typography>
-                                                    <Typography>{trait.value}</Typography>
-                                                </Grid>
-                                            )
-                                        })
+                                        frog.friendName && <Grid item xl={4} lg={4} md={4} sm={6} xs={6} pb={3}>
+                                            <Typography fontWeight='bold'>Friend</Typography>
+                                            <Typography>{frog.friendName}</Typography>
+                                        </Grid>
                                     }
                                 </Grid>
                             </Stack>
@@ -159,24 +179,24 @@ export default function FrogDetails() {
                                 <Typography variant='h5' fontWeight='bold'>Download Assets</Typography>
                                 <Stack direction={isXs ? 'column' : 'row'} spacing={3}>
                                     {
-                                        frog.image && 
+                                        frog.cid2d && 
                                         <Stack alignItems='center' spacing={5} pb={5}>
-                                            <img src={frog.image} alt='' width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
-                                            <Button variant='contained' color="primary" sx={{height: 50, width: 130}}onClick={() => downloadAsset(frog.image, `${frog.edition}.png`)}>Download</Button>
+                                            <img src={frog.cid2d} alt='' width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
+                                            <Button variant='contained' color="primary" sx={{height: 50, width: 130}}onClick={() => downloadAsset(frog.cid2d, `${frog.edition}.png`)}>Download</Button>
                                         </Stack>
                                     }
                                     {
-                                        frog.imagePixel && 
+                                        frog.cidPixel && 
                                         <Stack alignItems='center' spacing={5} pb={5}>
-                                            <img src={frog.imagePixel} alt='' width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
-                                            <Button variant='contained' color="primary" sx={{height: 50, width: 130}} onClick={() => downloadAsset(frog.imagePixel, `${frog.edition}-pixel.png`)}>Download</Button>
+                                            <img src={frog.cidPixel} alt='' width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
+                                            <Button variant='contained' color="primary" sx={{height: 50, width: 130}} onClick={() => downloadAsset(frog.cidPixel, `${frog.edition}-pixel.png`)}>Download</Button>
                                         </Stack>
                                     }
                                     {
-                                        frog.image3d && 
+                                        frog.cid3d && 
                                         <Stack alignItems='center' spacing={5} pb={5}>
-                                            <img src={frog.image3d} alt='' width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
-                                            <Button variant='contained' color="primary" sx={{height: 50, width: 130}} onClick={() => downloadAsset(frog.image3d, `${frog.edition}-3d.png`)}>Download</Button>
+                                            <img src={frog.cid3d} alt='' width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
+                                            <Button variant='contained' color="primary" sx={{height: 50, width: 130}} onClick={() => downloadAsset(frog.cid3d, `${frog.edition}-3d.png`)}>Download</Button>
                                         </Stack>
                                     }
                                 </Stack>

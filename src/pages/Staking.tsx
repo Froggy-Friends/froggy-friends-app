@@ -3,7 +3,7 @@ import { makeStyles, createStyles } from '@mui/styles';
 import { Box, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
-import { Check, Close, Launch, Warning } from '@mui/icons-material';
+import { Check, Close, Info, Launch, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted, useFroggiesStaked } from '../client';
 import { formatEther, commify } from '@ethersproject/units';
 import { Froggy } from '../models/Froggy';
@@ -101,7 +101,7 @@ export default function Staking() {
     async function getFroggiesOwned(address: string) {
       try {
         setLoading(true);
-        const response = await axios.get(`${process.env.REACT_APP_API}/owned/${address}`);
+        const response = await axios.get(`${process.env.REACT_APP_API}/frog/owned/${address}`);
         setOwned(response.data);
         setLoading(false);
       } catch (error) {
@@ -113,6 +113,8 @@ export default function Staking() {
 
     if (account) {
       getFroggiesOwned(account);
+    } else {
+      setOwned({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
     }
   }, [account])
 
@@ -132,7 +134,7 @@ export default function Staking() {
   useEffect(() => {
     async function fetchFroggies() {
       setLoading(true);
-      const ownedResponse = await axios.get(`${process.env.REACT_APP_API}/owned${account}`);
+      const ownedResponse = await axios.get(`${process.env.REACT_APP_API}/frog/owned${account}`);
       setOwned(ownedResponse.data);
       setLoading(false);
     }
@@ -208,7 +210,7 @@ export default function Staking() {
       setFroggiesToUnstake([]);
 
       setLoading(true);
-      const ownedResponse = await axios.get(`${process.env.REACT_APP_API}/owned/${account}`);
+      const ownedResponse = await axios.get(`${process.env.REACT_APP_API}/frog/owned/${account}`);
       setOwned(ownedResponse.data);
       setLoading(false);
     } catch (error) {
@@ -375,6 +377,7 @@ export default function Staking() {
                 </Grid>
               }
             </Grid>
+          { account && <Typography align='left' p={2} display='flex'><Info fontSize='small' sx={{mr: 1}}/> Click on froggy friends you wish to stake or unstake.</Typography> }
           <Grid id='froggies' container item xl={12} lg={12} md={12} sm={12} xs={12}>
             {
               loading && 
@@ -402,7 +405,7 @@ export default function Staking() {
               owned.froggies.map((froggy: Froggy) => {
                 return <Grid key={froggy.edition} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
                   <Card sx={{height: '100%', border: getBorderWidth(froggy.edition), borderColor: getBorderColor(froggy.edition)}} onClick={() => onSelectFroggy(froggy)}>
-                    <CardMedia component='img' image={froggy.image} alt='Froggy'/>
+                    <CardMedia component='img' image={froggy.cid2d} alt='Froggy'/>
                     <CardContent sx={{bgcolor: theme.palette.common.white, paddingBottom: 0}}>
                       <Typography variant='body1' fontWeight='bold' pb={1} pt={1}>{froggy.name}</Typography>
                       <Grid container item justifyContent='space-between'>
