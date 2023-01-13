@@ -3,7 +3,7 @@ import { makeStyles, createStyles } from '@mui/styles';
 import { Box, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
-import { Check, Close, Launch, Warning } from '@mui/icons-material';
+import { Check, Close, Info, Launch, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted, useFroggiesStaked } from '../client';
 import { formatEther, commify } from '@ethersproject/units';
 import { Froggy } from '../models/Froggy';
@@ -375,6 +375,7 @@ export default function Staking() {
                 </Grid>
               }
             </Grid>
+          <Typography align='left' p={2} display='flex'><Info fontSize='small' sx={{mr: 1}}/> Click on froggy friends you wish to stake or unstake.</Typography>
           <Grid id='froggies' container item xl={12} lg={12} md={12} sm={12} xs={12}>
             {
               loading && 
