@@ -52,7 +52,7 @@ export default function Admin() {
       <Paper elevation={3}>
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
-      <Container maxWidth='xl'  sx={{pt: 5, pb: 5}}>
+      <Container maxWidth='xl'  sx={{pt: 15, pb: 25}}>
         <Grid container justifyContent='space-between'>
           <Stack>
             <FormControl>
@@ -69,30 +69,32 @@ export default function Admin() {
               </RadioGroup>
             </FormControl>
           </Stack>
+          {
+            task === 'wallet' &&
+            <Stack width='80%'>
+              <Grid id="wallet" justifyContent="center" container pb={5}>
+                <TextField label="Wallet" variant="outlined" fullWidth value={stakingWallet} onChange={onStakingWalletChange}/>
+              </Grid>
+              {
+                deposits &&
+                <Grid id="staked" pb={5}>
+                  <Grid item>
+                    <Typography variant="h5">Froggies Unstaked: {owned}</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h5">Froggies Staked: {deposits.length}</Typography>
+                  </Grid>
+                  <Grid item>
+                  <Typography variant="h5">Froggies Owned: {owned + deposits.length}</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h5">Whale Roles: {getRole(deposits)}</Typography>
+                  </Grid>
+                </Grid> 
+              }
+            </Stack>
+          }
         </Grid>
-        
-        <Grid id="wallet" justifyContent="center" container pb={5}>
-          <Grid item xl={4} lg={4} md={6} sm={8} xs={10}>
-            <TextField label="Wallet" variant="outlined" fullWidth value={stakingWallet} onChange={onStakingWalletChange}/>
-          </Grid>
-        </Grid>
-        {
-          deposits &&
-          <Grid id="staked" pb={5}>
-            <Grid item>
-              <Typography variant="h5">Froggies Unstaked: {owned}</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="h5">Froggies Staked: {deposits.length}</Typography>
-            </Grid>
-            <Grid item>
-            <Typography variant="h5">Froggies Owned: {owned + deposits.length}</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="h5">Whale Roles: {getRole(deposits)}</Typography>
-            </Grid>
-          </Grid> 
-        }
       </Container>
     </Grid>
   )
