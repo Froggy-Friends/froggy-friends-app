@@ -1,4 +1,4 @@
-import { Container, FormControl, FormControlLabel, FormLabel, Grid, InputLabel, MenuItem, Paper, Radio, RadioGroup, Select, SelectChangeEvent, Stack, Switch, TextField, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Button, Container, FormControl, FormControlLabel, FormLabel, Grid, Input, InputLabel, MenuItem, Paper, Radio, RadioGroup, Select, SelectChangeEvent, Stack, Switch, TextField, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { makeStyles, createStyles } from '@mui/styles';
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -43,6 +43,8 @@ export default function Admin() {
   const [itemSupply, setItemSupply] = useState<number>();
   const [itemWalletLimit, setItemWalletLimit] = useState<number>();
   const [itemDescription, setItemDescription] = useState('');
+  const [itemImagePath, setItemImagePath] = useState('');
+  const [itemImageTransparentPath, setItemImageTransparentPath] = useState('');
 
   useEffect(() => {
     async function getPresets() {
@@ -149,6 +151,18 @@ export default function Admin() {
     setItemDescription(event.target.value);
   }
 
+  const  onItemImageChange = (event: any) => {
+    setItemImagePath(event.target.value);
+  }
+
+  const onItemImageTransparentChange = (event: any) => {
+    setItemImageTransparentPath(event.target.value);
+  }
+
+  const onListItem = () => {
+    
+  }
+
   return (
     <Grid id="admin" className={classes.market} container direction="column" justifyContent="start">
       <Paper elevation={3}>
@@ -156,7 +170,7 @@ export default function Admin() {
       </Paper>
       <Container maxWidth='xl'  sx={{pt: 15, pb: 25}}>
         <Grid container spacing={5}>
-          <Stack pr={5}>
+          <Stack pr={20}>
             <FormControl>
               <FormLabel id="demo-controlled-radio-buttons-group">Admin Tasks</FormLabel>
               <RadioGroup
@@ -199,6 +213,7 @@ export default function Admin() {
           {
             task === 'list' &&
             <Stack>
+              <Typography variant="h4" pb={5}>List New Item</Typography>
                 <Stack direction='row' pb={5}>
                   <TextField id='item-name' label="Name" variant="outlined" value={itemName} onChange={onItemNameChange}/>
                   <FormControl>
@@ -375,6 +390,31 @@ export default function Admin() {
                 </Stack>
                 <Stack id='description' pb={5}>
                   <TextField id='item-description' label="Description" variant="outlined" multiline minRows={3} value={itemDescription} onChange={onItemDescriptionChange}/>
+                </Stack>
+                <Stack id='files' direction='row' pb={5}>
+                  <FormControl>
+                    <FormControlLabel
+                      control={
+                        <Input type="file" value={itemImagePath} onChange={onItemImageChange}/>
+                      }
+                      label='Image'
+                      labelPlacement="top"
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormControlLabel
+                      control={
+                        <Input type="file" value={itemImageTransparentPath} onChange={onItemImageTransparentChange}/>
+                      }
+                      label='Transparent Image'
+                      labelPlacement="top"
+                    />
+                  </FormControl>
+                </Stack>
+                <Stack>
+                  <Button variant='contained' color="primary" onClick={onListItem}>
+                    <Typography>Submit</Typography>
+                  </Button>
                 </Stack>
             </Stack>
           }
