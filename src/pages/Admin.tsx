@@ -179,37 +179,12 @@ export default function Admin() {
                 value={task}
                 onChange={onTaskChange}
               >
-                <FormControlLabel value="wallet" control={<Radio />} label="Wallet Checker" />
                 <FormControlLabel value="list" control={<Radio />} label="List Item" />
                 <FormControlLabel value="update" control={<Radio />} label="Update Item" />
+                <FormControlLabel value="wallet" control={<Radio />} label="Wallet Checker" />
               </RadioGroup>
             </FormControl>
           </Stack>
-          {
-            task === 'wallet' &&
-            <Stack width='80%'>
-              <Grid id="wallet" justifyContent="center" container pb={5}>
-                <TextField label="Wallet" variant="outlined" fullWidth value={stakingWallet} onChange={onStakingWalletChange}/>
-              </Grid>
-              {
-                deposits &&
-                <Grid id="staked" pb={5}>
-                  <Grid item>
-                    <Typography variant="h5">Froggies Unstaked: {owned}</Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h5">Froggies Staked: {deposits.length}</Typography>
-                  </Grid>
-                  <Grid item>
-                  <Typography variant="h5">Froggies Owned: {owned + deposits.length}</Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h5">Whale Roles: {getRole(deposits)}</Typography>
-                  </Grid>
-                </Grid> 
-              }
-            </Stack>
-          }
           {
             task === 'list' &&
             <Stack>
@@ -416,6 +391,31 @@ export default function Admin() {
                     <Typography>Submit</Typography>
                   </Button>
                 </Stack>
+            </Stack>
+          }
+          {
+            task === 'wallet' &&
+            <Stack>
+              <Grid id="wallet" justifyContent="center" container pb={5}>
+                <TextField label="Wallet" variant="outlined" fullWidth value={stakingWallet} onChange={onStakingWalletChange}/>
+              </Grid>
+              {
+                deposits &&
+                <Grid id="staked" pb={5}>
+                  <Grid item>
+                    <Typography variant="h5">Froggies Unstaked: {owned}</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h5">Froggies Staked: {deposits.length}</Typography>
+                  </Grid>
+                  <Grid item>
+                  <Typography variant="h5">Froggies Owned: {owned + deposits.length}</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="h5">Whale Roles: {getRole(deposits)}</Typography>
+                  </Grid>
+                </Grid> 
+              }
             </Stack>
           }
         </Grid>
