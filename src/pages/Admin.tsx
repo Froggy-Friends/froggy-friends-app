@@ -34,6 +34,15 @@ export default function Admin() {
   const [itemBoost, setItemBoost] = useState<number>();
   const [itemRarity, setItemRarity] = useState<string>();
   const [itemTraitLayer, setItemTraitLayer] = useState<string>();
+  const [itemIsCommunity, setItemIsCommunity] = useState(false);
+  const [itemIsBoost, setItemIsBoost] = useState(false);
+  const [itemIsTrait, setItemIsTrait] = useState(false);
+  const [itemIsPhysical, setItemIsPhysical] = useState(false);
+  const [itemIsAllowlist, setItemIsAllowlist] = useState(false);
+  const [itemPrice, setItemPrice] = useState<number>();
+  const [itemSupply, setItemSupply] = useState<number>();
+  const [itemWalletLimit, setItemWalletLimit] = useState<number>();
+  const [itemDescription, setItemDescription] = useState('');
 
   useEffect(() => {
     async function getPresets() {
@@ -104,6 +113,42 @@ export default function Admin() {
     setItemTraitLayer(event.target.value);
   }
 
+  const onItemIsCommunityChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setItemIsCommunity(event.target.checked);
+  };
+
+  const onItemIsBoostChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setItemIsBoost(event.target.checked);
+  };
+
+  const onItemIsTraitChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setItemIsTrait(event.target.checked);
+  };
+
+  const onItemIsPhysicalChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setItemIsPhysical(event.target.checked);
+  };
+
+  const onItemIsAllowlistChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setItemIsAllowlist(event.target.checked);
+  };
+
+  const onItemPriceChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setItemPrice(+event.target.value);
+  }
+
+  const onItemSupplyChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setItemSupply(+event.target.value);
+  }
+
+  const onItemWalletLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setItemWalletLimit(+event.target.value);
+  }
+
+  const onItemDescriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setItemDescription(event.target.value);
+  }
+
   return (
     <Grid id="admin" className={classes.market} container direction="column" justifyContent="start">
       <Paper elevation={3}>
@@ -155,15 +200,13 @@ export default function Admin() {
             task === 'list' &&
             <Stack>
                 <Stack direction='row' pb={5}>
-                  <FormControl component='fieldset' variant='standard'>
-                    <TextField label="Name" variant="outlined" placeholder="Item name here" value={itemName} onChange={onItemNameChange}/>
-                  </FormControl>
+                  <TextField id='item-name' label="Name" variant="outlined" value={itemName} onChange={onItemNameChange}/>
                   <FormControl>
                     <FormControlLabel
                         control={
                           <Switch checked={itemOnSale} onChange={onItemSaleChanged}/>
                         }
-                        label='On Sale'
+                        label='On Sale*'
                         labelPlacement="top"
                       />  
                   </FormControl>
@@ -171,7 +214,7 @@ export default function Admin() {
                 <Stack direction='row' spacing={2} pb={5}>
                   <Stack minWidth={100}>
                     <FormControl fullWidth>
-                      <InputLabel id="category-label">Category</InputLabel>
+                      <InputLabel id="category-label">Category*</InputLabel>
                       <Select
                         labelId="category-label"
                         id="category"
@@ -182,6 +225,24 @@ export default function Admin() {
                         {
                           presets?.categories.map((category, index) => (
                             <MenuItem key={index} value={category}>{category}</MenuItem>
+                          ))
+                        }
+                      </Select>
+                    </FormControl>
+                  </Stack>
+                  <Stack minWidth={100}>
+                    <FormControl fullWidth>
+                      <InputLabel id="rarity-label">Rarity*</InputLabel>
+                      <Select
+                        labelId="rarity-label"
+                        id="rarity"
+                        value={`${itemRarity}`}
+                        label="rarity"
+                        onChange={onItemRarityChange}
+                      >
+                        {
+                          presets?.rarities.map((rarity, index) => (
+                            <MenuItem key={index} value={rarity}>{rarity}</MenuItem>
                           ))
                         }
                       </Select>
@@ -243,24 +304,6 @@ export default function Admin() {
                   </Stack>
                   <Stack minWidth={100}>
                     <FormControl fullWidth>
-                      <InputLabel id="rarity-label">Rarity</InputLabel>
-                      <Select
-                        labelId="rarity-label"
-                        id="rarity"
-                        value={`${itemRarity}`}
-                        label="rarity"
-                        onChange={onItemRarityChange}
-                      >
-                        {
-                          presets?.rarities.map((rarity, index) => (
-                            <MenuItem key={index} value={rarity}>{rarity}</MenuItem>
-                          ))
-                        }
-                      </Select>
-                    </FormControl>
-                  </Stack>
-                  <Stack minWidth={100}>
-                    <FormControl fullWidth>
                       <InputLabel id="traitLayer-label">Trait Layer</InputLabel>
                       <Select
                         labelId="traitLayer-label"
@@ -277,6 +320,61 @@ export default function Admin() {
                       </Select>
                     </FormControl>
                   </Stack>
+                </Stack>
+                <Stack id='switches' direction='row' pb={5}>
+                  <FormControl>
+                    <FormControlLabel
+                        control={
+                          <Switch checked={itemIsCommunity} onChange={onItemIsCommunityChanged}/>
+                        }
+                        label='Community'
+                        labelPlacement="top"
+                      />  
+                  </FormControl>
+                  <FormControl>
+                    <FormControlLabel
+                        control={
+                          <Switch checked={itemIsBoost} onChange={onItemIsBoostChanged}/>
+                        }
+                        label='Boost'
+                        labelPlacement="top"
+                      />  
+                  </FormControl>
+                  <FormControl>
+                    <FormControlLabel
+                        control={
+                          <Switch checked={itemIsTrait} onChange={onItemIsTraitChanged}/>
+                        }
+                        label='Trait'
+                        labelPlacement="top"
+                      />  
+                  </FormControl>
+                  <FormControl>
+                    <FormControlLabel
+                        control={
+                          <Switch checked={itemIsPhysical} onChange={onItemIsPhysicalChanged}/>
+                        }
+                        label='Physical'
+                        labelPlacement="top"
+                      />  
+                  </FormControl>
+                  <FormControl>
+                    <FormControlLabel
+                        control={
+                          <Switch checked={itemIsAllowlist} onChange={onItemIsAllowlistChanged}/>
+                        }
+                        label='Allowlist'
+                        labelPlacement="top"
+                      />  
+                  </FormControl>
+                </Stack>
+                <Stack id='contract' direction='row' spacing={2} pb={5}>
+                  <TextField id='item-price' label="Price" variant="outlined" value={itemPrice} onChange={onItemPriceChange}/>
+                  <TextField id='item-supply' label="Supply" variant="outlined" value={itemSupply} onChange={onItemSupplyChange}/>
+                  <TextField id='item-limit' label="Wallet Limit" variant="outlined" value={itemWalletLimit} onChange={onItemWalletLimitChange}/>
+                </Stack>
+                <Stack id='description' pb={5}>
+                  <TextField id='item-description' label="Description" variant="outlined" multiline minRows={3} value={itemDescription} onChange={onItemDescriptionChange}/>
                 </Stack>
             </Stack>
           }
