@@ -35,7 +35,7 @@ export default function Admin() {
   const [itemRarity, setItemRarity] = useState<string>('');
   const [itemTraitLayer, setItemTraitLayer] = useState<string>('');
   const [itemIsCommunity, setItemIsCommunity] = useState(false);
-  const [itemIsBoost, setItemIsBoost] = useState(false);
+  const [itemIsFriend, setItemIsFriend] = useState(false);
   const [itemIsTrait, setItemIsTrait] = useState(false);
   const [itemIsPhysical, setItemIsPhysical] = useState(false);
   const [itemIsAllowlist, setItemIsAllowlist] = useState(false);
@@ -43,8 +43,8 @@ export default function Admin() {
   const [itemSupply, setItemSupply] = useState<string>('');
   const [itemWalletLimit, setItemWalletLimit] = useState<string>('');
   const [itemDescription, setItemDescription] = useState('');
-  const [itemImagePath, setItemImagePath] = useState('');
-  const [itemImageTransparentPath, setItemImageTransparentPath] = useState('');
+  const [itemImage, setItemImage] = useState<File>();
+  const [itemImageTransparent, setItemImageTransparent] = useState<File>();
 
   useEffect(() => {
     async function getPresets() {
@@ -120,7 +120,7 @@ export default function Admin() {
   };
 
   const onItemIsBoostChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setItemIsBoost(event.target.checked);
+    setItemIsFriend(event.target.checked);
   };
 
   const onItemIsTraitChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,17 +151,46 @@ export default function Admin() {
     setItemDescription(event.target.value);
   }
 
-  const  onItemImageChange = (event: any) => {
-    setItemImagePath(event.target.value);
+  const onItemImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log("item image change: ", event);
+    if (event.target.files && event.target.files.length > 0) {
+      setItemImage(event.target.files[0]);
+    }
   }
 
-  const onItemImageTransparentChange = (event: any) => {
-    setItemImageTransparentPath(event.target.value);
+  const onItemImageTransparentChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setItemImageTransparent(event.target.files[0]);
+    }
   }
 
-  const onListItemSubmit = (event: ChangeEvent<HTMLFormElement>) => {
+  const onListItemSubmit = async (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log("list item submit: ", event);
+
+    if (itemIsFriend || itemIsTrait) {
+      // call /items/image/multiple api
+      try {
+        const formData = new FormData();
+        if (itemImage) {
+          formData.append('image', itemImage);
+        }
+        if (itemImageTransparent) {
+          formData.append('imageTransparent', itemImageTransparent);
+        }
+        const response = await axios({
+          method: 'post',
+          url: `${process.env.REACT_APP_API}/items/image/multiple`,
+          data: formData,
+          headers: { "Content-Type": "multipart/form-data"}
+        });
+        console.log("response: ", response);
+      } catch (error) {
+        console.log("list item images error: ", error);
+      }
+    } else {
+      // call /items/image/single api
+    }
   }
 
   return (
@@ -323,18 +352,18 @@ export default function Admin() {
                     <FormControl>
                       <FormControlLabel
                           control={
-                            <Switch checked={itemIsCommunity} onChange={onItemIsCommunityChanged}/>
+                            <Switch checked={itemIsAllowlist} onChange={onItemIsAllowlistChanged}/>
                           }
-                          label='Community'
+                          label='Allowlist'
                           labelPlacement="top"
                         />  
                     </FormControl>
                     <FormControl>
                       <FormControlLabel
                           control={
-                            <Switch checked={itemIsBoost} onChange={onItemIsBoostChanged}/>
+                            <Switch checked={itemIsFriend} onChange={onItemIsBoostChanged}/>
                           }
-                          label='Boost'
+                          label='Friend'
                           labelPlacement="top"
                         />  
                     </FormControl>
@@ -350,18 +379,18 @@ export default function Admin() {
                     <FormControl>
                       <FormControlLabel
                           control={
-                            <Switch checked={itemIsPhysical} onChange={onItemIsPhysicalChanged}/>
+                            <Switch checked={itemIsCommunity} onChange={onItemIsCommunityChanged}/>
                           }
-                          label='Physical'
+                          label='Community'
                           labelPlacement="top"
                         />  
                     </FormControl>
                     <FormControl>
                       <FormControlLabel
                           control={
-                            <Switch checked={itemIsAllowlist} onChange={onItemIsAllowlistChanged}/>
+                            <Switch checked={itemIsPhysical} onChange={onItemIsPhysicalChanged}/>
                           }
-                          label='Allowlist'
+                          label='Physical'
                           labelPlacement="top"
                         />  
                     </FormControl>
@@ -378,7 +407,7 @@ export default function Admin() {
                     <FormControl>
                       <FormControlLabel
                         control={
-                          <Input type="file" value={itemImagePath} onChange={onItemImageChange}/>
+                          <Input type="file" onChange={onItemImageChange}/>
                         }
                         label='Image'
                         labelPlacement="top"
@@ -387,7 +416,7 @@ export default function Admin() {
                     <FormControl>
                       <FormControlLabel
                         control={
-                          <Input type="file" value={itemImageTransparentPath} onChange={onItemImageTransparentChange}/>
+                          <Input type="file" onChange={onItemImageTransparentChange}/>
                         }
                         label='Transparent Image'
                         labelPlacement="top"
