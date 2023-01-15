@@ -28,20 +28,20 @@ export default function Admin() {
   const [presets, setPresets] = useState<ItemPresets>();
   const [itemName, setItemName] = useState('');
   const [itemOnSale, setItemOnSale] = useState(false);
-  const [itemCategory, setItemCategory] = useState<string>();
-  const [itemFriendOrigin, setItemFriendOrigin] = useState<string>();
-  const [itemCollabId, setItemCollabId] = useState<number>();
-  const [itemBoost, setItemBoost] = useState<number>();
-  const [itemRarity, setItemRarity] = useState<string>();
-  const [itemTraitLayer, setItemTraitLayer] = useState<string>();
+  const [itemCategory, setItemCategory] = useState<string>('');
+  const [itemFriendOrigin, setItemFriendOrigin] = useState<string>('');
+  const [itemCollabId, setItemCollabId] = useState<string>('');
+  const [itemBoost, setItemBoost] = useState<string>('');
+  const [itemRarity, setItemRarity] = useState<string>('');
+  const [itemTraitLayer, setItemTraitLayer] = useState<string>('');
   const [itemIsCommunity, setItemIsCommunity] = useState(false);
   const [itemIsBoost, setItemIsBoost] = useState(false);
   const [itemIsTrait, setItemIsTrait] = useState(false);
   const [itemIsPhysical, setItemIsPhysical] = useState(false);
   const [itemIsAllowlist, setItemIsAllowlist] = useState(false);
-  const [itemPrice, setItemPrice] = useState<number>();
-  const [itemSupply, setItemSupply] = useState<number>();
-  const [itemWalletLimit, setItemWalletLimit] = useState<number>();
+  const [itemPrice, setItemPrice] = useState<string>('');
+  const [itemSupply, setItemSupply] = useState<string>('');
+  const [itemWalletLimit, setItemWalletLimit] = useState<string>('');
   const [itemDescription, setItemDescription] = useState('');
   const [itemImagePath, setItemImagePath] = useState('');
   const [itemImageTransparentPath, setItemImageTransparentPath] = useState('');
@@ -100,11 +100,11 @@ export default function Admin() {
   }
 
   const onItemCollabIdChange = (event: SelectChangeEvent) => {
-    setItemCollabId(+event.target.value);
+    setItemCollabId(event.target.value);
   }
 
   const onItemBoostChange = (event: SelectChangeEvent) => {
-    setItemBoost(+event.target.value);
+    setItemBoost(event.target.value);
   }
 
   const onItemRarityChange = (event: SelectChangeEvent) => {
@@ -136,15 +136,15 @@ export default function Admin() {
   };
 
   const onItemPriceChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setItemPrice(+event.target.value);
+    setItemPrice(event.target.value);
   }
 
   const onItemSupplyChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setItemSupply(+event.target.value);
+    setItemSupply(event.target.value);
   }
 
   const onItemWalletLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setItemWalletLimit(+event.target.value);
+    setItemWalletLimit(event.target.value);
   }
 
   const onItemDescriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -159,8 +159,9 @@ export default function Admin() {
     setItemImageTransparentPath(event.target.value);
   }
 
-  const onListItem = () => {
-    
+  const onListItemSubmit = (event: ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("list item submit: ", event);
   }
 
   return (
@@ -189,208 +190,216 @@ export default function Admin() {
             task === 'list' &&
             <Stack>
               <Typography variant="h4" pb={5}>List New Item</Typography>
-                <Stack direction='row' pb={5}>
-                  <TextField id='item-name' label="Name" variant="outlined" value={itemName} onChange={onItemNameChange}/>
-                  <FormControl>
-                    <FormControlLabel
-                        control={
-                          <Switch checked={itemOnSale} onChange={onItemSaleChanged}/>
-                        }
-                        label='On Sale*'
-                        labelPlacement="top"
-                      />  
-                  </FormControl>
-                </Stack>
-                <Stack direction='row' spacing={2} pb={5}>
-                  <Stack minWidth={100}>
-                    <FormControl fullWidth>
-                      <InputLabel id="category-label">Category*</InputLabel>
-                      <Select
-                        labelId="category-label"
-                        id="category"
-                        value={`${itemCategory}`}
-                        label="Category"
-                        onChange={onItemCategoryChange}
-                      >
-                        {
-                          presets?.categories.map((category, index) => (
-                            <MenuItem key={index} value={category}>{category}</MenuItem>
-                          ))
-                        }
-                      </Select>
+              <form onSubmit={onListItemSubmit}>
+                <Stack id='title' direction='row' pb={5}>
+                    <TextField id='item-name' label="Name" variant="outlined" value={itemName} onChange={onItemNameChange}/>
+                    <FormControl>
+                      <FormControlLabel
+                          control={
+                            <Switch checked={itemOnSale} onChange={onItemSaleChanged}/>
+                          }
+                          label='On Sale*'
+                          labelPlacement="top"
+                        />  
                     </FormControl>
                   </Stack>
-                  <Stack minWidth={100}>
-                    <FormControl fullWidth>
-                      <InputLabel id="rarity-label">Rarity*</InputLabel>
-                      <Select
-                        labelId="rarity-label"
-                        id="rarity"
-                        value={`${itemRarity}`}
-                        label="rarity"
-                        onChange={onItemRarityChange}
-                      >
-                        {
-                          presets?.rarities.map((rarity, index) => (
-                            <MenuItem key={index} value={rarity}>{rarity}</MenuItem>
-                          ))
-                        }
-                      </Select>
+                  <Stack id='menus' direction='row' spacing={2} pb={5}>
+                    <Stack minWidth={100}>
+                      <FormControl fullWidth>
+                        <InputLabel id="category-label">Category*</InputLabel>
+                        <Select
+                          labelId="category-label"
+                          id="category"
+                          value={itemCategory}
+                          label="Category"
+                          onChange={onItemCategoryChange}
+                        >
+                          <MenuItem value=''></MenuItem>
+                          {
+                            presets?.categories.map((category, index) => (
+                              <MenuItem key={index} value={category}>{category}</MenuItem>
+                            ))
+                          }
+                        </Select>
+                      </FormControl>
+                    </Stack>
+                    <Stack minWidth={100}>
+                      <FormControl fullWidth>
+                        <InputLabel id="rarity-label">Rarity*</InputLabel>
+                        <Select
+                          labelId="rarity-label"
+                          id="rarity"
+                          value={itemRarity}
+                          label="rarity"
+                          onChange={onItemRarityChange}
+                        >
+                          <MenuItem value=''></MenuItem>
+                          {
+                            presets?.rarities.map((rarity, index) => (
+                              <MenuItem key={index} value={rarity}>{rarity}</MenuItem>
+                            ))
+                          }
+                        </Select>
+                      </FormControl>
+                    </Stack>
+                    <Stack minWidth={100}>
+                      <FormControl fullWidth>
+                        <InputLabel id="friendOrigin-label">Friend Origin</InputLabel>
+                        <Select
+                          labelId="friendOrigin-label"
+                          id="friendOrigin"
+                          value={itemFriendOrigin}
+                          label="friendOrigin"
+                          onChange={onItemFriendOriginChange}
+                        >
+                          <MenuItem value=''></MenuItem>
+                          {
+                            presets?.friendOrigins.map((friendOrigin, index) => (
+                              <MenuItem key={index} value={friendOrigin}>{friendOrigin}</MenuItem>
+                            ))
+                          }
+                        </Select>
+                      </FormControl>
+                    </Stack>
+                    <Stack minWidth={100}>
+                      <FormControl fullWidth>
+                        <InputLabel id="collabId-label">Collab ID</InputLabel>
+                        <Select
+                          labelId="collabId-label"
+                          id="collabId"
+                          value={itemCollabId}
+                          label="collabId"
+                          onChange={onItemCollabIdChange}
+                        >
+                          <MenuItem value=''></MenuItem>
+                          {
+                            presets?.collabIds.map((collabId, index) => (
+                              <MenuItem key={index} value={collabId}>{collabId}</MenuItem>
+                            ))
+                          }
+                        </Select>
+                      </FormControl>
+                    </Stack>
+                    <Stack minWidth={100}>
+                      <FormControl fullWidth>
+                        <InputLabel id="boost-label">Boost</InputLabel>
+                        <Select
+                          labelId="boost-label"
+                          id="boost"
+                          value={itemBoost}
+                          label="Boost"
+                          onChange={onItemBoostChange}
+                        >
+                          <MenuItem value=''></MenuItem>
+                          {
+                            presets?.boosts.map((boost, index) => (
+                              <MenuItem key={index} value={boost}>{boost}</MenuItem>
+                            ))
+                          }
+                        </Select>
+                      </FormControl>
+                    </Stack>
+                    <Stack minWidth={100}>
+                      <FormControl fullWidth>
+                        <InputLabel id="traitLayer-label">Trait Layer</InputLabel>
+                        <Select
+                          labelId="traitLayer-label"
+                          id="traitLayer"
+                          value={itemTraitLayer}
+                          label="traitLayer"
+                          onChange={onItemTraitLayerChange}
+                        >
+                          <MenuItem value=''></MenuItem>
+                          {
+                            presets?.traitLayers.map((traitLayer, index) => (
+                              <MenuItem key={index} value={traitLayer}>{traitLayer}</MenuItem>
+                            ))
+                          }
+                        </Select>
+                      </FormControl>
+                    </Stack>
+                  </Stack>
+                  <Stack id='switches' direction='row' pb={5}>
+                    <FormControl>
+                      <FormControlLabel
+                          control={
+                            <Switch checked={itemIsCommunity} onChange={onItemIsCommunityChanged}/>
+                          }
+                          label='Community'
+                          labelPlacement="top"
+                        />  
+                    </FormControl>
+                    <FormControl>
+                      <FormControlLabel
+                          control={
+                            <Switch checked={itemIsBoost} onChange={onItemIsBoostChanged}/>
+                          }
+                          label='Boost'
+                          labelPlacement="top"
+                        />  
+                    </FormControl>
+                    <FormControl>
+                      <FormControlLabel
+                          control={
+                            <Switch checked={itemIsTrait} onChange={onItemIsTraitChanged}/>
+                          }
+                          label='Trait'
+                          labelPlacement="top"
+                        />  
+                    </FormControl>
+                    <FormControl>
+                      <FormControlLabel
+                          control={
+                            <Switch checked={itemIsPhysical} onChange={onItemIsPhysicalChanged}/>
+                          }
+                          label='Physical'
+                          labelPlacement="top"
+                        />  
+                    </FormControl>
+                    <FormControl>
+                      <FormControlLabel
+                          control={
+                            <Switch checked={itemIsAllowlist} onChange={onItemIsAllowlistChanged}/>
+                          }
+                          label='Allowlist'
+                          labelPlacement="top"
+                        />  
                     </FormControl>
                   </Stack>
-                  <Stack minWidth={100}>
-                    <FormControl fullWidth>
-                      <InputLabel id="friendOrigin-label">Friend Origin</InputLabel>
-                      <Select
-                        labelId="friendOrigin-label"
-                        id="friendOrigin"
-                        value={`${itemFriendOrigin}`}
-                        label="friendOrigin"
-                        onChange={onItemFriendOriginChange}
-                      >
-                        {
-                          presets?.friendOrigins.map((friendOrigin, index) => (
-                            <MenuItem key={index} value={friendOrigin}>{friendOrigin}</MenuItem>
-                          ))
+                  <Stack id='contract' direction='row' spacing={2} pb={5}>
+                    <TextField id='item-price' label="Price" variant="outlined" value={itemPrice} onChange={onItemPriceChange}/>
+                    <TextField id='item-supply' label="Supply" variant="outlined" value={itemSupply} onChange={onItemSupplyChange}/>
+                    <TextField id='item-limit' label="Wallet Limit" variant="outlined" value={itemWalletLimit} onChange={onItemWalletLimitChange}/>
+                  </Stack>
+                  <Stack id='description' pb={5}>
+                    <TextField id='item-description' label="Description" variant="outlined" multiline minRows={3} value={itemDescription} onChange={onItemDescriptionChange}/>
+                  </Stack>
+                  <Stack id='files' direction='row' pb={5}>
+                    <FormControl>
+                      <FormControlLabel
+                        control={
+                          <Input type="file" value={itemImagePath} onChange={onItemImageChange}/>
                         }
-                      </Select>
+                        label='Image'
+                        labelPlacement="top"
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormControlLabel
+                        control={
+                          <Input type="file" value={itemImageTransparentPath} onChange={onItemImageTransparentChange}/>
+                        }
+                        label='Transparent Image'
+                        labelPlacement="top"
+                      />
                     </FormControl>
                   </Stack>
-                  <Stack minWidth={100}>
-                    <FormControl fullWidth>
-                      <InputLabel id="collabId-label">Collab ID</InputLabel>
-                      <Select
-                        labelId="collabId-label"
-                        id="collabId"
-                        value={`${itemCollabId}`}
-                        label="collabId"
-                        onChange={onItemCollabIdChange}
-                      >
-                        {
-                          presets?.collabIds.map((collabId, index) => (
-                            <MenuItem key={index} value={collabId}>{collabId}</MenuItem>
-                          ))
-                        }
-                      </Select>
-                    </FormControl>
+                  <Stack id='submit'>
+                    <Button type="submit" variant='contained' color="primary">
+                      <Typography>Submit</Typography>
+                    </Button>
                   </Stack>
-                  <Stack minWidth={100}>
-                    <FormControl fullWidth>
-                      <InputLabel id="boost-label">Boost</InputLabel>
-                      <Select
-                        labelId="boost-label"
-                        id="boost"
-                        value={`${itemBoost}`}
-                        label="Boost"
-                        onChange={onItemBoostChange}
-                      >
-                        {
-                          presets?.boosts.map((boost, index) => (
-                            <MenuItem key={index} value={boost}>{boost}</MenuItem>
-                          ))
-                        }
-                      </Select>
-                    </FormControl>
-                  </Stack>
-                  <Stack minWidth={100}>
-                    <FormControl fullWidth>
-                      <InputLabel id="traitLayer-label">Trait Layer</InputLabel>
-                      <Select
-                        labelId="traitLayer-label"
-                        id="traitLayer"
-                        value={`${itemTraitLayer}`}
-                        label="traitLayer"
-                        onChange={onItemTraitLayerChange}
-                      >
-                        {
-                          presets?.traitLayers.map((traitLayer, index) => (
-                            <MenuItem key={index} value={traitLayer}>{traitLayer}</MenuItem>
-                          ))
-                        }
-                      </Select>
-                    </FormControl>
-                  </Stack>
-                </Stack>
-                <Stack id='switches' direction='row' pb={5}>
-                  <FormControl>
-                    <FormControlLabel
-                        control={
-                          <Switch checked={itemIsCommunity} onChange={onItemIsCommunityChanged}/>
-                        }
-                        label='Community'
-                        labelPlacement="top"
-                      />  
-                  </FormControl>
-                  <FormControl>
-                    <FormControlLabel
-                        control={
-                          <Switch checked={itemIsBoost} onChange={onItemIsBoostChanged}/>
-                        }
-                        label='Boost'
-                        labelPlacement="top"
-                      />  
-                  </FormControl>
-                  <FormControl>
-                    <FormControlLabel
-                        control={
-                          <Switch checked={itemIsTrait} onChange={onItemIsTraitChanged}/>
-                        }
-                        label='Trait'
-                        labelPlacement="top"
-                      />  
-                  </FormControl>
-                  <FormControl>
-                    <FormControlLabel
-                        control={
-                          <Switch checked={itemIsPhysical} onChange={onItemIsPhysicalChanged}/>
-                        }
-                        label='Physical'
-                        labelPlacement="top"
-                      />  
-                  </FormControl>
-                  <FormControl>
-                    <FormControlLabel
-                        control={
-                          <Switch checked={itemIsAllowlist} onChange={onItemIsAllowlistChanged}/>
-                        }
-                        label='Allowlist'
-                        labelPlacement="top"
-                      />  
-                  </FormControl>
-                </Stack>
-                <Stack id='contract' direction='row' spacing={2} pb={5}>
-                  <TextField id='item-price' label="Price" variant="outlined" value={itemPrice} onChange={onItemPriceChange}/>
-                  <TextField id='item-supply' label="Supply" variant="outlined" value={itemSupply} onChange={onItemSupplyChange}/>
-                  <TextField id='item-limit' label="Wallet Limit" variant="outlined" value={itemWalletLimit} onChange={onItemWalletLimitChange}/>
-                </Stack>
-                <Stack id='description' pb={5}>
-                  <TextField id='item-description' label="Description" variant="outlined" multiline minRows={3} value={itemDescription} onChange={onItemDescriptionChange}/>
-                </Stack>
-                <Stack id='files' direction='row' pb={5}>
-                  <FormControl>
-                    <FormControlLabel
-                      control={
-                        <Input type="file" value={itemImagePath} onChange={onItemImageChange}/>
-                      }
-                      label='Image'
-                      labelPlacement="top"
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormControlLabel
-                      control={
-                        <Input type="file" value={itemImageTransparentPath} onChange={onItemImageTransparentChange}/>
-                      }
-                      label='Transparent Image'
-                      labelPlacement="top"
-                    />
-                  </FormControl>
-                </Stack>
-                <Stack>
-                  <Button variant='contained' color="primary" onClick={onListItem}>
-                    <Typography>Submit</Typography>
-                  </Button>
-                </Stack>
+              </form>
             </Stack>
           }
           {
