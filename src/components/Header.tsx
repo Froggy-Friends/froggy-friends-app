@@ -158,11 +158,6 @@ export default function Header() {
                     </Fab>
                   </Stack>
                   <Grid item display="flex" pr={1}>
-                    <Fab size='small' onClick={() => window.open('https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x46898f15f99b8887d87669ab19d633f579939ad9&chain=mainnet', '_blank')}>
-                      <Paid fontSize='medium'/>
-                    </Fab>
-                  </Grid>
-                  <Grid item display="flex" pr={1}>
                     <Fab size='small' onClick={onCartClick}>
                       <Badge badgeContent={cartItemCount} color="primary">
                         <ShoppingCart fontSize='medium'/>
