@@ -222,13 +222,6 @@ export default function getTheme(isDarkMode: boolean) {
           }
         }
       },
-      MuiOutlinedInput: {
-        styleOverrides: {
-          root: {
-            height: 35
-          }
-        }
-      },
       MuiChip: {
         styleOverrides: {
           root: {
