@@ -5,6 +5,7 @@ import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useFroggiesOwned, useStakingDeposits } from "../client";
 import ListItem from "../components/forms/ListItem";
+import UpdateItem from "../components/forms/UpdateItem";
 import banner from '../images/lab.jpg';
 import { ItemPresets } from "../models/ItemPresets";
 
@@ -108,6 +109,9 @@ export default function Admin() {
           }
           {
             task === 'list-trait' && <ListItem title='List Trait' type="traits" presets={presets}/>
+          }
+          {
+            task === 'update' && <UpdateItem title='Update Item' type="normal" presets={presets}/>
           }
           {
             task === 'wallet' &&
