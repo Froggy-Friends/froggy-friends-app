@@ -88,8 +88,6 @@ export default function ListItem(props: ListItemProps) {
     }
 
     const onSwitchChange = (event: ChangeEvent<HTMLInputElement>) => {
-        console.log("input change: ", event.target.name);
-        console.log("input value change: ", event.target.value);
         setItem({
             ...item,
             [event.target.name]: event.target.checked
@@ -123,14 +121,14 @@ export default function ListItem(props: ListItemProps) {
                 <Stack id='title' direction='row' pb={5}>
                     <TextField id='item-name' label="Name" name="name" variant="outlined" value={item.name} onChange={onInputChange} />
                     <FormControl>
-                        <FormControlLabel label='On Sale*' labelPlacement="top" control={<Switch checked={item.isOnSale} onChange={onSwitchChange} />} />
+                        <FormControlLabel label='On Sale*' labelPlacement="top" name="isOnSale" control={<Switch checked={item.isOnSale} onChange={onSwitchChange} />} />
                     </FormControl>
                 </Stack>
                 <Stack id='menus' direction='row' spacing={2} pb={5}>
                     <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="category-label">Category*</InputLabel>
-                            <Select labelId="category-label" id="category" value={item.category} label="Category" onChange={onMenuChange}>
+                            <Select labelId="category-label" id="category" name="category" value={item.category} label="Category" onChange={onMenuChange}>
                                 <MenuItem value=''></MenuItem>
                                 {
                                     presets?.categories.map((category, index) => (
@@ -143,7 +141,7 @@ export default function ListItem(props: ListItemProps) {
                     <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="rarity-label">Rarity*</InputLabel>
-                            <Select labelId="rarity-label" id="rarity" value={item.rarity} label="rarity" onChange={onMenuChange}>
+                            <Select labelId="rarity-label" id="rarity" name="rarity" value={item.rarity} label="rarity" onChange={onMenuChange}>
                                 <MenuItem value=''></MenuItem>
                                 {
                                     presets?.rarities.map((rarity, index) => (
@@ -156,7 +154,7 @@ export default function ListItem(props: ListItemProps) {
                     <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="friendOrigin-label">Friend Origin</InputLabel>
-                            <Select labelId="friendOrigin-label" id="friendOrigin" value={item.friendOrigin} label="friendOrigin" onChange={onMenuChange}>
+                            <Select labelId="friendOrigin-label" id="friendOrigin" name="friendOrigin" value={item.friendOrigin} label="friendOrigin" onChange={onMenuChange}>
                                 <MenuItem value=''></MenuItem>
                                 {
                                     presets?.friendOrigins.map((friendOrigin, index) => (
@@ -169,7 +167,7 @@ export default function ListItem(props: ListItemProps) {
                     <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="collabId-label">Collab ID</InputLabel>
-                            <Select labelId="collabId-label" id="collabId" value={item.collabId} label="collabId" onChange={onMenuChange}>
+                            <Select labelId="collabId-label" id="collabId" name="collabId" value={item.collabId} label="collabId" onChange={onMenuChange}>
                                 <MenuItem value=''></MenuItem>
                                 {
                                     presets?.collabIds.map((collabId, index) => (
@@ -182,7 +180,7 @@ export default function ListItem(props: ListItemProps) {
                     <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="boost-label">Boost</InputLabel>
-                            <Select labelId="boost-label" id="boost" value={item.percent} label="Boost" onChange={onMenuChange}>
+                            <Select labelId="boost-label" id="boost" name="percent" value={item.percent} label="Boost" onChange={onMenuChange}>
                                 <MenuItem value=''></MenuItem>
                                 {
                                     presets?.boosts.map((boost, index) => (
@@ -195,7 +193,7 @@ export default function ListItem(props: ListItemProps) {
                     <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="traitLayer-label">Trait Layer</InputLabel>
-                            <Select labelId="traitLayer-label" id="traitLayer" value={item.traitLayer} label="traitLayer" onChange={onMenuChange}>
+                            <Select labelId="traitLayer-label" id="traitLayer" name="traitLayer" value={item.traitLayer} label="traitLayer" onChange={onMenuChange}>
                                 <MenuItem value=''></MenuItem>
                                 {
                                     presets?.traitLayers.map((traitLayer, index) => (
