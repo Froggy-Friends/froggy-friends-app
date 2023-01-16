@@ -101,13 +101,13 @@ export default function Admin() {
             task === 'list' && <ListItem title='List Item' type="normal" presets={presets}/>
           }
           {
-            task === 'list-friend' && <ListItem title='List Friend Item' type="friend" presets={presets}/>
+            task === 'list-friend' && <ListItem title='List Friend Item' type="friends" presets={presets}/>
           }
           {
-            task === 'list-collab-friend' && <ListItem title='List Collab Friend Item' type="collab" presets={presets}/>
+            task === 'list-collab-friend' && <ListItem title='List Collab Friend Item' type="collabs" presets={presets}/>
           }
           {
-            task === 'list-trait' && <ListItem title='List Trait Item' type="trait" presets={presets}/>
+            task === 'list-trait' && <ListItem title='List Trait Item' type="traits" presets={presets}/>
           }
           {
             task === 'wallet' &&

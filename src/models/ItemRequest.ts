@@ -1,7 +1,4 @@
 export interface ItemRequest {
-    admin: string;
-    message: string;
-    signature: string;
     name: string;
     description: string;
     category: string;
@@ -9,19 +6,20 @@ export interface ItemRequest {
     discord: string;
     website: string;
     endDate: number;
-    collabId: string;
+    collabId: number;
     collabAddress: string;
     isCommunity: boolean;
     isBoost: boolean;
+    isFriend: boolean;
+    isCollabFriend: boolean;
     isTrait: boolean;
     isPhysical: boolean;
     isAllowlist: boolean;
     rarity: string;
-    friendOrigin: string;
     traitLayer: string;
-    price: string;
-    percent: string;
-    supply: string;
-    walletLimit: string;
+    price: number;
+    percent: number;
+    supply: number;
+    walletLimit: number;
     isOnSale: boolean;
   }
