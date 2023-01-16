@@ -1,11 +1,15 @@
 import { Button, Container, FormControl, FormControlLabel, FormLabel, Grid, Input, InputLabel, MenuItem, Paper, Radio, RadioGroup, Select, SelectChangeEvent, Stack, Switch, TextField, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { makeStyles, createStyles } from '@mui/styles';
+import { useConfig, useEthers } from "@usedapp/core";
 import axios from "axios";
+import { ethers } from "ethers";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useFroggiesOwned, useStakingDeposits } from "../client";
 import banner from '../images/lab.jpg';
 import { ItemPresets } from "../models/ItemPresets";
 import theme from "../theme";
+
+declare var window: any;
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -24,6 +28,7 @@ export default function Admin() {
   const deposits = useStakingDeposits(stakingWallet);
   const owned = useFroggiesOwned(stakingWallet);
   const isSm = useMediaQuery(theme.breakpoints.down('md'));
+  const { account } = useEthers();
   const [task, setTask] = useState('list');
   const [presets, setPresets] = useState<ItemPresets>();
   const [itemName, setItemName] = useState('');
@@ -36,6 +41,7 @@ export default function Admin() {
   const [itemTraitLayer, setItemTraitLayer] = useState<string>('');
   const [itemIsCommunity, setItemIsCommunity] = useState(false);
   const [itemIsFriend, setItemIsFriend] = useState(false);
+  const [itemIsCollabFriend, setItemIsCollabFriend] = useState(false);
   const [itemIsTrait, setItemIsTrait] = useState(false);
   const [itemIsPhysical, setItemIsPhysical] = useState(false);
   const [itemIsAllowlist, setItemIsAllowlist] = useState(false);
@@ -123,6 +129,10 @@ export default function Admin() {
     setItemIsFriend(event.target.checked);
   };
 
+  const onItemIsCollabFriendChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setItemIsCollabFriend(event.target.checked);
+  };
+
   const onItemIsTraitChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setItemIsTrait(event.target.checked);
   };
@@ -168,28 +178,39 @@ export default function Admin() {
     event.preventDefault();
     console.log("list item submit: ", event);
 
-    if (itemIsFriend || itemIsTrait) {
-      // call /items/image/multiple api
-      try {
-        const formData = new FormData();
-        if (itemImage) {
-          formData.append('image', itemImage);
-        }
-        if (itemImageTransparent) {
-          formData.append('imageTransparent', itemImageTransparent);
-        }
-        const response = await axios({
-          method: 'post',
-          url: `${process.env.REACT_APP_API}/items/image/multiple`,
-          data: formData,
-          headers: { "Content-Type": "multipart/form-data"}
-        });
-        console.log("response: ", response);
-      } catch (error) {
-        console.log("list item images error: ", error);
+    try {
+      // prompt admin signature
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const message = JSON.stringify({listItem: true, itemName: itemName, account: account});
+      const signer = provider.getSigner();
+      const signature = await signer.signMessage(message);
+      const address = await signer.getAddress();
+      const formData = new FormData();
+      formData.append('admin', address);
+      formData.append('message', message);
+      formData.append('signature', signature);
+      if (itemImage) {
+        formData.append('image', itemImage);
       }
-    } else {
-      // call /items/image/single api
+      if (itemImageTransparent) {
+        formData.append('imageTransparent', itemImageTransparent);
+      }
+
+      let url = `${process.env.REACT_APP_API}`;
+      if (itemIsFriend) {
+        url += '/items/list/friend';
+      } else if (itemIsCollabFriend) {
+        url += '/items/list/collab/friend';
+      } else {
+        url += '/items/list';
+      }
+      
+      const response = await axios.post(url, formData, { headers: { "Content-Type": "multipart/form-data"}});
+      console.log("response: ", response);
+
+    } catch (error) {
+      console.log("request accounts error: ", error);
+      
     }
   }
 
@@ -198,9 +219,9 @@ export default function Admin() {
       <Paper elevation={3}>
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
-      <Container maxWidth='xl'  sx={{pt: 15, pb: 25}}>
-        <Grid container spacing={5}>
-          <Stack pr={20}>
+      <Container maxWidth='lg'  sx={{pt: 15, pb: 25}}>
+        <Stack direction='row' spacing={20}>
+          <Stack>
             <FormControl>
               <FormLabel id="demo-controlled-radio-buttons-group">Admin Tasks</FormLabel>
               <RadioGroup
@@ -370,6 +391,15 @@ export default function Admin() {
                     <FormControl>
                       <FormControlLabel
                           control={
+                            <Switch checked={itemIsCollabFriend} onChange={onItemIsCollabFriendChanged}/>
+                          }
+                          label='Collab Friend'
+                          labelPlacement="top"
+                        />  
+                    </FormControl>
+                    <FormControl>
+                      <FormControlLabel
+                          control={
                             <Switch checked={itemIsTrait} onChange={onItemIsTraitChanged}/>
                           }
                           label='Trait'
@@ -403,7 +433,7 @@ export default function Admin() {
                   <Stack id='description' pb={5}>
                     <TextField id='item-description' label="Description" variant="outlined" multiline minRows={3} value={itemDescription} onChange={onItemDescriptionChange}/>
                   </Stack>
-                  <Stack id='files' direction='row' pb={5}>
+                  <Stack id='files' direction='row' pb={10}>
                     <FormControl>
                       <FormControlLabel
                         control={
@@ -423,7 +453,7 @@ export default function Admin() {
                       />
                     </FormControl>
                   </Stack>
-                  <Stack id='submit'>
+                  <Stack id='submit' direction='row' justifyContent='center'>
                     <Button type="submit" variant='contained' color="primary">
                       <Typography>Submit</Typography>
                     </Button>
@@ -456,7 +486,7 @@ export default function Admin() {
               }
             </Stack>
           }
-        </Grid>
+        </Stack>
       </Container>
     </Grid>
   )
