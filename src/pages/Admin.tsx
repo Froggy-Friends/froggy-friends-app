@@ -101,6 +101,9 @@ export default function Admin() {
             task === 'list' && <ListItem title='List Item' type="normal" presets={presets}/>
           }
           {
+            task === 'list-friend' && <ListItem title='List Friend Item' type="friend" presets={presets}/>
+          }
+          {
             task === 'wallet' &&
             <Stack>
               <Grid id="wallet" justifyContent="center" container pb={5}>

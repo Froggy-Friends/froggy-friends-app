@@ -210,17 +210,10 @@ export default function ListItem(props: ListItemProps) {
                     </Stack>
                     }
                 </Stack>
+                { type === 'normal' &&
                 <Stack id='switches' direction='row' pb={5}>
                     <FormControl>
                         <FormControlLabel label='Allowlist' labelPlacement="top" name="isAllowlist" control={<Switch checked={item.isAllowlist} onChange={onSwitchChange} />}/>
-                    </FormControl>
-                    { (type === 'friend' || type === 'collab') && 
-                    <FormControl>
-                        <FormControlLabel label='Friend' labelPlacement="top" name="isBoost" control={<Switch checked={item.isBoost} onChange={onSwitchChange} />}/>
-                    </FormControl>
-                    }
-                    <FormControl>
-                        <FormControlLabel label='Trait' labelPlacement="top" name="isTrait" control={<Switch checked={item.isTrait} onChange={onSwitchChange} />}/>
                     </FormControl>
                     <FormControl>
                         <FormControlLabel label='Community' labelPlacement="top" name="isCommunity" control={<Switch checked={item.isCommunity} onChange={onSwitchChange} />}/>
@@ -229,6 +222,7 @@ export default function ListItem(props: ListItemProps) {
                         <FormControlLabel label='Physical' labelPlacement="top" name="isPhysical" control={<Switch checked={item.isPhysical} onChange={onSwitchChange} />}/>
                     </FormControl>
                 </Stack>
+                }
                 <Stack id='contract' direction='row' spacing={2} pb={5}>
                     <TextField id='item-price' label="Price" name="price" variant="outlined" value={item.price} onChange={onInputChange} />
                     <TextField id='item-supply' label="Supply" name="supply" variant="outlined" value={item.supply} onChange={onInputChange} />
@@ -245,9 +239,10 @@ export default function ListItem(props: ListItemProps) {
                     <FormControl>
                         <FormControlLabel label='Image' labelPlacement="top" control={<Input type="file" onChange={onItemImageChange} />}/>
                     </FormControl>
-                    <FormControl>
+                    { type !== 'normal' && <FormControl>
                         <FormControlLabel label='Transparent Image' labelPlacement="top" control={<Input type="file" onChange={onItemImageTransparentChange} />}/>
                     </FormControl>
+                    }
                 </Stack>
                 <Stack id='submit' direction='row' justifyContent='center'>
                     <Button type="submit" variant='contained' color="primary">
