@@ -79,7 +79,7 @@ export default function UpdateItem(props: ListItemProps) {
         try {
             // prompt admin signature
             const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const message = JSON.stringify({ listItem: true, itemName: selectedItem.name, account: account });
+            const message = JSON.stringify({ modifiedBy: account });
             const signer = provider.getSigner();
             const signature = await signer.signMessage(message);
             const address = await signer.getAddress();
@@ -99,8 +99,8 @@ export default function UpdateItem(props: ListItemProps) {
             let url: string = `${process.env.REACT_APP_API}/items`;
             const response = await axios.put(url, formData, { headers: { "Content-Type": "multipart/form-data" } });
             console.log("response: ", response);
-            if (response.status === 201) {
-                setAlertMessage('Item created');
+            if (response.status === 200) {
+                setAlertMessage('Item updated');
                 setShowAlert(true);
             }
         } catch (error) {
@@ -111,7 +111,6 @@ export default function UpdateItem(props: ListItemProps) {
 
     const onSelectedItemIndexChange = (event: SelectChangeEvent) => {
       const newItem = items.find(item => item.name === event.target.value);
-      console.log("new item: ", newItem);
       if (newItem) {
         setSelectedItem(newItem);
       }
@@ -139,7 +138,6 @@ export default function UpdateItem(props: ListItemProps) {
     }
 
     const onItemImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-        console.log("item image change: ", event);
         if (event.target.files && event.target.files.length > 0) {
             setItemImage(event.target.files[0]);
         }
@@ -239,24 +237,7 @@ export default function UpdateItem(props: ListItemProps) {
                 </Stack>
                 { selectedItem.category === 'collabs' &&
                 <Stack id='collab' direction='row' spacing={2} pb={5}>
-                  <Stack minWidth={100}>
-                      <FormControl fullWidth>
-                          <InputLabel id="collabId-label">Collab ID</InputLabel>
-                          <Select labelId="collabId-label" id="collabId" name="collabId" label="collabId"
-                            value={selectedItem.collabId} 
-                            onChange={(event) => setSelectedItem({...selectedItem, collabId: +event.target.value})}>
-                              <MenuItem value=''></MenuItem>
-                              {
-                                  presets?.collabIds.map((collabId, index) => (
-                                      <MenuItem key={index} value={collabId}>{collabId}</MenuItem>
-                                  ))
-                              }
-                          </Select>
-                      </FormControl>
-                  </Stack>
-                  <Stack>
-                    <TextField id='item-collab-address' label="Collab Address" name="collabAddress" variant="outlined" fullWidth value={selectedItem.collabAddress} onChange={onInputChange} />
-                  </Stack>
+                  <TextField id='item-collab-address' label="Collab Address" name="collabAddress" variant="outlined" fullWidth value={selectedItem.collabAddress} onChange={onInputChange} />
                 </Stack>
                 }
                 <Stack id='switches' direction='row' pb={5}>
@@ -283,9 +264,9 @@ export default function UpdateItem(props: ListItemProps) {
                     <TextField id='item-description' label="Description" name="description" variant="outlined" multiline minRows={3} value={selectedItem.description} onChange={onInputChange} />
                 </Stack>
                 <Stack id='links' spacing={2} pb={5}>
-                    <TextField id='item-twitter' label="Twitter" name="twitter" variant="outlined" multiline minRows={3} value={selectedItem.twitter} onChange={onInputChange} />
-                    <TextField id='item-discord' label="Discord" name="discord" variant="outlined" multiline minRows={3} value={selectedItem.discord} onChange={onInputChange} />
-                    <TextField id='item-website' label="Website" name="website" variant="outlined" multiline minRows={3} value={selectedItem.website} onChange={onInputChange} />
+                    <TextField id='item-twitter' label="Twitter" name="twitter" variant="outlined" multiline value={selectedItem.twitter} onChange={onInputChange} />
+                    <TextField id='item-discord' label="Discord" name="discord" variant="outlined" multiline value={selectedItem.discord} onChange={onInputChange} />
+                    <TextField id='item-website' label="Website" name="website" variant="outlined" multiline value={selectedItem.website} onChange={onInputChange} />
                 </Stack>
                 <Stack id='files' direction='row' pb={10}>
                     <FormControl>

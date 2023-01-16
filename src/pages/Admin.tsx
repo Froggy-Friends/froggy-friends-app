@@ -81,6 +81,14 @@ export default function Admin() {
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
       <Container maxWidth='lg'  sx={{pt: 15, pb: 25}}>
+        <Stack spacing={2} pb={5}>
+          <Typography variant='h6'>
+            Note: listing and updating items cost gas and are paid by the froggy friends deployer.
+          </Typography>
+          <Typography>
+          Please check that the deployer has a balance to cover gas fees 0x09a06f3901f3b0299dd492bd35eA1bB38c5C4c9b.
+          </Typography>
+        </Stack>
         <Stack direction='row' spacing={20}>
           <Stack>
             <FormControl>

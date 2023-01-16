@@ -67,7 +67,7 @@ export default function ListItem(props: ListItemProps) {
         try {
             // prompt admin signature
             const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const message = JSON.stringify({ listItem: true, itemName: item.name, account: account });
+            const message = JSON.stringify({ modifiedBy: account });
             const signer = provider.getSigner();
             const signature = await signer.signMessage(message);
             const address = await signer.getAddress();
@@ -249,9 +249,9 @@ export default function ListItem(props: ListItemProps) {
                 </Stack>
                 { type === 'normal' &&
                 <Stack id='links' spacing={2} pb={5}>
-                    <TextField id='item-twitter' label="Twitter" name="twitter" variant="outlined" multiline minRows={3} value={item.twitter} onChange={onInputChange} />
-                    <TextField id='item-discord' label="Discord" name="discord" variant="outlined" multiline minRows={3} value={item.discord} onChange={onInputChange} />
-                    <TextField id='item-website' label="Website" name="website" variant="outlined" multiline minRows={3} value={item.website} onChange={onInputChange} />
+                    <TextField id='item-twitter' label="Twitter" name="twitter" variant="outlined" multiline value={item.twitter} onChange={onInputChange} />
+                    <TextField id='item-discord' label="Discord" name="discord" variant="outlined" multiline value={item.discord} onChange={onInputChange} />
+                    <TextField id='item-website' label="Website" name="website" variant="outlined" multiline value={item.website} onChange={onInputChange} />
                 </Stack>
                 }
                 <Stack id='files' direction='row' pb={10}>
