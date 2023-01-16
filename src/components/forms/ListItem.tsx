@@ -19,6 +19,7 @@ const itemRequest: ItemRequest = {
     website: '',
     endDate: 0,
     collabId: '',
+    collabAddress: '',
     isCommunity: false,
     isBoost: false,
     isTrait: false,
@@ -34,12 +35,15 @@ const itemRequest: ItemRequest = {
     isOnSale: false
 };
 
+export type itemType = 'normal' | 'friend' | 'collab' | 'trait';
 export interface ListItemProps {
+    title: string;
+    type: itemType;
     presets: ItemPresets;
 }
 
 export default function ListItem(props: ListItemProps) {
-    const { presets } = props;
+    const { title, type, presets } = props;
     const { account } = useEthers();
     const [item, setItem] = useState<ItemRequest>(itemRequest);
     const [itemImage, setItemImage] = useState<File>();
@@ -47,7 +51,6 @@ export default function ListItem(props: ListItemProps) {
 
     const onListItemSubmit = async (event: ChangeEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log("list item submit: ", event);
 
         try {
             // prompt admin signature
@@ -63,7 +66,6 @@ export default function ListItem(props: ListItemProps) {
             formData.append('signature', signature);
             formData.append('item', JSON.stringify(item));
 
-            // formData.append('')
             if (itemImage) {
                 formData.append('image', itemImage);
             }
@@ -116,11 +118,11 @@ export default function ListItem(props: ListItemProps) {
 
     return (
         <Stack>
-            <Typography variant="h4" pb={5}>List New Item</Typography>
+            <Typography variant="h4" pb={5}>{title}</Typography>
             <form onSubmit={onListItemSubmit}>
-                <Stack id='title' direction='row' pb={5}>
-                    <TextField id='item-name' label="Name" name="name" variant="outlined" value={item.name} onChange={onInputChange} />
-                    <FormControl>
+                <Stack id='title' direction='row' justifyContent='space-between' pb={5}>
+                    <TextField id='item-name' label="Name" name="name" variant="outlined" fullWidth value={item.name} onChange={onInputChange} />
+                    <FormControl fullWidth>
                         <FormControlLabel label='On Sale*' labelPlacement="top" name="isOnSale" control={<Switch checked={item.isOnSale} onChange={onSwitchChange} />} />
                     </FormControl>
                 </Stack>
@@ -151,7 +153,7 @@ export default function ListItem(props: ListItemProps) {
                             </Select>
                         </FormControl>
                     </Stack>
-                    <Stack minWidth={100}>
+                    { type === 'friend' && <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="friendOrigin-label">Friend Origin</InputLabel>
                             <Select labelId="friendOrigin-label" id="friendOrigin" name="friendOrigin" value={item.friendOrigin} label="friendOrigin" onChange={onMenuChange}>
@@ -164,7 +166,8 @@ export default function ListItem(props: ListItemProps) {
                             </Select>
                         </FormControl>
                     </Stack>
-                    <Stack minWidth={100}>
+                    }
+                    { type === 'collab' && <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="collabId-label">Collab ID</InputLabel>
                             <Select labelId="collabId-label" id="collabId" name="collabId" value={item.collabId} label="collabId" onChange={onMenuChange}>
@@ -177,7 +180,8 @@ export default function ListItem(props: ListItemProps) {
                             </Select>
                         </FormControl>
                     </Stack>
-                    <Stack minWidth={100}>
+                    }
+                    { (type === 'friend' || type === 'collab') && <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="boost-label">Boost</InputLabel>
                             <Select labelId="boost-label" id="boost" name="percent" value={item.percent} label="Boost" onChange={onMenuChange}>
@@ -190,7 +194,8 @@ export default function ListItem(props: ListItemProps) {
                             </Select>
                         </FormControl>
                     </Stack>
-                    <Stack minWidth={100}>
+                    }
+                    { type === 'trait' && <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="traitLayer-label">Trait Layer</InputLabel>
                             <Select labelId="traitLayer-label" id="traitLayer" name="traitLayer" value={item.traitLayer} label="traitLayer" onChange={onMenuChange}>
@@ -203,14 +208,17 @@ export default function ListItem(props: ListItemProps) {
                             </Select>
                         </FormControl>
                     </Stack>
+                    }
                 </Stack>
                 <Stack id='switches' direction='row' pb={5}>
                     <FormControl>
                         <FormControlLabel label='Allowlist' labelPlacement="top" name="isAllowlist" control={<Switch checked={item.isAllowlist} onChange={onSwitchChange} />}/>
                     </FormControl>
+                    { (type === 'friend' || type === 'collab') && 
                     <FormControl>
                         <FormControlLabel label='Friend' labelPlacement="top" name="isBoost" control={<Switch checked={item.isBoost} onChange={onSwitchChange} />}/>
                     </FormControl>
+                    }
                     <FormControl>
                         <FormControlLabel label='Trait' labelPlacement="top" name="isTrait" control={<Switch checked={item.isTrait} onChange={onSwitchChange} />}/>
                     </FormControl>
@@ -225,6 +233,10 @@ export default function ListItem(props: ListItemProps) {
                     <TextField id='item-price' label="Price" name="price" variant="outlined" value={item.price} onChange={onInputChange} />
                     <TextField id='item-supply' label="Supply" name="supply" variant="outlined" value={item.supply} onChange={onInputChange} />
                     <TextField id='item-limit' label="Wallet Limit" name="walletLimit" variant="outlined" value={item.walletLimit} onChange={onInputChange} />
+                    {
+                        type === 'collab' &&
+                        <TextField id='item-address' label="Collab Address" name="collabAddress" variant="outlined" value={item.collabAddress} onChange={onInputChange} />
+                    }
                 </Stack>
                 <Stack id='description' pb={5}>
                     <TextField id='item-description' label="Description" name="description" variant="outlined" multiline minRows={3} value={item.description} onChange={onInputChange} />

@@ -10,6 +10,7 @@ export interface ItemRequest {
     website: string;
     endDate: number;
     collabId: string;
+    collabAddress: string;
     isCommunity: boolean;
     isBoost: boolean;
     isTrait: boolean;

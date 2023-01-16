@@ -98,7 +98,7 @@ export default function Admin() {
             </FormControl>
           </Stack>
           {
-            task === 'list' && <ListItem presets={presets}/>
+            task === 'list' && <ListItem title='List Item' type="normal" presets={presets}/>
           }
           {
             task === 'wallet' &&
