@@ -191,7 +191,6 @@ export default function UpdateItem(props: ListItemProps) {
                     </FormControl>
                 </Stack>
                 <Stack id='menus' direction='row' spacing={2} pb={5}>
-                    { type === 'normal' &&
                     <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="category-label">Category*</InputLabel>
@@ -205,7 +204,6 @@ export default function UpdateItem(props: ListItemProps) {
                             </Select>
                         </FormControl>
                     </Stack>
-                    }
                     <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="rarity-label">Rarity*</InputLabel>
@@ -219,20 +217,7 @@ export default function UpdateItem(props: ListItemProps) {
                             </Select>
                         </FormControl>
                     </Stack>
-                    { type === 'normal' &&
-                    <Stack id='switches' direction='row' pb={5}>
-                        <FormControl>
-                            <FormControlLabel label='Allowlist' labelPlacement="top" name="isAllowlist" control={<Switch checked={selectedItem.isAllowlist} onChange={onSwitchChange} />}/>
-                        </FormControl>
-                        <FormControl>
-                            <FormControlLabel label='Community' labelPlacement="top" name="isCommunity" control={<Switch checked={selectedItem.isCommunity} onChange={onSwitchChange} />}/>
-                        </FormControl>
-                        <FormControl>
-                            <FormControlLabel label='Physical' labelPlacement="top" name="isPhysical" control={<Switch checked={selectedItem.isPhysical} onChange={onSwitchChange} />}/>
-                        </FormControl>
-                    </Stack>
-                    }
-                    { type === 'collabs' && <Stack minWidth={100}>
+                    <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="collabId-label">Collab ID</InputLabel>
                             <Select labelId="collabId-label" id="collabId" name="collabId" label="collabId"
@@ -247,8 +232,7 @@ export default function UpdateItem(props: ListItemProps) {
                             </Select>
                         </FormControl>
                     </Stack>
-                    }
-                    { (type === 'friends' || type === 'collabs') && <Stack minWidth={100}>
+                    <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="boost-label">Boost</InputLabel>
                             <Select labelId="boost-label" id="boost" name="percent" label="Boost"
@@ -263,8 +247,7 @@ export default function UpdateItem(props: ListItemProps) {
                             </Select>
                         </FormControl>
                     </Stack>
-                    }
-                    { type === 'traits' && <Stack minWidth={100}>
+                    <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="traitLayer-label">Trait Layer</InputLabel>
                             <Select labelId="traitLayer-label" id="traitLayer" name="traitLayer" value={selectedItem.traitLayer} label="traitLayer" onChange={onMenuChange}>
@@ -277,7 +260,17 @@ export default function UpdateItem(props: ListItemProps) {
                             </Select>
                         </FormControl>
                     </Stack>
-                    }
+                </Stack>
+                <Stack id='switches' direction='row' pb={5}>
+                    <FormControl>
+                        <FormControlLabel label='Allowlist' labelPlacement="top" name="isAllowlist" control={<Switch checked={selectedItem.isAllowlist} onChange={onSwitchChange} />}/>
+                    </FormControl>
+                    <FormControl>
+                        <FormControlLabel label='Community' labelPlacement="top" name="isCommunity" control={<Switch checked={selectedItem.isCommunity} onChange={onSwitchChange} />}/>
+                    </FormControl>
+                    <FormControl>
+                        <FormControlLabel label='Physical' labelPlacement="top" name="isPhysical" control={<Switch checked={selectedItem.isPhysical} onChange={onSwitchChange} />}/>
+                    </FormControl>
                 </Stack>
                 <Stack id='contract' direction='row' spacing={2} pb={5}>
                     <TextField id='item-price' label="Price" variant="outlined" value={selectedItem.price} onChange={(event) => setSelectedItem({...selectedItem, price: +event.target.value})} />
@@ -291,21 +284,18 @@ export default function UpdateItem(props: ListItemProps) {
                 <Stack id='description' pb={5}>
                     <TextField id='item-description' label="Description" name="description" variant="outlined" multiline minRows={3} value={selectedItem.description} onChange={onInputChange} />
                 </Stack>
-                { type === 'normal' &&
                 <Stack id='links' spacing={2} pb={5}>
                     <TextField id='item-twitter' label="Twitter" name="twitter" variant="outlined" multiline minRows={3} value={selectedItem.twitter} onChange={onInputChange} />
                     <TextField id='item-discord' label="Discord" name="discord" variant="outlined" multiline minRows={3} value={selectedItem.discord} onChange={onInputChange} />
                     <TextField id='item-website' label="Website" name="website" variant="outlined" multiline minRows={3} value={selectedItem.website} onChange={onInputChange} />
                 </Stack>
-                }
                 <Stack id='files' direction='row' pb={10}>
                     <FormControl>
                         <FormControlLabel label='Image' labelPlacement="top" control={<Input type="file" onChange={onItemImageChange} />}/>
                     </FormControl>
-                    { type !== 'normal' && <FormControl>
+                    <FormControl>
                         <FormControlLabel label='Transparent Image' labelPlacement="top" control={<Input type="file" onChange={onItemImageTransparentChange} />}/>
                     </FormControl>
-                    }
                 </Stack>
                 <Stack id='submit' direction='row' justifyContent='center'>
                     <Button type="submit" variant='contained' color="primary">
