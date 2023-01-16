@@ -86,13 +86,13 @@ export default function Admin() {
               <FormLabel id="admin-tasks">Admin Tasks</FormLabel>
               <RadioGroup aria-labelledby="admin-tasks" name="admin-tasks-group" value={task} onChange={onTaskChange}>
                 <FormControlLabel value="list" control={<Radio />} label="List Item" />
-                <FormControlLabel value="list-friend" control={<Radio />} label="List Friend Item" />
-                <FormControlLabel value="list-collab-friend" control={<Radio />} label="List Collab Friend Item" />
-                <FormControlLabel value="list-trait" control={<Radio />} label="List Trait Item" />
+                <FormControlLabel value="list-friend" control={<Radio />} label="List Friend" />
+                <FormControlLabel value="list-collab-friend" control={<Radio />} label="List Collab Friend" />
+                <FormControlLabel value="list-trait" control={<Radio />} label="List Trait" />
                 <FormControlLabel value="update" control={<Radio />} label="Update Item" />
-                <FormControlLabel value="update-friend" control={<Radio />} label="Update Friend Item" />
-                <FormControlLabel value="update-collab-friend" control={<Radio />} label="Update Collab Friend Item" />
-                <FormControlLabel value="update-trait" control={<Radio />} label="Update Trait Item" />
+                <FormControlLabel value="update-friend" control={<Radio />} label="Update Friend" />
+                <FormControlLabel value="update-collab-friend" control={<Radio />} label="Update Collab Friend" />
+                <FormControlLabel value="update-trait" control={<Radio />} label="Update Trait" />
                 <FormControlLabel value="wallet" control={<Radio />} label="Wallet Checker" />
               </RadioGroup>
             </FormControl>
@@ -101,13 +101,13 @@ export default function Admin() {
             task === 'list' && <ListItem title='List Item' type="normal" presets={presets}/>
           }
           {
-            task === 'list-friend' && <ListItem title='List Friend Item' type="friends" presets={presets}/>
+            task === 'list-friend' && <ListItem title='List Friend' type="friends" presets={presets}/>
           }
           {
-            task === 'list-collab-friend' && <ListItem title='List Collab Friend Item' type="collabs" presets={presets}/>
+            task === 'list-collab-friend' && <ListItem title='List Collab Friend' type="collabs" presets={presets}/>
           }
           {
-            task === 'list-trait' && <ListItem title='List Trait Item' type="traits" presets={presets}/>
+            task === 'list-trait' && <ListItem title='List Trait' type="traits" presets={presets}/>
           }
           {
             task === 'wallet' &&

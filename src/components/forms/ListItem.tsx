@@ -195,6 +195,19 @@ export default function ListItem(props: ListItemProps) {
                             </Select>
                         </FormControl>
                     </Stack>
+                    { type === 'normal' &&
+                    <Stack id='switches' direction='row' pb={5}>
+                        <FormControl>
+                            <FormControlLabel label='Allowlist' labelPlacement="top" name="isAllowlist" control={<Switch checked={item.isAllowlist} onChange={onSwitchChange} />}/>
+                        </FormControl>
+                        <FormControl>
+                            <FormControlLabel label='Community' labelPlacement="top" name="isCommunity" control={<Switch checked={item.isCommunity} onChange={onSwitchChange} />}/>
+                        </FormControl>
+                        <FormControl>
+                            <FormControlLabel label='Physical' labelPlacement="top" name="isPhysical" control={<Switch checked={item.isPhysical} onChange={onSwitchChange} />}/>
+                        </FormControl>
+                    </Stack>
+                    }
                     { type === 'collabs' && <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="collabId-label">Collab ID</InputLabel>
@@ -238,19 +251,6 @@ export default function ListItem(props: ListItemProps) {
                     </Stack>
                     }
                 </Stack>
-                { type === 'normal' &&
-                <Stack id='switches' direction='row' pb={5}>
-                    <FormControl>
-                        <FormControlLabel label='Allowlist' labelPlacement="top" name="isAllowlist" control={<Switch checked={item.isAllowlist} onChange={onSwitchChange} />}/>
-                    </FormControl>
-                    <FormControl>
-                        <FormControlLabel label='Community' labelPlacement="top" name="isCommunity" control={<Switch checked={item.isCommunity} onChange={onSwitchChange} />}/>
-                    </FormControl>
-                    <FormControl>
-                        <FormControlLabel label='Physical' labelPlacement="top" name="isPhysical" control={<Switch checked={item.isPhysical} onChange={onSwitchChange} />}/>
-                    </FormControl>
-                </Stack>
-                }
                 <Stack id='contract' direction='row' spacing={2} pb={5}>
                     <TextField id='item-price' label="Price" variant="outlined" value={price} onChange={(event) => setPrice(event.target.value)} />
                     <TextField id='item-supply' label="Supply" variant="outlined" value={supply} onChange={(event) => setSupply(event.target.value)} />
@@ -263,6 +263,13 @@ export default function ListItem(props: ListItemProps) {
                 <Stack id='description' pb={5}>
                     <TextField id='item-description' label="Description" name="description" variant="outlined" multiline minRows={3} value={item.description} onChange={onInputChange} />
                 </Stack>
+                { type === 'normal' &&
+                <Stack id='links' spacing={2} pb={5}>
+                    <TextField id='item-twitter' label="Twitter" name="twitter" variant="outlined" multiline minRows={3} value={item.twitter} onChange={onInputChange} />
+                    <TextField id='item-discord' label="Discord" name="discord" variant="outlined" multiline minRows={3} value={item.discord} onChange={onInputChange} />
+                    <TextField id='item-website' label="Website" name="website" variant="outlined" multiline minRows={3} value={item.website} onChange={onInputChange} />
+                </Stack>
+                }
                 <Stack id='files' direction='row' pb={10}>
                     <FormControl>
                         <FormControlLabel label='Image' labelPlacement="top" control={<Input type="file" onChange={onItemImageChange} />}/>
