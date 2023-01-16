@@ -88,6 +88,8 @@ export default function ListItem(props: ListItemProps) {
     }
 
     const onSwitchChange = (event: ChangeEvent<HTMLInputElement>) => {
+        console.log("input change: ", event.target.name);
+        console.log("input value change: ", event.target.value);
         setItem({
             ...item,
             [event.target.name]: event.target.checked
@@ -119,7 +121,7 @@ export default function ListItem(props: ListItemProps) {
             <Typography variant="h4" pb={5}>List New Item</Typography>
             <form onSubmit={onListItemSubmit}>
                 <Stack id='title' direction='row' pb={5}>
-                    <TextField id='item-name' label="Name" variant="outlined" value={item.name} onChange={onInputChange} />
+                    <TextField id='item-name' label="Name" name="name" variant="outlined" value={item.name} onChange={onInputChange} />
                     <FormControl>
                         <FormControlLabel label='On Sale*' labelPlacement="top" control={<Switch checked={item.isOnSale} onChange={onSwitchChange} />} />
                     </FormControl>
@@ -206,28 +208,28 @@ export default function ListItem(props: ListItemProps) {
                 </Stack>
                 <Stack id='switches' direction='row' pb={5}>
                     <FormControl>
-                        <FormControlLabel label='Allowlist' labelPlacement="top" control={<Switch checked={item.isAllowlist} onChange={onSwitchChange} />}/>
+                        <FormControlLabel label='Allowlist' labelPlacement="top" name="isAllowlist" control={<Switch checked={item.isAllowlist} onChange={onSwitchChange} />}/>
                     </FormControl>
                     <FormControl>
-                        <FormControlLabel label='Friend' labelPlacement="top" control={<Switch checked={item.isBoost} onChange={onSwitchChange} />}/>
+                        <FormControlLabel label='Friend' labelPlacement="top" name="isBoost" control={<Switch checked={item.isBoost} onChange={onSwitchChange} />}/>
                     </FormControl>
                     <FormControl>
-                        <FormControlLabel label='Trait' labelPlacement="top" control={<Switch checked={item.isTrait} onChange={onSwitchChange} />}/>
+                        <FormControlLabel label='Trait' labelPlacement="top" name="isTrait" control={<Switch checked={item.isTrait} onChange={onSwitchChange} />}/>
                     </FormControl>
                     <FormControl>
-                        <FormControlLabel label='Community' labelPlacement="top" control={<Switch checked={item.isCommunity} onChange={onSwitchChange} />}/>
+                        <FormControlLabel label='Community' labelPlacement="top" name="isCommunity" control={<Switch checked={item.isCommunity} onChange={onSwitchChange} />}/>
                     </FormControl>
                     <FormControl>
-                        <FormControlLabel label='Physical' labelPlacement="top" control={<Switch checked={item.isPhysical} onChange={onSwitchChange} />}/>
+                        <FormControlLabel label='Physical' labelPlacement="top" name="isPhysical" control={<Switch checked={item.isPhysical} onChange={onSwitchChange} />}/>
                     </FormControl>
                 </Stack>
                 <Stack id='contract' direction='row' spacing={2} pb={5}>
-                    <TextField id='item-price' label="Price" variant="outlined" value={item.price} onChange={onInputChange} />
-                    <TextField id='item-supply' label="Supply" variant="outlined" value={item.supply} onChange={onInputChange} />
-                    <TextField id='item-limit' label="Wallet Limit" variant="outlined" value={item.walletLimit} onChange={onInputChange} />
+                    <TextField id='item-price' label="Price" name="price" variant="outlined" value={item.price} onChange={onInputChange} />
+                    <TextField id='item-supply' label="Supply" name="supply" variant="outlined" value={item.supply} onChange={onInputChange} />
+                    <TextField id='item-limit' label="Wallet Limit" name="walletLimit" variant="outlined" value={item.walletLimit} onChange={onInputChange} />
                 </Stack>
                 <Stack id='description' pb={5}>
-                    <TextField id='item-description' label="Description" variant="outlined" multiline minRows={3} value={item.description} onChange={onInputChange} />
+                    <TextField id='item-description' label="Description" name="description" variant="outlined" multiline minRows={3} value={item.description} onChange={onInputChange} />
                 </Stack>
                 <Stack id='files' direction='row' pb={10}>
                     <FormControl>
