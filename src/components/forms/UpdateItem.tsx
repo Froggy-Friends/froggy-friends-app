@@ -56,10 +56,6 @@ export default function UpdateItem(props: ListItemProps) {
     const [selectedItem, setSelectedItem] = useState<RibbitItem>(ribbitItem);
     const [itemImage, setItemImage] = useState<File>();
     const [itemImageTransparent, setItemImageTransparent] = useState<File>();
-    const [price, setPrice] = useState('');
-    const [percent, setPercent] = useState('');
-    const [supply, setSupply] = useState('');
-    const [walletLimit, setWalletLimit] = useState('');
     const [collabId, setCollabId] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
@@ -90,15 +86,10 @@ export default function UpdateItem(props: ListItemProps) {
             const signature = await signer.signMessage(message);
             const address = await signer.getAddress();
             const formData = new FormData();
-            const listItem = {...selectedItem, price: +price, supply: +supply, walletLimit: +walletLimit};
-            if (percent) listItem.percent = +percent;
-            if (collabId) listItem.collabId = +collabId;
-            console.log("item: ", listItem);
-
             formData.append('admin', address);
             formData.append('message', message);
             formData.append('signature', signature);
-            formData.append('item', JSON.stringify(listItem));
+            formData.append('item', JSON.stringify(selectedItem));
 
             if (itemImage) {
                 formData.append('image', itemImage);
@@ -108,9 +99,9 @@ export default function UpdateItem(props: ListItemProps) {
             }
 
             let url: string = '';
-            if (listItem.isFriend) {
+            if (selectedItem.isFriend) {
                 url = `${process.env.REACT_APP_API}/items/list/friend`;
-            } else if (listItem.isCollabFriend) {
+            } else if (selectedItem.isCollabFriend) {
                 url = `${process.env.REACT_APP_API}/items/list/collab/friend`;
             } else {
                 url = `${process.env.REACT_APP_API}/items/list`;
@@ -181,7 +172,7 @@ export default function UpdateItem(props: ListItemProps) {
         <Stack>
             <Stack direction='row' justifyContent='space-between'>
               <Typography variant="h4" pb={5}>{title}</Typography>
-              <FormControl>
+              <FormControl sx={{minWidth: 200}}>
                 <InputLabel id="item-label">Selected Item</InputLabel>
                 <Select labelId="item-label" id="item" label="Selected Item" value={selectedItem.name} onChange={onSelectedItemIndexChange}>
                     {
@@ -244,7 +235,9 @@ export default function UpdateItem(props: ListItemProps) {
                     { type === 'collabs' && <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="collabId-label">Collab ID</InputLabel>
-                            <Select labelId="collabId-label" id="collabId" name="collabId" value={collabId} label="collabId" onChange={(event) => setCollabId(event.target.value)}>
+                            <Select labelId="collabId-label" id="collabId" name="collabId" label="collabId"
+                              value={selectedItem.collabId} 
+                              onChange={(event) => setSelectedItem({...selectedItem, collabId: +event.target.value})}>
                                 <MenuItem value=''></MenuItem>
                                 {
                                     presets?.collabIds.map((collabId, index) => (
@@ -258,7 +251,9 @@ export default function UpdateItem(props: ListItemProps) {
                     { (type === 'friends' || type === 'collabs') && <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="boost-label">Boost</InputLabel>
-                            <Select labelId="boost-label" id="boost" name="percent" value={percent} label="Boost" onChange={(event) => setPercent(event.target.value)}>
+                            <Select labelId="boost-label" id="boost" name="percent" label="Boost"
+                              value={selectedItem.percent}
+                              onChange={(event) => setSelectedItem({...selectedItem, percent: +event.target.value})}>
                                 <MenuItem value=''></MenuItem>
                                 {
                                     presets?.boosts.map((boost, index) => (
@@ -285,9 +280,9 @@ export default function UpdateItem(props: ListItemProps) {
                     }
                 </Stack>
                 <Stack id='contract' direction='row' spacing={2} pb={5}>
-                    <TextField id='item-price' label="Price" variant="outlined" value={price} onChange={(event) => setPrice(event.target.value)} />
-                    <TextField id='item-supply' label="Supply" variant="outlined" value={supply} onChange={(event) => setSupply(event.target.value)} />
-                    <TextField id='item-limit' label="Wallet Limit" variant="outlined" value={walletLimit} onChange={(event) => setWalletLimit(event.target.value)} />
+                    <TextField id='item-price' label="Price" variant="outlined" value={selectedItem.price} onChange={(event) => setSelectedItem({...selectedItem, price: +event.target.value})} />
+                    <TextField id='item-supply' label="Supply" variant="outlined" value={selectedItem.supply} onChange={(event) => setSelectedItem({...selectedItem, supply: +event.target.value})} />
+                    <TextField id='item-limit' label="Wallet Limit" variant="outlined" value={selectedItem.walletLimit} onChange={(event) => setSelectedItem({...selectedItem, walletLimit: +event.target.value})} />
                     {
                         type === 'collabs' &&
                         <TextField id='item-address' label="Collab Address" name="collabAddress" variant="outlined" value={selectedItem.collabAddress} onChange={onInputChange} />
