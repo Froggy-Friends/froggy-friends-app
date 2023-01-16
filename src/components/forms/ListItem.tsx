@@ -50,7 +50,6 @@ export default function ListItem(props: ListItemProps) {
     const [percent, setPercent] = useState('');
     const [supply, setSupply] = useState('');
     const [walletLimit, setWalletLimit] = useState('');
-    const [collabId, setCollabId] = useState('');
     const [item, setItem] = useState<ItemRequest>({
         ...itemRequest, 
         isBoost: type === 'friends' || type === 'collabs',
@@ -75,7 +74,6 @@ export default function ListItem(props: ListItemProps) {
             const formData = new FormData();
             const listItem = {...item, price: +price, supply: +supply, walletLimit: +walletLimit};
             if (percent) listItem.percent = +percent;
-            if (collabId) listItem.collabId = +collabId;
             console.log("item: ", listItem);
 
             formData.append('admin', address);
@@ -205,20 +203,6 @@ export default function ListItem(props: ListItemProps) {
                         </FormControl>
                         <FormControl>
                             <FormControlLabel label='Physical' labelPlacement="top" name="isPhysical" control={<Switch checked={item.isPhysical} onChange={onSwitchChange} />}/>
-                        </FormControl>
-                    </Stack>
-                    }
-                    { type === 'collabs' && <Stack minWidth={100}>
-                        <FormControl fullWidth>
-                            <InputLabel id="collabId-label">Collab ID</InputLabel>
-                            <Select labelId="collabId-label" id="collabId" name="collabId" value={collabId} label="collabId" onChange={(event) => setCollabId(event.target.value)}>
-                                <MenuItem value=''></MenuItem>
-                                {
-                                    presets?.collabIds.map((collabId, index) => (
-                                        <MenuItem key={index} value={collabId}>{collabId}</MenuItem>
-                                    ))
-                                }
-                            </Select>
                         </FormControl>
                     </Stack>
                     }
