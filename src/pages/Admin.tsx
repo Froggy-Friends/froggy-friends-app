@@ -91,9 +91,6 @@ export default function Admin() {
                 <FormControlLabel value="list-collab-friend" control={<Radio />} label="List Collab Friend" />
                 <FormControlLabel value="list-trait" control={<Radio />} label="List Trait" />
                 <FormControlLabel value="update" control={<Radio />} label="Update Item" />
-                <FormControlLabel value="update-friend" control={<Radio />} label="Update Friend" />
-                <FormControlLabel value="update-collab-friend" control={<Radio />} label="Update Collab Friend" />
-                <FormControlLabel value="update-trait" control={<Radio />} label="Update Trait" />
                 <FormControlLabel value="wallet" control={<Radio />} label="Wallet Checker" />
               </RadioGroup>
             </FormControl>

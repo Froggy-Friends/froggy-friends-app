@@ -5,7 +5,6 @@ import axios from "axios";
 import { ethers } from "ethers";
 import { ChangeEvent, useEffect, useState } from "react";
 import { ItemPresets } from "../../models/ItemPresets";
-import { ItemRequest } from "../../models/ItemRequest";
 import { RibbitItem } from "../../models/RibbitItem";
 
 declare var window: any;
@@ -56,7 +55,6 @@ export default function UpdateItem(props: ListItemProps) {
     const [selectedItem, setSelectedItem] = useState<RibbitItem>(ribbitItem);
     const [itemImage, setItemImage] = useState<File>();
     const [itemImageTransparent, setItemImageTransparent] = useState<File>();
-    const [collabId, setCollabId] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
@@ -98,15 +96,8 @@ export default function UpdateItem(props: ListItemProps) {
                 formData.append('imageTransparent', itemImageTransparent);
             }
 
-            let url: string = '';
-            if (selectedItem.isFriend) {
-                url = `${process.env.REACT_APP_API}/items/list/friend`;
-            } else if (selectedItem.isCollabFriend) {
-                url = `${process.env.REACT_APP_API}/items/list/collab/friend`;
-            } else {
-                url = `${process.env.REACT_APP_API}/items/list`;
-            }
-            const response = await axios.post(url, formData, { headers: { "Content-Type": "multipart/form-data" } });
+            let url: string = `${process.env.REACT_APP_API}/items`;
+            const response = await axios.put(url, formData, { headers: { "Content-Type": "multipart/form-data" } });
             console.log("response: ", response);
             if (response.status === 201) {
                 setAlertMessage('Item created');
@@ -219,21 +210,6 @@ export default function UpdateItem(props: ListItemProps) {
                     </Stack>
                     <Stack minWidth={100}>
                         <FormControl fullWidth>
-                            <InputLabel id="collabId-label">Collab ID</InputLabel>
-                            <Select labelId="collabId-label" id="collabId" name="collabId" label="collabId"
-                              value={selectedItem.collabId} 
-                              onChange={(event) => setSelectedItem({...selectedItem, collabId: +event.target.value})}>
-                                <MenuItem value=''></MenuItem>
-                                {
-                                    presets?.collabIds.map((collabId, index) => (
-                                        <MenuItem key={index} value={collabId}>{collabId}</MenuItem>
-                                    ))
-                                }
-                            </Select>
-                        </FormControl>
-                    </Stack>
-                    <Stack minWidth={100}>
-                        <FormControl fullWidth>
                             <InputLabel id="boost-label">Boost</InputLabel>
                             <Select labelId="boost-label" id="boost" name="percent" label="Boost"
                               value={selectedItem.percent}
@@ -261,6 +237,28 @@ export default function UpdateItem(props: ListItemProps) {
                         </FormControl>
                     </Stack>
                 </Stack>
+                { selectedItem.category === 'collabs' &&
+                <Stack id='collab' direction='row' spacing={2} pb={5}>
+                  <Stack minWidth={100}>
+                      <FormControl fullWidth>
+                          <InputLabel id="collabId-label">Collab ID</InputLabel>
+                          <Select labelId="collabId-label" id="collabId" name="collabId" label="collabId"
+                            value={selectedItem.collabId} 
+                            onChange={(event) => setSelectedItem({...selectedItem, collabId: +event.target.value})}>
+                              <MenuItem value=''></MenuItem>
+                              {
+                                  presets?.collabIds.map((collabId, index) => (
+                                      <MenuItem key={index} value={collabId}>{collabId}</MenuItem>
+                                  ))
+                              }
+                          </Select>
+                      </FormControl>
+                  </Stack>
+                  <Stack>
+                    <TextField id='item-collab-address' label="Collab Address" name="collabAddress" variant="outlined" fullWidth value={selectedItem.collabAddress} onChange={onInputChange} />
+                  </Stack>
+                </Stack>
+                }
                 <Stack id='switches' direction='row' pb={5}>
                     <FormControl>
                         <FormControlLabel label='Allowlist' labelPlacement="top" name="isAllowlist" control={<Switch checked={selectedItem.isAllowlist} onChange={onSwitchChange} />}/>
