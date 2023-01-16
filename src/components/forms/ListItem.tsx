@@ -153,7 +153,7 @@ export default function ListItem(props: ListItemProps) {
                             </Select>
                         </FormControl>
                     </Stack>
-                    { type === 'friend' && <Stack minWidth={100}>
+                    { (type === 'friend' || type === 'collab') && <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="friendOrigin-label">Friend Origin</InputLabel>
                             <Select labelId="friendOrigin-label" id="friendOrigin" name="friendOrigin" value={item.friendOrigin} label="friendOrigin" onChange={onMenuChange}>
