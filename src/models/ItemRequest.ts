@@ -9,7 +9,7 @@ export interface ItemRequest {
     discord: string;
     website: string;
     endDate: number;
-    collabId: number;
+    collabId: string;
     isCommunity: boolean;
     isBoost: boolean;
     isTrait: boolean;
@@ -18,10 +18,9 @@ export interface ItemRequest {
     rarity: string;
     friendOrigin: string;
     traitLayer: string;
-    price: number;
-    percent: number;
-    minted: number;
-    supply: number;
-    walletLimit: number;
+    price: string;
+    percent: string;
+    supply: string;
+    walletLimit: string;
     isOnSale: boolean;
   }
