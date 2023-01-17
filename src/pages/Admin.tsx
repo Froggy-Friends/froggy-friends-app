@@ -1,6 +1,5 @@
-import { Container, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Stack, TextField, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Container, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Stack, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { makeStyles, createStyles } from '@mui/styles';
-import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useFroggiesOwned, useStakingDeposits } from "../client";
