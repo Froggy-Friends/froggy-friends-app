@@ -5,6 +5,7 @@ export interface RibbitItem {
   description: string;
   category: string;
   collabId: number;
+  collabAddress: string;
   twitter: string;
   discord: string;
   website: string;
@@ -19,6 +20,8 @@ export interface RibbitItem {
   rarity: string;
   walletLimit: number;
   isBoost: boolean;
+  isFriend: boolean;
+  isCollabFriend: boolean;
   isOnSale: boolean;
   isCommunity: boolean;
   isAllowlist: boolean;

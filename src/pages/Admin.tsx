@@ -5,6 +5,7 @@ import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useFroggiesOwned, useStakingDeposits } from "../client";
 import ListItem from "../components/forms/ListItem";
+import UpdateItem from "../components/forms/UpdateItem";
 import banner from '../images/lab.jpg';
 import { ItemPresets } from "../models/ItemPresets";
 
@@ -79,7 +80,15 @@ export default function Admin() {
       <Paper elevation={3}>
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
-      <Container maxWidth='lg'  sx={{pt: 15, pb: 25}}>
+      <Container maxWidth='lg'  sx={{pt: 5, pb: 25}}>
+        <Stack spacing={2} pb={5}>
+          <Typography variant='h6'>
+            Note: listing and updating items cost gas and are paid by the froggy friends deployer.
+          </Typography>
+          <Typography>
+            Please check that the deployer has a balance to cover gas fees 0x09a06f3901f3b0299dd492bd35eA1bB38c5C4c9b.
+          </Typography>
+        </Stack>
         <Stack direction='row' spacing={20}>
           <Stack>
             <FormControl>
@@ -90,9 +99,6 @@ export default function Admin() {
                 <FormControlLabel value="list-collab-friend" control={<Radio />} label="List Collab Friend" />
                 <FormControlLabel value="list-trait" control={<Radio />} label="List Trait" />
                 <FormControlLabel value="update" control={<Radio />} label="Update Item" />
-                <FormControlLabel value="update-friend" control={<Radio />} label="Update Friend" />
-                <FormControlLabel value="update-collab-friend" control={<Radio />} label="Update Collab Friend" />
-                <FormControlLabel value="update-trait" control={<Radio />} label="Update Trait" />
                 <FormControlLabel value="wallet" control={<Radio />} label="Wallet Checker" />
               </RadioGroup>
             </FormControl>
@@ -108,6 +114,9 @@ export default function Admin() {
           }
           {
             task === 'list-trait' && <ListItem title='List Trait' type="traits" presets={presets}/>
+          }
+          {
+            task === 'update' && <UpdateItem title='Update Item' type="normal" presets={presets}/>
           }
           {
             task === 'wallet' &&
