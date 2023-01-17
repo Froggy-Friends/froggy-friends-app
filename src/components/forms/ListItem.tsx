@@ -52,6 +52,10 @@ export default function ListItem(props: ListItemProps) {
     const [percent, setPercent] = useState('');
     const [supply, setSupply] = useState('');
     const [walletLimit, setWalletLimit] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [traits, setTraits] = useState<Trait[]>([]);
+    const [compatibleTraits, setCompatibleTraits] = useState<string[]>([]);
     const [item, setItem] = useState<ItemRequest>({
         ...itemRequest, 
         isBoost: type === 'friends' || type === 'collabs',
@@ -60,10 +64,6 @@ export default function ListItem(props: ListItemProps) {
         isTrait: type === 'traits',
         category: type === 'normal' ? '' : type
     });
-    const [showAlert, setShowAlert] = useState(false);
-    const [alertMessage, setAlertMessage] = useState('');
-    const [traits, setTraits] = useState<Trait[]>([]);
-    const [compatibleTraits, setCompatibleTraits] = useState<string[]>([]);
 
     useEffect(() => {
         async function getTraits(layer: string) {
@@ -73,6 +73,7 @@ export default function ListItem(props: ListItemProps) {
                 setTraits(response.data);
             } catch (error) {
                 console.log("error fetching traits: ", error);
+                setCompatibleTraits([]);
             }
         }
 
@@ -101,12 +102,16 @@ export default function ListItem(props: ListItemProps) {
             const formData = new FormData();
             const listItem = {...item, price: +price, supply: +supply, walletLimit: +walletLimit};
             if (percent) listItem.percent = +percent;
-            console.log("item: ", listItem);
+            
+            // gather compatible traits
+            const compTraits = traits.filter(trait => compatibleTraits.includes(trait.name));
+            console.log("compatible traits: ", compTraits);
 
             formData.append('admin', address);
             formData.append('message', message);
             formData.append('signature', signature);
             formData.append('item', JSON.stringify(listItem));
+            formData.append('compatibleTraits', JSON.stringify(compTraits));
 
             if (itemImage) {
                 formData.append('image', itemImage);
