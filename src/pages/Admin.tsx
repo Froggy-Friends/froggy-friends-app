@@ -80,7 +80,7 @@ export default function Admin() {
       <Paper elevation={3}>
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
-      <Container maxWidth='lg'  sx={{pt: 15, pb: 25}}>
+      <Container maxWidth='lg'  sx={{pt: 5, pb: 25}}>
         <Stack spacing={2} pb={5}>
           <Typography variant='h6'>
             Note: listing and updating items cost gas and are paid by the froggy friends deployer.
