@@ -113,6 +113,7 @@ export default function UpdateItem(props: ListItemProps) {
             const signature = await signer.signMessage(message);
             const address = await signer.getAddress();
             const formData = new FormData();
+
             formData.append('admin', address);
             formData.append('message', message);
             formData.append('signature', signature);
@@ -123,6 +124,11 @@ export default function UpdateItem(props: ListItemProps) {
             }
             if (itemImageTransparent) {
                 formData.append('imageTransparent', itemImageTransparent);
+            }
+            if (selectedItem.isTrait) {
+                // gather compatible traits
+                const compTraits = traits.filter(trait => compatibleTraits.includes(trait.name));
+                formData.append('compatibleTraits', JSON.stringify(compTraits));
             }
 
             let url: string = `${process.env.REACT_APP_API}/items`;

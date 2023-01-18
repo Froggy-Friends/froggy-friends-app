@@ -105,7 +105,6 @@ export default function ListItem(props: ListItemProps) {
             
             // gather compatible traits
             const compTraits = traits.filter(trait => compatibleTraits.includes(trait.name));
-            console.log("compatible traits: ", compTraits);
 
             formData.append('admin', address);
             formData.append('message', message);
