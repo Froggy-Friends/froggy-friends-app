@@ -29,5 +29,6 @@ export interface RibbitItem {
   isTrait: boolean;
   amount: number;
   traitLayer: string;
+  traitId: number;
   friendOrigin: string;
 }
