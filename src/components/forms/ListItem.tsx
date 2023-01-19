@@ -1,13 +1,15 @@
 import { Close } from "@mui/icons-material";
-import { Stack, Typography, TextField, FormControl, FormControlLabel, Switch, InputLabel, Select, MenuItem, Input, Button, SelectChangeEvent, IconButton, Snackbar } from "@mui/material";
+import { Stack, Typography, TextField, FormControl, FormControlLabel, Switch, InputLabel, Select, MenuItem, Input, Button, SelectChangeEvent, IconButton, Snackbar, OutlinedInput, Checkbox, ListItemText } from "@mui/material";
 import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import { ethers } from "ethers";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { ItemPresets } from "../../models/ItemPresets";
 import { ItemRequest } from "../../models/ItemRequest";
+import { Trait } from "../../models/Trait";
 
 declare var window: any;
+
 const itemRequest: ItemRequest = {
     name: '',
     description: '',
@@ -50,6 +52,10 @@ export default function ListItem(props: ListItemProps) {
     const [percent, setPercent] = useState('');
     const [supply, setSupply] = useState('');
     const [walletLimit, setWalletLimit] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [traits, setTraits] = useState<Trait[]>([]);
+    const [compatibleTraits, setCompatibleTraits] = useState<string[]>([]);
     const [item, setItem] = useState<ItemRequest>({
         ...itemRequest, 
         isBoost: type === 'friends' || type === 'collabs',
@@ -58,8 +64,30 @@ export default function ListItem(props: ListItemProps) {
         isTrait: type === 'traits',
         category: type === 'normal' ? '' : type
     });
-    const [showAlert, setShowAlert] = useState(false);
-    const [alertMessage, setAlertMessage] = useState('');
+
+    useEffect(() => {
+        async function getTraits(layer: string) {
+            try {
+                setCompatibleTraits([]);
+                const response = await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/${layer}`);
+                setTraits(response.data);
+            } catch (error) {
+                console.log("error fetching traits: ", error);
+                setCompatibleTraits([]);
+            }
+        }
+
+        getTraits(item.traitLayer);
+    }, [item.traitLayer]);
+
+    const onCompatibleTraitsChanged = (event: SelectChangeEvent<typeof compatibleTraits>) => {
+      const value = event.target.value;
+
+      setCompatibleTraits(
+        // On autofill we get a stringified value.
+        typeof value === 'string' ? value.split(',') : value,
+      )
+    };
 
     const onListItemSubmit = async (event: ChangeEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -74,12 +102,15 @@ export default function ListItem(props: ListItemProps) {
             const formData = new FormData();
             const listItem = {...item, price: +price, supply: +supply, walletLimit: +walletLimit};
             if (percent) listItem.percent = +percent;
-            console.log("item: ", listItem);
+            
+            // gather compatible traits
+            const compTraits = traits.filter(trait => compatibleTraits.includes(trait.name));
 
             formData.append('admin', address);
             formData.append('message', message);
             formData.append('signature', signature);
             formData.append('item', JSON.stringify(listItem));
+            formData.append('compatibleTraits', JSON.stringify(compTraits));
 
             if (itemImage) {
                 formData.append('image', itemImage);
@@ -220,7 +251,8 @@ export default function ListItem(props: ListItemProps) {
                         </FormControl>
                     </Stack>
                     }
-                    { type === 'traits' && <Stack minWidth={100}>
+                    { type === 'traits' && 
+                    <Stack minWidth={100}>
                         <FormControl fullWidth>
                             <InputLabel id="traitLayer-label">Trait Layer</InputLabel>
                             <Select labelId="traitLayer-label" id="traitLayer" name="traitLayer" value={item.traitLayer} label="traitLayer" onChange={onMenuChange}>
@@ -230,6 +262,22 @@ export default function ListItem(props: ListItemProps) {
                                         <MenuItem key={index} value={traitLayer}>{traitLayer}</MenuItem>
                                     ))
                                 }
+                            </Select>
+                        </FormControl>
+                    </Stack>
+                    }
+                    { type === 'traits' &&
+                    <Stack minWidth={300}>
+                        <FormControl>
+                            <InputLabel id="compatible-traits-label">Compatible Traits</InputLabel>
+                            <Select labelId="compatible-traits-label" id="compatible-traits" multiple value={compatibleTraits} onChange={onCompatibleTraitsChanged} 
+                                input={<OutlinedInput label="Compatible Traits" />} renderValue={(selected) => selected.join(', ')}>
+                            {traits.map((trait) => (
+                                <MenuItem key={trait.id} value={trait.name}>
+                                    <Checkbox checked={compatibleTraits.includes(trait.name)} />
+                                    <ListItemText primary={trait.name} />
+                                </MenuItem>
+                            ))}
                             </Select>
                         </FormControl>
                     </Stack>
