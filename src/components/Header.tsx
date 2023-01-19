@@ -133,6 +133,13 @@ export default function Header() {
   return (
       <Fragment>
         <AppBar position="fixed" color="inherit">
+          {
+            isDesktop &&
+            <Stack direction='row' spacing={10} p={1} justifyContent='center' bgcolor={theme.palette.primary.main}>
+              <Typography variant="h5" fontWeight='bold' color={theme.palette.common.black}>Our marketplace with Snag has launched!</Typography>
+              <Typography variant="h5" fontWeight='bold' color={theme.palette.common.black}>Our swapping platform with Swapbox has launched!</Typography>
+            </Stack>
+          }
           <Toolbar sx={{bgcolor: theme.palette.background.default, pb: theme.spacing(1)}}>
             <Container maxWidth='xl' disableGutters={isMobile}>
               <Stack id="header" direction='row' justifyContent={isXs ? 'end' : 'space-between'} alignItems="center" p={0.5}>
@@ -146,10 +153,19 @@ export default function Header() {
                 </Stack>
                 <Stack id='links' direction='row' display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' spacing={2}>
                     <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => navigate("/staking")}>Stake</Typography>
-                    <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => navigate("/market")}>Market</Typography>
+                    <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => navigate("/market")}>Shop</Typography>
                     <Typography className="link" variant="h5" color={getLinkColor('/leaderboard')} onClick={() => navigate("/leaderboard")}>Board</Typography>
                     <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => navigate("/studio")}>Studio</Typography>
-                    <Typography className="link" variant="h5" color={getLinkColor('/spaces')} onClick={() => navigate("/spaces")}>Spaces</Typography>
+                    <Typography className="link" variant="h5">
+                      <Link href="https://marketplace.froggyfriendsnft.com" target='_blank' underline="none" color='secondary'>
+                        Market
+                      </Link>
+                    </Typography>
+                    <Typography className="link" variant="h5">
+                      <Link href="https://swap.froggyfriendsnft.com" target='_blank' underline="none" color='secondary'>
+                        Swap
+                      </Link>
+                    </Typography>
                 </Stack>
                 <Stack id='buttons' direction='row' justifyContent="end" alignItems='center' p={1}>
                   <Stack direction='row' pr={1}>
@@ -253,7 +269,7 @@ export default function Header() {
               <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => {navigate("/staking"); setSidemenuOpen(false)}}>Stake</Typography>
             </Grid>
             <Grid item pb={3}>
-              <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => {navigate("/market"); setSidemenuOpen(false)}}>Market</Typography>
+              <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => {navigate("/market"); setSidemenuOpen(false)}}>Shop</Typography>
             </Grid>
             <Grid item pb={3}>
               <Typography className="link" variant="h5" color={getLinkColor('/leaderboard')} onClick={() => {navigate("/leaderboard"); setSidemenuOpen(false)}}>Board</Typography>
@@ -262,7 +278,18 @@ export default function Header() {
               <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => {navigate("/studio"); setSidemenuOpen(false)}}>Studio</Typography>
             </Grid>
             <Grid item pb={3}>
-              <Typography className="link" variant="h5" color={getLinkColor('/spaces')} onClick={() => {navigate("/spaces"); setSidemenuOpen(false)}}>Spaces</Typography>
+              <Typography className="link" variant="h5">
+                <Link href="https://marketplace.froggyfriendsnft.com" target='_blank' underline="none" color='secondary'>
+                  Market
+                </Link>
+              </Typography>
+            </Grid>
+            <Grid item pb={3}>
+              <Typography className="link" variant="h5">
+                <Link href="https://swap.froggyfriendsnft.com" target='_blank' underline="none" color='secondary'>
+                  Swap
+                </Link>
+              </Typography>
             </Grid>
             <Grid id='account' container item alignItems='center'>
               <Grid item display={!account ? "flex" : "none"} pr={2}>
