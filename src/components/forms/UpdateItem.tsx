@@ -97,10 +97,14 @@ export default function UpdateItem(props: ListItemProps) {
             }
         }
 
-        getTraits(selectedItem.traitLayer);
-        getCompatibleTraits(selectedItem.traitId);
+        if (selectedItem.traitLayer) {
+            getTraits(selectedItem.traitLayer);
+        }
+        if (selectedItem.traitId) {
+            getCompatibleTraits(selectedItem.traitId);
+        }
 
-    }, [selectedItem.traitLayer]);
+    }, [selectedItem.traitLayer, selectedItem.traitId]);
 
     const onListItemSubmit = async (event: ChangeEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -145,10 +149,11 @@ export default function UpdateItem(props: ListItemProps) {
     }
 
     const onSelectedItemIndexChange = (event: SelectChangeEvent) => {
-      const newItem = items.find(item => item.name === event.target.value);
-      if (newItem) {
-        setSelectedItem(newItem);
-      }
+        const id = +event.target.value;
+        const newItem = items.find(item => item.id === id);
+        if (newItem) {
+            setSelectedItem(newItem);
+        }
     }
 
     const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -207,10 +212,10 @@ export default function UpdateItem(props: ListItemProps) {
               <Typography variant="h4" pb={5}>{title}</Typography>
               <FormControl sx={{minWidth: 200}}>
                 <InputLabel id="item-label">Selected Item</InputLabel>
-                <Select labelId="item-label" id="item" label="Selected Item" value={selectedItem.name} onChange={onSelectedItemIndexChange}>
+                <Select labelId="item-label" id="item" label="Selected Item" value={`${selectedItem.id}`} onChange={onSelectedItemIndexChange}>
                     {
                         items.map((item, index) => (
-                            <MenuItem key={index} value={item.name}>{item.name}</MenuItem>
+                            <MenuItem key={index} value={item.id}>{item.name}</MenuItem>
                         ))
                     }
                 </Select>
