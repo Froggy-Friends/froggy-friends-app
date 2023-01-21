@@ -139,10 +139,6 @@ export default function ListItem(props: ListItemProps) {
         }
     }
 
-    const onPriceChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setPrice(event.target.value)
-    }
-
     const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         setItem({
             ...item,

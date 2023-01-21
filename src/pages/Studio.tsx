@@ -3,7 +3,6 @@ import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia,
 import { useEthers } from "@usedapp/core";
 import { Fragment, useEffect, useState } from "react";
 import { Owned } from '../models/Owned';
-import useDebounce from "../hooks/useDebounce";
 import axios from "axios";
 import { RibbitItem } from "../models/RibbitItem";
 import { History } from "../models/History";
@@ -51,7 +50,6 @@ export default function Studio() {
   const classes = useStyles();
   const theme = useTheme();
   const { account } = useEthers();
-  const [search, setSearch] = useState('');
   const [frogs, setFrogs] = useState<Froggy[]>([]);
   const [friends, setFriends] = useState<RibbitItem[]>([]);
   const [history, setHistory] = useState<History[]>([]);
@@ -61,7 +59,6 @@ export default function Studio() {
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
   const [selectedFriend, setSelectedFriend] = useState<RibbitItem>();
-  const debouncedSearch = useDebounce(search, 500);
   const [showPairingModal, setShowPairingModal] = useState(false);
   const [showUnpairingModal, setShowUnpairingModal] = useState(false);
   const [preview, setPreview] = useState<string>();
@@ -148,10 +145,6 @@ export default function Studio() {
         setIsUnpairProcessing(true);
       }
   }, [unpairState])
-
-  const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
-  };
 
   const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {

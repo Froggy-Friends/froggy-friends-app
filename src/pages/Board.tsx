@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import {  Container, createStyles, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {  Container, createStyles, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Leaderboard } from '../models/Leaderboard';
 import axios from 'axios';
@@ -22,8 +22,6 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 export default function Board() {
   const classes = useStyles();
-  const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const [leaders, setLeaders] = useState<Leaderboard[]>([]);
   const {account} = useEthers();
   const ens = useLookupAddress();
