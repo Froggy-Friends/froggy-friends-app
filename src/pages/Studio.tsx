@@ -1,5 +1,5 @@
 import { CheckCircle, Close, ExpandMore, HourglassBottom, Info, Launch, Warning } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Container, Grid, IconButton, LinearProgress, Link, Modal, Paper, Skeleton, Snackbar, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Container, FormControl, Grid, IconButton, InputLabel, LinearProgress, Link, MenuItem, Modal, Paper, Select, SelectChangeEvent, Skeleton, Snackbar, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useEthers } from "@usedapp/core";
 import { Fragment, useEffect, useState } from "react";
 import { Owned } from '../models/Owned';
@@ -50,6 +50,7 @@ export default function Studio() {
   const classes = useStyles();
   const theme = useTheme();
   const { account } = useEthers();
+  const [studioView, setStudioView] = useState('pair');
   const [frogs, setFrogs] = useState<Froggy[]>([]);
   const [friends, setFriends] = useState<RibbitItem[]>([]);
   const [history, setHistory] = useState<History[]>([]);
@@ -146,6 +147,10 @@ export default function Studio() {
       }
   }, [unpairState])
 
+  const onStudioViewChange = (event: SelectChangeEvent) => {
+    setStudioView(event.target.value);
+}
+
   const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -207,7 +212,16 @@ export default function Studio() {
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
       <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
-        <Typography variant='h3' pb={5}>Froggy Studio</Typography>
+        <Stack direction='row' justifyContent='space-between'>
+          <Typography variant='h3' pb={5}>Froggy Studio</Typography>
+          <FormControl sx={{minWidth: 200}}>
+            <InputLabel id="item-label">Studio View</InputLabel>
+            <Select labelId="item-label" id="item" label="Studio View" value={studioView} onChange={onStudioViewChange}>
+              <MenuItem value='pair'>Pairing</MenuItem>
+              <MenuItem value='trait'>Traits</MenuItem>
+            </Select>
+          </FormControl>
+        </Stack>
         <Grid id='panel' container spacing={theme.spacing(isSm ? 1 : 8)}>
           <Grid id='selections' item xl={4} lg={4} md={6} sm={12}>
             <Stack pb={5}>
