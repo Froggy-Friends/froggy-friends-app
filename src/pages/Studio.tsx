@@ -3,6 +3,7 @@ import { useState } from "react";
 import { createStyles, makeStyles } from "@mui/styles";
 import banner from '../images/friends.png';
 import FriendPairing from "../components/FriendPairing";
+import TraitUpgrade from "../components/TraitUpgrade";
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -31,18 +32,19 @@ export default function Studio() {
       <Paper elevation={3}>
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
-      <Container maxWidth='xl' sx={{pt: 5, pb: 5}}>
+      <Container maxWidth='xl' sx={{minHeight: 800, pt: 5, pb: 5}}>
         <Stack direction='row' justifyContent='space-between'>
           <Typography variant='h3' pb={5}>Froggy Studio</Typography>
           <FormControl sx={{minWidth: 200}}>
             <InputLabel id="item-label">Studio View</InputLabel>
             <Select labelId="item-label" id="item" label="Studio View" value={studioView} onChange={onStudioViewChange}>
               <MenuItem value='pair'>Pairing</MenuItem>
-              <MenuItem value='trait'>Traits</MenuItem>
+              <MenuItem value='traits'>Traits</MenuItem>
             </Select>
           </FormControl>
         </Stack>
-        <FriendPairing/>
+        { studioView === 'pair' && <FriendPairing/>}
+        { studioView === 'traits' && <TraitUpgrade/>}
       </Container>
     </Grid>
 
