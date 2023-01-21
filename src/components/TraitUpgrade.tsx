@@ -1,12 +1,16 @@
 import { ExpandMore, Info, Launch } from "@mui/icons-material"
 import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Grid, Link, Paper, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { useEthers } from "@usedapp/core"
+import axios from "axios"
 import { getDate } from "date-fns"
-import { Fragment, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { Froggy } from "../models/Froggy"
 import { Trait } from "../models/Trait"
+import { Owned } from "../models/Owned"
 import theme from "../theme"
 
 export default function TraitUpgrade() {
+  const { account } = useEthers();
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const [frogs, setFrogs] = useState<Froggy[]>([]);
@@ -15,6 +19,27 @@ export default function TraitUpgrade() {
   const [selectedTrait, setSelectedTrait] = useState<Trait>();
   const [preview, setPreview] = useState<string>();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<any>(undefined);
+
+  useEffect(() => {
+    async function loadAccountData(address: string) {
+      try {
+        setLoadingFrogs(true);
+        const response = await axios.get<Owned>(`${process.env.REACT_APP_API}/frog/owned/${address}`);
+        setFrogs(response.data.froggies);
+        setLoadingFrogs(false);
+      } catch (error) {
+        setAlertMessage("Issue fetching froggies owned");
+        setShowAlert(true);
+        setLoadingFrogs(false);
+      }
+    }
+
+    if (account) {
+      loadAccountData(account);
+    }
+  }, [account])
 
   const onFrogClick = (frog: Froggy) => {
     setSelectedFrog(frog);
