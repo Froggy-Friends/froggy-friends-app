@@ -4,6 +4,7 @@ import { createStyles, makeStyles } from "@mui/styles";
 import banner from '../images/friends.png';
 import FriendPairing from "../components/FriendPairing";
 import TraitUpgrade from "../components/TraitUpgrade";
+import { useLocation } from "react-router-dom";
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -20,7 +21,9 @@ const useStyles: any = makeStyles((theme: Theme) =>
 export default function Studio() {
   const classes = useStyles();
   const theme = useTheme();
-  const [studioView, setStudioView] = useState('pair');
+  const location = useLocation();
+  const state: any = location.state;
+  const [studioView, setStudioView] = useState(state ? state.view : 'pair');
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   const onStudioViewChange = (event: SelectChangeEvent) => {
