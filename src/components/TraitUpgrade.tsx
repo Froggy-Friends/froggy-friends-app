@@ -1,14 +1,12 @@
-import { ExpandMore, Info, Launch } from "@mui/icons-material"
+import { ExpandMore, Info } from "@mui/icons-material"
 import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Grid, Link, Paper, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { useEthers } from "@usedapp/core"
-import axios from "axios"
-import { getDate } from "date-fns"
 import { Fragment, useEffect, useState } from "react"
 import { Froggy } from "../models/Froggy"
-import { Trait } from "../models/Trait"
 import { Owned } from "../models/Owned"
-import theme from "../theme"
 import { RibbitItem } from "../models/RibbitItem"
+import mergeImages from 'merge-images';
+import axios from "axios"
 
 export default function TraitUpgrade() {
   const { account } = useEthers();
@@ -19,7 +17,7 @@ export default function TraitUpgrade() {
   const [loadingFrogs, setLoadingFrogs] = useState(false);
   const [loadingTraits, setLoadingTraits] = useState(false);
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
-  const [selectedTrait, setSelectedTrait] = useState<Trait>();
+  const [selectedTrait, setSelectedTrait] = useState<RibbitItem>();
   const [preview, setPreview] = useState<string>();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -47,10 +45,39 @@ export default function TraitUpgrade() {
     if (account) {
       loadAccountData(account);
     }
-  }, [account])
+  }, [account]);
+
+  useEffect(() => {
+    async function layerImages(sources: any[]) {
+      const b64 = await mergeImages(sources, { crossOrigin: 'anonymous'})
+      setPreview(b64);
+    }
+
+    // only show prevew of existing paired frog
+    if (selectedFrog && selectedFrog.isTraitUpgraded) {
+      layerImages([selectedFrog.cid2d]);
+      return;
+    }
+
+    // show preview of unpaired frog and friend
+    if (selectedFrog && selectedTrait) {
+      layerImages([selectedFrog.cid2d, selectedTrait.imageTransparent]);
+      return;
+    }
+
+    // switch frog in preview
+    if (selectedFrog) {
+      layerImages([selectedFrog.cid2d]);
+      return;
+    }
+  }, [selectedFrog, selectedTrait]);
 
   const onFrogClick = (frog: Froggy) => {
     setSelectedFrog(frog);
+  }
+
+  const onTraitClick = (trait: RibbitItem) => {
+    setSelectedTrait(trait);
   }
 
   const onUpgradeClick = (frog: Froggy) => {
@@ -111,25 +138,25 @@ export default function TraitUpgrade() {
                 </Stack>
               </AccordionSummary>
               <AccordionDetails sx={{p: 0}}>
-                {/* {
-                  !loadingFriends && !friends.length &&
+                {
+                  !loadingTraits && !traits.length &&
                   <Typography color='secondary' variant='body1'>
-                    No friends in your wallet but you can purchase them on <Link href="https://opensea.io/collection/ribbit-items" target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>Opensea</Link>
+                    No traits in your wallet but you can purchase them on <Link href="https://opensea.io/collection/ribbit-items" target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>Opensea</Link>
                   </Typography>
                 }
                 <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
                   {
-                    friends.map(friend => {
-                      return <Grid key={friend.id} item p={1} xl={3}>
-                        <Card onClick={() => onFriendClick(friend)}>
-                          <CardMedia component='img' src={friend.image} height={100} alt=''/>
+                    traits.map(trait => {
+                      return <Grid key={trait.id} item p={1} xl={3}>
+                        <Card onClick={() => onTraitClick(trait)}>
+                          <CardMedia component='img' src={trait.image} height={100} alt=''/>
                         </Card>
                       </Grid>
                     })
                   }
                 </Grid>
                 {
-                  loadingFriends && 
+                  loadingTraits && 
                   <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
                     {
                       new Array(10).fill('').map((item, index) => {
@@ -139,7 +166,7 @@ export default function TraitUpgrade() {
                       })
                     }
                   </Grid>
-                } */}
+                }
               </AccordionDetails>
             </Accordion>
           </Stack>
