@@ -23,7 +23,7 @@ export default function Studio() {
   const theme = useTheme();
   const location = useLocation();
   const state: any = location.state;
-  const [studioView, setStudioView] = useState(state ? state.view : 'pair');
+  const [studioView, setStudioView] = useState(state ? state.view : 'traits');
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   const onStudioViewChange = (event: SelectChangeEvent) => {

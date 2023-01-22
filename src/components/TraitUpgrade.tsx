@@ -183,7 +183,7 @@ export default function TraitUpgrade() {
                 }
                 {
                   selectedFrog && selectedTrait && !selectedFrog.isTraitUpgraded &&
-                  <Grid id='buttons' container pt={5}>
+                  <Grid id='buttons' container justifyContent='center' pt={5}>
                       <Button variant='contained' sx={{height: 50}} onClick={() => onUpgradeClick(selectedFrog)}>
                           <Typography>Upgrade Frog</Typography>
                       </Button>
