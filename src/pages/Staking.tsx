@@ -1,11 +1,11 @@
-import { useEthers, useTokenBalance } from '@usedapp/core';
+import { useEthers } from '@usedapp/core';
 import { makeStyles, createStyles } from '@mui/styles';
 import { Box, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Info, Launch, Warning } from '@mui/icons-material';
-import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted, useFroggiesStaked } from '../client';
-import { formatEther, commify } from '@ethersproject/units';
+import { useSetApprovalForAll, useStake, useUnstake, useClaim, useStakingStarted, useFroggiesStaked } from '../client';
+import { commify } from '@ethersproject/units';
 import { Froggy } from '../models/Froggy';
 import { Owned } from '../models/Owned';
 import axios from 'axios';
