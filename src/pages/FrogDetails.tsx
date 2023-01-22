@@ -32,7 +32,7 @@ export default function FrogDetails() {
 
     async function getFroggy(id: string) {
         try {
-          const response = await axios.get<Froggy>(`${process.env.REACT_APP_API}/frog/${id}`);
+          const response = await axios.get<Froggy>(`${process.env.REACT_APP_API}/frog/details/${id}`);
           let item = response.data;
           setFrog(item);
         } catch (error) {

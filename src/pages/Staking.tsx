@@ -1,11 +1,11 @@
-import { useEthers, useTokenBalance } from '@usedapp/core';
+import { useEthers } from '@usedapp/core';
 import { makeStyles, createStyles } from '@mui/styles';
 import { Box, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { Check, Close, Info, Launch, Warning } from '@mui/icons-material';
-import { useSetApprovalForAll, useStake, useUnstake, useClaim, useCheckStakingBalance, useStakingStarted, useFroggiesStaked } from '../client';
-import { formatEther, commify } from '@ethersproject/units';
+import { useSetApprovalForAll, useStake, useUnstake, useClaim, useStakingStarted, useFroggiesStaked } from '../client';
+import { commify } from '@ethersproject/units';
 import { Froggy } from '../models/Froggy';
 import { Owned } from '../models/Owned';
 import axios from 'axios';
@@ -22,10 +22,8 @@ import logo from '../images/logo.png';
 import biz from '../images/biz.png'
 import { useNavigate } from 'react-router-dom';
 
-const formatBalance = (balance: any) => {
-  const etherFormat = formatEther(balance);
-  const number = +etherFormat;
-  return commify(number.toFixed(0));
+const formatBalance = (balance: number) => {
+  return commify(balance.toFixed(0));
 }
 
 const useStyles: any = makeStyles((theme: Theme) => 
@@ -88,31 +86,18 @@ export default function Staking() {
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
   const { account } = useEthers();
-  const ribbitBalance: any = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || 0;
+  const [ribbitBalance, setRibbitBalance] = useState<number>(0);
+  const [stakingBalance, setStakingBalance] = useState<number>(0);
   const { setApprovalForAll, setApprovalForAllState } = useSetApprovalForAll();
   const { stake, stakeState } = useStake();
   const { unstake, unstakeState } = useUnstake();
   const { claim, claimState } = useClaim();
-  const stakingBalance = useCheckStakingBalance(account ?? '');
   const stakingStarted = useStakingStarted();
   const froggiesStaked = useFroggiesStaked();
 
   useEffect(() => {
-    async function getFroggiesOwned(address: string) {
-      try {
-        setLoading(true);
-        const response = await axios.get(`${process.env.REACT_APP_API}/frog/owned/${address}`);
-        setOwned(response.data);
-        setLoading(false);
-      } catch (error) {
-        setAlertMessage("Issue fetching froggies owned");
-        setShowAlert(true);
-        setLoading(false);
-      }
-    }
-
     if (account) {
-      getFroggiesOwned(account);
+      loadAccountData(account);
     } else {
       setOwned({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
     }
@@ -132,13 +117,6 @@ export default function Staking() {
   }, [setApprovalForAllState])
 
   useEffect(() => {
-    async function fetchFroggies() {
-      setLoading(true);
-      const ownedResponse = await axios.get(`${process.env.REACT_APP_API}/frog/owned${account}`);
-      setOwned(ownedResponse.data);
-      setLoading(false);
-    }
-
     if (stakeState.status === "Exception" || stakeState.status === "Fail") {
       console.log("stake error: ", stakeState.errorMessage);
       if (stakeState.errorMessage?.includes("execution reverted")) {
@@ -147,10 +125,8 @@ export default function Staking() {
       }
     } else if (stakeState.status === "Mining") {
       setShowStakeModal(true);
-    } else if (stakeState.status === "Success") {
-      setTimeout(() => {
-        fetchFroggies();
-      }, 5000);
+    } else if (stakeState.status === "Success" && account) {
+      loadAccountData(account);
     }
   }, [stakeState, account])
 
@@ -163,6 +139,8 @@ export default function Staking() {
       }
     } else if (unstakeState.status === "Mining") {
       setShowUnstakeModal(true);
+    } else if (unstakeState.status === "Success" && account) {
+      loadAccountData(account);
     }
   }, [unstakeState])
 
@@ -175,8 +153,29 @@ export default function Staking() {
       }
     } else if (claimState.status === "Mining") {
       setShowClamModal(true);
+    } else if (claimState.status === "Success" && account) {
+      loadAccountData(account);
     }
   }, [claimState])
+
+  async function loadAccountData(address: string) {
+    try {
+      setLoading(true);
+      const ownedData = (await axios.get(`${process.env.REACT_APP_API}/frog/owned/${address}`)).data;
+      const ribbit = (await axios.get(`${process.env.REACT_APP_API}/ribbit/${account}`)).data;
+      const staked = (await axios.get(`${process.env.REACT_APP_API}/ribbit/staked/${account}`)).data;
+      setOwned(ownedData);
+      setRibbitBalance(ribbit);
+      setStakingBalance(staked);
+      setLoading(false);
+    } catch (error) {
+      setRibbitBalance(0);
+      setStakingBalance(0);
+      setAlertMessage("Issue fetching froggies owned");
+      setShowAlert(true);
+      setLoading(false);
+    }
+  }
 
   const onStake = async () => {
     try {

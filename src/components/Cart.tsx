@@ -14,6 +14,7 @@ import ribbit from '../images/ribbit.gif';
 import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
+import axios from 'axios';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -92,6 +93,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 
 export default function Cart() {
+  const { account } = useEthers();
   const classes = useStyles();
   const theme = useTheme();
   const dispatch = useAppDispatch();
@@ -105,11 +107,26 @@ export default function Cart() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
-  const { account } = useEthers();
-  const ribbitBalance: BigNumber = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || BigNumber.from(0);
+  const [ribbitBalance, setRibbitBalance] = useState<number>(0);
   const isSpendingApproved = useSpendingApproved(`${account}`);
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const { bundleBuy, bundleBuyState } = useBundleBuy();
+
+  useEffect(() => {
+    async function getRibbitBalance(account: string) {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API}/ribbit/${account}`);
+        setRibbitBalance(response.data);
+      } catch (error) {
+        console.log("get ribbit balance error: ", error);
+        setRibbitBalance(0);
+      }
+    }
+
+    if (account) {
+      getRibbitBalance(account);
+    }
+  }, [account]);
   
   useEffect(() => {
     if (approveSpenderState.status === "Exception" || approveSpenderState.status === "Fail") {
@@ -151,10 +168,7 @@ export default function Cart() {
     if (items) {
       const total = items.reduce((acc, item) => { return acc + (item.price * item.amount)}, 0);
       setTotal(total);
-
-      const etherFormat = formatEther(ribbitBalance);
-      const number = +etherFormat;
-      const remaining = number - total;
+      const remaining = ribbitBalance - total;
       setRemaining(remaining);
     }
   }, [items, ribbitBalance]);
@@ -167,10 +181,8 @@ export default function Cart() {
     dispatch(toggle(false));
   }
 
-  const formatBalance = (balance: BigNumber) => {
-    const etherFormat = formatEther(balance);
-    const number = +etherFormat;
-    return commify(number.toFixed(0));
+  const formatBalance = (balance: number) => {
+    return commify(balance.toFixed(0));
   }
 
   const formatPrice = (item: RibbitItem) => {
