@@ -22,10 +22,8 @@ import logo from '../images/logo.png';
 import biz from '../images/biz.png'
 import { useNavigate } from 'react-router-dom';
 
-const formatBalance = (balance: any) => {
-  const etherFormat = formatEther(balance);
-  const number = +etherFormat;
-  return commify(number.toFixed(0));
+const formatBalance = (balance: number) => {
+  return commify(balance.toFixed(0));
 }
 
 const useStyles: any = makeStyles((theme: Theme) => 
@@ -88,7 +86,7 @@ export default function Staking() {
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
   const { account } = useEthers();
-  const ribbitBalance: any = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || 0;
+  const [ribbitBalance, setRibbitBalance] = useState<number>(0);
   const { setApprovalForAll, setApprovalForAllState } = useSetApprovalForAll();
   const { stake, stakeState } = useStake();
   const { unstake, unstakeState } = useUnstake();
@@ -111,8 +109,19 @@ export default function Staking() {
       }
     }
 
+    async function getRibbitBalance(account: string) {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API}/ribbit/${account}`);
+        setRibbitBalance(response.data);
+      } catch (error) {
+        console.log("get ribbit balance error: ", error);
+        setRibbitBalance(0);
+      }
+    }
+
     if (account) {
       getFroggiesOwned(account);
+      getRibbitBalance(account);
     } else {
       setOwned({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
     }
