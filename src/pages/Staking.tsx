@@ -87,41 +87,36 @@ export default function Staking() {
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
   const { account } = useEthers();
   const [ribbitBalance, setRibbitBalance] = useState<number>(0);
+  const [stakingBalance, setStakingBalance] = useState<number>(0);
   const { setApprovalForAll, setApprovalForAllState } = useSetApprovalForAll();
   const { stake, stakeState } = useStake();
   const { unstake, unstakeState } = useUnstake();
   const { claim, claimState } = useClaim();
-  const stakingBalance = useCheckStakingBalance(account ?? '');
   const stakingStarted = useStakingStarted();
   const froggiesStaked = useFroggiesStaked();
 
   useEffect(() => {
-    async function getFroggiesOwned(address: string) {
+    async function loadAccountData(address: string) {
       try {
         setLoading(true);
-        const response = await axios.get(`${process.env.REACT_APP_API}/frog/owned/${address}`);
-        setOwned(response.data);
+        const ownedData = (await axios.get(`${process.env.REACT_APP_API}/frog/owned/${address}`)).data;
+        const ribbit = (await axios.get(`${process.env.REACT_APP_API}/ribbit/${account}`)).data;
+        const staked = (await axios.get(`${process.env.REACT_APP_API}/ribbit/staked/${account}`)).data;
+        setOwned(ownedData);
+        setRibbitBalance(ribbit);
+        setStakingBalance(staked);
         setLoading(false);
       } catch (error) {
+        setRibbitBalance(0);
+        setStakingBalance(0);
         setAlertMessage("Issue fetching froggies owned");
         setShowAlert(true);
         setLoading(false);
       }
     }
 
-    async function getRibbitBalance(account: string) {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API}/ribbit/${account}`);
-        setRibbitBalance(response.data);
-      } catch (error) {
-        console.log("get ribbit balance error: ", error);
-        setRibbitBalance(0);
-      }
-    }
-
     if (account) {
-      getFroggiesOwned(account);
-      getRibbitBalance(account);
+      loadAccountData(account);
     } else {
       setOwned({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
     }
