@@ -8,13 +8,16 @@ import { Froggy } from "../models/Froggy"
 import { Trait } from "../models/Trait"
 import { Owned } from "../models/Owned"
 import theme from "../theme"
+import { RibbitItem } from "../models/RibbitItem"
 
 export default function TraitUpgrade() {
   const { account } = useEthers();
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const [frogs, setFrogs] = useState<Froggy[]>([]);
+  const [traits, setTraits] = useState<RibbitItem[]>([]);
   const [loadingFrogs, setLoadingFrogs] = useState(false);
+  const [loadingTraits, setLoadingTraits] = useState(false);
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
   const [selectedTrait, setSelectedTrait] = useState<Trait>();
   const [preview, setPreview] = useState<string>();
@@ -26,13 +29,18 @@ export default function TraitUpgrade() {
     async function loadAccountData(address: string) {
       try {
         setLoadingFrogs(true);
-        const response = await axios.get<Owned>(`${process.env.REACT_APP_API}/frog/owned/${address}`);
-        setFrogs(response.data.froggies);
+        setLoadingTraits(true);
+        const froggies = (await axios.get<Owned>(`${process.env.REACT_APP_API}/frog/owned/${address}`)).data.froggies;
+        const traits = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/traits/${account}`)).data;
+        setFrogs(froggies);
+        setTraits(traits);
         setLoadingFrogs(false);
+        setLoadingTraits(false);
       } catch (error) {
         setAlertMessage("Issue fetching froggies owned");
         setShowAlert(true);
         setLoadingFrogs(false);
+        setLoadingTraits(false);
       }
     }
 
