@@ -159,6 +159,10 @@ export default function Cart() {
       dispatch(toggle(false));
       setShowPurchaseModal(true);
     } else if (bundleBuyState.status === "Success") {
+      // refresh items
+      for (const item of items) {
+        refreshItem(item.id);
+      }
       dispatch(empty());
       dispatch(toggle(false));
     }
@@ -172,6 +176,10 @@ export default function Cart() {
       setRemaining(remaining);
     }
   }, [items, ribbitBalance]);
+
+  async function refreshItem(id: number) {
+    await axios.put(`${process.env.REACT_APP_API}/items/${id}/refresh`);
+  }
 
   const onRemoveItem = (item: RibbitItem) => {
     dispatch(remove(item));
