@@ -37,12 +37,18 @@ export default function Studio() {
       </Paper>
       <Container maxWidth='xl' sx={{minHeight: 800, pt: 5, pb: 5}}>
         <Stack direction='row' justifyContent='space-between'>
-          <Typography variant='h3' pb={5}>Froggy Studio</Typography>
-          <FormControl sx={{minWidth: 200}}>
+          <Typography variant='h3' pb={5}>
+            Froggy Studio
+          </Typography>
+          <FormControl sx={{minWidth: 400}}>
             <InputLabel id="item-label">Studio View</InputLabel>
             <Select labelId="item-label" id="item" label="Studio View" value={studioView} onChange={onStudioViewChange}>
-              <MenuItem value='pair'>Pairing</MenuItem>
-              <MenuItem value='traits'>Traits</MenuItem>
+              <MenuItem value='pair' sx={{fontSize: theme.typography.h6}}>
+                <Typography variant="h6">Pairing</Typography>
+              </MenuItem>
+              <MenuItem value='traits' sx={{fontSize: theme.typography.h6}}>
+                <Typography variant='h6'>Traits</Typography>
+              </MenuItem>
             </Select>
           </FormControl>
         </Stack>
