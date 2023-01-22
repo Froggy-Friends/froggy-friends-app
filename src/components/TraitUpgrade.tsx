@@ -48,27 +48,19 @@ export default function TraitUpgrade() {
   }, [account]);
 
   useEffect(() => {
-    async function layerImages(sources: any[]) {
-      const b64 = await mergeImages(sources, { crossOrigin: 'anonymous'})
-      setPreview(b64);
+    async function getTraitPreview(selectedFrog: Froggy, selectedTrait: RibbitItem) {
+      try {
+        // get trait preview
+        console.log("get image preview...");
+        const image = (await axios.get<string>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog.edition}/trait/${selectedTrait.traitId}`)).data;
+        setPreview(image);
+      } catch (error) {
+        console.log("get trait preview error: ", error);
+      }
     }
 
-    // only show prevew of existing paired frog
-    if (selectedFrog && selectedFrog.isTraitUpgraded) {
-      layerImages([selectedFrog.cid2d]);
-      return;
-    }
-
-    // show preview of unpaired frog and friend
     if (selectedFrog && selectedTrait) {
-      layerImages([selectedFrog.cid2d, selectedTrait.imageTransparent]);
-      return;
-    }
-
-    // switch frog in preview
-    if (selectedFrog) {
-      layerImages([selectedFrog.cid2d]);
-      return;
+      getTraitPreview(selectedFrog, selectedTrait);
     }
   }, [selectedFrog, selectedTrait]);
 
