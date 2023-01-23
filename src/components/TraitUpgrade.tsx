@@ -76,6 +76,22 @@ export default function TraitUpgrade() {
     setShowUpgradeModal(true);
   }
 
+  const getBorderColor = (tokenId: number): string => {
+    return selectedFrog?.edition === tokenId ? "white" : "transparent";
+  }
+
+  const getBorderWidth = (tokenId: number): string => {
+    return selectedFrog?.edition === tokenId ? '3.5px solid' : '0px';
+  }
+
+  const getTraitBorderColor = (id: number): string => {
+    return selectedTrait?.id === id ? "white" : "transparent";
+  }
+
+  const getTraitBorder = (id: number): string => {
+    return selectedTrait?.id === id ? '3.5px solid' : '0px';
+  }
+
   return (
     <Fragment>
       <Grid id='panel' container spacing={theme.spacing(isSm ? 1 : 8)}>
@@ -99,7 +115,7 @@ export default function TraitUpgrade() {
                   {
                     frogs.map(frog => {
                       return <Grid key={frog.edition} item p={1} xl={3}>
-                        <Card onClick={() => onFrogClick(frog)}>
+                        <Card sx={{border: getBorderWidth(frog.edition), borderColor: getBorderColor(frog.edition), cursor: 'pointer'}} onClick={() => onFrogClick(frog)}>
                           <CardMedia component='img' src={frog.cid2d} height={100} alt=''/>
                         </Card>
                       </Grid>
@@ -140,7 +156,7 @@ export default function TraitUpgrade() {
                   {
                     traits.map(trait => {
                       return <Grid key={trait.id} item p={1} xl={3}>
-                        <Card onClick={() => onTraitClick(trait)}>
+                        <Card sx={{border: getTraitBorder(trait.id), borderColor: getTraitBorderColor(trait.id), cursor: 'pointer'}} onClick={() => onTraitClick(trait)}>
                           <CardMedia component='img' src={trait.image} height={100} alt=''/>
                         </Card>
                       </Grid>
@@ -166,7 +182,7 @@ export default function TraitUpgrade() {
         <Grid id='preview' item xl={4} lg={4} md={6} sm={12} mt={3}>
           <Paper elevation={0} sx={{ minHeight: 500}}>
             {
-              selectedFrog &&
+              selectedFrog && selectedTrait &&
               <Stack spacing={4}>
               <Typography color='secondary' variant='h4'>Preview {selectedFrog.name}</Typography>
               <Grid container direction='column' justifyContent='space-between'>
@@ -182,7 +198,7 @@ export default function TraitUpgrade() {
                     </Stack>
                 }
                 {
-                  selectedFrog && selectedTrait && !selectedFrog.isTraitUpgraded &&
+                  selectedFrog && selectedTrait && !selectedFrog.isTraitUpgraded && preview &&
                   <Grid id='buttons' container justifyContent='center' pt={5}>
                       <Button variant='contained' sx={{height: 50}} onClick={() => onUpgradeClick(selectedFrog)}>
                           <Typography>Upgrade Frog</Typography>
