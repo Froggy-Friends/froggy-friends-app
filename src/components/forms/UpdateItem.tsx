@@ -80,7 +80,7 @@ export default function UpdateItem(props: ListItemProps) {
     useEffect(() => {
         async function getTraits(layer: string) {
             try {
-                const response = await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/${layer}`);
+                const response = await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/layer/${layer}`);
                 setTraits(response.data);
             } catch (error) {
                 console.log("error fetching traits: ", error);
