@@ -8,8 +8,6 @@ import UpdateItem from "../components/forms/UpdateItem";
 import banner from '../images/lab.jpg';
 import { ItemPresets } from "../models/ItemPresets";
 
-declare var window: any;
-
 const useStyles: any = makeStyles(() => 
   createStyles({
     banner: {

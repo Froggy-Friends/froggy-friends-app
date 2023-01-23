@@ -19,6 +19,7 @@ export interface Froggy {
     cidCarousel: string;
     isStaked: boolean;
     isPaired: boolean;
+    isTraitUpgraded: boolean;
     isOneOfOne: boolean;
     pairTx: string;
     unpairTx: string;

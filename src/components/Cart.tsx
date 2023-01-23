@@ -15,6 +15,7 @@ import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -96,6 +97,7 @@ export default function Cart() {
   const { account } = useEthers();
   const classes = useStyles();
   const theme = useTheme();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isCartOpen = useAppSelector(cartOpen);
   const items = useAppSelector(cartItems);
@@ -159,6 +161,10 @@ export default function Cart() {
       dispatch(toggle(false));
       setShowPurchaseModal(true);
     } else if (bundleBuyState.status === "Success") {
+      // refresh items
+      for (const item of items) {
+        refreshItem(item.id);
+      }
       dispatch(empty());
       dispatch(toggle(false));
     }
@@ -172,6 +178,10 @@ export default function Cart() {
       setRemaining(remaining);
     }
   }, [items, ribbitBalance]);
+
+  async function refreshItem(id: number) {
+    await axios.put(`${process.env.REACT_APP_API}/items/${id}/refresh`);
+  }
 
   const onRemoveItem = (item: RibbitItem) => {
     dispatch(remove(item));
@@ -192,6 +202,10 @@ export default function Cart() {
   const onPurchaseModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason !== 'backdropClick') {
       setShowPurchaseModal(false);
+      // navigate to studio
+      if (bundleBuyState.status === "Success") {
+        navigate("/studio", { state: { view: 'traits' }});
+      }
     }
   }
 

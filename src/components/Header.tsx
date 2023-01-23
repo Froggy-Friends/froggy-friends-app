@@ -3,10 +3,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import { makeStyles, createStyles } from '@mui/styles';
-import { Grid, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Button, useTheme, Container, Tooltip, Avatar, Divider, ListItemIcon, MenuItem, Menu, Stack, Box, Modal } from "@mui/material";
-import { Close, ShoppingCart, Menu as MenuIcon, DarkMode, LightMode, Paid, Logout, PersonAdd, Settings, AccountCircle, Assignment } from "@mui/icons-material";
+import { Grid, Link, Theme, useMediaQuery, Typography, Badge, Fab, AppBar, Toolbar, IconButton, Drawer, Button, useTheme, Container, Divider, ListItemIcon, MenuItem, Menu, Stack, Box, Modal } from "@mui/material";
+import { Close, ShoppingCart, Menu as MenuIcon, DarkMode, LightMode, Logout, Settings, AccountCircle, Assignment } from "@mui/icons-material";
 import { cartCount, toggle } from "../redux/cartSlice";
-import { isPlaying } from "../redux/musicSlice";
 import { ColorModeContext } from "../App";
 import logo from '../images/logo.png';
 import metamask from '../images/metamask.webp';
@@ -48,7 +47,6 @@ export default function Header() {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const cartItemCount = useAppSelector(cartCount);
-  const playing = useAppSelector(isPlaying);
   const navigate = useNavigate();
   const location = useLocation();
   const colorMode = useContext(ColorModeContext);
@@ -58,7 +56,6 @@ export default function Header() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isXs = useMediaQuery(theme.breakpoints.down(321));
   const [sidemenuOpen, setSidemenuOpen] = useState<boolean>(false);
-  const [musicOpen, setMusicOpen] = useState<boolean>(false);
   const { activateBrowserWallet, account, deactivate } = useEthers();
   const ens = useLookupAddress();
   const [displayName, setDisplayName] = useState<string>("");
@@ -107,11 +104,7 @@ export default function Header() {
     if (showLoginModal && account) {
       setShowLoginModal(false);
     }
-  }, [account])
-
-  const onMusicClick = () => {
-    setMusicOpen(!musicOpen);
-  }
+  }, [account, showLoginModal])
 
   const onCartClick = () => {
     // toggle items modal
@@ -319,7 +312,7 @@ export default function Header() {
                   sx={{cursor: 'pointer'}}
                   onClick={() => activateBrowserWallet()}
               >
-                <img src={metamask} height={35} width={35}/>
+                <img src={metamask} alt='Metamask' height={35} width={35}/>
                 <Typography>Metamask</Typography>
               </Stack>
               { 
@@ -334,7 +327,7 @@ export default function Header() {
                   sx={{cursor: 'pointer'}}
                   onClick={() => activateBrowserWallet()}
                 >
-                  <img src={brave} height={35} width={35}/>
+                  <img src={brave} alt='Brave' height={35} width={35}/>
                   <Typography>Brave</Typography>
                 </Stack>
               }

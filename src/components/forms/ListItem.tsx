@@ -69,7 +69,7 @@ export default function ListItem(props: ListItemProps) {
         async function getTraits(layer: string) {
             try {
                 setCompatibleTraits([]);
-                const response = await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/${layer}`);
+                const response = await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/layer/${layer}`);
                 setTraits(response.data);
             } catch (error) {
                 console.log("error fetching traits: ", error);
@@ -137,10 +137,6 @@ export default function ListItem(props: ListItemProps) {
             setAlertMessage('Error creating item ' + error);
             setShowAlert(true);
         }
-    }
-
-    const onPriceChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setPrice(event.target.value)
     }
 
     const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
