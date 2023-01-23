@@ -19,6 +19,7 @@ export default function TraitUpgrade() {
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
   const [selectedTrait, setSelectedTrait] = useState<RibbitItem>();
   const [preview, setPreview] = useState<string>();
+  const [loadingPreview, setLoadingPreview] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
@@ -51,11 +52,14 @@ export default function TraitUpgrade() {
     async function getTraitPreview(selectedFrog: Froggy, selectedTrait: RibbitItem) {
       try {
         // get trait preview
-        console.log("get image preview...");
+        setPreview(undefined);
+        setLoadingPreview(true);
         const image = (await axios.get<string>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog.edition}/trait/${selectedTrait.traitId}`)).data;
         setPreview(image);
+        setLoadingPreview(false);
       } catch (error) {
         console.log("get trait preview error: ", error);
+        setLoadingPreview(false);
       }
     }
 
@@ -187,7 +191,12 @@ export default function TraitUpgrade() {
               <Typography color='secondary' variant='h4'>Preview {selectedFrog.name}</Typography>
               <Grid container direction='column' justifyContent='space-between'>
                 <Grid item xl={3} lg={3} md={3} sm={6} pb={3}>
-                  <img src={preview} alt='' width='100%'/>
+                  {
+                    preview && <img src={preview} alt='' width='100%'/>
+                  }
+                  {
+                    loadingPreview && <Skeleton variant='rectangular' animation='wave' height={500}/>  
+                  }
                   {
                     selectedFrog && selectedFrog.isTraitUpgraded &&
                     <Stack spacing={4} pt={2}>
@@ -196,15 +205,15 @@ export default function TraitUpgrade() {
                           <Typography>Trait preview unavailable for upgraded frogs</Typography>
                       </Stack>
                     </Stack>
-                }
-                {
+                  }
+                  {
                   selectedFrog && selectedTrait && !selectedFrog.isTraitUpgraded && preview &&
                   <Grid id='buttons' container justifyContent='center' pt={5}>
                       <Button variant='contained' sx={{height: 50}} onClick={() => onUpgradeClick(selectedFrog)}>
                           <Typography>Upgrade Frog</Typography>
                       </Button>
                   </Grid>
-                }
+                  }
                 </Grid>
               </Grid>
             </Stack>
