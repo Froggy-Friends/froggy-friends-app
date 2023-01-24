@@ -5,8 +5,8 @@ import { Fragment, useEffect, useState } from "react"
 import { Froggy } from "../models/Froggy"
 import { Owned } from "../models/Owned"
 import { RibbitItem } from "../models/RibbitItem"
-import mergeImages from 'merge-images';
 import axios from "axios"
+import { Trait } from "../models/Trait"
 
 export default function TraitUpgrade() {
   const { account } = useEthers();
@@ -18,6 +18,8 @@ export default function TraitUpgrade() {
   const [loadingTraits, setLoadingTraits] = useState(false);
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
   const [selectedTrait, setSelectedTrait] = useState<RibbitItem>();
+  const [isTraitCompatible, setIsTraitCompatible] = useState<boolean>(false);
+  const [compatibleTraits, setCompatibleTraits] = useState<Trait[]>([]);
   const [preview, setPreview] = useState<string>();
   const [loadingPreview, setLoadingPreview] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -49,24 +51,39 @@ export default function TraitUpgrade() {
   }, [account]);
 
   useEffect(() => {
-    async function getTraitPreview(selectedFrog: Froggy, selectedTrait: RibbitItem) {
+    async function loadTraitData(selectedFrog: Froggy, selectedTrait: RibbitItem) {
       try {
         // get trait preview
         setPreview(undefined);
         setLoadingPreview(true);
+        setIsTraitCompatible(false);
+        setCompatibleTraits([]);
         const image = (await axios.get<string>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog.edition}/trait/${selectedTrait.traitId}`)).data;
+        const isCompatible = (await axios.get<boolean>(`${process.env.REACT_APP_API}/frog/compatible/${selectedFrog.edition}/trait/${selectedTrait.traitId}`)).data;
+        const compatibleTraits = (await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/compatible/${selectedTrait.traitId}`)).data;
         setPreview(image);
+        setIsTraitCompatible(isCompatible);
+        setCompatibleTraits(compatibleTraits);
         setLoadingPreview(false);
       } catch (error) {
         console.log("get trait preview error: ", error);
         setLoadingPreview(false);
+        setIsTraitCompatible(false);
+        setCompatibleTraits([]);
       }
     }
 
     if (selectedFrog && selectedTrait) {
-      getTraitPreview(selectedFrog, selectedTrait);
+      loadTraitData(selectedFrog, selectedTrait);
     }
   }, [selectedFrog, selectedTrait]);
+
+  const isUpgradeDisabled = (): boolean => {
+    // check trait compatibility
+
+    
+    return false;
+  }
 
   const onFrogClick = (frog: Froggy) => {
     setSelectedFrog(frog);
@@ -161,7 +178,7 @@ export default function TraitUpgrade() {
                     traits.map(trait => {
                       return <Grid key={trait.id} item p={1} xl={3}>
                         <Card sx={{border: getTraitBorder(trait.id), borderColor: getTraitBorderColor(trait.id), cursor: 'pointer'}} onClick={() => onTraitClick(trait)}>
-                          <CardMedia component='img' src={trait.image} height={100} alt=''/>
+                          <CardMedia component='img' src={trait.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
                     })
@@ -207,7 +224,23 @@ export default function TraitUpgrade() {
                     </Stack>
                   }
                   {
-                  selectedFrog && selectedTrait && !selectedFrog.isTraitUpgraded && preview &&
+                    !loadingPreview && !isTraitCompatible &&
+                    <Stack pt={2}>
+                      <Typography>Please select a frog with compatible traits to upgrade.</Typography>
+                      <Typography>{selectedTrait.name} is only compatible with:</Typography>
+                      <ul>
+                      {
+                        compatibleTraits.map((trait) => {
+                          return (
+                            <li><Typography key={trait.id}>{trait.name}</Typography></li>
+                          )
+                        })
+                      }
+                      </ul>
+                    </Stack>
+                  }
+                  {
+                  selectedFrog && selectedTrait && !selectedFrog.isTraitUpgraded && isTraitCompatible && preview &&
                   <Grid id='buttons' container justifyContent='center' pt={5}>
                       <Button variant='contained' sx={{height: 50}} onClick={() => onUpgradeClick(selectedFrog)}>
                           <Typography>Upgrade Frog</Typography>
