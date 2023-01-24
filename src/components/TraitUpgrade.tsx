@@ -67,6 +67,13 @@ export default function TraitUpgrade() {
     }
   }, [selectedFrog, selectedTrait]);
 
+  const isUpgradeDisabled = (): boolean => {
+    // check trait compatibility
+
+    
+    return false;
+  }
+
   const onFrogClick = (frog: Froggy) => {
     setSelectedFrog(frog);
   }
@@ -160,7 +167,7 @@ export default function TraitUpgrade() {
                     traits.map(trait => {
                       return <Grid key={trait.id} item p={1} xl={3}>
                         <Card sx={{border: getTraitBorder(trait.id), borderColor: getTraitBorderColor(trait.id), cursor: 'pointer'}} onClick={() => onTraitClick(trait)}>
-                          <CardMedia component='img' src={trait.image} height={100} alt=''/>
+                          <CardMedia component='img' src={trait.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
                     })
@@ -208,7 +215,7 @@ export default function TraitUpgrade() {
                   {
                   selectedFrog && selectedTrait && !selectedFrog.isTraitUpgraded && preview &&
                   <Grid id='buttons' container justifyContent='center' pt={5}>
-                      <Button variant='contained' sx={{height: 50}} onClick={() => onUpgradeClick(selectedFrog)}>
+                      <Button variant='contained' sx={{height: 50}} disabled={isUpgradeDisabled()} onClick={() => onUpgradeClick(selectedFrog)}>
                           <Typography>Upgrade Frog</Typography>
                       </Button>
                   </Grid>
