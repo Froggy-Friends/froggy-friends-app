@@ -225,8 +225,9 @@ export default function TraitUpgrade() {
                   }
                   {
                     !loadingPreview && !isTraitCompatible &&
-                    <Stack>
-                      <Typography>{selectedTrait.name} is only compatible with the following traits:</Typography>
+                    <Stack pt={2}>
+                      <Typography>Please select a frog with compatible traits to upgrade.</Typography>
+                      <Typography>{selectedTrait.name} is only compatible with:</Typography>
                       <ul>
                       {
                         compatibleTraits.map((trait) => {
@@ -239,9 +240,9 @@ export default function TraitUpgrade() {
                     </Stack>
                   }
                   {
-                  selectedFrog && selectedTrait && !selectedFrog.isTraitUpgraded && preview &&
+                  selectedFrog && selectedTrait && !selectedFrog.isTraitUpgraded && isTraitCompatible && preview &&
                   <Grid id='buttons' container justifyContent='center' pt={5}>
-                      <Button variant='contained' sx={{height: 50}} disabled={!isTraitCompatible} onClick={() => onUpgradeClick(selectedFrog)}>
+                      <Button variant='contained' sx={{height: 50}} onClick={() => onUpgradeClick(selectedFrog)}>
                           <Typography>Upgrade Frog</Typography>
                       </Button>
                   </Grid>
