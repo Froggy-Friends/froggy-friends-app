@@ -1,9 +1,8 @@
 import { Fragment, useEffect, useState } from 'react';
-import { useEthers, useTokenBalance } from '@usedapp/core';
+import { useEthers } from '@usedapp/core';
 import { makeStyles, createStyles } from '@mui/styles';
 import { Fade, Grid, Typography, IconButton, Button, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar, useTheme, useMediaQuery, Paper, Stack, TableContainer, Table, TableBody, TableRow, TableCell } from "@mui/material";
-import { BigNumber } from 'ethers';
-import { commify, formatEther } from "ethers/lib/utils";
+import { commify } from "ethers/lib/utils";
 import { cartItems, cartOpen, empty, remove, toggle } from '../redux/cartSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { RibbitItem } from '../models/RibbitItem';
@@ -168,7 +167,7 @@ export default function Cart() {
       dispatch(empty());
       dispatch(toggle(false));
     }
-  }, [bundleBuyState, dispatch])
+  }, [bundleBuyState, dispatch, items])
 
   useEffect(() => {
     if (items) {

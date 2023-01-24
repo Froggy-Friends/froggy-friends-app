@@ -40,7 +40,7 @@ export default function Board() {
     if (leaders.length === 0) {
       getLeaderboard();
     }
-  }, []);
+  }, [leaders.length]);
 
   useEffect(() => {
     if(ens) {
@@ -49,7 +49,7 @@ export default function Board() {
         setUserStats({...leaders[currUserStatsIdx], rank: currUserStatsIdx+1})
       }
     }
-  }, [ens, leaders])
+  }, [ens, account, leaders, leaders.length])
 
   return (
     <Grid id="leaderboard" container direction="column" pb={20}>

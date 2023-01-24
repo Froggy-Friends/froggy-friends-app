@@ -5,7 +5,6 @@ import { Fragment, useEffect, useState } from "react"
 import { Froggy } from "../models/Froggy"
 import { Owned } from "../models/Owned"
 import { RibbitItem } from "../models/RibbitItem"
-import mergeImages from 'merge-images';
 import axios from "axios"
 
 export default function TraitUpgrade() {
