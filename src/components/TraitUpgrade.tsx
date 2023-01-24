@@ -6,6 +6,7 @@ import { Froggy } from "../models/Froggy"
 import { Owned } from "../models/Owned"
 import { RibbitItem } from "../models/RibbitItem"
 import axios from "axios"
+import { Trait } from "../models/Trait"
 
 export default function TraitUpgrade() {
   const { account } = useEthers();
@@ -17,6 +18,8 @@ export default function TraitUpgrade() {
   const [loadingTraits, setLoadingTraits] = useState(false);
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
   const [selectedTrait, setSelectedTrait] = useState<RibbitItem>();
+  const [isTraitCompatible, setIsTraitCompatible] = useState<boolean>(false);
+  const [compatibleTraits, setCompatibleTraits] = useState<Trait[]>([]);
   const [preview, setPreview] = useState<string>();
   const [loadingPreview, setLoadingPreview] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -48,22 +51,30 @@ export default function TraitUpgrade() {
   }, [account]);
 
   useEffect(() => {
-    async function getTraitPreview(selectedFrog: Froggy, selectedTrait: RibbitItem) {
+    async function loadTraitData(selectedFrog: Froggy, selectedTrait: RibbitItem) {
       try {
         // get trait preview
         setPreview(undefined);
         setLoadingPreview(true);
+        setIsTraitCompatible(false);
+        setCompatibleTraits([]);
         const image = (await axios.get<string>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog.edition}/trait/${selectedTrait.traitId}`)).data;
+        const isCompatible = (await axios.get<boolean>(`${process.env.REACT_APP_API}/frog/compatible/${selectedFrog.edition}/trait/${selectedTrait.traitId}`)).data;
+        const compatibleTraits = (await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/compatible/${selectedTrait.traitId}`)).data;
         setPreview(image);
+        setIsTraitCompatible(isCompatible);
+        setCompatibleTraits(compatibleTraits);
         setLoadingPreview(false);
       } catch (error) {
         console.log("get trait preview error: ", error);
         setLoadingPreview(false);
+        setIsTraitCompatible(false);
+        setCompatibleTraits([]);
       }
     }
 
     if (selectedFrog && selectedTrait) {
-      getTraitPreview(selectedFrog, selectedTrait);
+      loadTraitData(selectedFrog, selectedTrait);
     }
   }, [selectedFrog, selectedTrait]);
 
@@ -213,9 +224,24 @@ export default function TraitUpgrade() {
                     </Stack>
                   }
                   {
+                    !loadingPreview && !isTraitCompatible &&
+                    <Stack>
+                      <Typography>{selectedTrait.name} is only compatible with the following traits:</Typography>
+                      <ul>
+                      {
+                        compatibleTraits.map((trait) => {
+                          return (
+                            <li><Typography key={trait.id}>{trait.name}</Typography></li>
+                          )
+                        })
+                      }
+                      </ul>
+                    </Stack>
+                  }
+                  {
                   selectedFrog && selectedTrait && !selectedFrog.isTraitUpgraded && preview &&
                   <Grid id='buttons' container justifyContent='center' pt={5}>
-                      <Button variant='contained' sx={{height: 50}} disabled={isUpgradeDisabled()} onClick={() => onUpgradeClick(selectedFrog)}>
+                      <Button variant='contained' sx={{height: 50}} disabled={!isTraitCompatible} onClick={() => onUpgradeClick(selectedFrog)}>
                           <Typography>Upgrade Frog</Typography>
                       </Button>
                   </Grid>
