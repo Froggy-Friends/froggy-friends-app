@@ -1,12 +1,12 @@
 import { ExpandMore, Info } from "@mui/icons-material"
-import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Grid, Link, Paper, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Chip, Grid, Link, Paper, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { useEthers } from "@usedapp/core"
 import { Fragment, useEffect, useState } from "react"
 import { Froggy } from "../models/Froggy"
 import { Owned } from "../models/Owned"
 import { RibbitItem } from "../models/RibbitItem"
 import axios from "axios"
-import { Trait } from "../models/Trait"
+import { CompatibleFrogTraits } from "../models/CompatibleFrogTraits"
 
 export default function TraitStudio() {
   const { account } = useEthers();
@@ -19,7 +19,7 @@ export default function TraitStudio() {
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
   const [selectedTrait, setSelectedTrait] = useState<RibbitItem>();
   const [isTraitCompatible, setIsTraitCompatible] = useState<boolean>(false);
-  const [compatibleTraits, setCompatibleTraits] = useState<Trait[]>([]);
+  const [compatibleTraits, setCompatibleTraits] = useState<CompatibleFrogTraits>();
   const [preview, setPreview] = useState<string>();
   const [loadingPreview, setLoadingPreview] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -51,32 +51,30 @@ export default function TraitStudio() {
   }, [account]);
 
   useEffect(() => {
-    async function loadTraitData(selectedFrog: Froggy, selectedTrait: RibbitItem) {
+    async function loadTraitData(selectedFrog: Froggy) {
       try {
         // get trait preview
-        setPreview(undefined);
         setLoadingPreview(true);
         setIsTraitCompatible(false);
-        setCompatibleTraits([]);
-        const image = (await axios.get<string>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog.edition}/trait/${selectedTrait.traitId}`)).data;
-        const isCompatible = (await axios.get<boolean>(`${process.env.REACT_APP_API}/frog/compatible/${selectedFrog.edition}/trait/${selectedTrait.traitId}`)).data;
-        const compatibleTraits = (await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/compatible/${selectedTrait.traitId}`)).data;
-        setPreview(image);
-        setIsTraitCompatible(isCompatible);
+        setCompatibleTraits(undefined);
+        // const image = (await axios.get<string>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog.edition}/trait/${selectedTrait.traitId}`)).data;
+        const compatibleTraits = (await axios.get<CompatibleFrogTraits>(`${process.env.REACT_APP_API}/frog/compatible/${selectedFrog.edition}`)).data;
+        console.log("compatible traits for frog: ", compatibleTraits);
+        // setPreview(image);
         setCompatibleTraits(compatibleTraits);
         setLoadingPreview(false);
       } catch (error) {
-        console.log("get trait preview error: ", error);
         setLoadingPreview(false);
         setIsTraitCompatible(false);
-        setCompatibleTraits([]);
+        setCompatibleTraits(undefined);
       }
     }
 
-    if (selectedFrog && selectedTrait) {
-      loadTraitData(selectedFrog, selectedTrait);
+    if (selectedFrog) {
+      setPreview(selectedFrog.cid2d);
+      loadTraitData(selectedFrog);
     }
-  }, [selectedFrog, selectedTrait]);
+  }, [selectedFrog]);
 
   const isUpgradeDisabled = (): boolean => {
     // check trait compatibility
@@ -121,7 +119,7 @@ export default function TraitStudio() {
             <Accordion elevation={0} defaultExpanded>
               <AccordionSummary expandIcon={<ExpandMore/>} sx={{p: 0}}>
                 <Stack>
-                <Typography color='secondary' variant='h4'>Owned Frogs</Typography>
+                <Typography color='secondary' variant='h5'>Owned Frogs</Typography>
                 <Typography color='secondary' variant='subtitle1'>Select a frog to get started</Typography>
                 </Stack>
               </AccordionSummary>
@@ -162,7 +160,7 @@ export default function TraitStudio() {
             <Accordion elevation={0} defaultExpanded>
               <AccordionSummary expandIcon={<ExpandMore/>} sx={{p: 0}}>
                 <Stack>
-                <Typography color='secondary' variant='h4'>Owned Traits</Typography>
+                <Typography color='secondary' variant='h5'>Owned Traits</Typography>
                 <Typography color='secondary' variant='subtitle1'>Select a trait to upgrade</Typography>
                 </Stack>
               </AccordionSummary>
@@ -203,16 +201,16 @@ export default function TraitStudio() {
         <Grid id='preview' item xl={4} lg={4} md={6} sm={12} mt={3}>
           <Paper elevation={0} sx={{ minHeight: 500}}>
             {
-              selectedFrog && selectedTrait &&
+              selectedFrog &&
               <Stack spacing={4}>
-              <Typography color='secondary' variant='h4'>Preview {selectedFrog.name}</Typography>
+              <Typography color='secondary' variant='h5'>Preview {selectedFrog.name}</Typography>
               <Grid container direction='column' justifyContent='space-between'>
                 <Grid item xl={3} lg={3} md={3} sm={6} pb={3}>
                   {
                     preview && <img src={preview} alt='' width='100%'/>
                   }
                   {
-                    loadingPreview && <Skeleton variant='rectangular' animation='wave' height={500}/>  
+                    !preview && loadingPreview && <Skeleton variant='rectangular' animation='wave' height={500}/>  
                   }
                   {
                     selectedFrog && selectedFrog.isTraitUpgraded &&
@@ -221,22 +219,6 @@ export default function TraitStudio() {
                           <Info color="secondary"/>
                           <Typography>Trait preview unavailable for upgraded frogs</Typography>
                       </Stack>
-                    </Stack>
-                  }
-                  {
-                    !loadingPreview && !isTraitCompatible &&
-                    <Stack pt={2}>
-                      <Typography>Please select a frog with compatible traits to upgrade.</Typography>
-                      <Typography>{selectedTrait.name} is only compatible with:</Typography>
-                      <ul>
-                      {
-                        compatibleTraits.map((trait) => {
-                          return (
-                            <li><Typography key={trait.id}>{trait.name}</Typography></li>
-                          )
-                        })
-                      }
-                      </ul>
                     </Stack>
                   }
                   {
@@ -253,31 +235,50 @@ export default function TraitStudio() {
             }
           </Paper>
         </Grid>
-        {/* <Grid id='history' item xl={4} lg={4} md={6} sm={12} mt={3}>
-          {
-            history && history.length > 0 &&
-            <Fragment>
-              <Typography color='secondary' variant='h4' pb={5}>Activity Log</Typography>
-              <Stack>
+        {
+          compatibleTraits && compatibleTraits.all.length > 0 &&
+          <Grid id='compatible-traits' item xl={4} lg={4} md={6} sm={12} mt={3}>
+            {
+              compatibleTraits && selectedFrog &&
+              <Stack spacing={2}>
+                <Typography variant='h5'>Compatible for {selectedFrog.name}</Typography>
                 {
-                  history.map(activity => {
-                    return (
-                      <Stack key={activity.id} direction='row' spacing={isSm ? 2 : 4} pb={2}>
-                        { activity.isPairing && <Typography>Pairing</Typography>}
-                        { activity.isUnpairing && <Typography>Unpairing</Typography>}
-                        <Typography>Frog #{activity.frogId}</Typography>
-                        { activity.isPairing && <Typography>Friend #{activity.friendId}</Typography>}
-                        <Typography>{getDate(activity.date)}</Typography>
-                        { activity.isPairing && <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${activity.pairTx}`} target='_blank' sx={{cursor: 'pointer'}}><Launch/></Link>}
-                        { activity.isUnpairing && <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${activity.unpairTx}`} target='_blank' sx={{cursor: 'pointer'}}><Launch/></Link>}
-                      </Stack>
-                    )
-                  })
+                  compatibleTraits && compatibleTraits.background.length > 0 &&
+                  <Stack spacing={1}>
+                    <Typography variant='h6'>Background</Typography>
+                    {
+                      compatibleTraits.background.map(bg => {
+                        return (
+                          <Card>
+                            <CardMedia component='img' src={bg.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                          </Card>
+                        )
+                      })
+                    }
+                  </Stack>
+                }
+                {
+                  compatibleTraits && compatibleTraits.body.length > 0 &&
+                  <Stack spacing={1}>
+                    <Typography variant='h6'>Body</Typography>
+                    {
+                      compatibleTraits.body.map(body => {
+                        return (
+                          <Grid key={body.id} item p={1} xl={3}>
+                            <Card>
+                              <CardMedia component='img' src={body.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                            </Card>
+                            <Chip label={body.name} sx={{mt: 2}}/>
+                          </Grid>
+                        )
+                      })
+                    }
+                  </Stack>
                 }
               </Stack>
-            </Fragment>
-          }
-        </Grid> */}
+            }
+          </Grid>
+        }
       </Grid>
     </Fragment>
   )
