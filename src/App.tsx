@@ -1,4 +1,4 @@
-import { createContext, useMemo, useState } from 'react';
+import { createContext, useEffect, useMemo, useState } from 'react';
 import { Provider } from 'react-redux';
 import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import { CssBaseline, PaletteMode, ThemeProvider, useMediaQuery } from '@mui/material';
@@ -18,10 +18,21 @@ import FrogDetails from './pages/FrogDetails';
 import BoardMobile from './pages/BoardMobile';
 import Studio from './pages/Studio';
 import Spaces from './pages/Spaces';
+import axios from 'axios';
+
+declare var window: any;
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
+const ProtectedRoute = ({ admin, children}: { admin: boolean, children: any}) => {
+  if (!admin) {
+    return <Navigate to="/staking" replace/>
+  }
+  return children;
+}
+
 export default function App() {
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [mode, setMode] = useState<PaletteMode>('dark');
   const colorMode = useMemo(
     () => ({
@@ -34,6 +45,23 @@ export default function App() {
   const theme = useMemo(() => getTheme(mode === 'dark'), [mode])
   const isSm = useMediaQuery(theme.breakpoints.down("md"));
 
+  useEffect(() => {
+    async function getAdmins(account: string) {
+      try {
+        const admins = (await axios.get<string[]>(`${process.env.REACT_APP_API}/items/admins`)).data;
+        const match = admins.some(admin => admin.toLowerCase() === account.toLowerCase());
+        setIsAdmin(match);
+      } catch (error) {
+        setIsAdmin(false);
+      }
+    }
+
+    if (window && window.ethereum) {
+      getAdmins(window.ethereum.selectedAddress);
+    }
+
+  }, [window, window.ethereum]);
+
   return (
     <ErrorBoundary>
       <Provider store={store}>
@@ -42,16 +70,20 @@ export default function App() {
             <CssBaseline/>
             <DAppProvider config={config}>
               <BrowserRouter>
-                <Header/>
+                <Header isAdmin={isAdmin}/>
                 <Routes>
                   <Route path="/staking" element={<Staking/>} />
-                  <Route path="/admin" element={<Admin/>} />
                   <Route path="/market" element={<Market/>}/>
                   <Route path="/studio" element={<Studio/>}/>
                   <Route path="/spaces" element={<Spaces/>}/>
                   <Route path="/leaderboard" element={isSm ? <BoardMobile/> : <Board/>} />
                   <Route path="/item/:id" element={<ItemDetails/>} />
                   <Route path='/frog/:id' element={<FrogDetails/>}/>
+                  <Route path="/admin" element={
+                    <ProtectedRoute admin={isAdmin}>
+                      <Admin/>
+                    </ProtectedRoute>
+                  } />
                   <Route path="*" element={ <Navigate to="/staking" replace />} />
                 </Routes>
                 <Footer/>
