@@ -236,16 +236,20 @@ export default function TraitStudio() {
           </Paper>
         </Grid>
         {
-          compatibleTraits && compatibleTraits.all.length > 0 &&
+          compatibleTraits &&
           <Grid id='compatible-traits' item xl={4} lg={4} md={6} sm={12} mt={3}>
             {
-              compatibleTraits && selectedFrog &&
+              selectedFrog &&
               <Stack spacing={2}>
                 <Typography variant='h5'>Compatible for {selectedFrog.name}</Typography>
+                {
+                  compatibleTraits.all.length === 0 && <Typography>No traits compatible for {selectedFrog.name} please select a different froggy.</Typography>
+                }
                 {
                   compatibleTraits && compatibleTraits.background.length > 0 &&
                   <Stack spacing={1}>
                     <Typography variant='h6'>Background</Typography>
+                    <Stack direction='row'>
                     {
                       compatibleTraits.background.map(bg => {
                         return (
@@ -255,12 +259,14 @@ export default function TraitStudio() {
                         )
                       })
                     }
+                    </Stack>
                   </Stack>
                 }
                 {
                   compatibleTraits && compatibleTraits.body.length > 0 &&
                   <Stack spacing={1}>
                     <Typography variant='h6'>Body</Typography>
+                    <Stack direction='row'>
                     {
                       compatibleTraits.body.map(body => {
                         return (
@@ -273,6 +279,87 @@ export default function TraitStudio() {
                         )
                       })
                     }
+                    </Stack>
+                  </Stack>
+                }
+                {
+                  compatibleTraits && compatibleTraits.eyes.length > 0 &&
+                  <Stack spacing={1}>
+                    <Typography variant='h6'>Eyes</Typography>
+                    <Stack direction='row'>
+                    {
+                      compatibleTraits.eyes.map(eye => {
+                        return (
+                          <Grid key={eye.id} item p={1} xl={3}>
+                            <Card>
+                              <CardMedia component='img' src={eye.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                            </Card>
+                            <Chip label={eye.name} sx={{mt: 2}}/>
+                          </Grid>
+                        )
+                      })
+                    }
+                    </Stack>
+                  </Stack>
+                }
+                {
+                  compatibleTraits && compatibleTraits.mouth.length > 0 &&
+                  <Stack spacing={1}>
+                    <Typography variant='h6'>Mouth</Typography>
+                    <Stack direction='row'>
+                    {
+                      compatibleTraits.mouth.map(mouth => {
+                        return (
+                          <Grid key={mouth.id} item p={1} xl={3}>
+                            <Card>
+                              <CardMedia component='img' src={mouth.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                            </Card>
+                            <Chip label={mouth.name} sx={{mt: 2}}/>
+                          </Grid>
+                        )
+                      })
+                    }
+                    </Stack>
+                  </Stack>
+                }
+                {
+                  compatibleTraits && compatibleTraits.shirt.length > 0 &&
+                  <Stack spacing={1}>
+                    <Typography variant='h6'>Shirt</Typography>
+                    <Stack direction='row'>
+                    {
+                      compatibleTraits.shirt.map(shirt => {
+                        return (
+                          <Grid key={shirt.id} item p={1} xl={3}>
+                            <Card>
+                              <CardMedia component='img' src={shirt.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                            </Card>
+                            <Chip label={shirt.name} sx={{mt: 2}}/>
+                          </Grid>
+                        )
+                      })
+                    }
+                    </Stack>
+                  </Stack>
+                }
+                {
+                  compatibleTraits && compatibleTraits.hat.length > 0 &&
+                  <Stack spacing={1}>
+                    <Typography variant='h6'>Hat</Typography>
+                    <Stack direction='row'>
+                    {
+                      compatibleTraits.hat.map(hat => {
+                        return (
+                          <Grid key={hat.id} item p={1} xl={3}>
+                            <Card>
+                              <CardMedia component='img' src={hat.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                            </Card>
+                            <Chip label={hat.name} sx={{mt: 2}}/>
+                          </Grid>
+                        )
+                      })
+                    }
+                    </Stack>
                   </Stack>
                 }
               </Stack>
