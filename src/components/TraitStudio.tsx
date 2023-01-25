@@ -31,6 +31,9 @@ export default function TraitStudio() {
   useEffect(() => {
     async function loadAccountData(address: string) {
       try {
+        setFrogs([]);
+        setTraits([]);
+        setOwnedCompatibleTraits([]);
         setLoadingFrogs(true);
         setLoadingTraits(true);
         const froggies = (await axios.get<Owned>(`${process.env.REACT_APP_API}/frog/owned/${address}`)).data.froggies;
@@ -61,8 +64,11 @@ export default function TraitStudio() {
         setCompatibleTraits(compatibleTraits);
         const compatibleTraitsOwned = compatibleTraits.all.filter(trait => traits.some(t => t.traitId === trait.id));
         setOwnedCompatibleTraits(compatibleTraitsOwned);
+        // clear selected trait when none compatible
+        if (!compatibleTraitsOwned.length) {
+          setSelectedTrait(undefined);
+        }
       } catch (error) {
-        setLoadingPreview(false);
         setCompatibleTraits(undefined);
       }
     }
@@ -75,8 +81,15 @@ export default function TraitStudio() {
 
   useEffect(() => {
     async function loadPreview(selectedFrog: Froggy, selectedTrait: Trait) {
-      const image = (await axios.get<string>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog.edition}/trait/${selectedTrait.id}`)).data;
-      setPreview(image);
+      try {
+        setPreview('');
+        setLoadingPreview(true);
+        const image = (await axios.get<string>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog.edition}/trait/${selectedTrait.id}`)).data;
+        setPreview(image);
+        setLoadingPreview(false); 
+      } catch (error) {
+        setLoadingPreview(false); 
+      }
     }
 
     if (selectedFrog && selectedTrait) {
@@ -222,7 +235,7 @@ export default function TraitStudio() {
                     preview && <img src={preview} alt='' width='100%'/>
                   }
                   {
-                    !preview && loadingPreview && <Skeleton variant='rectangular' animation='wave' height={500}/>  
+                    loadingPreview && <Skeleton variant='rectangular' animation='wave' height={500}/>  
                   }
                   {
                     selectedFrog && selectedFrog.isTraitUpgraded &&
@@ -253,7 +266,7 @@ export default function TraitStudio() {
             {
               selectedFrog &&
               <Stack spacing={2}>
-                <Typography variant='h5'>Froggy #{selectedFrog.edition} can upgrade to these traits</Typography>
+                <Typography variant='h5'>Froggy #{selectedFrog.edition} trait compatibility</Typography>
                 {
                   compatibleTraits.all.length === 0 && <Typography>No traits compatible for {selectedFrog.name} please select a different froggy.</Typography>
                 }
