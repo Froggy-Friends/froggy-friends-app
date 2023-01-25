@@ -60,7 +60,7 @@ export default function App() {
       getAdmins(window.ethereum.selectedAddress);
     }
 
-  }, [window, window.ethereum]);
+  }, []);
 
   return (
     <ErrorBoundary>

@@ -8,7 +8,7 @@ import { RibbitItem } from "../models/RibbitItem"
 import axios from "axios"
 import { Trait } from "../models/Trait"
 
-export default function TraitUpgrade() {
+export default function TraitStudio() {
   const { account } = useEthers();
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));

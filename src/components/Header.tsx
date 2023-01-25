@@ -11,7 +11,6 @@ import logo from '../images/logo.png';
 import metamask from '../images/metamask.webp';
 import brave from '../images/brave.svg';
 import Cart from "./Cart";
-import axios from "axios";
 
 declare var window: any;
 
