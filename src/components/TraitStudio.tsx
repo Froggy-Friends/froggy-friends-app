@@ -130,7 +130,7 @@ export default function TraitStudio() {
                     No frogs in your wallet but you can purchase them on <Link href="https://opensea.io/collection/froggyfriendsnft" target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>Opensea</Link>
                   </Typography>
                 }
-                <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
+                <Grid className="scrollable" container pb={5} ml={-1} maxHeight={300} overflow='scroll'>
                   {
                     frogs.map(frog => {
                       return <Grid key={frog.edition} item p={1} xl={3}>
@@ -171,7 +171,7 @@ export default function TraitStudio() {
                     No traits in your wallet but you can purchase them on <Link href="https://opensea.io/collection/ribbit-items" target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>Opensea</Link>
                   </Typography>
                 }
-                <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
+                <Grid className="scrollable" container pb={5} ml={-1} maxHeight={300} overflow='scroll'>
                   {
                     traits.map(trait => {
                       return <Grid key={trait.id} item p={1} xl={3}>
@@ -241,7 +241,7 @@ export default function TraitStudio() {
             {
               selectedFrog &&
               <Stack spacing={2}>
-                <Typography variant='h5'>Compatible for {selectedFrog.name}</Typography>
+                <Typography variant='h5'>Compatible traits for Froggy #{selectedFrog.edition}</Typography>
                 {
                   compatibleTraits.all.length === 0 && <Typography>No traits compatible for {selectedFrog.name} please select a different froggy.</Typography>
                 }
@@ -253,9 +253,12 @@ export default function TraitStudio() {
                     {
                       compatibleTraits.background.map(bg => {
                         return (
-                          <Card>
-                            <CardMedia component='img' src={bg.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                          </Card>
+                          <Grid key={bg.id} item pr={1} xl={3}>
+                            <Card>
+                              <CardMedia component='img' src={bg.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                            </Card>
+                            <Chip label={bg.name} sx={{mt: 2, display: 'flex'}}/>
+                          </Grid>
                         )
                       })
                     }
@@ -270,11 +273,11 @@ export default function TraitStudio() {
                     {
                       compatibleTraits.body.map(body => {
                         return (
-                          <Grid key={body.id} item p={1} xl={3}>
+                          <Grid key={body.id} item pr={1} xl={3}>
                             <Card>
                               <CardMedia component='img' src={body.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                             </Card>
-                            <Chip label={body.name} sx={{mt: 2}}/>
+                            <Chip label={body.name} sx={{mt: 2, display: 'flex'}}/>
                           </Grid>
                         )
                       })
@@ -290,11 +293,11 @@ export default function TraitStudio() {
                     {
                       compatibleTraits.eyes.map(eye => {
                         return (
-                          <Grid key={eye.id} item p={1} xl={3}>
+                          <Grid key={eye.id} item pr={1} xl={3}>
                             <Card>
                               <CardMedia component='img' src={eye.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                             </Card>
-                            <Chip label={eye.name} sx={{mt: 2}}/>
+                            <Chip label={eye.name} sx={{mt: 2, display: 'flex'}}/>
                           </Grid>
                         )
                       })
@@ -310,11 +313,11 @@ export default function TraitStudio() {
                     {
                       compatibleTraits.mouth.map(mouth => {
                         return (
-                          <Grid key={mouth.id} item p={1} xl={3}>
+                          <Grid key={mouth.id} item pr={1} xl={3}>
                             <Card>
                               <CardMedia component='img' src={mouth.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                             </Card>
-                            <Chip label={mouth.name} sx={{mt: 2}}/>
+                            <Chip label={mouth.name} sx={{mt: 2, display: 'flex'}}/>
                           </Grid>
                         )
                       })
@@ -330,11 +333,11 @@ export default function TraitStudio() {
                     {
                       compatibleTraits.shirt.map(shirt => {
                         return (
-                          <Grid key={shirt.id} item p={1} xl={3}>
+                          <Grid key={shirt.id} item pr={1} xl={3}>
                             <Card>
                               <CardMedia component='img' src={shirt.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                             </Card>
-                            <Chip label={shirt.name} sx={{mt: 2}}/>
+                            <Chip label={shirt.name} sx={{mt: 2, display: 'flex'}}/>
                           </Grid>
                         )
                       })
@@ -350,11 +353,11 @@ export default function TraitStudio() {
                     {
                       compatibleTraits.hat.map(hat => {
                         return (
-                          <Grid key={hat.id} item p={1} xl={3}>
+                          <Grid key={hat.id} item pr={1} xl={3}>
                             <Card>
                               <CardMedia component='img' src={hat.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                             </Card>
-                            <Chip label={hat.name} sx={{mt: 2}}/>
+                            <Chip label={hat.name} sx={{mt: 2, display: 'flex'}}/>
                           </Grid>
                         )
                       })
