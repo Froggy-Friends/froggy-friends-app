@@ -38,7 +38,7 @@ const useStyles: any = makeStyles((theme: Theme) =>
   })
 );
 
-export default function FriendPairing() {
+export default function FriendStudio() {
   const classes = useStyles();
   const theme = useTheme();
   const { account } = useEthers();

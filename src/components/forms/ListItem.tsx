@@ -72,12 +72,12 @@ export default function ListItem(props: ListItemProps) {
                 const response = await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/layer/${layer}`);
                 setTraits(response.data);
             } catch (error) {
-                console.log("error fetching traits: ", error);
                 setCompatibleTraits([]);
             }
         }
-
-        getTraits(item.traitLayer);
+        if (item.traitLayer) {
+            getTraits(item.traitLayer);
+        }
     }, [item.traitLayer]);
 
     const onCompatibleTraitsChanged = (event: SelectChangeEvent<typeof compatibleTraits>) => {

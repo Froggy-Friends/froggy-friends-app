@@ -2,8 +2,8 @@ import { Container, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Sele
 import { useState } from "react";
 import { createStyles, makeStyles } from "@mui/styles";
 import banner from '../images/friends.png';
-import FriendPairing from "../components/FriendPairing";
-import TraitUpgrade from "../components/TraitUpgrade";
+import FriendStudio from "../components/FriendStudio";
+import TraitStudio from "../components/TraitStudio";
 import { useLocation } from "react-router-dom";
 
 const useStyles: any = makeStyles((theme: Theme) => 
@@ -52,8 +52,8 @@ export default function Studio() {
             </Select>
           </FormControl>
         </Stack>
-        { studioView === 'pair' && <FriendPairing/>}
-        { studioView === 'traits' && <TraitUpgrade/>}
+        { studioView === 'pair' && <FriendStudio/>}
+        { studioView === 'traits' && <TraitStudio/>}
       </Container>
     </Grid>
 

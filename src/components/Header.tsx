@@ -11,7 +11,6 @@ import logo from '../images/logo.png';
 import metamask from '../images/metamask.webp';
 import brave from '../images/brave.svg';
 import Cart from "./Cart";
-import axios from "axios";
 
 declare var window: any;
 
@@ -43,7 +42,12 @@ const useStyles: any = makeStyles((theme: Theme) =>
   })
 );
 
-export default function Header() {
+interface HeaderProps {
+  isAdmin: boolean;
+}
+
+export default function Header(props: HeaderProps) {
+  const { isAdmin } = props;
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const cartItemCount = useAppSelector(cartCount);
@@ -59,7 +63,6 @@ export default function Header() {
   const { activateBrowserWallet, account, deactivate } = useEthers();
   const ens = useLookupAddress();
   const [displayName, setDisplayName] = useState<string>("");
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const ethereum = window.ethereum;
 
@@ -71,26 +74,6 @@ export default function Header() {
   const closeAccountMenu = () => {
     setAnchorEl(null);
   };
-
-  useEffect(() => {
-    async function getAdmins(account: string) {
-      try {
-        
-        const response = await axios.get<string[]>(`${process.env.REACT_APP_API}/items/admins`);
-        const admins = response.data;
-        if (admins.includes(account)) {
-          setIsAdmin(true);
-        }
-      } catch (error) {
-        console.log("get admins error: ", error);
-      }
-    }
-
-    if (account) {
-      getAdmins(account);
-    }
-
-  }, [account]);
 
   useEffect(() => {
     if (ens) {
