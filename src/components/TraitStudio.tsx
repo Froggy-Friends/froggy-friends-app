@@ -7,6 +7,7 @@ import { Owned } from "../models/Owned"
 import { RibbitItem } from "../models/RibbitItem"
 import axios from "axios"
 import { CompatibleFrogTraits } from "../models/CompatibleFrogTraits"
+import { Trait } from "../models/Trait"
 
 export default function TraitStudio() {
   const { account } = useEthers();
@@ -17,7 +18,8 @@ export default function TraitStudio() {
   const [loadingFrogs, setLoadingFrogs] = useState(false);
   const [loadingTraits, setLoadingTraits] = useState(false);
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
-  const [selectedTrait, setSelectedTrait] = useState<RibbitItem>();
+  const [selectedTrait, setSelectedTrait] = useState<Trait>();
+  const [ownedCompatibleTraits, setOwnedCompatibleTraits] = useState<Trait[]>([]);
   const [isTraitCompatible, setIsTraitCompatible] = useState<boolean>(false);
   const [compatibleTraits, setCompatibleTraits] = useState<CompatibleFrogTraits>();
   const [preview, setPreview] = useState<string>();
@@ -51,30 +53,37 @@ export default function TraitStudio() {
   }, [account]);
 
   useEffect(() => {
-    async function loadTraitData(selectedFrog: Froggy) {
+    async function loadCompatibleTraits(selectedFrog: Froggy) {
       try {
         // get trait preview
-        setLoadingPreview(true);
-        setIsTraitCompatible(false);
         setCompatibleTraits(undefined);
-        // const image = (await axios.get<string>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog.edition}/trait/${selectedTrait.traitId}`)).data;
         const compatibleTraits = (await axios.get<CompatibleFrogTraits>(`${process.env.REACT_APP_API}/frog/compatible/${selectedFrog.edition}`)).data;
-        console.log("compatible traits for frog: ", compatibleTraits);
-        // setPreview(image);
         setCompatibleTraits(compatibleTraits);
-        setLoadingPreview(false);
+        const compatibleTraitsOwned = compatibleTraits.all.filter(trait => traits.some(t => t.traitId === trait.id));
+        setOwnedCompatibleTraits(compatibleTraitsOwned);
       } catch (error) {
         setLoadingPreview(false);
-        setIsTraitCompatible(false);
         setCompatibleTraits(undefined);
       }
     }
 
     if (selectedFrog) {
       setPreview(selectedFrog.cid2d);
-      loadTraitData(selectedFrog);
+      loadCompatibleTraits(selectedFrog);
     }
   }, [selectedFrog]);
+
+  useEffect(() => {
+    async function loadPreview(selectedFrog: Froggy, selectedTrait: Trait) {
+      const image = (await axios.get<string>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog.edition}/trait/${selectedTrait.id}`)).data;
+      setPreview(image);
+    }
+
+    if (selectedFrog && selectedTrait) {
+      loadPreview(selectedFrog, selectedTrait);
+    }
+
+  }, [selectedFrog, selectedTrait])
 
   const isUpgradeDisabled = (): boolean => {
     // check trait compatibility
@@ -87,7 +96,7 @@ export default function TraitStudio() {
     setSelectedFrog(frog);
   }
 
-  const onTraitClick = (trait: RibbitItem) => {
+  const onTraitClick = (trait: Trait) => {
     setSelectedTrait(trait);
   }
 
@@ -96,19 +105,19 @@ export default function TraitStudio() {
   }
 
   const getBorderColor = (tokenId: number): string => {
-    return selectedFrog?.edition === tokenId ? "white" : "transparent";
+    return selectedFrog?.edition === tokenId ? theme.palette.primary.main : "transparent";
   }
 
   const getBorderWidth = (tokenId: number): string => {
-    return selectedFrog?.edition === tokenId ? '3.5px solid' : '0px';
+    return selectedFrog?.edition === tokenId ? '4px solid' : '0px';
   }
 
   const getTraitBorderColor = (id: number): string => {
-    return selectedTrait?.id === id ? "white" : "transparent";
+    return selectedTrait?.id === id ? theme.palette.primary.main : "transparent";
   }
 
   const getTraitBorder = (id: number): string => {
-    return selectedTrait?.id === id ? '3.5px solid' : '0px';
+    return selectedTrait?.id === id ? '4px solid' : '0px';
   }
 
   return (
@@ -157,45 +166,48 @@ export default function TraitStudio() {
             </Accordion>
           </Stack>
           <Stack pb={5}>
-            <Accordion elevation={0} defaultExpanded>
-              <AccordionSummary expandIcon={<ExpandMore/>} sx={{p: 0}}>
-                <Stack>
-                <Typography color='secondary' variant='h5'>Owned Traits</Typography>
-                <Typography color='secondary' variant='subtitle1'>Select a trait to upgrade</Typography>
-                </Stack>
-              </AccordionSummary>
-              <AccordionDetails sx={{p: 0}}>
-                {
-                  !loadingTraits && !traits.length &&
-                  <Typography color='secondary' variant='body1'>
-                    No traits in your wallet but you can purchase them on <Link href="https://opensea.io/collection/ribbit-items" target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>Opensea</Link>
-                  </Typography>
-                }
-                <Grid className="scrollable" container pb={5} ml={-1} maxHeight={300} overflow='scroll'>
+            {
+              ownedCompatibleTraits.length > 0 &&
+              <Accordion elevation={0} defaultExpanded>
+                <AccordionSummary expandIcon={<ExpandMore/>} sx={{p: 0}}>
+                  <Stack>
+                  <Typography color='secondary' variant='h5'>Owned Traits</Typography>
+                  <Typography color='secondary' variant='subtitle1'>Select a trait to upgrade</Typography>
+                  </Stack>
+                </AccordionSummary>
+                <AccordionDetails sx={{p: 0}}>
                   {
-                    traits.map(trait => {
-                      return <Grid key={trait.id} item p={1} xl={3}>
-                        <Card sx={{border: getTraitBorder(trait.id), borderColor: getTraitBorderColor(trait.id), cursor: 'pointer'}} onClick={() => onTraitClick(trait)}>
-                          <CardMedia component='img' src={trait.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                        </Card>
-                      </Grid>
-                    })
+                    !loadingTraits && !traits.length &&
+                    <Typography color='secondary' variant='body1'>
+                      No traits in your wallet but you can purchase them on <Link href="https://opensea.io/collection/ribbit-items" target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>Opensea</Link>
+                    </Typography>
                   }
-                </Grid>
-                {
-                  loadingTraits && 
-                  <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
+                  <Grid className="scrollable" container pb={5} ml={-1} maxHeight={300} overflow='scroll'>
                     {
-                      new Array(10).fill('').map((item, index) => {
-                        return <Grid key={index} item p={1} xl={2.4}>
-                          <Skeleton variant='rectangular' animation='wave' height={100}/>  
+                      ownedCompatibleTraits.map(trait => {
+                        return <Grid key={trait.id} item p={1} xl={3}>
+                          <Card sx={{border: getTraitBorder(trait.id), borderColor: getTraitBorderColor(trait.id), cursor: 'pointer'}} onClick={() => onTraitClick(trait)}>
+                            <CardMedia component='img' src={trait.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                          </Card>
                         </Grid>
                       })
                     }
                   </Grid>
-                }
-              </AccordionDetails>
-            </Accordion>
+                  {
+                    loadingTraits && 
+                    <Grid className="scrollable" container pb={5} maxHeight={300} overflow='scroll'>
+                      {
+                        new Array(10).fill('').map((item, index) => {
+                          return <Grid key={index} item p={1} xl={2.4}>
+                            <Skeleton variant='rectangular' animation='wave' height={100}/>  
+                          </Grid>
+                        })
+                      }
+                    </Grid>
+                  }
+                </AccordionDetails>
+              </Accordion>
+            }
           </Stack>
         </Grid>
         <Grid id='preview' item xl={4} lg={4} md={6} sm={12} mt={3}>
@@ -241,7 +253,7 @@ export default function TraitStudio() {
             {
               selectedFrog &&
               <Stack spacing={2}>
-                <Typography variant='h5'>Compatible traits for Froggy #{selectedFrog.edition}</Typography>
+                <Typography variant='h5'>Froggy #{selectedFrog.edition} can upgrade to these traits</Typography>
                 {
                   compatibleTraits.all.length === 0 && <Typography>No traits compatible for {selectedFrog.name} please select a different froggy.</Typography>
                 }
