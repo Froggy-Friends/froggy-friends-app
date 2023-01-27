@@ -155,6 +155,189 @@ export default function TraitStudio() {
                 }
               </AccordionDetails>
             </Accordion>
+            {
+            compatibleTraits &&
+            <Grid id='compatible-traits' item mt={3}>
+              {
+                selectedFrog &&
+                <Stack spacing={3}>
+                  <Stack>
+                    <Typography variant='h5'>Froggy #{selectedFrog.edition} compatible traits</Typography>
+                    <Typography variant='subtitle1'>Owned traits have a green button you can click to preview</Typography>
+                  </Stack>
+                  {
+                    compatibleTraits.all.length === 0 && <Typography>No traits compatible for {selectedFrog.name} please select a different froggy.</Typography>
+                  }
+                  {
+                    compatibleTraits && compatibleTraits.background.length > 0 &&
+                    <Stack spacing={1}>
+                      <Typography variant='h6'>Background</Typography>
+                      <Stack direction='row'>
+                      {
+                        compatibleTraits.background.map(bg => {
+                          return (
+                            <Grid key={bg.id} item pr={1}>
+                              <Card>
+                                <CardMedia component='img' src={bg.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                              </Card>
+                              <Button 
+                              variant="contained" 
+                              color="primary" 
+                              sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
+                              disabled={!isTraitOwned(bg)}
+                              onClick={() => onTraitClick(bg)}>
+                                {bg.name}
+                              </Button>
+                            </Grid>
+                          )
+                        })
+                      }
+                      </Stack>
+                    </Stack>
+                  }
+                  {
+                    compatibleTraits && compatibleTraits.body.length > 0 &&
+                    <Stack spacing={1}>
+                      <Typography variant='h6'>Body</Typography>
+                      <Stack direction='row'>
+                      {
+                        compatibleTraits.body.map(body => {
+                          return (
+                            <Grid key={body.id} item pr={1}>
+                              <Card>
+                                <CardMedia component='img' src={body.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                              </Card>
+                              <Button 
+                              variant="contained" 
+                              color="primary" 
+                              sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
+                              disabled={!isTraitOwned(body)}
+                              onClick={() => onTraitClick(body)}>
+                                {body.name}
+                              </Button>
+                            </Grid>
+                          )
+                        })
+                      }
+                      </Stack>
+                    </Stack>
+                  }
+                  { compatibleTraits && compatibleTraits.eyes.length > 0 && <Divider sx={{height: 2}}/> }
+                  {
+                    compatibleTraits && compatibleTraits.eyes.length > 0 &&
+                    <Stack spacing={1}>
+                      <Typography variant='h6'>Eyes</Typography>
+                      <Stack direction='row'>
+                      {
+                        compatibleTraits.eyes.map(eye => {
+                          return (
+                            <Grid key={eye.id} item pr={1}>
+                              <Card>
+                                <CardMedia component='img' src={eye.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                              </Card>
+                              <Button 
+                              variant="contained" 
+                              color="primary" 
+                              sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
+                              disabled={!isTraitOwned(eye)}
+                              onClick={() => onTraitClick(eye)}>
+                                {eye.name}
+                              </Button>
+                            </Grid>
+                          )
+                        })
+                      }
+                      </Stack>
+                    </Stack>
+                  }
+                  { compatibleTraits && compatibleTraits.mouth.length > 0 && <Divider sx={{height: 2}}/>}
+                  {
+                    compatibleTraits && compatibleTraits.mouth.length > 0 &&
+                    <Stack spacing={1}>
+                      <Typography variant='h6'>Mouth</Typography>
+                      <Stack direction='row'>
+                      {
+                        compatibleTraits.mouth.map(mouth => {
+                          return (
+                            <Grid key={mouth.id} item pr={1}>
+                              <Card>
+                                <CardMedia component='img' src={mouth.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                              </Card>
+                              <Button 
+                                variant="contained" 
+                                color="primary" 
+                                sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
+                                disabled={!isTraitOwned(mouth)}
+                                onClick={() => onTraitClick(mouth)}>
+                                {mouth.name}
+                              </Button>
+                            </Grid>
+                          )
+                        })
+                      }
+                      </Stack>
+                    </Stack>
+                  }
+                  { compatibleTraits && compatibleTraits.shirt.length > 0 && <Divider sx={{height: 2}}/>}
+                  {
+                    compatibleTraits && compatibleTraits.shirt.length > 0 &&
+                    <Stack spacing={1}>
+                      <Typography variant='h6'>Shirt</Typography>
+                      <Stack direction='row'>
+                      {
+                        compatibleTraits.shirt.map(shirt => {
+                          return (
+                            <Grid key={shirt.id} item pr={1}>
+                              <Card>
+                                <CardMedia component='img' src={shirt.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                              </Card>
+                              <Button 
+                                variant="contained" 
+                                color="primary" 
+                                sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
+                                disabled={!isTraitOwned(shirt)}
+                                onClick={() => onTraitClick(shirt)}>
+                                {shirt.name}
+                                </Button>
+                            </Grid>
+                          )
+                        })
+                      }
+                      </Stack>
+                    </Stack>
+                  }
+                  { compatibleTraits && compatibleTraits.hat.length > 0 && <Divider sx={{height: 2}}/>}
+                  {
+                    compatibleTraits && compatibleTraits.hat.length > 0 &&
+                    <Stack spacing={1}>
+                      <Typography variant='h6'>Hat</Typography>
+                      <Stack direction='row'>
+                      {
+                        compatibleTraits.hat.map(hat => {
+                          return (
+                            <Grid key={hat.id} item pr={1}>
+                              <Card>
+                                <CardMedia component='img' src={hat.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                              </Card>
+                              <Button 
+                                variant="contained" 
+                                color="primary" 
+                                sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
+                                disabled={!isTraitOwned(hat)}
+                                onClick={() => onTraitClick(hat)}>
+                                {hat.name}
+                              </Button>
+                            </Grid>
+                          )
+                        })
+                      }
+                      </Stack>
+                    </Stack>
+                  }
+                </Stack>
+              }
+            </Grid>
+          }
           </Stack>
         </Grid>
         <Grid id='preview' item xl={4} lg={4} md={6} sm={12} mt={3}>
@@ -194,189 +377,6 @@ export default function TraitStudio() {
             }
           </Paper>
         </Grid>
-        {
-          compatibleTraits &&
-          <Grid id='compatible-traits' item xl={4} lg={4} md={6} sm={12} mt={3}>
-            {
-              selectedFrog &&
-              <Stack spacing={3}>
-                <Stack>
-                  <Typography variant='h5'>Froggy #{selectedFrog.edition} compatible traits</Typography>
-                  <Typography variant='subtitle1'>Owned traits have a green button you can click to preview</Typography>
-                </Stack>
-                {
-                  compatibleTraits.all.length === 0 && <Typography>No traits compatible for {selectedFrog.name} please select a different froggy.</Typography>
-                }
-                {
-                  compatibleTraits && compatibleTraits.background.length > 0 &&
-                  <Stack spacing={1}>
-                    <Typography variant='h6'>Background</Typography>
-                    <Stack direction='row'>
-                    {
-                      compatibleTraits.background.map(bg => {
-                        return (
-                          <Grid key={bg.id} item pr={1}>
-                            <Card>
-                              <CardMedia component='img' src={bg.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                            </Card>
-                            <Button 
-                            variant="contained" 
-                            color="primary" 
-                            sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                            disabled={!isTraitOwned(bg)}
-                            onClick={() => onTraitClick(bg)}>
-                              {bg.name}
-                            </Button>
-                          </Grid>
-                        )
-                      })
-                    }
-                    </Stack>
-                  </Stack>
-                }
-                {
-                  compatibleTraits && compatibleTraits.body.length > 0 &&
-                  <Stack spacing={1}>
-                    <Typography variant='h6'>Body</Typography>
-                    <Stack direction='row'>
-                    {
-                      compatibleTraits.body.map(body => {
-                        return (
-                          <Grid key={body.id} item pr={1}>
-                            <Card>
-                              <CardMedia component='img' src={body.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                            </Card>
-                            <Button 
-                            variant="contained" 
-                            color="primary" 
-                            sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                            disabled={!isTraitOwned(body)}
-                            onClick={() => onTraitClick(body)}>
-                              {body.name}
-                            </Button>
-                          </Grid>
-                        )
-                      })
-                    }
-                    </Stack>
-                  </Stack>
-                }
-                { compatibleTraits && compatibleTraits.eyes.length > 0 && <Divider sx={{height: 2}}/> }
-                {
-                  compatibleTraits && compatibleTraits.eyes.length > 0 &&
-                  <Stack spacing={1}>
-                    <Typography variant='h6'>Eyes</Typography>
-                    <Stack direction='row'>
-                    {
-                      compatibleTraits.eyes.map(eye => {
-                        return (
-                          <Grid key={eye.id} item pr={1}>
-                            <Card>
-                              <CardMedia component='img' src={eye.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                            </Card>
-                            <Button 
-                            variant="contained" 
-                            color="primary" 
-                            sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                            disabled={!isTraitOwned(eye)}
-                            onClick={() => onTraitClick(eye)}>
-                              {eye.name}
-                            </Button>
-                          </Grid>
-                        )
-                      })
-                    }
-                    </Stack>
-                  </Stack>
-                }
-                { compatibleTraits && compatibleTraits.mouth.length > 0 && <Divider sx={{height: 2}}/>}
-                {
-                  compatibleTraits && compatibleTraits.mouth.length > 0 &&
-                  <Stack spacing={1}>
-                    <Typography variant='h6'>Mouth</Typography>
-                    <Stack direction='row'>
-                    {
-                      compatibleTraits.mouth.map(mouth => {
-                        return (
-                          <Grid key={mouth.id} item pr={1}>
-                            <Card>
-                              <CardMedia component='img' src={mouth.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                            </Card>
-                            <Button 
-                              variant="contained" 
-                              color="primary" 
-                              sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                              disabled={!isTraitOwned(mouth)}
-                              onClick={() => onTraitClick(mouth)}>
-                              {mouth.name}
-                            </Button>
-                          </Grid>
-                        )
-                      })
-                    }
-                    </Stack>
-                  </Stack>
-                }
-                { compatibleTraits && compatibleTraits.shirt.length > 0 && <Divider sx={{height: 2}}/>}
-                {
-                  compatibleTraits && compatibleTraits.shirt.length > 0 &&
-                  <Stack spacing={1}>
-                    <Typography variant='h6'>Shirt</Typography>
-                    <Stack direction='row'>
-                    {
-                      compatibleTraits.shirt.map(shirt => {
-                        return (
-                          <Grid key={shirt.id} item pr={1}>
-                            <Card>
-                              <CardMedia component='img' src={shirt.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                            </Card>
-                            <Button 
-                              variant="contained" 
-                              color="primary" 
-                              sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                              disabled={!isTraitOwned(shirt)}
-                              onClick={() => onTraitClick(shirt)}>
-                              {shirt.name}
-                              </Button>
-                          </Grid>
-                        )
-                      })
-                    }
-                    </Stack>
-                  </Stack>
-                }
-                { compatibleTraits && compatibleTraits.hat.length > 0 && <Divider sx={{height: 2}}/>}
-                {
-                  compatibleTraits && compatibleTraits.hat.length > 0 &&
-                  <Stack spacing={1}>
-                    <Typography variant='h6'>Hat</Typography>
-                    <Stack direction='row'>
-                    {
-                      compatibleTraits.hat.map(hat => {
-                        return (
-                          <Grid key={hat.id} item pr={1}>
-                            <Card>
-                              <CardMedia component='img' src={hat.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                            </Card>
-                            <Button 
-                              variant="contained" 
-                              color="primary" 
-                              sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                              disabled={!isTraitOwned(hat)}
-                              onClick={() => onTraitClick(hat)}>
-                              {hat.name}
-                            </Button>
-                          </Grid>
-                        )
-                      })
-                    }
-                    </Stack>
-                  </Stack>
-                }
-              </Stack>
-            }
-          </Grid>
-        }
       </Grid>
     </Fragment>
   )
