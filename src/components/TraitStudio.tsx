@@ -1,13 +1,15 @@
-import { ExpandMore, Info } from "@mui/icons-material"
+import { ExpandMore, Info, Launch } from "@mui/icons-material"
 import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Chip, Divider, Grid, Link, Paper, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { useEthers } from "@usedapp/core"
 import { Fragment, useEffect, useState } from "react"
 import { Froggy } from "../models/Froggy"
 import { Owned } from "../models/Owned"
 import { RibbitItem } from "../models/RibbitItem"
+import { History } from "../models/History";
 import axios from "axios"
 import { CompatibleFrogTraits } from "../models/CompatibleFrogTraits"
 import { Trait } from "../models/Trait"
+import { formatDistanceStrict } from "date-fns";
 
 export default function TraitStudio() {
   const { account } = useEthers();
@@ -15,6 +17,7 @@ export default function TraitStudio() {
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const [frogs, setFrogs] = useState<Froggy[]>([]);
   const [traits, setTraits] = useState<RibbitItem[]>([]);
+  const [history, setHistory] = useState<History[]>([]);
   const [loadingFrogs, setLoadingFrogs] = useState(false);
   const [loadingTraits, setLoadingTraits] = useState(false);
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
@@ -33,12 +36,15 @@ export default function TraitStudio() {
         setFrogs([]);
         setTraits([]);
         setOwnedCompatibleTraits([]);
+        setHistory([]);
         setLoadingFrogs(true);
         setLoadingTraits(true);
         const froggies = (await axios.get<Owned>(`${process.env.REACT_APP_API}/frog/owned/${address}`)).data.froggies;
         const traits = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/traits/${account}`)).data;
+        const history = (await axios.get<History[]>(`${process.env.REACT_APP_API}/history/traits/${account}`)).data;
         setFrogs(froggies);
         setTraits(traits);
+        setHistory(history);
         setLoadingFrogs(false);
         setLoadingTraits(false);
       } catch (error) {
@@ -109,6 +115,14 @@ export default function TraitStudio() {
 
   const isTraitOwned = (trait: Trait): boolean => {
     return ownedCompatibleTraits.some(t => t.id === trait.id);
+  }
+
+  const getDate = (dateUtc: string) => {
+    const date = new Date(dateUtc);
+    const result = formatDistanceStrict(date, Date.now(), {
+      addSuffix: true
+    })
+    return result;
   }
 
   return (
@@ -376,6 +390,29 @@ export default function TraitStudio() {
             </Stack>
             }
           </Paper>
+        </Grid>
+        <Grid id='history' item xl={4} lg={4} md={6} sm={12} mt={3}>
+          {
+            history && history.length > 0 &&
+            <Fragment>
+              <Typography color='secondary' variant='h4' pb={5}>Activity Log</Typography>
+              <Stack>
+                {
+                  history.map(activity => {
+                    return (
+                      <Stack key={activity.id} direction='row' spacing={isSm ? 2 : 4} pb={2}>
+                        { activity.isTraitUpgrade && <Typography>Trait Upgrade</Typography>}
+                        <Typography>Frog #{activity.frogId}</Typography>
+                        { activity.isTraitUpgrade && <Typography>Trait #{activity.traitId}</Typography>}
+                        <Typography>{getDate(activity.date)}</Typography>
+                        { activity.isTraitUpgrade && <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${activity.upgradeTx}`} target='_blank' sx={{cursor: 'pointer'}}><Launch/></Link>}
+                      </Stack>
+                    )
+                  })
+                }
+              </Stack>
+            </Fragment>
+          }
         </Grid>
       </Grid>
     </Fragment>
