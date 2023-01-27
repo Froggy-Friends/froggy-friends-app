@@ -305,7 +305,7 @@ export default function FriendStudio() {
                 }
                 {
                   selectedFrog && selectedFriend && !selectedFrog.isPaired &&
-                  <Grid id='buttons' container pt={5}>
+                  <Grid id='buttons' container justifyContent='center' pt={5}>
                       <Button variant='contained' sx={{height: 50}} onClick={() => onPairClick(selectedFrog)}>
                           <Typography>Pair Friend</Typography>
                       </Button>
@@ -366,8 +366,12 @@ export default function FriendStudio() {
             {
                 selectedFriend && !isPairingProcessing &&
                 <Stack direction='row' pt={3} spacing={1} alignItems='center'>
-                    <Info color="secondary"/>
-                    <Typography>Pairing will burn your friend item and apply a staking boost.</Typography>
+                    <Warning color="warning"/>
+                    <Typography>
+                      Pairing will burn your friend item and apply a staking boost.
+                      You will not be able to unpair and retrieve your friend.
+                      Would you like to proceed?
+                    </Typography>
                 </Stack>
             }
             <Stack alignItems='center'>
