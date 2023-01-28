@@ -1,5 +1,5 @@
-import { ExpandMore, Info, Launch } from "@mui/icons-material"
-import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Chip, Divider, Grid, Link, Paper, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { CheckCircle, Close, ExpandMore, HourglassBottom, Info, Launch, Warning } from "@mui/icons-material"
+import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Chip, Divider, Grid, IconButton, LinearProgress, Link, Modal, Paper, Skeleton, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { useEthers } from "@usedapp/core"
 import { Fragment, useEffect, useState } from "react"
 import { Froggy } from "../models/Froggy"
@@ -10,9 +10,42 @@ import axios from "axios"
 import { CompatibleFrogTraits } from "../models/CompatibleFrogTraits"
 import { Trait } from "../models/Trait"
 import { formatDistanceStrict } from "date-fns";
+import { createStyles, makeStyles } from "@mui/styles";
+import please from '../images/plz.png';
+import hype from '../images/hype.png';
+import uhhh from '../images/uhhh.png';
+import hi from '../images/hi.png';
+import { communityWallet, useUpgradeTrait } from "../client"
+import { ethers } from "ethers"
+import { TraitPreview } from "../models/TraitPreview"
+
+declare var window: any;
+
+const useStyles: any = makeStyles((theme: Theme) => 
+  createStyles({
+    modal: {
+      position: 'absolute' as 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 700,
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.secondary.main,
+      borderRadius: 5,
+      padding: theme.spacing(3),
+      minHeight: 500, 
+      justifyContent: 'space-between',
+      [theme.breakpoints.down('sm')]: {
+        height: '100%',
+        width: '100%'
+      }
+    }
+  })
+);
 
 export default function TraitStudio() {
   const { account } = useEthers();
+  const classes = useStyles();
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const [frogs, setFrogs] = useState<Froggy[]>([]);
@@ -25,10 +58,13 @@ export default function TraitStudio() {
   const [ownedCompatibleTraits, setOwnedCompatibleTraits] = useState<Trait[]>([]);
   const [compatibleTraits, setCompatibleTraits] = useState<CompatibleFrogTraits>();
   const [preview, setPreview] = useState<string>();
+  const [isCombinationTaken, setIsCombinationTaken] = useState(false);
   const [loadingPreview, setLoadingPreview] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [isUpgradeProcessing, setIsUpgradeProcessing] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
+  const { upgrade, upgradeState } = useUpgradeTrait();
 
   useEffect(() => {
     async function loadAccountData(address: string) {
@@ -60,11 +96,24 @@ export default function TraitStudio() {
     }
   }, [account]);
 
+  useEffect(() => {
+    if (upgradeState.status === "Exception" || upgradeState.status === "Fail") {
+      console.log("upgrade error: ", upgradeState.errorMessage);
+      if (upgradeState.errorMessage?.includes("execution reverted")) {
+        setAlertMessage(upgradeState.errorMessage.replace(/^execution reverted:/i, ''));
+        setShowAlert(true);
+      }
+    } else if (upgradeState.status === 'Mining') {
+      setIsUpgradeProcessing(true);
+    }
+  }, [upgradeState])
+
   const onFrogClick = async (frog: Froggy) => {
     setSelectedFrog(frog);
     setSelectedTrait(undefined);
     setPreview(frog.cid2d);
     setCompatibleTraits(undefined);
+    setIsCombinationTaken(false);
 
     try {
       // get trait preview
@@ -78,14 +127,14 @@ export default function TraitStudio() {
   }
 
   const onTraitClick = async (trait: Trait) => {
-    console.log("trait clicked: ", trait);
     setSelectedTrait(trait);
     setPreview('');
     setLoadingPreview(true);
 
     try {
-      const image = (await axios.get<string>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog?.edition}/trait/${trait.id}`)).data;
-      setPreview(image);
+      const traitPreview = (await axios.get<TraitPreview>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog?.edition}/trait/${trait.id}`)).data;
+      setPreview(traitPreview.preview);
+      setIsCombinationTaken(traitPreview.isCombinationTaken);
       setLoadingPreview(false);
     } catch (error) {
       console.log("error getting preview for selected frog and trait combo");
@@ -93,7 +142,7 @@ export default function TraitStudio() {
     }
   }
 
-  const onUpgradeClick = (frog: Froggy) => {
+  const onUpgradeClick = (frog: Froggy, trait: Trait) => {
     setShowUpgradeModal(true);
   }
 
@@ -123,6 +172,38 @@ export default function TraitStudio() {
       addSuffix: true
     })
     return result;
+  }
+
+  const onUpgradeComplete = () => {
+    setShowUpgradeModal(false);
+    setSelectedFrog(undefined);
+    setSelectedTrait(undefined);
+    setIsUpgradeProcessing(false);
+  }
+
+  const onUpgrade = async (selectedFrog: Froggy, selectedTrait: Trait) => {
+    // prompt owner signature
+    // const provider = new ethers.providers.Web3Provider(window.ethereum);
+    // const message = JSON.stringify({ account: account, frogId: selectedFrog.edition, traitId: selectedTrait.id });
+    // const signer = provider.getSigner();
+    // const signature = await signer.signMessage(message);
+    // const address = await signer.getAddress();
+    // store history pending state
+    // await axios.post(
+    //   `${process.env.REACT_APP_API}/history/frog/${selectedFrog.edition}/trait/${selectedTrait.id}`, 
+    //   { 
+    //     message: message,
+    //     signature: signature,
+    //     address: address
+    //   }
+    // );
+    // burn trait item
+    // console.log("selected trait: ", selectedTrait);
+    // const traitItem = traits.find(trait => trait.traitId === selectedTrait.id);
+    // if (account && traitItem) {
+    //   console.log("trait item to burn: ", traitItem);
+    //   await upgrade(account, communityWallet, traitItem.id, 1, []);
+    // }
   }
 
   return (
@@ -176,7 +257,7 @@ export default function TraitStudio() {
                 selectedFrog &&
                 <Stack spacing={3}>
                   <Stack>
-                    <Typography variant='h5'>Froggy #{selectedFrog.edition} compatible traits</Typography>
+                    <Typography variant='h5'>Compatible Traits</Typography>
                     <Typography variant='subtitle1'>Owned traits have a green button you can click to preview</Typography>
                   </Stack>
                   {
@@ -369,7 +450,7 @@ export default function TraitStudio() {
                     loadingPreview && <Skeleton variant='rectangular' animation='wave' height={500}/>  
                   }
                   {
-                    selectedFrog && selectedFrog.isTraitUpgraded &&
+                    selectedFrog.isTraitUpgraded &&
                     <Stack spacing={4} pt={2}>
                         <Stack direction='row' spacing={1} alignItems='center'>
                           <Info color="secondary"/>
@@ -378,9 +459,18 @@ export default function TraitStudio() {
                     </Stack>
                   }
                   {
-                  selectedFrog && selectedTrait && !selectedFrog.isTraitUpgraded && preview &&
+                    isCombinationTaken &&
+                    <Stack spacing={4} pt={2}>
+                        <Stack direction='row' spacing={1} alignItems='center'>
+                          <Info color="secondary"/>
+                          <Typography>Trait combination is already taken</Typography>
+                      </Stack>
+                    </Stack>
+                  }
+                  {
+                  selectedTrait && !selectedFrog.isTraitUpgraded && preview &&
                   <Grid id='buttons' container justifyContent='center' pt={5}>
-                      <Button variant='contained' sx={{height: 50}} onClick={() => onUpgradeClick(selectedFrog)}>
+                      <Button variant='contained' sx={{height: 50}} disabled={isCombinationTaken} onClick={() => onUpgradeClick(selectedFrog, selectedTrait)}>
                           <Typography>Upgrade Frog</Typography>
                       </Button>
                   </Grid>
@@ -415,6 +505,70 @@ export default function TraitStudio() {
           }
         </Grid>
       </Grid>
+      <Modal open={showUpgradeModal}>
+        <Stack className={classes.modal}>
+            <Stack direction="row" justifyContent="space-between" pb={8}>
+                <Typography id='modal-title' variant="h4">Froggy Trait Upgrade</Typography>
+                <IconButton className="cta" size={isSm ? 'small' : 'medium'} color='inherit' onClick={onUpgradeComplete}>
+                    <Close fontSize={isSm ? 'small' : 'medium'}/>
+                </IconButton>
+            </Stack>
+            {
+                selectedFrog && selectedTrait && !isUpgradeProcessing &&
+                <Stack direction='row' pt={3} spacing={1} alignItems='center'>
+                    <Warning color="warning"/>
+                    <Typography>
+                      Upgrading will burn your trait item and apply a trait upgrade on your froggy.
+                      You will not be able to downgrade and retrieve your trait.
+                      Would you like to proceed?
+                    </Typography>
+                </Stack>
+            }
+            <Stack alignItems='center'>
+              { isUpgradeProcessing && upgradeState.status === "Success" && <img src={hype} style={{height: 100, width: 100}} alt='hype'/> }
+              { isUpgradeProcessing && upgradeState.status === "Mining" && <img src={please} style={{height: 100, width: 100}} alt='please'/> }
+              { isUpgradeProcessing && upgradeState.status === "Fail" && <img src={uhhh} style={{height: 100, width: 100}} alt='uhhh'/> }
+            </Stack>
+            {
+                isUpgradeProcessing && upgradeState.status === 'Success' && 
+                <Stack>
+                  <Typography>Your froggy trait is upgraded and your metadata will update shortly on opensea.</Typography>
+                </Stack>
+            }
+            {
+                isUpgradeProcessing && upgradeState && upgradeState.transaction &&
+                <Stack direction='row' spacing={1} alignItems='center'>
+                  {upgradeState.status === "Success" && <CheckCircle/>} 
+                  {upgradeState.status === "Fail" && <Warning/>} 
+                  {upgradeState.status === 'Mining' && <HourglassBottom/>}
+                  <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${upgradeState.transaction?.hash}`} target='_blank' sx={{cursor: 'pointer', textDecoration: 'none'}}>
+                      <Typography id='pair-tx' variant="h6">
+                      Upgrade trait transaction
+                      </Typography>
+                  </Link>
+                </Stack>
+            }
+            {
+                selectedFrog && selectedTrait && !isUpgradeProcessing &&
+                <Stack pb={3}>
+                    <Button variant='contained' disabled={!selectedFrog || !selectedTrait} onClick={() => onUpgrade(selectedFrog, selectedTrait)} sx={{width: 140, height: 45, alignSelf: 'center'}}>
+                        <Typography>Confirm</Typography>
+                    </Button>
+                </Stack>
+            }
+            {
+                selectedFrog && isUpgradeProcessing && upgradeState.status === 'Success' &&
+                <Stack>
+                    <Button variant='contained' onClick={onUpgradeComplete} sx={{width: 140, height: 44, alignSelf: 'center'}}>
+                        <Typography>Done</Typography>
+                    </Button>
+                </Stack>
+            }
+            {
+                upgradeState.status === "Mining" && <LinearProgress  sx={{margin: 2}}/>
+            }
+        </Stack>
+      </Modal>
     </Fragment>
   )
 }
