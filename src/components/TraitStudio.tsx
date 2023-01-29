@@ -105,8 +105,45 @@ export default function TraitStudio() {
       }
     } else if (upgradeState.status === 'Mining') {
       setIsUpgradeProcessing(true);
+
+      // save activity for account, frog and trait id
+      if (selectedFrog && selectedTrait && upgradeState.transaction) {
+        saveActivity(selectedFrog, selectedTrait, upgradeState.transaction.hash);
+      }
     }
   }, [upgradeState])
+
+  const saveActivity = async (frog: Froggy, trait: Trait, tx: string) => {
+    try {
+      console.log("saving activity...");
+      let data = {
+        account: account,
+        transaction: tx,
+        frogId: frog.edition,
+        traitId: trait.id
+      };
+      
+      // prompt admin signature
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const message = JSON.stringify(data);
+      const signer = provider.getSigner();
+      const signature = await signer.signMessage(message);
+      const request = {...data, signature: signature};
+      const historyResponse = await axios.post(`${process.env.REACT_APP_API}/history/traits`, request);
+      const upgradeResponse = await axios.post(`${process.env.REACT_APP_API}/upgrades/pending`, request);
+
+      if (historyResponse.status !== 200 || upgradeResponse.status !== 200) {
+        setAlertMessage("Error saving trait upgrade activity");
+        setShowAlert(true);
+      } else {
+        setAlertMessage("Trait upgrade processing");
+        setShowAlert(true);
+      }
+    } catch (error) {
+      setAlertMessage("Error saving trait upgrade activity");
+      setShowAlert(true);
+    }
+  }
 
   const onFrogClick = async (frog: Froggy) => {
     setSelectedFrog(frog);
@@ -182,28 +219,24 @@ export default function TraitStudio() {
   }
 
   const onUpgrade = async (selectedFrog: Froggy, selectedTrait: Trait) => {
-    // prompt owner signature
-    // const provider = new ethers.providers.Web3Provider(window.ethereum);
-    // const message = JSON.stringify({ account: account, frogId: selectedFrog.edition, traitId: selectedTrait.id });
-    // const signer = provider.getSigner();
-    // const signature = await signer.signMessage(message);
-    // const address = await signer.getAddress();
-    // store history pending state
-    // await axios.post(
-    //   `${process.env.REACT_APP_API}/history/frog/${selectedFrog.edition}/trait/${selectedTrait.id}`, 
-    //   { 
-    //     message: message,
-    //     signature: signature,
-    //     address: address
-    //   }
-    // );
-    // burn trait item
-    // console.log("selected trait: ", selectedTrait);
-    // const traitItem = traits.find(trait => trait.traitId === selectedTrait.id);
-    // if (account && traitItem) {
-    //   console.log("trait item to burn: ", traitItem);
-    //   await upgrade(account, communityWallet, traitItem.id, 1, []);
-    // }
+    // check if frog and trait combination is reserved
+    const api = process.env.REACT_APP_API;
+    const isComboTaken = (await axios.get<boolean>(`${api}/upgrades/frog/${selectedFrog?.edition}/trait/${selectedTrait.id}`)).data;
+    if (isComboTaken) {
+      setAlertMessage("Combination of traits already taken");
+      setShowAlert(true);
+    } else {
+      // burn trait item
+      const traitItem = traits.find(trait => trait.traitId === selectedTrait.id);
+
+      if (!traitItem) {
+        setAlertMessage("Selected trait not owned");
+        setShowAlert(true);
+      } else {
+        console.log("trait item to burn: ", traitItem);
+        await upgrade(account, communityWallet, traitItem.id, 1, []);
+      }
+    }
   }
 
   return (
