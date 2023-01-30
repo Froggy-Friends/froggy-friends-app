@@ -1,5 +1,5 @@
 import { CheckCircle, Close, ExpandMore, HourglassBottom, Info, Launch, Warning } from "@mui/icons-material"
-import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Chip, Divider, Grid, IconButton, LinearProgress, Link, Modal, Paper, Skeleton, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Divider, Grid, IconButton, LinearProgress, Link, Modal, Paper, Skeleton, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { useEthers } from "@usedapp/core"
 import { Fragment, useEffect, useState } from "react"
 import { Froggy } from "../models/Froggy"
@@ -9,15 +9,13 @@ import { History } from "../models/History";
 import axios from "axios"
 import { CompatibleFrogTraits } from "../models/CompatibleFrogTraits"
 import { Trait } from "../models/Trait"
-import { formatDistanceStrict } from "date-fns";
+import { format } from "date-fns";
 import { createStyles, makeStyles } from "@mui/styles";
 import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
-import hi from '../images/hi.png';
 import { communityWallet, useUpgradeTrait } from "../client"
 import { ethers } from "ethers"
-import { TraitPreview } from "../models/TraitPreview"
 
 declare var window: any;
 
@@ -84,7 +82,7 @@ export default function TraitStudio() {
 
       // save activity for account, frog and trait id
       if (selectedFrog && selectedTrait && upgradeState.transaction) {
-        saveActivity(selectedFrog, selectedTrait, upgradeState.transaction.hash);
+        onTransactionPending(selectedFrog, selectedTrait, upgradeState.transaction.hash);
       }
     }
   }, [upgradeState])
@@ -113,7 +111,7 @@ export default function TraitStudio() {
     }
   }
 
-  const saveActivity = async (frog: Froggy, trait: Trait, tx: string) => {
+  const onTransactionPending = async (frog: Froggy, trait: Trait, tx: string) => {
     try {
       console.log("saving activity...");
       let data = {
@@ -212,9 +210,7 @@ export default function TraitStudio() {
 
   const getDate = (dateUtc: string) => {
     const date = new Date(dateUtc);
-    const result = formatDistanceStrict(date, Date.now(), {
-      addSuffix: true
-    })
+    const result = format(date, 'MMM dd');
     return result;
   }
 
