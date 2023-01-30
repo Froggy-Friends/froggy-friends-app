@@ -50,7 +50,6 @@ export default function TraitStudio() {
   const [traits, setTraits] = useState<RibbitItem[]>([]);
   const [history, setHistory] = useState<History[]>([]);
   const [loadingFrogs, setLoadingFrogs] = useState(false);
-  const [loadingTraits, setLoadingTraits] = useState(false);
   const [selectedFrog, setSelectedFrog] = useState<Froggy>();
   const [selectedTrait, setSelectedTrait] = useState<Trait>();
   const [ownedCompatibleTraits, setOwnedCompatibleTraits] = useState<Trait[]>([]);
@@ -93,7 +92,6 @@ export default function TraitStudio() {
       setOwnedCompatibleTraits([]);
       setHistory([]);
       setLoadingFrogs(true);
-      setLoadingTraits(true);
       const froggies = (await axios.get<Owned>(`${process.env.REACT_APP_API}/frog/owned/${address}`)).data.froggies;
       const traits = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/traits/${account}`)).data;
       const history = (await axios.get<History[]>(`${process.env.REACT_APP_API}/history/traits/${account}`)).data;
@@ -101,12 +99,10 @@ export default function TraitStudio() {
       setTraits(traits);
       setHistory(history);
       setLoadingFrogs(false);
-      setLoadingTraits(false);
     } catch (error) {
       setAlertMessage("Issue fetching froggies owned");
       setShowAlert(true);
       setLoadingFrogs(false);
-      setLoadingTraits(false);
     }
   }
 
@@ -164,6 +160,7 @@ export default function TraitStudio() {
     setSelectedTrait(trait);
     setPreview('');
     setLoadingPreview(true);
+    setIsCombinationTaken(false);
 
     try {
       const apiUrl = process.env.REACT_APP_API;
