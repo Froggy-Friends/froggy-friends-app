@@ -1,5 +1,5 @@
 import { CheckCircle, Close, ExpandMore, HourglassBottom, Info, Launch, Warning } from "@mui/icons-material"
-import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Divider, Grid, IconButton, LinearProgress, Link, Modal, Paper, Skeleton, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Divider, Grid, IconButton, LinearProgress, Link, Modal, Paper, Skeleton, Snackbar, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { useEthers } from "@usedapp/core"
 import { Fragment, useEffect, useState } from "react"
 import { Froggy } from "../models/Froggy"
@@ -251,6 +251,14 @@ export default function TraitStudio() {
       setShowAlert(true);
     }
   }
+
+  const onAlertClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setShowAlert(false);
+  };
 
   return (
     <Fragment>
@@ -615,6 +623,18 @@ export default function TraitStudio() {
             }
         </Stack>
       </Modal>
+      <Snackbar
+          open={showAlert} 
+          autoHideDuration={5000} 
+          message={alertMessage} 
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          onClose={onAlertClose}
+          action={
+          <IconButton size='small' aria-label='close' color='inherit' onClick={onAlertClose}>
+              <Close fontSize='small' />
+          </IconButton>
+          }
+      />
     </Fragment>
   )
 }
