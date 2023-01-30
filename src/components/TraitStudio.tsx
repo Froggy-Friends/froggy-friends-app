@@ -16,6 +16,7 @@ import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import { communityWallet, useUpgradeTrait } from "../client"
 import { ethers } from "ethers"
+import { Upgrade } from "../models/Upgrade"
 
 declare var window: any;
 
@@ -120,11 +121,12 @@ export default function TraitStudio() {
       const message = JSON.stringify(data);
       const signer = provider.getSigner();
       const signature = await signer.signMessage(message);
-      const request = {...data, message: message, signature: signature};
-      const historyResponse = await axios.post(`${process.env.REACT_APP_API}/history/traits`, request);
-      const upgradeResponse = await axios.post(`${process.env.REACT_APP_API}/upgrades/pending`, request);
+      const upgradeRequest = {...data, message: message, signature: signature};
+      const upgradeResponse = await axios.post<Upgrade>(`${process.env.REACT_APP_API}/upgrades/pending`, upgradeRequest);
+      const historyRequest = {...upgradeRequest, upgradeId: upgradeResponse.data.id};
+      const historyResponse = await axios.post(`${process.env.REACT_APP_API}/history/traits`, historyRequest);
 
-      if (historyResponse.status !== 200 || upgradeResponse.status !== 200) {
+      if (historyResponse.status !== 201 || upgradeResponse.status !== 201) {
         setAlertMessage("Error saving trait upgrade activity");
         setShowAlert(true);
       } else {
