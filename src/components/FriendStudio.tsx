@@ -14,7 +14,7 @@ import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import hi from '../images/hi.png';
-import { formatDistanceStrict } from "date-fns";
+import { format } from "date-fns";
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -70,7 +70,7 @@ export default function FriendStudio() {
         setHistory([]);
         const owned = (await axios.get<Owned>(`${process.env.REACT_APP_API}/frog/owned/unstaked/${address}`)).data;
         const friends = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/owned/friends/${account}`)).data;
-        const history = (await axios.get<History[]>(`${process.env.REACT_APP_API}/history/${account}`)).data;
+        const history = (await axios.get<History[]>(`${process.env.REACT_APP_API}/history/pairing/${account}`)).data;
         setFrogs(owned.froggies.filter(frog => !frog.isStaked));
         setFriends(friends);
         setHistory(history);
@@ -187,9 +187,7 @@ export default function FriendStudio() {
 
   const getDate = (dateUtc: string) => {
     const date = new Date(dateUtc);
-    const result = formatDistanceStrict(date, Date.now(), {
-      addSuffix: true
-    })
+    const result = format(date, 'MMM dd');
     return result;
   }
 
@@ -305,7 +303,7 @@ export default function FriendStudio() {
                 }
                 {
                   selectedFrog && selectedFriend && !selectedFrog.isPaired &&
-                  <Grid id='buttons' container pt={5}>
+                  <Grid id='buttons' container justifyContent='center' pt={5}>
                       <Button variant='contained' sx={{height: 50}} onClick={() => onPairClick(selectedFrog)}>
                           <Typography>Pair Friend</Typography>
                       </Button>
@@ -366,8 +364,12 @@ export default function FriendStudio() {
             {
                 selectedFriend && !isPairingProcessing &&
                 <Stack direction='row' pt={3} spacing={1} alignItems='center'>
-                    <Info color="secondary"/>
-                    <Typography>Pairing will burn your friend item and apply a staking boost.</Typography>
+                    <Warning color="warning"/>
+                    <Typography>
+                      Pairing will burn your friend item and apply a staking boost.
+                      You will not be able to unpair and retrieve your friend.
+                      Would you like to proceed?
+                    </Typography>
                 </Stack>
             }
             <Stack alignItems='center'>
