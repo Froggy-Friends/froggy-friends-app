@@ -190,14 +190,6 @@ export default function TraitStudio() {
     return selectedFrog?.edition === tokenId ? '4px solid' : '0px';
   }
 
-  const getTraitBorderColor = (id: number): string => {
-    return selectedTrait?.id === id ? theme.palette.primary.main : "transparent";
-  }
-
-  const getTraitBorder = (id: number): string => {
-    return selectedTrait?.id === id ? '4px solid' : '0px';
-  }
-
   const isTraitOwned = (trait: Trait): boolean => {
     return ownedCompatibleTraits.some(t => t.id === trait.id);
   }
