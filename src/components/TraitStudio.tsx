@@ -72,7 +72,6 @@ export default function TraitStudio() {
 
   useEffect(() => {
     if (upgradeState.status === "Exception" || upgradeState.status === "Fail") {
-      console.log("upgrade error: ", upgradeState.errorMessage);
       if (upgradeState.errorMessage?.includes("execution reverted")) {
         setAlertMessage(upgradeState.errorMessage.replace(/^execution reverted:/i, ''));
         setShowAlert(true);
@@ -113,7 +112,6 @@ export default function TraitStudio() {
 
   const onTransactionPending = async (frog: Froggy, trait: Trait, tx: string) => {
     try {
-      console.log("saving activity...");
       let data = {
         account: account,
         transaction: tx,
@@ -157,7 +155,8 @@ export default function TraitStudio() {
       setCompatibleTraits(compatibleTraits);
       setOwnedCompatibleTraits(compatibleTraitsOwned);
     } catch (error) {
-      console.log("error getting compatible traits for selected frog...");
+      setAlertMessage("Error getting compatible traits for selected frog");
+      setShowAlert(true);
     }
   }
 
@@ -172,15 +171,13 @@ export default function TraitStudio() {
       const preview = (await axios.get<string>(`${apiUrl}/frog/preview/${frogId}/trait/${trait.id}`)).data;
       const isComboTaken = (await axios.get<boolean>(`${apiUrl}/frog/exists/${frogId}/${trait.id}`)).data;
       const isUpgradeTaken = (await axios.get<boolean>(`${apiUrl}/upgrades/pending/${frogId}/${trait.id}`)).data;
-      console.log("trait click...");
-      console.log("is combo taken: ", isComboTaken);
-      console.log("is upgrade taken: ", isUpgradeTaken);
       setPreview(preview);
       setIsCombinationTaken(isComboTaken || isUpgradeTaken);
       setLoadingPreview(false);
     } catch (error) {
-      console.log("error getting preview for selected frog and trait combo");
       setLoadingPreview(false);
+      setAlertMessage("Error getting preview");
+      setShowAlert(true);
     }
   }
 
@@ -220,22 +217,18 @@ export default function TraitStudio() {
     setSelectedTrait(undefined);
     setIsUpgradeProcessing(false);
     if (account) {
-      console.log("refreshing account data: ", account);
       loadAccountData(account);
     }
   }
 
   const onUpgrade = async (selectedFrog: Froggy, selectedTrait: Trait) => {
     try {
-      console.log("on upgrade...");
       // check if frog and trait combination is reserved
       const apiUrl = process.env.REACT_APP_API;
       const frogId = selectedFrog.edition;
       const traitId = selectedTrait.id;
       const isComboTaken = (await axios.get<boolean>(`${apiUrl}/frog/exists/${frogId}/${traitId}`)).data;
       const isUpgradeTaken = (await axios.get<boolean>(`${apiUrl}/upgrades/pending/${frogId}/${traitId}`)).data;
-      console.log("is combo taken: ", isComboTaken);
-      console.log("is upgrade taken: ", isUpgradeTaken);
       setIsCombinationTaken(isComboTaken || isUpgradeTaken);
 
       if (isComboTaken) {
@@ -251,11 +244,9 @@ export default function TraitStudio() {
         setAlertMessage("Selected trait not owned");
         setShowAlert(true);
       } else {
-        console.log("trait item to burn: ", traitItem);
         await upgrade(account, communityWallet, traitItem.id, 1, []);
       }
     } catch (error) {
-      console.log("error on upgrade: ", error);
       setAlertMessage("Error processing trait upgrade");
       setShowAlert(true);
     }
