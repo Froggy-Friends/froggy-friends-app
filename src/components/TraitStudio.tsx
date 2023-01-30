@@ -67,30 +67,6 @@ export default function TraitStudio() {
   const { upgrade, upgradeState } = useUpgradeTrait();
 
   useEffect(() => {
-    async function loadAccountData(address: string) {
-      try {
-        setFrogs([]);
-        setTraits([]);
-        setOwnedCompatibleTraits([]);
-        setHistory([]);
-        setLoadingFrogs(true);
-        setLoadingTraits(true);
-        const froggies = (await axios.get<Owned>(`${process.env.REACT_APP_API}/frog/owned/${address}`)).data.froggies;
-        const traits = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/traits/${account}`)).data;
-        const history = (await axios.get<History[]>(`${process.env.REACT_APP_API}/history/traits/${account}`)).data;
-        setFrogs(froggies);
-        setTraits(traits);
-        setHistory(history);
-        setLoadingFrogs(false);
-        setLoadingTraits(false);
-      } catch (error) {
-        setAlertMessage("Issue fetching froggies owned");
-        setShowAlert(true);
-        setLoadingFrogs(false);
-        setLoadingTraits(false);
-      }
-    }
-
     if (account) {
       loadAccountData(account);
     }
@@ -113,6 +89,30 @@ export default function TraitStudio() {
     }
   }, [upgradeState])
 
+  async function loadAccountData(address: string) {
+    try {
+      setFrogs([]);
+      setTraits([]);
+      setOwnedCompatibleTraits([]);
+      setHistory([]);
+      setLoadingFrogs(true);
+      setLoadingTraits(true);
+      const froggies = (await axios.get<Owned>(`${process.env.REACT_APP_API}/frog/owned/${address}`)).data.froggies;
+      const traits = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/traits/${account}`)).data;
+      const history = (await axios.get<History[]>(`${process.env.REACT_APP_API}/history/traits/${account}`)).data;
+      setFrogs(froggies);
+      setTraits(traits);
+      setHistory(history);
+      setLoadingFrogs(false);
+      setLoadingTraits(false);
+    } catch (error) {
+      setAlertMessage("Issue fetching froggies owned");
+      setShowAlert(true);
+      setLoadingFrogs(false);
+      setLoadingTraits(false);
+    }
+  }
+
   const saveActivity = async (frog: Froggy, trait: Trait, tx: string) => {
     try {
       console.log("saving activity...");
@@ -128,7 +128,7 @@ export default function TraitStudio() {
       const message = JSON.stringify(data);
       const signer = provider.getSigner();
       const signature = await signer.signMessage(message);
-      const request = {...data, signature: signature};
+      const request = {...data, message: message, signature: signature};
       const historyResponse = await axios.post(`${process.env.REACT_APP_API}/history/traits`, request);
       const upgradeResponse = await axios.post(`${process.env.REACT_APP_API}/upgrades/pending`, request);
 
@@ -163,15 +163,22 @@ export default function TraitStudio() {
     }
   }
 
-  const onTraitClick = async (trait: Trait) => {
+  const onTraitClick = async (frog: Froggy, trait: Trait) => {
     setSelectedTrait(trait);
     setPreview('');
     setLoadingPreview(true);
 
     try {
-      const traitPreview = (await axios.get<TraitPreview>(`${process.env.REACT_APP_API}/frog/preview/${selectedFrog?.edition}/trait/${trait.id}`)).data;
-      setPreview(traitPreview.preview);
-      setIsCombinationTaken(traitPreview.isCombinationTaken);
+      const apiUrl = process.env.REACT_APP_API;
+      const frogId = frog.edition;
+      const preview = (await axios.get<string>(`${apiUrl}/frog/preview/${frogId}/trait/${trait.id}`)).data;
+      const isComboTaken = (await axios.get<boolean>(`${apiUrl}/frog/exists/${frogId}/${trait.id}`)).data;
+      const isUpgradeTaken = (await axios.get<boolean>(`${apiUrl}/upgrades/pending/${frogId}/${trait.id}`)).data;
+      console.log("trait click...");
+      console.log("is combo taken: ", isComboTaken);
+      console.log("is upgrade taken: ", isUpgradeTaken);
+      setPreview(preview);
+      setIsCombinationTaken(isComboTaken || isUpgradeTaken);
       setLoadingPreview(false);
     } catch (error) {
       console.log("error getting preview for selected frog and trait combo");
@@ -216,18 +223,33 @@ export default function TraitStudio() {
     setSelectedFrog(undefined);
     setSelectedTrait(undefined);
     setIsUpgradeProcessing(false);
+    if (account) {
+      console.log("refreshing account data: ", account);
+      loadAccountData(account);
+    }
   }
 
   const onUpgrade = async (selectedFrog: Froggy, selectedTrait: Trait) => {
-    // check if frog and trait combination is reserved
-    const api = process.env.REACT_APP_API;
-    const isComboTaken = (await axios.get<boolean>(`${api}/upgrades/frog/${selectedFrog?.edition}/trait/${selectedTrait.id}`)).data;
-    if (isComboTaken) {
-      setAlertMessage("Combination of traits already taken");
-      setShowAlert(true);
-    } else {
+    try {
+      console.log("on upgrade...");
+      // check if frog and trait combination is reserved
+      const apiUrl = process.env.REACT_APP_API;
+      const frogId = selectedFrog.edition;
+      const traitId = selectedTrait.id;
+      const isComboTaken = (await axios.get<boolean>(`${apiUrl}/frog/exists/${frogId}/${traitId}`)).data;
+      const isUpgradeTaken = (await axios.get<boolean>(`${apiUrl}/upgrades/pending/${frogId}/${traitId}`)).data;
+      console.log("is combo taken: ", isComboTaken);
+      console.log("is upgrade taken: ", isUpgradeTaken);
+      setIsCombinationTaken(isComboTaken || isUpgradeTaken);
+
+      if (isComboTaken) {
+        setAlertMessage("Combination of traits already taken");
+        setShowAlert(true);
+        return;
+      }
+
       // burn trait item
-      const traitItem = traits.find(trait => trait.traitId === selectedTrait.id);
+      const traitItem = traits.find(trait => trait.traitId === traitId);
 
       if (!traitItem) {
         setAlertMessage("Selected trait not owned");
@@ -236,6 +258,10 @@ export default function TraitStudio() {
         console.log("trait item to burn: ", traitItem);
         await upgrade(account, communityWallet, traitItem.id, 1, []);
       }
+    } catch (error) {
+      console.log("error on upgrade: ", error);
+      setAlertMessage("Error processing trait upgrade");
+      setShowAlert(true);
     }
   }
 
@@ -313,7 +339,7 @@ export default function TraitStudio() {
                               color="primary" 
                               sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
                               disabled={!isTraitOwned(bg)}
-                              onClick={() => onTraitClick(bg)}>
+                              onClick={() => onTraitClick(selectedFrog, bg)}>
                                 {bg.name}
                               </Button>
                             </Grid>
@@ -340,7 +366,7 @@ export default function TraitStudio() {
                               color="primary" 
                               sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
                               disabled={!isTraitOwned(body)}
-                              onClick={() => onTraitClick(body)}>
+                              onClick={() => onTraitClick(selectedFrog, body)}>
                                 {body.name}
                               </Button>
                             </Grid>
@@ -368,7 +394,7 @@ export default function TraitStudio() {
                               color="primary" 
                               sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
                               disabled={!isTraitOwned(eye)}
-                              onClick={() => onTraitClick(eye)}>
+                              onClick={() => onTraitClick(selectedFrog, eye)}>
                                 {eye.name}
                               </Button>
                             </Grid>
@@ -396,7 +422,7 @@ export default function TraitStudio() {
                                 color="primary" 
                                 sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
                                 disabled={!isTraitOwned(mouth)}
-                                onClick={() => onTraitClick(mouth)}>
+                                onClick={() => onTraitClick(selectedFrog, mouth)}>
                                 {mouth.name}
                               </Button>
                             </Grid>
@@ -424,7 +450,7 @@ export default function TraitStudio() {
                                 color="primary" 
                                 sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
                                 disabled={!isTraitOwned(shirt)}
-                                onClick={() => onTraitClick(shirt)}>
+                                onClick={() => onTraitClick(selectedFrog, shirt)}>
                                 {shirt.name}
                                 </Button>
                             </Grid>
@@ -452,7 +478,7 @@ export default function TraitStudio() {
                                 color="primary" 
                                 sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
                                 disabled={!isTraitOwned(hat)}
-                                onClick={() => onTraitClick(hat)}>
+                                onClick={() => onTraitClick(selectedFrog, hat)}>
                                 {hat.name}
                               </Button>
                             </Grid>
