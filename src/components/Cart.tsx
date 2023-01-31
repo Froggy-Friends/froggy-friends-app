@@ -403,6 +403,14 @@ export default function Cart() {
               </Typography>
             </Link>
           }
+          {
+            bundleBuyState.status === "Success" &&
+            <Stack direction='row' justifyContent='center' pb={3}>
+              <Button variant='contained' color='primary' onClick={onPurchaseModalClose}>
+                <Typography>Done</Typography>
+              </Button>
+            </Stack>
+          }
           { (approveSpenderState.status === "Mining" || bundleBuyState.status === "Mining") && <LinearProgress  sx={{margin: 2}}/>}
         </Box>
       </Modal>
