@@ -123,10 +123,8 @@ export default function TraitStudio() {
       const signature = await signer.signMessage(message);
       const upgradeRequest = {...data, message: message, signature: signature};
       const upgradeResponse = await axios.post<Upgrade>(`${process.env.REACT_APP_API}/upgrades/pending`, upgradeRequest);
-      const historyRequest = {...upgradeRequest, upgradeId: upgradeResponse.data.id};
-      const historyResponse = await axios.post(`${process.env.REACT_APP_API}/history/traits`, historyRequest);
 
-      if (historyResponse.status !== 201 || upgradeResponse.status !== 201) {
+      if (upgradeResponse.status !== 201) {
         setAlertMessage("Error saving trait upgrade activity");
         setShowAlert(true);
       } else {
