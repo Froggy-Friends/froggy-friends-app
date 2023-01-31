@@ -185,20 +185,6 @@ export default function FrogDetails() {
                                             <Button variant='contained' color="primary" sx={{height: 50, width: 130}}onClick={() => downloadAsset(frog.cid2d, `${frog.edition}.png`)}>Download</Button>
                                         </Stack>
                                     }
-                                    {
-                                        frog.cidPixel && 
-                                        <Stack alignItems='center' spacing={5} pb={5}>
-                                            <img src={frog.cidPixel} alt='' width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
-                                            <Button variant='contained' color="primary" sx={{height: 50, width: 130}} onClick={() => downloadAsset(frog.cidPixel, `${frog.edition}-pixel.png`)}>Download</Button>
-                                        </Stack>
-                                    }
-                                    {
-                                        frog.cid3d && 
-                                        <Stack alignItems='center' spacing={5} pb={5}>
-                                            <img src={frog.cid3d} alt='' width={isSm ? '100%' : 200} style={{borderRadius: 5}}/>
-                                            <Button variant='contained' color="primary" sx={{height: 50, width: 130}} onClick={() => downloadAsset(frog.cid3d, `${frog.edition}-3d.png`)}>Download</Button>
-                                        </Stack>
-                                    }
                                 </Stack>
                             </Stack>
                         </Grid>
