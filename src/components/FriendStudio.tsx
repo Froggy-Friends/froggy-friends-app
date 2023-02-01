@@ -429,7 +429,11 @@ export default function FriendStudio() {
                 selectedFrog && !isUnpairProcessing && 
                 <Stack direction='row' pt={3} spacing={1} alignItems='center'>
                   <Info color="secondary"/>
-                  <Typography>Unpairing will remove your staking boost and friend</Typography>
+                  <Typography>
+                    Unpairing will remove your staking boost and friend. 
+                    This actions is permanent and you will not be able to recover your friend.
+                    Do you wish to proceed?
+                  </Typography>
                 </Stack>
             }
             <Stack alignItems='center'>
