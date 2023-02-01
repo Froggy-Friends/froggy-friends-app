@@ -164,8 +164,9 @@ export default function TraitStudio() {
 
     try {
       const apiUrl = process.env.REACT_APP_API;
+      const factoryUrl = process.env.REACT_APP_FROGGY_FACTORY;
       const frogId = frog.edition;
-      const preview = (await axios.get<string>(`${apiUrl}/frog/preview/${frogId}/trait/${trait.id}`)).data;
+      const preview = (await axios.get<string>(`${factoryUrl}/stream/preview/${frogId}/${trait.id}`)).data;
       const isComboTaken = (await axios.get<boolean>(`${apiUrl}/frog/exists/${frogId}/${trait.id}`)).data;
       const isUpgradeTaken = (await axios.get<boolean>(`${apiUrl}/upgrades/pending/${frogId}/${trait.id}`)).data;
       setPreview(preview);
