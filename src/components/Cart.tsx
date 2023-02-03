@@ -164,7 +164,6 @@ export default function Cart() {
       for (const item of items) {
         refreshItem(item.id);
       }
-      dispatch(empty());
       dispatch(toggle(false));
     }
   }, [bundleBuyState, dispatch, items])
@@ -238,6 +237,7 @@ export default function Cart() {
       const ids = items.map(item => item.id);
       const amounts = items.map(item => item.amount);
       await bundleBuy(ids, amounts);
+      dispatch(empty());
     } catch (error) {
       console.log("checkout error: ", error);
       setAlertMessage("Checkout error");

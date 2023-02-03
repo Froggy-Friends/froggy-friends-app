@@ -365,8 +365,8 @@ export default function ItemDetails() {
                             <Typography fontWeight='bold' display='flex' justifyContent={isXs ? 'center' : 'left'} pb={3}>Compatible Traits</Typography>
                             <Stack direction={isXs ? 'column' : 'row'} spacing={2}>
                                 {
-                                    compatibleTraits.map((trait) => (
-                                        <Stack alignItems='center' spacing={3} pb={5}>
+                                    compatibleTraits.map((trait, index) => (
+                                        <Stack key={index} alignItems='center' spacing={3} pb={5}>
                                             <img src={trait.imageTransparent} alt='' width={200} style={{borderRadius: 5, backgroundColor: '#93d0aa'}}/>
                                             <Typography>{trait.name}</Typography>
                                             <Chip label={trait.layer}/>
