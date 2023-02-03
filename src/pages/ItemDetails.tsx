@@ -19,6 +19,7 @@ import { compareAsc, formatDistanceStrict } from 'date-fns';
 import { useEthers } from "@usedapp/core";
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from "../client";
 import { kFormatter } from "../utils";
+import { Trait } from "../models/Trait";
 const {REACT_APP_RIBBIT_ITEM_CONTRACT} = process.env;
 
 const useStyles: any = makeStyles((theme: Theme) => 
@@ -67,6 +68,7 @@ export default function ItemDetails() {
     const [filteredItemOwners, setFilteredItemOwners] = useState<string[]>([]);
     const [tickets, setTickets] = useState('');
     const [search, setSearch] = useState('');
+    const [compatibleTraits, setCompatibleTraits] = useState<Trait[]>([]);
     const debouncedSearch = useDebounce(search, 500);
     const debouncedTickets = useDebounce(tickets, 500);
     const isSpendingApproved = useSpendingApproved(`${account}`);
@@ -111,9 +113,26 @@ export default function ItemDetails() {
         }
       }, [collabBuyState])
 
+    useEffect(() => {
+        async function getCompatibleTraits(traitId: number) {
+            try {
+                const response = await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/compatible/${traitId}`);
+                console.log("comp traits: ", response.data);
+                setCompatibleTraits(response.data);
+            } catch (error) {
+                console.log("get compatible traits error: ", error);
+                setCompatibleTraits([]);
+            }
+        }
+
+        if (item && item.isTrait && item.traitId) {
+            getCompatibleTraits(item.traitId);
+        }
+    }, [item]);
+
     async function getItem(id: string) {
         try {
-          const response = await axios.get<RibbitItem>(`${process.env.REACT_APP_API}/items/${id}`);
+          const response = await axios.get<RibbitItem>(`${process.env.REACT_APP_API}/items/${id}/details`);
           let item = response.data;
           setItem(item);
           setItemEnded(compareAsc(item.endDate, Date.now()) === -1);
@@ -155,11 +174,6 @@ export default function ItemDetails() {
             return '';
         }
         
-    }
-
-    const getRarity = (item: RibbitItem) => {
-        const attribute = item.attributes.find(attribute => attribute.trait_type === 'Rarity');
-        return attribute ? attribute.value : '';
     }
 
     const getAddToCartDisabled = (item: RibbitItem) => {
@@ -330,21 +344,38 @@ export default function ItemDetails() {
                     </Grid>
                 </Grid>
                 <Grid id='bottom-row' container justifyContent='space-between'>
-                    <Grid id='tags' item xl={4} lg={4} md={4} sm={12} xs={12} pb={5}>
-                        <Stack spacing={1}>
+                    <Grid id='tags' item xl={4} lg={4} md={4} sm={12} xs={12} pb={10}>
+                        <Stack spacing={1} alignItems={isXs ? 'center' : 'left'}>
                             <Typography fontWeight='bold'>Tags</Typography>
                             {
                                 item && 
-                                <Grid container spacing={2}>
+                                <Grid container justifyContent={isXs ? 'center' : 'left'} spacing={2}>
                                     <Grid item ml={-2}><Chip label={item.category}/></Grid>
                                     <Grid item><Chip label={item.isOnSale && item.minted !== item.supply ? 'On Sale' : 'Off Sale'}/></Grid>
-                                    { item.isBoost && <Grid item><Chip label={`${item.percentage}% Boost`}/></Grid>}
-                                    { item.community && <Grid item><Chip label='Community'/></Grid>}
-                                    <Grid item><Chip label={getRarity(item)}/></Grid>
+                                    { item.isBoost && <Grid item><Chip label={`${item.percent}% Boost`}/></Grid>}
+                                    { item.isCommunity && <Grid item><Chip label='Community'/></Grid>}
+                                    <Grid item><Chip label={item.rarity}/></Grid>
                                 </Grid>
                             }
                         </Stack>
                     </Grid>
+                    {
+                        compatibleTraits.length > 0 &&
+                        <Grid id='compatible-traits' item xl={7} lg={7} md={12} sm={12} xs={12}>
+                            <Typography fontWeight='bold' display='flex' justifyContent={isXs ? 'center' : 'left'} pb={3}>Compatible Traits</Typography>
+                            <Stack direction={isXs ? 'column' : 'row'} spacing={2}>
+                                {
+                                    compatibleTraits.map((trait, index) => (
+                                        <Stack key={index} alignItems='center' spacing={3} pb={5}>
+                                            <img src={trait.imageTransparent} alt='' width={200} style={{borderRadius: 5, backgroundColor: '#93d0aa'}}/>
+                                            <Typography>{trait.name}</Typography>
+                                            <Chip label={trait.layer}/>
+                                        </Stack>
+                                    ))
+                                }
+                            </Stack>
+                        </Grid>
+                    }
                     {
                         itemOwners.length > 0 && 
                         <Grid id='owners' item xl={7} lg={7} md={7} sm={12} xs={12}>

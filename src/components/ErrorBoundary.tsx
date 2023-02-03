@@ -31,7 +31,7 @@ export class ErrorBoundary extends Component {
         <Grid container direction='column' bgcolor='#181818' height='100vh' alignItems='center' pt={5}>
           <Typography variant='h4' p={3} sx={{color: '#ebedf1'}}>Oops something went wrong</Typography>
           <Typography variant='h5' p={3} sx={{color: '#ebedf1'}}>An alert has been sent to the team. Please refresh your page.</Typography>
-          <img src={uhh} height='10%'/>
+          <img src={uhh} alt='Error' height='10%'/>
         </Grid>
       )
     }

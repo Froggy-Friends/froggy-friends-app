@@ -1,9 +1,8 @@
 import { Fragment, useEffect, useState } from 'react';
-import { useEthers, useTokenBalance } from '@usedapp/core';
+import { useEthers } from '@usedapp/core';
 import { makeStyles, createStyles } from '@mui/styles';
 import { Fade, Grid, Typography, IconButton, Button, Theme, Modal, Backdrop, Box, Link, LinearProgress, Snackbar, useTheme, useMediaQuery, Paper, Stack, TableContainer, Table, TableBody, TableRow, TableCell } from "@mui/material";
-import { BigNumber } from 'ethers';
-import { commify, formatEther } from "ethers/lib/utils";
+import { commify } from "ethers/lib/utils";
 import { cartItems, cartOpen, empty, remove, toggle } from '../redux/cartSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { RibbitItem } from '../models/RibbitItem';
@@ -14,6 +13,8 @@ import ribbit from '../images/ribbit.gif';
 import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -92,8 +93,10 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 
 export default function Cart() {
+  const { account } = useEthers();
   const classes = useStyles();
   const theme = useTheme();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isCartOpen = useAppSelector(cartOpen);
   const items = useAppSelector(cartItems);
@@ -105,11 +108,26 @@ export default function Cart() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
-  const { account } = useEthers();
-  const ribbitBalance: BigNumber = useTokenBalance(process.env.REACT_APP_RIBBIT_CONTRACT, account) || BigNumber.from(0);
+  const [ribbitBalance, setRibbitBalance] = useState<number>(0);
   const isSpendingApproved = useSpendingApproved(`${account}`);
   const { approveSpender, approveSpenderState } = useApproveSpender();
   const { bundleBuy, bundleBuyState } = useBundleBuy();
+
+  useEffect(() => {
+    async function getRibbitBalance(account: string) {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API}/ribbit/${account}`);
+        setRibbitBalance(response.data);
+      } catch (error) {
+        console.log("get ribbit balance error: ", error);
+        setRibbitBalance(0);
+      }
+    }
+
+    if (account) {
+      getRibbitBalance(account);
+    }
+  }, [account]);
   
   useEffect(() => {
     if (approveSpenderState.status === "Exception" || approveSpenderState.status === "Fail") {
@@ -142,22 +160,26 @@ export default function Cart() {
       dispatch(toggle(false));
       setShowPurchaseModal(true);
     } else if (bundleBuyState.status === "Success") {
-      dispatch(empty());
+      // refresh items
+      for (const item of items) {
+        refreshItem(item.id);
+      }
       dispatch(toggle(false));
     }
-  }, [bundleBuyState, dispatch])
+  }, [bundleBuyState, dispatch, items])
 
   useEffect(() => {
     if (items) {
       const total = items.reduce((acc, item) => { return acc + (item.price * item.amount)}, 0);
       setTotal(total);
-
-      const etherFormat = formatEther(ribbitBalance);
-      const number = +etherFormat;
-      const remaining = number - total;
+      const remaining = ribbitBalance - total;
       setRemaining(remaining);
     }
   }, [items, ribbitBalance]);
+
+  async function refreshItem(id: number) {
+    await axios.put(`${process.env.REACT_APP_API}/items/${id}/refresh`);
+  }
 
   const onRemoveItem = (item: RibbitItem) => {
     dispatch(remove(item));
@@ -167,10 +189,8 @@ export default function Cart() {
     dispatch(toggle(false));
   }
 
-  const formatBalance = (balance: BigNumber) => {
-    const etherFormat = formatEther(balance);
-    const number = +etherFormat;
-    return commify(number.toFixed(0));
+  const formatBalance = (balance: number) => {
+    return commify(balance.toFixed(0));
   }
 
   const formatPrice = (item: RibbitItem) => {
@@ -180,6 +200,10 @@ export default function Cart() {
   const onPurchaseModalClose = (event: React.SyntheticEvent | Event, reason?: string) => {
     if (reason !== 'backdropClick') {
       setShowPurchaseModal(false);
+      // navigate to studio
+      if (bundleBuyState.status === "Success") {
+        navigate("/studio", { state: { view: 'traits' }});
+      }
     }
   }
 
@@ -213,6 +237,7 @@ export default function Cart() {
       const ids = items.map(item => item.id);
       const amounts = items.map(item => item.amount);
       await bundleBuy(ids, amounts);
+      dispatch(empty());
     } catch (error) {
       console.log("checkout error: ", error);
       setAlertMessage("Checkout error");
@@ -377,6 +402,14 @@ export default function Cart() {
                 Purchase transaction {bundleBuyState.status === "Success" && <Check/>} {bundleBuyState.status === "Fail" && <Warning/>}
               </Typography>
             </Link>
+          }
+          {
+            bundleBuyState.status === "Success" &&
+            <Stack direction='row' justifyContent='center' pb={3}>
+              <Button variant='contained' color='primary' onClick={onPurchaseModalClose}>
+                <Typography>Done</Typography>
+              </Button>
+            </Stack>
           }
           { (approveSpenderState.status === "Mining" || bundleBuyState.status === "Mining") && <LinearProgress  sx={{margin: 2}}/>}
         </Box>

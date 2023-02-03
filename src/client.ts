@@ -15,10 +15,19 @@ const froggyContract = new Contract(`${process.env.REACT_APP_CONTRACT}`, abi);
 const ribbitContract = new Contract(`${process.env.REACT_APP_RIBBIT_CONTRACT}`, ribbitAbi);
 const stakingContract = new Contract(`${process.env.REACT_APP_STAKING_CONTRACT}`, stakingAbi);
 const ribbitItemContract = new Contract(`${process.env.REACT_APP_RIBBIT_ITEM_CONTRACT}`, ribbitItemAbi);
+export const communityWallet = "0x6b01ad68ab6f53128b7a6fe7e199b31179a4629a";
 console.log("froggy address: ", froggyContract.address);
 console.log("ribbit address: ", ribbitContract.address);
 console.log("staking address: ", stakingContract.address);
 console.log("ribbit item address: ", ribbitItemContract.address);
+
+export function useUpgradeTrait() {
+  const { send, state } = useContractFunction(ribbitItemContract, 'safeTransferFrom');
+  return {
+    upgrade: send,
+    upgradeState: state
+  }
+}
 
 export function usePair() {
   const { send, state } = useContractFunction(stakingContract, 'pairFriend');

@@ -57,6 +57,7 @@ export default function Market() {
   const [filterAvailable, setFilterAvailable] = useState<boolean>(true);
   const [filterCommunity, setFilterCommunity] = useState<boolean>(false);
   const [filterOwned, setFilterOwned] = useState<boolean>(false);
+  const [filterTraits, setFilterTraits] = useState<boolean>(true);
   const [filterGLP, setFilterGLP] = useState<boolean>(true);
   const [filterFriends, setFilterFriends] = useState<boolean>(true);
   const [filterCollabFriends, setFilterCollabFriends] = useState<boolean>(true);
@@ -88,6 +89,7 @@ export default function Market() {
     filterAvailable, 
     filterCommunity, 
     filterOwned,
+    filterTraits,
     filterGLP,
     filterFriends,
     filterCollabFriends,
@@ -102,7 +104,7 @@ export default function Market() {
   async function getItems() {
     try {
       setLoadingItems(true);
-      const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/contract`);
+      const response = await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items`);
       let items = response.data;
       setItems(items);
       setLoadingItems(false);
@@ -139,8 +141,9 @@ export default function Market() {
         return false;
       }
       if (filterAvailable && (!item.isOnSale || item.minted === item.supply)) return false;
-      if (filterCommunity && !item.community) return false;
+      if (filterCommunity && !item.isCommunity) return false;
       if (filterOwned && !ownedNfts.find((nft: any) => +nft.tokenId === item.id)) return false;
+      if (!filterTraits && item.category === 'traits') return false;
       if (!filterGLP && item.category === 'lilies') return false;
       if (!filterFriends && item.category === 'friends') return false;
       if (!filterCollabFriends && item.category === 'collabs') return false;
@@ -195,6 +198,9 @@ export default function Market() {
     setFilterOwned(event.target.checked);
   };
 
+  const traitsFilterChanged =(event: ChangeEvent<HTMLInputElement>) => {
+    setFilterTraits(event.target.checked);
+  }
   const glpFilterChanged = (event: ChangeEvent<HTMLInputElement>) => {
     setFilterGLP(event.target.checked);
   }
@@ -249,6 +255,10 @@ export default function Market() {
               </Grid>
               <Grid id='categories-title' container pt={5} pb={3}>
                 <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='h6' fontWeight='bold'>Categories</Typography></Grid>
+              </Grid>
+              <Grid id='traits' container alignItems='center' pb={3}>
+                <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Traits</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Checkbox color='primary' checked={filterTraits} onChange={traitsFilterChanged}/></Grid>
               </Grid>
               <Grid id='glp' container alignItems='center' pb={3}>
                 <Grid id='filter' item xl={6} lg={6} md={6}><Typography variant='body1'>Golden Lily Pad</Typography></Grid>
@@ -371,7 +381,7 @@ export default function Market() {
               {
                 filteredItems.length > 0 &&
                 filteredItems.map((item: RibbitItem) => {
-                  return <Grid key={item.name} item xl={2.4} lg={2.4} md={3} sm={4} xs={isDown425 ? 12 : 6} pl={2} pb={2}>
+                  return <Grid key={item.id} item xl={2.4} lg={2.4} md={3} sm={4} xs={isDown425 ? 12 : 6} pl={2} pb={2}>
                     <Item item={item} selected={false}/>
                   </Grid>
                 })
