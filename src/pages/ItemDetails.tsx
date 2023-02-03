@@ -363,17 +363,17 @@ export default function ItemDetails() {
                         compatibleTraits.length > 0 &&
                         <Grid id='compatible-traits' item xl={7} lg={7} md={12} sm={12} xs={12}>
                             <Typography fontWeight='bold' display='flex' justifyContent={isXs ? 'center' : 'left'} pb={3}>Compatible Traits</Typography>
-                            <Stack direction={isXs ? 'column' : 'row'} spacing={2}>
+                            <Grid container justifyContent={isXs ? 'center' : 'start'} spacing={2}>
                                 {
                                     compatibleTraits.map((trait, index) => (
-                                        <Stack key={index} alignItems='center' spacing={3} pb={5}>
+                                        <Grid key={index} item display='flex' flexDirection='column' alignItems='center' spacing={2} pb={5} xl={4}>
                                             <img src={trait.imageTransparent} alt='' width={200} style={{borderRadius: 5, backgroundColor: '#93d0aa'}}/>
-                                            <Typography>{trait.name}</Typography>
+                                            <Typography p={3}>{trait.name}</Typography>
                                             <Chip label={trait.layer}/>
-                                        </Stack>
+                                        </Grid>
                                     ))
                                 }
-                            </Stack>
+                            </Grid>
                         </Grid>
                     }
                     {
