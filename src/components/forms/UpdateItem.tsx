@@ -84,27 +84,25 @@ export default function UpdateItem(props: ListItemProps) {
                 setTraits(response.data);
             } catch (error) {
                 console.log("error fetching traits: ", error);
-            }
-        }
-
-        async function getCompatibleTraits(traitId: number) {
-            try {
-                const response = await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/compatible/${traitId}`);
-                setCompatibleTraits(response.data.map(t => t.name));
-            } catch (error) {
-                console.log("get compatible traits error: ", error);
-                setCompatibleTraits([]);
+                setTraits([]);
             }
         }
 
         if (selectedItem.traitLayer) {
             getTraits(selectedItem.traitLayer);
         }
-        if (selectedItem.traitId) {
-            getCompatibleTraits(selectedItem.traitId);
-        }
 
-    }, [selectedItem.traitLayer, selectedItem.traitId]);
+    }, [selectedItem.traitLayer]);
+
+    async function getCompatibleTraits(traitId: number) {
+        try {
+            const response = await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/compatible/${traitId}`);
+            setCompatibleTraits(response.data.map(t => t.name));
+        } catch (error) {
+            console.log("get compatible traits error: ", error);
+            setCompatibleTraits([]);
+        }
+    }
 
     const onListItemSubmit = async (event: ChangeEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -153,6 +151,9 @@ export default function UpdateItem(props: ListItemProps) {
         const newItem = items.find(item => item.id === id);
         if (newItem) {
             setSelectedItem(newItem);
+            if (newItem.traitId) {
+                getCompatibleTraits(newItem.traitId);
+            }
         }
     }
 
@@ -171,6 +172,10 @@ export default function UpdateItem(props: ListItemProps) {
     }
 
     const onMenuChange = (event: SelectChangeEvent) => {
+        if (event.target.name === 'traitLayer' && event.target.value !== selectedItem.traitLayer) {
+            setTraits([]);
+            setCompatibleTraits([]);
+        }
         setSelectedItem({
             ...selectedItem,
             [event.target.name]: event.target.value as string
