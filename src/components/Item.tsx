@@ -34,7 +34,7 @@ export default function Item (props: ItemProps) {
 
     return (
         <Card sx={{height: '100%', border: selected ? '5px solid' : '0px', borderColor: getBorderColor()}}>
-            <CardMedia component='img' image={item.image} alt='' height={isDown425 ? 300 : 200}/>
+            <CardMedia component='img' image={`${item.image}?img-width=400&img-height=400`} alt='' height={isDown425 ? 300 : 200}/>
             <CardContent sx={{bgcolor: theme.palette.common.white}}>
                 <Typography variant='body1' fontWeight='bold' pb={1} pt={1}>{item.name}</Typography>
                 <Grid container item justifyContent='space-between'>

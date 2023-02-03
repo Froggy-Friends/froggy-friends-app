@@ -404,7 +404,7 @@ export default function Staking() {
               owned.froggies.map((froggy: Froggy) => {
                 return <Grid key={froggy.edition} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
                   <Card sx={{height: '100%', border: getBorderWidth(froggy.edition), borderColor: getBorderColor(froggy.edition)}} onClick={() => onSelectFroggy(froggy)}>
-                    <CardMedia component='img' image={froggy.cid2d} alt='Froggy'/>
+                    <CardMedia component='img' image={`${froggy.cid2d}?img-width=400&img-height=400`} alt='Froggy'/>
                     <CardContent sx={{bgcolor: theme.palette.common.white, paddingBottom: 0}}>
                       <Typography variant='body1' fontWeight='bold' pb={1} pt={1}>{froggy.name}</Typography>
                       <Grid container item justifyContent='space-between'>
