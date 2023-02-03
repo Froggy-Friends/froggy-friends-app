@@ -109,13 +109,6 @@ export default function Header(props: HeaderProps) {
   return (
       <Fragment>
         <AppBar position="fixed" color="inherit">
-          {
-            isDesktop &&
-            <Stack direction='row' spacing={10} p={1} justifyContent='center' bgcolor={theme.palette.primary.main}>
-              <Typography variant="h5" fontWeight='bold' color={theme.palette.common.black}>Our marketplace with Snag has launched!</Typography>
-              <Typography variant="h5" fontWeight='bold' color={theme.palette.common.black}>Our swapping platform with Swapbox has launched!</Typography>
-            </Stack>
-          }
           <Toolbar sx={{bgcolor: theme.palette.background.default, pb: theme.spacing(1)}}>
             <Container maxWidth='xl' disableGutters={isMobile}>
               <Stack id="header" direction='row' justifyContent={isXs ? 'end' : 'space-between'} alignItems="center" p={0.5}>
