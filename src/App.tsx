@@ -56,7 +56,7 @@ export default function App() {
               <BrowserRouter>
                 <Header isAdmin={isAdmin} onAdminChange={onAdminChange}/>
                 <Routes>
-                  <Route path="/staking" element={<Staking/>} />
+                  <Route path="/portfolio" element={<Staking/>} />
                   <Route path="/market" element={<Market/>}/>
                   <Route path="/studio" element={<Studio/>}/>
                   <Route path="/spaces" element={<Spaces/>}/>
@@ -68,7 +68,7 @@ export default function App() {
                       <Admin/>
                     </ProtectedRoute>
                   } />
-                  <Route path="*" element={ <Navigate to="/staking" replace />} />
+                  <Route path="*" element={ <Navigate to="/portfolio" replace />} />
                 </Routes>
                 <Footer/>
               </BrowserRouter>
