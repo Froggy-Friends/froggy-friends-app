@@ -1,9 +1,9 @@
 import { useEthers } from '@usedapp/core';
 import { makeStyles, createStyles } from '@mui/styles';
-import { Box, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip, Switch, Tooltip } from "@mui/material";
+import { Box, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, Paper, Skeleton, Stack, Chip, Switch, Tooltip } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from 'react';
-import { Check, Close, FilterList, Info, InfoOutlined, Launch, Warning } from '@mui/icons-material';
+import { Check, Close, FilterList, InfoOutlined, Launch, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useStakingStarted, useFroggiesStaked } from '../client';
 import { commify } from '@ethersproject/units';
 import { Froggy } from '../models/Froggy';
@@ -18,8 +18,6 @@ import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import hi from '../images/hi.png';
 import banner from '../images/pond.png';
-import logo from '../images/logo.png';
-import biz from '../images/biz.png'
 import { useNavigate } from 'react-router-dom';
 import { RibbitItem } from '../models/RibbitItem';
 
@@ -76,7 +74,6 @@ export default function Staking() {
   const navigate = useNavigate();
   const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isBelow320 = useMediaQuery(theme.breakpoints.down(321));
   const [froggiesToStake, setFroggiesToStake] = useState<number[]>([]);
   const [froggiesToUnstake, setFroggiesToUnstake] = useState<number[]>([]);
   const [showAlert, setShowAlert] = useState(false);
@@ -85,8 +82,8 @@ export default function Staking() {
   const [showUnstakeModal, setShowUnstakeModal] = useState(false);
   const [showClaimModal, setShowClamModal] = useState(false);
   const [showFrogs, setShowFrogs] = useState(true);
-  const [showFriends, setShowFriends] = useState(false);
-  const [showTraits, setShowTraits] = useState(false);
+  const [showFriends, setShowFriends] = useState(true);
+  const [showTraits, setShowTraits] = useState(true);
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
   const [friends, setFriends] = useState<RibbitItem[]>([]);
@@ -389,46 +386,39 @@ export default function Staking() {
                   </Tooltip>
                 </Grid>
               </Grid>
-              <Grid id='stats' container item direction='column' alignItems='start' pt={5}>
+              <Grid id='stats' container item direction='column' alignItems={isMobile ? 'center' : 'start'} pt={5}>
                 <Typography pb={5} variant='h6' fontWeight='bold'>Staking Stats</Typography>
-                <Grid id='all-staked' container item direction='column' alignItems='start' pb={4}>
-                  <Typography variant='body2' color='secondary' textAlign={isMobile ? 'center' : 'start'} pb={2}>Collection Staked</Typography>
+                <Grid id='all-staked' container item direction='column' alignItems={isMobile ? 'center' : 'start'} pb={4}>
+                  <Typography variant='body2' color='secondary' textAlign={isMobile ? 'center' : 'start'} pb={2}>Collectively Staked</Typography>
                   <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                     <img src={think} style={{height: 50, width: 50}} alt='Total'/>
                     <Typography variant='h6' color='secondary' pl={2}>{froggiesStakedPercentage()}</Typography>
                   </Grid>
                 </Grid>
-                <Grid id='balance' container item direction='column' alignItems='start' pb={4}>
+                <Grid id='balance' container item direction='column' alignItems={isMobile ? 'center' : 'start'} pb={4}>
                   <Typography variant='body2' color='secondary' textAlign={isMobile ? 'center' : 'start'} pb={2}>Claimed Ribbit</Typography>
                   <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                     <img src={chest} style={{height: 50, width: 50}} alt='Balance'/>
                     <Typography variant='h6' color='secondary' pl={2}>{formatBalance(ribbitBalance)}</Typography>
                   </Grid>
                 </Grid>
-                <Grid id='staked' container item direction='column' alignItems='start' pb={4}>
+                <Grid id='staked' container item direction='column' alignItems={isMobile ? 'center' : 'start'} pb={4}>
                   <Typography variant='body2' color='secondary' textAlign={isMobile ? 'center' : 'start'} pb={2}>Claimable Ribbit</Typography>
                   <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                     <img src={rain} style={{height: 50, width: 50}} alt='Staked'/>
                     <Typography variant='h6' color='secondary' pl={2}>{formatBalance(stakingBalance)}</Typography>
                   </Grid>
                 </Grid>
-                <Grid id='ribbit-per-day' container item direction='column' alignItems='start' pb={4}>
-                  <Typography variant='body2' color='secondary' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit / Day</Typography>
+                <Grid id='ribbit-per-day' container item direction='column' alignItems={isMobile ? 'center' : 'start'} pb={4}>
+                  <Typography variant='body2' color='secondary' textAlign={isMobile ? 'center' : 'start'} pb={2}>Ribbit Per Day</Typography>
                   <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
                     <img src={ribbit} style={{height: 50, width: 50}} alt='Day'/>
                     <Typography variant='h6' color='secondary'>{owned.totalRibbit}</Typography>
                   </Grid>
                 </Grid>
-                <Grid id='frogs-owned' container item direction='column' alignItems='start' pb={4}>
-                  <Typography variant='body2' color='secondary' textAlign={isMobile ? 'center' : 'start'} pb={2}>Frogs Owned</Typography>
-                  <Grid item display='flex' justifyContent={isMobile ? 'center' : 'start'} alignItems='center'>
-                    <img src={logo} style={{height: 50, width: 50}} alt='Owned'/>
-                    <Typography variant='h6' color='secondary' pl={1}>{owned.froggies.length}</Typography>
-                  </Grid>
-                </Grid>
               </Grid>
             </Grid>
-          <Grid id='assets' container item xl={9} lg={9} md={9} sm={9} xs={12}>
+          <Grid id='assets' container item xl={9} lg={9} md={9} sm={9} xs={12} height='fit-content'>
             {
               loading && 
               new Array(20).fill('').map((item, index) => {
