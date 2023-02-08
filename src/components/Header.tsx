@@ -11,6 +11,7 @@ import logo from '../images/logo.png';
 import metamask from '../images/metamask.webp';
 import brave from '../images/brave.svg';
 import Cart from "./Cart";
+import axios from "axios";
 
 declare var window: any;
 
@@ -44,10 +45,11 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 interface HeaderProps {
   isAdmin: boolean;
+  onAdminChange: Function;
 }
 
 export default function Header(props: HeaderProps) {
-  const { isAdmin } = props;
+  const { isAdmin, onAdminChange } = props;
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const cartItemCount = useAppSelector(cartCount);
@@ -87,7 +89,24 @@ export default function Header(props: HeaderProps) {
     if (showLoginModal && account) {
       setShowLoginModal(false);
     }
-  }, [account, showLoginModal])
+  }, [account, showLoginModal]);
+
+  useEffect(() => {
+    async function getAdmins(account: string) {
+      try {
+        const admins = (await axios.get<string[]>(`${process.env.REACT_APP_API}/items/admins`)).data;
+        const match = admins.some(admin => admin.toLowerCase() === account.toLowerCase());
+        onAdminChange(match);
+      } catch (error) {
+        onAdminChange(false);
+      }
+    }
+
+    if (account) {
+      getAdmins(account);
+    }
+
+  }, [account]);
 
   const onCartClick = () => {
     // toggle items modal
