@@ -1,9 +1,9 @@
 import { useEthers } from '@usedapp/core';
 import { makeStyles, createStyles } from '@mui/styles';
-import { Box, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip } from "@mui/material";
+import { Box, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip, Switch } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { useEffect, useState } from 'react';
-import { Check, Close, Info, Launch, Warning } from '@mui/icons-material';
+import { Check, Close, FilterList, Info, Launch, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useStakingStarted, useFroggiesStaked } from '../client';
 import { commify } from '@ethersproject/units';
 import { Froggy } from '../models/Froggy';
@@ -309,15 +309,20 @@ export default function Staking() {
   const onItemClick = (frog: Froggy) => {
     navigate(`/frog/${frog.edition}`);
   }
-  
-  return (
-    <Grid id='app' className={classes.app} container direction='column' pb={30}>
-      <Paper elevation={3}>
-        <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
-      </Paper>
-      <Container maxWidth='xl' sx={{pt: 2}}>
-        <Grid id='staking' container direction='column' textAlign='center'>
-            <Grid container p={isBelow320 ? 0 : 3}>
+
+  const onFrogsChanged = () => {
+
+  }
+
+  const onFriendsChanged = () => {
+    
+  }
+
+  const onTraitsChanged = () => {
+    
+  }
+
+  {/* <Grid container p={isBelow320 ? 0 : 3}>
               <Grid id='stats' container item alignItems='end' xl={9} lg={9} md={9} sm={12} xs={12} pb={3}>
                 <Grid id='all-staked' container item direction='column' alignItems='start' xl={2} lg={2} md={3} sm={3} xs={6} pb={4}>
                   <Typography variant='body1' color='secondary' fontWeight='bold' textAlign={isMobile ? 'center' : 'start'} pb={2}>Collection Staked</Typography>
@@ -375,13 +380,38 @@ export default function Staking() {
                   </ButtonGroup>
                 </Grid>
               }
+            </Grid> */}
+  
+  return (
+    <Grid id='app' className={classes.app} container direction='column' pb={30}>
+      <Paper elevation={3}>
+        <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
+      </Paper>
+      <Container maxWidth='xl' sx={{pt: 2}}>
+        <Grid id='staking' container direction='row' textAlign='center' justifyContent='space-between' pt={5}>
+          <Grid id='left-panel' container item direction='column' xl={2} lg={2} md={2} sm={12} xs={12}>
+              <Grid id='filter-title' container pb={5} alignItems='center'>
+                <Grid id='filter' display='flex' justifyContent='start' item xl={6} lg={6} md={6}><Typography variant='h5' fontWeight='bold'>Assets</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><FilterList/></Grid>
+              </Grid>
+              <Grid id='available' container justifyContent='space-between' pb={3}>
+                <Grid display='flex' justifyContent='start' item xl={6} lg={6} md={6}><Typography variant='body1'>Frogs</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={true} onChange={onFrogsChanged}/></Grid>
+              </Grid>
+              <Grid id='community' container pb={3}>
+                <Grid display='flex' justifyContent='start' item xl={6} lg={6} md={6}><Typography variant='body1'>Friends</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={true} onChange={onFriendsChanged}/></Grid>
+              </Grid>
+              <Grid id='owned' container pb={3}>
+                <Grid display='flex' justifyContent='start' item xl={6} lg={6} md={6}><Typography variant='body1'>Traits</Typography></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={true} onChange={onTraitsChanged}/></Grid>
+              </Grid>
             </Grid>
-          { account && <Typography align='left' p={2} display='flex'><Info fontSize='small' sx={{mr: 1}}/> Click on froggy friends you wish to stake or unstake.</Typography> }
-          <Grid id='froggies' container item xl={12} lg={12} md={12} sm={12} xs={12}>
+          <Grid id='froggies' container item xl={9} lg={9} md={9} sm={12} xs={12}>
             {
               loading && 
               new Array(20).fill('').map((item, index) => {
-                return <Grid key={index} item xl={2.4} lg={2.4} md={3} sm={6} xs={12} pl={2} pb={2}>
+                return <Grid key={index} item xl={2.5} lg={2.5} md={2.5} sm={6} xs={12} pl={2} pb={2}>
                   <Skeleton variant='rectangular' animation='wave' height={300}/>  
                 </Grid>
               })
@@ -402,9 +432,9 @@ export default function Staking() {
             }
             {
               owned.froggies.map((froggy: Froggy) => {
-                return <Grid key={froggy.edition} item xl={2} lg={2} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                return <Grid key={froggy.edition} item xl={2.5} lg={2.5} md={2.5} sm={6} xs={12} p={2} minHeight={300}>
                   <Card sx={{height: '100%', border: getBorderWidth(froggy.edition), borderColor: getBorderColor(froggy.edition)}} onClick={() => onSelectFroggy(froggy)}>
-                    <CardMedia component='img' image={`${froggy.cid2d}?img-width=400&img-height=400`} alt='Froggy'/>
+                    <CardMedia component='img' image={`${froggy.cid2d}?img-width=400&img-height=400`} alt='Froggy' sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}/>
                     <CardContent sx={{bgcolor: theme.palette.common.white, paddingBottom: 0}}>
                       <Typography variant='body1' fontWeight='bold' pb={1} pt={1}>{froggy.name}</Typography>
                       <Grid container item justifyContent='space-between'>

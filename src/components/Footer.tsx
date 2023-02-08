@@ -77,7 +77,7 @@ export default function Footer() {
           </Grid>
           <Grid container direction={isTinyMobile ? "column" : "row"} justifyContent='center' pt={2} maxWidth={500}>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/staking")}>Stake</Typography>
+              <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/staking")}>Portfolio</Typography>
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
               <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/market")}>Market</Typography>
