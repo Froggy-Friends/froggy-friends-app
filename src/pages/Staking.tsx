@@ -1,9 +1,9 @@
 import { useEthers } from '@usedapp/core';
 import { makeStyles, createStyles } from '@mui/styles';
-import { Box, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip, Switch } from "@mui/material";
+import { Box, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip, Switch, Tooltip } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from 'react';
-import { Check, Close, FilterList, Info, Launch, Warning } from '@mui/icons-material';
+import { Check, Close, FilterList, Info, InfoOutlined, Launch, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useStakingStarted, useFroggiesStaked } from '../client';
 import { commify } from '@ethersproject/units';
 import { Froggy } from '../models/Froggy';
@@ -424,6 +424,29 @@ export default function Staking() {
               <Grid id='owned' container pb={3} alignItems='center' justifyContent='space-between'>
                 <Grid display='flex' justifyContent='start' item xl={6} lg={6} md={6}><Typography variant='body1'>Traits</Typography></Grid>
                 <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={showTraits} onChange={onTraitsChanged}/></Grid>
+              </Grid>
+              <Grid id='stake-buttons' container item direction='column' alignItems='start' pt={5}>
+                <Grid item pt={2} pb={2}>
+                  <Button variant='contained' color='primary' onClick={() => onClaim()}>
+                    <Typography variant='body2'>Claim</Typography>
+                  </Button>
+                </Grid>
+                <Grid container item pt={2} pb={2} alignItems='center'>
+                  <Button variant='contained' color='primary' disabled={froggiesToStake.length === 0} onClick={() => onStake()}>
+                    <Typography variant='body2'>Stake {froggiesToStake.length || ''}</Typography>
+                  </Button>
+                  <Tooltip title='Select unstaked frogs to enable staking' sx={{ml: 2}}>
+                    <InfoOutlined fontSize='small'/>
+                  </Tooltip>
+                </Grid>
+                <Grid container item pt={2} pb={2} alignItems='center'>
+                  <Button variant='contained' color='primary' disabled={froggiesToUnstake.length === 0} onClick={() => onUnstake()}>
+                    <Typography variant='body2'>Unstake {froggiesToUnstake.length || ''}</Typography>
+                  </Button>
+                  <Tooltip title='Select staked frogs to enable unstaking' sx={{ml: 2}}>
+                    <InfoOutlined fontSize='small'/>
+                  </Tooltip>
+                </Grid>
               </Grid>
             </Grid>
           <Grid id='assets' container item xl={9} lg={9} md={9} sm={9} xs={12}>
