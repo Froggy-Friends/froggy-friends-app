@@ -11,6 +11,7 @@ import logo from '../images/logo.png';
 import metamask from '../images/metamask.webp';
 import brave from '../images/brave.svg';
 import Cart from "./Cart";
+import axios from "axios";
 
 declare var window: any;
 
@@ -44,10 +45,11 @@ const useStyles: any = makeStyles((theme: Theme) =>
 
 interface HeaderProps {
   isAdmin: boolean;
+  onAdminChange: Function;
 }
 
 export default function Header(props: HeaderProps) {
-  const { isAdmin } = props;
+  const { isAdmin, onAdminChange } = props;
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const cartItemCount = useAppSelector(cartCount);
@@ -87,7 +89,24 @@ export default function Header(props: HeaderProps) {
     if (showLoginModal && account) {
       setShowLoginModal(false);
     }
-  }, [account, showLoginModal])
+  }, [account, showLoginModal]);
+
+  useEffect(() => {
+    async function getAdmins(account: string) {
+      try {
+        const admins = (await axios.get<string[]>(`${process.env.REACT_APP_API}/items/admins`)).data;
+        const match = admins.some(admin => admin.toLowerCase() === account.toLowerCase());
+        onAdminChange(match);
+      } catch (error) {
+        onAdminChange(false);
+      }
+    }
+
+    if (account) {
+      getAdmins(account);
+    }
+
+  }, [account]);
 
   const onCartClick = () => {
     // toggle items modal
@@ -121,7 +140,7 @@ export default function Header(props: HeaderProps) {
                   }
                 </Stack>
                 <Stack id='links' direction='row' display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' spacing={2}>
-                    <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => navigate("/staking")}>Stake</Typography>
+                    <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => navigate("/staking")}>Portfolio</Typography>
                     <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => navigate("/market")}>Shop</Typography>
                     <Typography className="link" variant="h5" color={getLinkColor('/leaderboard')} onClick={() => navigate("/leaderboard")}>Board</Typography>
                     <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => navigate("/studio")}>Studio</Typography>
@@ -235,7 +254,7 @@ export default function Header(props: HeaderProps) {
               </Grid>
             </Grid>
             <Grid item pb={3}>
-              <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => {navigate("/staking"); setSidemenuOpen(false)}}>Stake</Typography>
+              <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => {navigate("/staking"); setSidemenuOpen(false)}}>Portfolio</Typography>
             </Grid>
             <Grid item pb={3}>
               <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => {navigate("/market"); setSidemenuOpen(false)}}>Shop</Typography>

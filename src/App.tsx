@@ -1,4 +1,4 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useMemo, useState } from 'react';
 import { Provider } from 'react-redux';
 import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import { CssBaseline, PaletteMode, ThemeProvider, useMediaQuery } from '@mui/material';
@@ -18,9 +18,6 @@ import FrogDetails from './pages/FrogDetails';
 import BoardMobile from './pages/BoardMobile';
 import Studio from './pages/Studio';
 import Spaces from './pages/Spaces';
-import axios from 'axios';
-
-declare var window: any;
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -45,22 +42,9 @@ export default function App() {
   const theme = useMemo(() => getTheme(mode === 'dark'), [mode])
   const isSm = useMediaQuery(theme.breakpoints.down("md"));
 
-  useEffect(() => {
-    async function getAdmins(account: string) {
-      try {
-        const admins = (await axios.get<string[]>(`${process.env.REACT_APP_API}/items/admins`)).data;
-        const match = admins.some(admin => admin.toLowerCase() === account.toLowerCase());
-        setIsAdmin(match);
-      } catch (error) {
-        setIsAdmin(false);
-      }
-    }
-
-    if (window && window.ethereum) {
-      getAdmins(window.ethereum.selectedAddress);
-    }
-
-  }, []);
+  const onAdminChange = (admin: boolean) => {
+    setIsAdmin(admin);
+  }
 
   return (
     <ErrorBoundary>
@@ -70,9 +54,9 @@ export default function App() {
             <CssBaseline/>
             <DAppProvider config={config}>
               <BrowserRouter>
-                <Header isAdmin={isAdmin}/>
+                <Header isAdmin={isAdmin} onAdminChange={onAdminChange}/>
                 <Routes>
-                  <Route path="/staking" element={<Staking/>} />
+                  <Route path="/portfolio" element={<Staking/>} />
                   <Route path="/market" element={<Market/>}/>
                   <Route path="/studio" element={<Studio/>}/>
                   <Route path="/spaces" element={<Spaces/>}/>
@@ -84,7 +68,7 @@ export default function App() {
                       <Admin/>
                     </ProtectedRoute>
                   } />
-                  <Route path="*" element={ <Navigate to="/staking" replace />} />
+                  <Route path="*" element={ <Navigate to="/portfolio" replace />} />
                 </Routes>
                 <Footer/>
               </BrowserRouter>
