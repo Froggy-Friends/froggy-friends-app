@@ -407,30 +407,30 @@ export default function Staking() {
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
       <Container maxWidth='xl' sx={{pt: 2}}>
-        <Grid id='staking' container direction='row' textAlign='center' justifyContent='space-between' pt={5}>
-          <Grid id='left-panel' container item direction='column' xl={2} lg={2} md={2} sm={12} xs={12}>
-              <Grid id='filter-title' container pb={5} alignItems='center'>
+        <Grid id='portfolio' container direction='row' textAlign='center' justifyContent='space-between' pt={5}>
+          <Grid id='left-panel' container item direction='column' xl={2} lg={2} md={2} sm={3} xs={12}>
+              <Grid id='filter-title' container pb={5} alignItems='center' justifyContent='space-between'>
                 <Grid id='filter' display='flex' justifyContent='start' item xl={6} lg={6} md={6}><Typography variant='h5' fontWeight='bold'>Assets</Typography></Grid>
                 <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><FilterList/></Grid>
               </Grid>
-              <Grid id='available' container justifyContent='space-between' pb={3}>
+              <Grid id='available' container pb={3} alignItems='center' justifyContent='space-between'>
                 <Grid display='flex' justifyContent='start' item xl={6} lg={6} md={6}><Typography variant='body1'>Frogs</Typography></Grid>
                 <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={showFrogs} onChange={onFrogsChanged}/></Grid>
               </Grid>
-              <Grid id='community' container pb={3}>
+              <Grid id='community' container pb={3} alignItems='center' justifyContent='space-between'>
                 <Grid display='flex' justifyContent='start' item xl={6} lg={6} md={6}><Typography variant='body1'>Friends</Typography></Grid>
                 <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={showFriends} onChange={onFriendsChanged}/></Grid>
               </Grid>
-              <Grid id='owned' container pb={3}>
+              <Grid id='owned' container pb={3} alignItems='center' justifyContent='space-between'>
                 <Grid display='flex' justifyContent='start' item xl={6} lg={6} md={6}><Typography variant='body1'>Traits</Typography></Grid>
                 <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={showTraits} onChange={onTraitsChanged}/></Grid>
               </Grid>
             </Grid>
-          <Grid id='assets' container item xl={9} lg={9} md={9} sm={12} xs={12}>
+          <Grid id='assets' container item xl={9} lg={9} md={9} sm={9} xs={12}>
             {
               loading && 
               new Array(20).fill('').map((item, index) => {
-                return <Grid key={index} item xl={3} lg={3} md={3} sm={6} xs={12} pl={2} pb={2}>
+                return <Grid key={index} item xl={3} lg={3} md={4} sm={6} xs={12} pl={2} pb={2}>
                   <Skeleton variant='rectangular' animation='wave' height={300}/>  
                 </Grid>
               })
@@ -451,7 +451,7 @@ export default function Staking() {
             }
             {
               showFrogs && owned.froggies.map((froggy: Froggy) => {
-                return <Grid key={froggy.edition} item xl={3} lg={3} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                return <Grid key={froggy.edition} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={300}>
                   <Card sx={{height: '100%', border: getBorderWidth(froggy.edition), borderColor: getBorderColor(froggy.edition)}} onClick={() => onSelectFroggy(froggy)}>
                     <CardMedia component='img' image={`${froggy.cid2d}?img-width=400&img-height=400`} alt='Froggy' sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}/>
                     <CardContent sx={{bgcolor: theme.palette.common.white, paddingBottom: 0}}>
@@ -478,7 +478,7 @@ export default function Staking() {
             }
             {
               showFriends && friends.map((friend) => {
-                return <Grid key={friend.id} item xl={3} lg={3} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                return <Grid key={friend.id} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={300}>
                 <Card sx={{height: '100%'}}>
                   <CardMedia component='img' image={`${friend.image}?img-width=400&img-height=400`} alt='Friend' 
                     sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}
@@ -498,7 +498,7 @@ export default function Staking() {
             }
             {
               showTraits && traits.map((trait) => {
-                return <Grid key={trait.id} item xl={3} lg={3} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                return <Grid key={trait.id} item xl={3} lg={3} md={4} sm={6} xs={12} p={2} minHeight={300}>
                 <Card sx={{height: '100%'}}>
                   <CardMedia component='img' image={`${trait.imageTransparent}?img-width=400&img-height=400`} alt='Friend' 
                     sx={{bgcolor: '#93d0aa', cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}
