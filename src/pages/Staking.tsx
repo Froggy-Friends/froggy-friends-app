@@ -2,7 +2,7 @@ import { useEthers } from '@usedapp/core';
 import { makeStyles, createStyles } from '@mui/styles';
 import { Box, Grid, IconButton, LinearProgress, Modal, Snackbar, Theme, useMediaQuery, useTheme, Card, CardContent, CardMedia, Container, ButtonGroup, Paper, Skeleton, Stack, Chip, Switch } from "@mui/material";
 import { Button, Link, Typography } from "@mui/material";
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Check, Close, FilterList, Info, Launch, Warning } from '@mui/icons-material';
 import { useSetApprovalForAll, useStake, useUnstake, useClaim, useStakingStarted, useFroggiesStaked } from '../client';
 import { commify } from '@ethersproject/units';
@@ -21,6 +21,7 @@ import banner from '../images/pond.png';
 import logo from '../images/logo.png';
 import biz from '../images/biz.png'
 import { useNavigate } from 'react-router-dom';
+import { RibbitItem } from '../models/RibbitItem';
 
 const formatBalance = (balance: number) => {
   return commify(balance.toFixed(0));
@@ -83,8 +84,12 @@ export default function Staking() {
   const [showStakeModal, setShowStakeModal] = useState(false);
   const [showUnstakeModal, setShowUnstakeModal] = useState(false);
   const [showClaimModal, setShowClamModal] = useState(false);
+  const [showFrogs, setShowFrogs] = useState(true);
+  const [showFriends, setShowFriends] = useState(false);
+  const [showTraits, setShowTraits] = useState(false);
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
+  const [friends, setFriends] = useState<RibbitItem[]>([]);
   const { account } = useEthers();
   const [ribbitBalance, setRibbitBalance] = useState<number>(0);
   const [stakingBalance, setStakingBalance] = useState<number>(0);
@@ -162,13 +167,17 @@ export default function Staking() {
     try {
       setLoading(true);
       const ownedData = (await axios.get(`${process.env.REACT_APP_API}/frog/owned/${address}`)).data;
+      const friends = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/owned/friends/${account}`)).data;
       const ribbit = (await axios.get(`${process.env.REACT_APP_API}/ribbit/${account}`)).data;
       const staked = (await axios.get(`${process.env.REACT_APP_API}/ribbit/staked/${account}`)).data;
+      console.log("friends: ", friends);
       setOwned(ownedData);
+      setFriends(friends);
       setRibbitBalance(ribbit);
       setStakingBalance(staked);
       setLoading(false);
     } catch (error) {
+      setFriends([]);
       setRibbitBalance(0);
       setStakingBalance(0);
       setAlertMessage("Issue fetching froggies owned");
@@ -310,16 +319,20 @@ export default function Staking() {
     navigate(`/frog/${frog.edition}`);
   }
 
-  const onFrogsChanged = () => {
-
+  const onFriendClick = (friend: RibbitItem) => {
+    navigate(`/item/${friend.id}`);
   }
 
-  const onFriendsChanged = () => {
-    
+  const onFrogsChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setShowFrogs(event.target.checked);
   }
 
-  const onTraitsChanged = () => {
-    
+  const onFriendsChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setShowFriends(event.target.checked);
+  }
+
+  const onTraitsChanged = (event: ChangeEvent<HTMLInputElement>) => {
+    setShowTraits(event.target.checked);
   }
 
   {/* <Grid container p={isBelow320 ? 0 : 3}>
@@ -396,22 +409,22 @@ export default function Staking() {
               </Grid>
               <Grid id='available' container justifyContent='space-between' pb={3}>
                 <Grid display='flex' justifyContent='start' item xl={6} lg={6} md={6}><Typography variant='body1'>Frogs</Typography></Grid>
-                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={true} onChange={onFrogsChanged}/></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={showFrogs} onChange={onFrogsChanged}/></Grid>
               </Grid>
               <Grid id='community' container pb={3}>
                 <Grid display='flex' justifyContent='start' item xl={6} lg={6} md={6}><Typography variant='body1'>Friends</Typography></Grid>
-                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={true} onChange={onFriendsChanged}/></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={showFriends} onChange={onFriendsChanged}/></Grid>
               </Grid>
               <Grid id='owned' container pb={3}>
                 <Grid display='flex' justifyContent='start' item xl={6} lg={6} md={6}><Typography variant='body1'>Traits</Typography></Grid>
-                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={true} onChange={onTraitsChanged}/></Grid>
+                <Grid id='filter-icon' item xl={6} lg={6} md={6} display='flex' justifyContent='center'><Switch checked={showTraits} onChange={onTraitsChanged}/></Grid>
               </Grid>
             </Grid>
-          <Grid id='froggies' container item xl={9} lg={9} md={9} sm={12} xs={12}>
+          <Grid id='assets' container item xl={9} lg={9} md={9} sm={12} xs={12}>
             {
               loading && 
               new Array(20).fill('').map((item, index) => {
-                return <Grid key={index} item xl={2.5} lg={2.5} md={2.5} sm={6} xs={12} pl={2} pb={2}>
+                return <Grid key={index} item xl={3} lg={3} md={3} sm={6} xs={12} pl={2} pb={2}>
                   <Skeleton variant='rectangular' animation='wave' height={300}/>  
                 </Grid>
               })
@@ -431,8 +444,8 @@ export default function Staking() {
               </Stack>
             }
             {
-              owned.froggies.map((froggy: Froggy) => {
-                return <Grid key={froggy.edition} item xl={2.5} lg={2.5} md={2.5} sm={6} xs={12} p={2} minHeight={300}>
+              showFrogs && owned.froggies.map((froggy: Froggy) => {
+                return <Grid key={froggy.edition} item xl={3} lg={3} md={3} sm={6} xs={12} p={2} minHeight={300}>
                   <Card sx={{height: '100%', border: getBorderWidth(froggy.edition), borderColor: getBorderColor(froggy.edition)}} onClick={() => onSelectFroggy(froggy)}>
                     <CardMedia component='img' image={`${froggy.cid2d}?img-width=400&img-height=400`} alt='Froggy' sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}/>
                     <CardContent sx={{bgcolor: theme.palette.common.white, paddingBottom: 0}}>
@@ -455,6 +468,26 @@ export default function Staking() {
                     </CardContent>
                   </Card>
                 </Grid>
+              })
+            }
+            {
+              showFriends && friends.map((friend) => {
+                return <Grid key={friend.id} item xl={3} lg={3} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                <Card sx={{height: '100%'}}>
+                  <CardMedia component='img' image={`${friend.image}?img-width=400&img-height=400`} alt='Friend' 
+                    sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}
+                    onClick={() => onFriendClick(friend)}
+                  />
+                  <CardContent sx={{bgcolor: theme.palette.common.white, paddingBottom: 0}}>
+                    <Typography variant='body1' fontWeight='bold' pb={1} pt={1}>{friend.name}</Typography>
+                    <Grid container item justifyContent='center'>
+                      <Button variant='outlined' color='inherit' onClick={() => onFriendClick(friend)}>
+                        <Typography variant='body2'>MORE</Typography>
+                      </Button>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
               })
             }
           </Grid>
