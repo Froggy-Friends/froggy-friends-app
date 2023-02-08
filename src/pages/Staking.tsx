@@ -90,6 +90,7 @@ export default function Staking() {
   const [loading, setLoading] = useState(false);
   const [owned, setOwned] = useState<Owned>({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
   const [friends, setFriends] = useState<RibbitItem[]>([]);
+  const [traits, setTraits] = useState<RibbitItem[]>([]);
   const { account } = useEthers();
   const [ribbitBalance, setRibbitBalance] = useState<number>(0);
   const [stakingBalance, setStakingBalance] = useState<number>(0);
@@ -166,18 +167,23 @@ export default function Staking() {
   async function loadAccountData(address: string) {
     try {
       setLoading(true);
+      setOwned({froggies:[], totalRibbit: 0, allowance: 0, isStakingApproved: false});
+      setFriends([]);
+      setTraits([]);
       const ownedData = (await axios.get(`${process.env.REACT_APP_API}/frog/owned/${address}`)).data;
       const friends = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/owned/friends/${account}`)).data;
+      const traits = (await axios.get<RibbitItem[]>(`${process.env.REACT_APP_API}/items/traits/${account}`)).data;
       const ribbit = (await axios.get(`${process.env.REACT_APP_API}/ribbit/${account}`)).data;
       const staked = (await axios.get(`${process.env.REACT_APP_API}/ribbit/staked/${account}`)).data;
-      console.log("friends: ", friends);
       setOwned(ownedData);
       setFriends(friends);
+      setTraits(traits);
       setRibbitBalance(ribbit);
       setStakingBalance(staked);
       setLoading(false);
     } catch (error) {
       setFriends([]);
+      setTraits([]);
       setRibbitBalance(0);
       setStakingBalance(0);
       setAlertMessage("Issue fetching froggies owned");
@@ -315,11 +321,11 @@ export default function Staking() {
   }
 
 
-  const onItemClick = (frog: Froggy) => {
+  const onFrogClick = (frog: Froggy) => {
     navigate(`/frog/${frog.edition}`);
   }
 
-  const onFriendClick = (friend: RibbitItem) => {
+  const onItemClick = (friend: RibbitItem) => {
     navigate(`/item/${friend.id}`);
   }
 
@@ -433,9 +439,9 @@ export default function Staking() {
               !account && <Typography variant='h6' pl={3} pt={5}>Login to view staked frogs</Typography>
             }
             {
-              account && owned.froggies.length === 0 && 
+              account && !loading && owned.froggies.length === 0 && 
               <Stack spacing={1} direction={isMobile ? 'column' : 'row'} alignItems='center' pt={5}>
-                <Typography pl={3} display='flex' alignItems='center'>Purchase Froggy Friends on Opensea to begin staking</Typography>
+                <Typography pl={3} display='flex' alignItems='center'>Purchase Froggy Friends on Opensea to start your portfolio</Typography>
                 <Paper elevation={3} sx={{borderRadius: 25, width: 34, height: 34}}>
                   <IconButton className="cta" size='small' href='https://opensea.io/collection/froggyfriendsnft' target='_blank'>
                     <Launch/>
@@ -461,7 +467,7 @@ export default function Staking() {
                             <Chip label='unstaked'/>
                           )
                         }
-                        <Button variant='outlined' color='inherit' onClick={() => onItemClick(froggy)}>
+                        <Button variant='outlined' color='inherit' onClick={() => onFrogClick(froggy)}>
                           <Typography variant='body2'>MORE</Typography>
                         </Button>
                       </Grid>
@@ -476,12 +482,32 @@ export default function Staking() {
                 <Card sx={{height: '100%'}}>
                   <CardMedia component='img' image={`${friend.image}?img-width=400&img-height=400`} alt='Friend' 
                     sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}
-                    onClick={() => onFriendClick(friend)}
+                    onClick={() => onItemClick(friend)}
                   />
                   <CardContent sx={{bgcolor: theme.palette.common.white, paddingBottom: 0}}>
                     <Typography variant='body1' fontWeight='bold' pb={1} pt={1}>{friend.name}</Typography>
                     <Grid container item justifyContent='center'>
-                      <Button variant='outlined' color='inherit' onClick={() => onFriendClick(friend)}>
+                      <Button variant='outlined' color='inherit' onClick={() => onItemClick(friend)}>
+                        <Typography variant='body2'>MORE</Typography>
+                      </Button>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+              })
+            }
+            {
+              showTraits && traits.map((trait) => {
+                return <Grid key={trait.id} item xl={3} lg={3} md={3} sm={6} xs={12} p={2} minHeight={300}>
+                <Card sx={{height: '100%'}}>
+                  <CardMedia component='img' image={`${trait.imageTransparent}?img-width=400&img-height=400`} alt='Friend' 
+                    sx={{bgcolor: '#93d0aa', cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}
+                    onClick={() => onItemClick(trait)}
+                  />
+                  <CardContent sx={{bgcolor: theme.palette.common.white, paddingBottom: 0}}>
+                    <Typography variant='body1' fontWeight='bold' pb={1} pt={1}>{trait.name}</Typography>
+                    <Grid container item justifyContent='center'>
+                      <Button variant='outlined' color='inherit' onClick={() => onItemClick(trait)}>
                         <Typography variant='body2'>MORE</Typography>
                       </Button>
                     </Grid>
