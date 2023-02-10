@@ -5,6 +5,7 @@ import banner from '../images/friends.png';
 import FriendStudio from "../components/FriendStudio";
 import TraitStudio from "../components/TraitStudio";
 import { useLocation } from "react-router-dom";
+import BuildAFrog from "../components/BuildAFrog";
 
 const useStyles: any = makeStyles((theme: Theme) => 
   createStyles({
@@ -49,11 +50,15 @@ export default function Studio() {
               <MenuItem value='traits' sx={{fontSize: theme.typography.h6}}>
                 <Typography variant='h6'>Traits</Typography>
               </MenuItem>
+              <MenuItem value='build' sx={{fontSize: theme.typography.h6}}>
+                <Typography variant='h6'>Build-A-Frog</Typography>
+              </MenuItem>
             </Select>
           </FormControl>
         </Stack>
         { studioView === 'pair' && <FriendStudio/>}
         { studioView === 'traits' && <TraitStudio/>}
+        { studioView === 'build' && <BuildAFrog/>}
       </Container>
     </Grid>
 
