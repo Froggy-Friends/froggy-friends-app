@@ -202,7 +202,7 @@ export default function Cart() {
       setShowPurchaseModal(false);
       // navigate to studio
       if (bundleBuyState.status === "Success") {
-        navigate("/studio", { state: { view: 'traits' }});
+        navigate("/studio", { state: { view: 'Trait Studio' }});
       }
     }
   }
