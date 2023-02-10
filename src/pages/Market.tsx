@@ -58,13 +58,13 @@ export default function Market() {
   const [filterCommunity, setFilterCommunity] = useState<boolean>(false);
   const [filterOwned, setFilterOwned] = useState<boolean>(false);
   const [filterTraits, setFilterTraits] = useState<boolean>(true);
-  const [filterGLP, setFilterGLP] = useState<boolean>(false);
-  const [filterFriends, setFilterFriends] = useState<boolean>(false);
+  const [filterGLP, setFilterGLP] = useState<boolean>(true);
+  const [filterFriends, setFilterFriends] = useState<boolean>(true);
   const [filterCollabFriends, setFilterCollabFriends] = useState<boolean>(true);
   const [filterAllowlists, setFilterAllowlists] = useState<boolean>(true);
   const [filterNfts, setFilterNfts] = useState<boolean>(true);
-  const [filterRaffles, setFilterRaffles] = useState<boolean>(false);
-  const [filterMerch, setFilterMerch] = useState<boolean>(false);
+  const [filterRaffles, setFilterRaffles] = useState<boolean>(true);
+  const [filterMerch, setFilterMerch] = useState<boolean>(true);
   const [alertMessage, setAlertMessage] = useState<any>(undefined);
   const [showAlert, setShowAlert] = useState(false);
   const [itemOwners, setItemOwners] = useState<string[]>([]);
