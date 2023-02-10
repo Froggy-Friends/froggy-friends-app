@@ -91,28 +91,28 @@ export default function BuildAFrog() {
       </Stack>
       <Stack id='choices' pt={2} spacing={5}>
         <Typography variant='h6'>Filters</Typography>
-        <Stack id='filters' direction='row' spacing={2}>
-          <Stack direction='row'>
+        <Stack id='filters' direction='row' spacing={5}>
+          <Stack direction='row' alignItems='center'>
             <Typography variant='body1'>Backgrounds</Typography>
             <Switch checked={showBackgrounds} onChange={() => setShowBackgrounds(!showBackgrounds)}/>
           </Stack>
-          <Stack direction='row'>
+          <Stack direction='row' alignItems='center'>
             <Typography variant='body1'>Bodies</Typography>
             <Switch checked={showBodies} onChange={() => setShowBodies(!showBodies)}/>
           </Stack>
-          <Stack direction='row'>
+          <Stack direction='row' alignItems='center'>
             <Typography variant='body1'>Eyes</Typography>
             <Switch checked={showEyes} onChange={() => setShowEyes(!showEyes)}/>
           </Stack>
-          <Stack direction='row'>
+          <Stack direction='row' alignItems='center'>
             <Typography variant='body1'>Mouths</Typography>
             <Switch checked={showMouths} onChange={() => setShowMouths(!showMouths)}/>
           </Stack>
-          <Stack direction='row'>
+          <Stack direction='row' alignItems='center'>
             <Typography variant='body1'>Shirts</Typography>
             <Switch checked={showShirts} onChange={() => setShowShirts(!showShirts)}/>
           </Stack>
-          <Stack direction='row'>
+          <Stack direction='row' alignItems='center'>
             <Typography variant='body1'>Hats</Typography>
             <Switch checked={showHats} onChange={() => setShowHats(!showHats)}/>
           </Stack>
