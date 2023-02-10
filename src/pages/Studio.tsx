@@ -24,7 +24,7 @@ export default function Studio() {
   const theme = useTheme();
   const location = useLocation();
   const state: any = location.state;
-  const [studioView, setStudioView] = useState(state ? state.view : 'traits');
+  const [studioView, setStudioView] = useState(state ? state.view : 'Trait Studio');
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   const onStudioViewChange = (event: SelectChangeEvent) => {
@@ -39,26 +39,26 @@ export default function Studio() {
       <Container maxWidth='xl' sx={{minHeight: 800, pt: 5, pb: 5}}>
         <Stack direction='row' justifyContent='space-between'>
           <Typography variant='h3' pb={5}>
-            Froggy Studio
+            {studioView}
           </Typography>
           <FormControl sx={{minWidth: 400}}>
             <InputLabel id="item-label">Studio View</InputLabel>
             <Select labelId="item-label" id="item" label="Studio View" value={studioView} onChange={onStudioViewChange}>
-              <MenuItem value='pair' sx={{fontSize: theme.typography.h6}}>
+              <MenuItem value='Pair Studio' sx={{fontSize: theme.typography.h6}}>
                 <Typography variant="h6">Pairing</Typography>
               </MenuItem>
-              <MenuItem value='traits' sx={{fontSize: theme.typography.h6}}>
+              <MenuItem value='Trait Studio' sx={{fontSize: theme.typography.h6}}>
                 <Typography variant='h6'>Traits</Typography>
               </MenuItem>
-              <MenuItem value='build' sx={{fontSize: theme.typography.h6}}>
+              <MenuItem value='Build-A-Frog' sx={{fontSize: theme.typography.h6}}>
                 <Typography variant='h6'>Build-A-Frog</Typography>
               </MenuItem>
             </Select>
           </FormControl>
         </Stack>
-        { studioView === 'pair' && <FriendStudio/>}
-        { studioView === 'traits' && <TraitStudio/>}
-        { studioView === 'build' && <BuildAFrog/>}
+        { studioView === 'Pair Studio' && <FriendStudio/>}
+        { studioView === 'Trait Studio' && <TraitStudio/>}
+        { studioView === 'Build-A-Frog' && <BuildAFrog/>}
       </Container>
     </Grid>
 

@@ -75,8 +75,7 @@ export default function BuildAFrog() {
 
   return (
     <Stack id='build-a-frog' direction='row' spacing={5}>
-      <Stack id='preview'>
-        <Typography variant='h5' pb={2}>Build-A-Frog</Typography>
+      <Stack id='preview' pt={5}>
         { preview && <img src={preview} alt='' height={400} width={400} style={{backgroundColor: 'white'}}/> }
         { !preview && <Stack width={400} height={400} bgcolor='white'/>}
       </Stack>
@@ -88,7 +87,7 @@ export default function BuildAFrog() {
               return (
                 <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} p={2}>
                   <Card onClick={() => onBackgroundClicked(trait)}>
-                    <CardMedia component='img' src={trait.imageTransparent} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                    <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                   </Card>
                 </Grid>
               )
@@ -102,7 +101,7 @@ export default function BuildAFrog() {
               return (
                 <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} p={2}>
                   <Card onClick={() => onBodyClick(trait)}>
-                    <CardMedia component='img' src={trait.imageTransparent} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                    <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                   </Card>
                 </Grid>
               )
@@ -116,7 +115,7 @@ export default function BuildAFrog() {
               return (
                 <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} p={2}>
                   <Card onClick={() => onEyesClick(trait)}>
-                    <CardMedia component='img' src={trait.imageTransparent} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                    <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                   </Card>
                 </Grid>
               )
