@@ -90,8 +90,8 @@ export default function BuildAFrog() {
         { !preview && <Stack width={400} height={400} bgcolor='white'/>}
       </Stack>
       <Stack id='choices' pt={2} spacing={5}>
-        <Typography variant='h6'>Filters</Typography>
-        <Stack id='filters' direction='row' spacing={5}>
+        <Typography variant='h6'>Layers</Typography>
+        <Stack id='layers' direction='row' spacing={5}>
           <Stack direction='row' alignItems='center'>
             <Typography variant='body1'>Backgrounds</Typography>
             <Switch checked={showBackgrounds} onChange={() => setShowBackgrounds(!showBackgrounds)}/>
@@ -128,7 +128,7 @@ export default function BuildAFrog() {
                     return (
                       <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
                         <Card onClick={() => setSelectedBackground(trait)}>
-                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
                     )
@@ -147,7 +147,7 @@ export default function BuildAFrog() {
                     return (
                       <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
                         <Card onClick={() => setSelectedBody(trait)}>
-                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
                     )
@@ -166,7 +166,7 @@ export default function BuildAFrog() {
                     return (
                       <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
                         <Card onClick={() => setSelectedEyes(trait)}>
-                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
                     )
@@ -185,7 +185,7 @@ export default function BuildAFrog() {
                     return (
                       <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
                         <Card onClick={() => setSelectedMouth(trait)}>
-                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
                     )
@@ -204,7 +204,7 @@ export default function BuildAFrog() {
                     return (
                       <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
                         <Card onClick={() => setSelectedShirt(trait)}>
-                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
                     )
@@ -216,14 +216,14 @@ export default function BuildAFrog() {
           {
             showHats &&
             <Stack spacing={3}>
-              <Typography variant='h6'>Mouths</Typography>
+              <Typography variant='h6'>Hats</Typography>
               <Grid id='mouths' container>
                 {
                   showHats && hatTraits.map((trait, index) => {
                     return (
                       <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
                         <Card onClick={() => setSelectedHat(trait)}>
-                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
                     )
