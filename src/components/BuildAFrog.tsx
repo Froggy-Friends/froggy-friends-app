@@ -16,6 +16,7 @@ export default function BuildAFrog() {
   const [selectedBackground, setSelectedBackground] = useState<Trait>();
   const [selectedBody, setSelectedBody] = useState<Trait>();
   const [selectedEyes, setSelectedEyes] = useState<Trait>();
+  const [selectedMouth, setSelectedMouth] = useState<Trait>();
 
   useEffect(() => {
     loadTraits();
@@ -25,9 +26,10 @@ export default function BuildAFrog() {
     loadPreview(
       selectedBackground,
       selectedBody,
-      selectedEyes
+      selectedEyes,
+      selectedMouth
     );
-  }, [selectedBackground, selectedBody, selectedEyes]);
+  }, [selectedBackground, selectedBody, selectedEyes, selectedMouth]);
 
   const loadTraits = async () => {
     try {
@@ -48,12 +50,13 @@ export default function BuildAFrog() {
     }
   }
 
-  const loadPreview = async (bg: Trait | undefined, body: Trait | undefined, eyes: Trait | undefined) => {
+  const loadPreview = async (bg: Trait | undefined, body: Trait | undefined, eyes: Trait | undefined, mouth: Trait | undefined) => {
     const sources = [];
 
     if (bg) sources.push(bg.imageTransparent);
     if (body) sources.push(body.imageTransparent);
     if (eyes) sources.push(eyes.imageTransparent);
+    if (mouth) sources.push(mouth.imageTransparent);
 
     if (sources.length) {
       const prev = await mergeImages(sources, { crossOrigin: 'anonymous', width: 2000, height: 2000});
@@ -71,6 +74,10 @@ export default function BuildAFrog() {
 
   const onEyesClick = (trait: Trait) => {
     setSelectedEyes(trait);
+  }
+
+  const onMouthClick = (trait: Trait) => {
+    setSelectedMouth(trait);
   }
 
   return (
@@ -115,6 +122,20 @@ export default function BuildAFrog() {
               return (
                 <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} p={2}>
                   <Card onClick={() => onEyesClick(trait)}>
+                    <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                  </Card>
+                </Grid>
+              )
+            })
+          }
+        </Grid>
+        <Typography variant='h6' pl={2}>Mouths</Typography>
+        <Grid id='mouths' container>
+          {
+            mouthTraits.map((trait, index) => {
+              return (
+                <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} p={2}>
+                  <Card onClick={() => onMouthClick(trait)}>
                     <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                   </Card>
                 </Grid>
