@@ -118,90 +118,120 @@ export default function BuildAFrog() {
           </Stack>
         </Stack>
         <Stack id='traits' spacing={2}>
-          <Typography variant='h6'>Backgrounds</Typography>
-          <Grid id='backgrounds' container>
-            {
-              backgroundTraits.map((trait, index) => {
-                return (
-                  <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                    <Card onClick={() => setSelectedBackground(trait)}>
-                      <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                    </Card>
-                  </Grid>
-                )
-              })
-            }
-          </Grid>
-          <Typography variant='h6' pl={2}>Body</Typography>
-          <Grid id='body' container>
-            {
-              bodyTraits.map((trait, index) => {
-                return (
-                  <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                    <Card onClick={() => setSelectedBody(trait)}>
-                      <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                    </Card>
-                  </Grid>
-                )
-              })
-            }
-          </Grid>
-          <Typography variant='h6' pl={2}>Eyes</Typography>
-          <Grid id='eyes' container>
-            {
-              eyeTraits.map((trait, index) => {
-                return (
-                  <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                    <Card onClick={() => setSelectedEyes(trait)}>
-                      <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                    </Card>
-                  </Grid>
-                )
-              })
-            }
-          </Grid>
-          <Typography variant='h6' pl={2}>Mouths</Typography>
-          <Grid id='mouths' container>
-            {
-              mouthTraits.map((trait, index) => {
-                return (
-                  <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                    <Card onClick={() => setSelectedMouth(trait)}>
-                      <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                    </Card>
-                  </Grid>
-                )
-              })
-            }
-          </Grid>
-          <Typography variant='h6' pl={2}>Shirts</Typography>
-          <Grid id='shirts' container>
-            {
-              shirtTraits.map((trait, index) => {
-                return (
-                  <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                    <Card onClick={() => setSelectedShirt(trait)}>
-                      <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                    </Card>
-                  </Grid>
-                )
-              })
-            }
-          </Grid>
-          <Typography variant='h6' pl={2}>Mouths</Typography>
-          <Grid id='mouths' container>
-            {
-              hatTraits.map((trait, index) => {
-                return (
-                  <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                    <Card onClick={() => setSelectedHat(trait)}>
-                      <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                    </Card>
-                  </Grid>
-                )
-              })
-            }
-          </Grid>
+          {
+            showBackgrounds &&
+            <Stack spacing={3}>
+              <Typography variant='h6'>Backgrounds</Typography>
+              <Grid id='backgrounds' container>
+                {
+                  backgroundTraits.map((trait, index) => {
+                    return (
+                      <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
+                        <Card onClick={() => setSelectedBackground(trait)}>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                        </Card>
+                      </Grid>
+                    )
+                  })
+                }
+              </Grid>
+            </Stack>
+          }
+          {
+            showBodies &&
+            <Stack spacing={3}>
+              <Typography variant='h6'>Body</Typography>
+              <Grid id='body' container>
+                {
+                  showBodies && bodyTraits.map((trait, index) => {
+                    return (
+                      <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
+                        <Card onClick={() => setSelectedBody(trait)}>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                        </Card>
+                      </Grid>
+                    )
+                  })
+                }
+              </Grid>
+            </Stack>
+          }
+          {
+            showEyes &&
+            <Stack spacing={3}>
+              <Typography variant='h6'>Eyes</Typography>
+              <Grid id='eyes' container>
+                {
+                  showEyes && eyeTraits.map((trait, index) => {
+                    return (
+                      <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
+                        <Card onClick={() => setSelectedEyes(trait)}>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                        </Card>
+                      </Grid>
+                    )
+                  })
+                }
+              </Grid>
+            </Stack>
+          }
+          {
+            showMouths &&
+            <Stack spacing={3}>
+              <Typography variant='h6'>Mouths</Typography>
+              <Grid id='mouths' container>
+                {
+                  showMouths && mouthTraits.map((trait, index) => {
+                    return (
+                      <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
+                        <Card onClick={() => setSelectedMouth(trait)}>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                        </Card>
+                      </Grid>
+                    )
+                  })
+                }
+              </Grid>
+            </Stack>
+          }
+          {
+            showShirts &&
+            <Stack spacing={3}>
+              <Typography variant='h6'>Shirts</Typography>
+              <Grid id='shirts' container>
+                {
+                  showShirts && shirtTraits.map((trait, index) => {
+                    return (
+                      <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
+                        <Card onClick={() => setSelectedShirt(trait)}>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                        </Card>
+                      </Grid>
+                    )
+                  })
+                }
+              </Grid>
+            </Stack>
+          }
+          {
+            showHats &&
+            <Stack spacing={3}>
+              <Typography variant='h6'>Mouths</Typography>
+              <Grid id='mouths' container>
+                {
+                  showHats && hatTraits.map((trait, index) => {
+                    return (
+                      <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
+                        <Card onClick={() => setSelectedHat(trait)}>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=100&img-height=100`} height={100} width={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                        </Card>
+                      </Grid>
+                    )
+                  })
+                }
+              </Grid>  
+            </Stack>
+          }
         </Stack>
       </Stack>
     </Stack>
