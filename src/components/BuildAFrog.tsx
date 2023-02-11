@@ -127,7 +127,7 @@ export default function BuildAFrog() {
                   backgroundTraits.map((trait, index) => {
                     return (
                       <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                        <Card onClick={() => setSelectedBackground(trait)} sx={{cursor: 'pointer'}}>
+                        <Card onClick={() => setSelectedBackground(trait)} sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}>
                           <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
@@ -146,8 +146,9 @@ export default function BuildAFrog() {
                   showBodies && bodyTraits.map((trait, index) => {
                     return (
                       <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                        <Card onClick={() => setSelectedBody(trait)} sx={{cursor: 'pointer'}}>
-                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                        <Card onClick={() => setSelectedBody(trait)} sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} 
+                            height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
                     )
@@ -165,7 +166,7 @@ export default function BuildAFrog() {
                   showEyes && eyeTraits.map((trait, index) => {
                     return (
                       <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                        <Card onClick={() => setSelectedEyes(trait)} sx={{cursor: 'pointer'}}>
+                        <Card onClick={() => setSelectedEyes(trait)} sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}>
                           <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
@@ -184,7 +185,7 @@ export default function BuildAFrog() {
                   showMouths && mouthTraits.map((trait, index) => {
                     return (
                       <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                        <Card onClick={() => setSelectedMouth(trait)} sx={{cursor: 'pointer'}}>
+                        <Card onClick={() => setSelectedMouth(trait)} sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}>
                           <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
@@ -203,7 +204,7 @@ export default function BuildAFrog() {
                   showShirts && shirtTraits.map((trait, index) => {
                     return (
                       <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                        <Card onClick={() => setSelectedShirt(trait)} sx={{cursor: 'pointer'}}>
+                        <Card onClick={() => setSelectedShirt(trait)} sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}>
                           <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
@@ -222,7 +223,7 @@ export default function BuildAFrog() {
                   showHats && hatTraits.map((trait, index) => {
                     return (
                       <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                        <Card onClick={() => setSelectedHat(trait)} sx={{cursor: 'pointer'}}>
+                        <Card onClick={() => setSelectedHat(trait)} sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}>
                           <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
