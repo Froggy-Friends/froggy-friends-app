@@ -37,28 +37,28 @@ export default function Studio() {
         <Grid id='banner' className={classes.banner} container height={isSm ? 300 : 600}/>
       </Paper>
       <Container maxWidth='xl' sx={{minHeight: 800, pt: 5, pb: 5}}>
-        <Stack direction='row' justifyContent='space-between'>
+        <Stack direction={isSm ? 'column' : 'row'} justifyContent='space-between'>
           <Typography variant='h3' pb={5}>
             {studioView}
           </Typography>
-          <FormControl sx={{minWidth: 400}}>
+          <FormControl>
             <InputLabel id="item-label">Studio View</InputLabel>
             <Select labelId="item-label" id="item" label="Studio View" value={studioView} onChange={onStudioViewChange}>
+              <MenuItem value='Build-A-Frog' sx={{fontSize: theme.typography.h6}}>
+                <Typography variant='h6'>Build-A-Frog</Typography>
+              </MenuItem>
               <MenuItem value='Pair Studio' sx={{fontSize: theme.typography.h6}}>
                 <Typography variant="h6">Pairing</Typography>
               </MenuItem>
               <MenuItem value='Trait Studio' sx={{fontSize: theme.typography.h6}}>
                 <Typography variant='h6'>Traits</Typography>
               </MenuItem>
-              <MenuItem value='Build-A-Frog' sx={{fontSize: theme.typography.h6}}>
-                <Typography variant='h6'>Build-A-Frog</Typography>
-              </MenuItem>
             </Select>
           </FormControl>
         </Stack>
+        { studioView === 'Build-A-Frog' && <BuildAFrog/>}
         { studioView === 'Pair Studio' && <FriendStudio/>}
         { studioView === 'Trait Studio' && <TraitStudio/>}
-        { studioView === 'Build-A-Frog' && <BuildAFrog/>}
       </Container>
     </Grid>
 

@@ -1,10 +1,13 @@
-import { ChangeEvent, Fragment, useEffect, useState } from "react";
-import { Card, CardMedia, Grid, Stack, Switch, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Grid, Skeleton, Stack, Switch, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Trait } from "../models/Trait";
 import axios from "axios";
 import mergeImages from 'merge-images';
+import { saveAs } from 'file-saver';
+import { ExpandMore } from "@mui/icons-material";
 
 export default function BuildAFrog() {
+  const theme = useTheme();
   const [preview, setPreview] = useState('');
   const [backgroundTraits, setBackgroundTraits] = useState<Trait[]>([]);
   const [bodyTraits, setBodyTraits] = useState<Trait[]>([]);
@@ -19,11 +22,12 @@ export default function BuildAFrog() {
   const [selectedShirt, setSelectedShirt] = useState<Trait>();
   const [selectedHat, setSelectedHat] = useState<Trait>();
   const [showBackgrounds, setShowBackgrounds] = useState(true);
-  const [showBodies, setShowBodies] = useState(true);
+  const [showBodies, setShowBodies] = useState(false);
   const [showEyes, setShowEyes] = useState(false);
   const [showMouths, setShowMouths] = useState(false);
   const [showShirts, setShowShirts] = useState(false);
   const [showHats, setShowHats] = useState(false);
+  const isMd = useMediaQuery(theme.breakpoints.down('lg'));
 
   useEffect(() => {
     loadTraits();
@@ -82,41 +86,99 @@ export default function BuildAFrog() {
     }
   }
 
+  const downloadAsset = (asset: string, name: string) => {
+    saveAs(asset, name);
+  }
+
   return (
-    <Stack id='build-a-frog' direction='row' spacing={10}>
+    <Stack id='build-a-frog' direction={isMd ? 'column-reverse' : 'row'} spacing={10}>
       <Stack id='preview' pt={2} spacing={4}>
-        <Typography variant='h6'>Frog Preview</Typography>
-        { preview && <img src={preview} alt='' height={400} width={400} style={{backgroundColor: 'white'}}/> }
-        { !preview && <Stack width={400} height={400} bgcolor='white'/>}
+        { 
+          !preview &&
+          <Stack spacing={5} alignItems='center'>
+            <Typography variant='h6'>Frog Preview</Typography>
+            <Skeleton variant='rectangular' animation='wave' height={400} width={400}/>
+          </Stack>
+        }
+        { 
+          preview && 
+          <Stack spacing={5} alignItems='center'>
+            <Typography variant='h6'>Frog Preview</Typography>
+            <img src={preview} alt='' height={400} width={400} style={{backgroundColor: 'white'}}/>
+            <Button variant='contained' color="primary" sx={{height: 50, width: 130}}onClick={() => downloadAsset(preview, 'build-a-frog.png')}>
+              Download
+            </Button>
+          </Stack>
+        }
       </Stack>
-      <Stack id='choices' pt={2} spacing={5}>
-        <Typography variant='h6'>Layers</Typography>
-        <Stack id='layers' direction='row' spacing={5}>
-          <Stack direction='row' alignItems='center'>
-            <Typography variant='body1'>Backgrounds</Typography>
-            <Switch checked={showBackgrounds} onChange={() => setShowBackgrounds(!showBackgrounds)}/>
+      <Stack id='choices' pt={2} spacing={3}>
+        {
+          !isMd &&
+          <Stack id='layers' direction={isMd ? 'column' : 'row'} spacing={5}>
+            <Stack direction='row' alignItems='center'>
+              <Typography variant='body1'>Backgrounds</Typography>
+              <Switch checked={showBackgrounds} onChange={() => setShowBackgrounds(!showBackgrounds)}/>
+            </Stack>
+            <Stack direction='row' alignItems='center'>
+              <Typography variant='body1'>Bodies</Typography>
+              <Switch checked={showBodies} onChange={() => setShowBodies(!showBodies)}/>
+            </Stack>
+            <Stack direction='row' alignItems='center'>
+              <Typography variant='body1'>Eyes</Typography>
+              <Switch checked={showEyes} onChange={() => setShowEyes(!showEyes)}/>
+            </Stack>
+            <Stack direction='row' alignItems='center'>
+              <Typography variant='body1'>Mouths</Typography>
+              <Switch checked={showMouths} onChange={() => setShowMouths(!showMouths)}/>
+            </Stack>
+            <Stack direction='row' alignItems='center'>
+              <Typography variant='body1'>Shirts</Typography>
+              <Switch checked={showShirts} onChange={() => setShowShirts(!showShirts)}/>
+            </Stack>
+            <Stack direction='row' alignItems='center'>
+              <Typography variant='body1'>Hats</Typography>
+              <Switch checked={showHats} onChange={() => setShowHats(!showHats)}/>
+            </Stack>
           </Stack>
-          <Stack direction='row' alignItems='center'>
-            <Typography variant='body1'>Bodies</Typography>
-            <Switch checked={showBodies} onChange={() => setShowBodies(!showBodies)}/>
-          </Stack>
-          <Stack direction='row' alignItems='center'>
-            <Typography variant='body1'>Eyes</Typography>
-            <Switch checked={showEyes} onChange={() => setShowEyes(!showEyes)}/>
-          </Stack>
-          <Stack direction='row' alignItems='center'>
-            <Typography variant='body1'>Mouths</Typography>
-            <Switch checked={showMouths} onChange={() => setShowMouths(!showMouths)}/>
-          </Stack>
-          <Stack direction='row' alignItems='center'>
-            <Typography variant='body1'>Shirts</Typography>
-            <Switch checked={showShirts} onChange={() => setShowShirts(!showShirts)}/>
-          </Stack>
-          <Stack direction='row' alignItems='center'>
-            <Typography variant='body1'>Hats</Typography>
-            <Switch checked={showHats} onChange={() => setShowHats(!showHats)}/>
-          </Stack>
-        </Stack>
+        }
+        {
+          isMd &&
+          <Accordion elevation={0}>
+            <AccordionSummary expandIcon={<ExpandMore/>} sx={{p: 0}}>
+              <Stack>
+              <Typography color='secondary' variant='h4'>Layers</Typography>
+              </Stack>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Stack id='layers' direction={isMd ? 'column' : 'row'} spacing={5}>
+                <Stack direction='row' alignItems='center'>
+                  <Typography variant='body1'>Backgrounds</Typography>
+                  <Switch checked={showBackgrounds} onChange={() => setShowBackgrounds(!showBackgrounds)}/>
+                </Stack>
+                <Stack direction='row' alignItems='center'>
+                  <Typography variant='body1'>Bodies</Typography>
+                  <Switch checked={showBodies} onChange={() => setShowBodies(!showBodies)}/>
+                </Stack>
+                <Stack direction='row' alignItems='center'>
+                  <Typography variant='body1'>Eyes</Typography>
+                  <Switch checked={showEyes} onChange={() => setShowEyes(!showEyes)}/>
+                </Stack>
+                <Stack direction='row' alignItems='center'>
+                  <Typography variant='body1'>Mouths</Typography>
+                  <Switch checked={showMouths} onChange={() => setShowMouths(!showMouths)}/>
+                </Stack>
+                <Stack direction='row' alignItems='center'>
+                  <Typography variant='body1'>Shirts</Typography>
+                  <Switch checked={showShirts} onChange={() => setShowShirts(!showShirts)}/>
+                </Stack>
+                <Stack direction='row' alignItems='center'>
+                  <Typography variant='body1'>Hats</Typography>
+                  <Switch checked={showHats} onChange={() => setShowHats(!showHats)}/>
+                </Stack>
+              </Stack>
+            </AccordionDetails>
+          </Accordion>
+        }
         <Stack id='traits' spacing={2}>
           {
             showBackgrounds &&
@@ -126,8 +188,8 @@ export default function BuildAFrog() {
                 {
                   backgroundTraits.map((trait, index) => {
                     return (
-                      <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                        <Card onClick={() => setSelectedBackground(trait)} sx={{cursor: 'pointer'}}>
+                      <Grid item key={index} xl={2} lg={2} md={2} sm={3} xs={6} pr={2} pb={2}>
+                        <Card onClick={() => setSelectedBackground(trait)} sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}>
                           <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
@@ -145,9 +207,10 @@ export default function BuildAFrog() {
                 {
                   showBodies && bodyTraits.map((trait, index) => {
                     return (
-                      <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                        <Card onClick={() => setSelectedBody(trait)} sx={{cursor: 'pointer'}}>
-                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+                      <Grid item key={index} xl={2} lg={2} md={2} sm={3} xs={6} pr={2} pb={2}>
+                        <Card onClick={() => setSelectedBody(trait)} sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}>
+                          <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} 
+                            height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
                     )
@@ -164,8 +227,8 @@ export default function BuildAFrog() {
                 {
                   showEyes && eyeTraits.map((trait, index) => {
                     return (
-                      <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                        <Card onClick={() => setSelectedEyes(trait)} sx={{cursor: 'pointer'}}>
+                      <Grid item key={index} xl={2} lg={2} md={2} sm={3} xs={6} pr={2} pb={2}>
+                        <Card onClick={() => setSelectedEyes(trait)} sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}>
                           <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
@@ -183,8 +246,8 @@ export default function BuildAFrog() {
                 {
                   showMouths && mouthTraits.map((trait, index) => {
                     return (
-                      <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                        <Card onClick={() => setSelectedMouth(trait)} sx={{cursor: 'pointer'}}>
+                      <Grid item key={index} xl={2} lg={2} md={2} sm={3} xs={6} pr={2} pb={2}>
+                        <Card onClick={() => setSelectedMouth(trait)} sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}>
                           <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
@@ -202,8 +265,8 @@ export default function BuildAFrog() {
                 {
                   showShirts && shirtTraits.map((trait, index) => {
                     return (
-                      <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                        <Card onClick={() => setSelectedShirt(trait)} sx={{cursor: 'pointer'}}>
+                      <Grid item key={index} xl={2} lg={2} md={2} sm={3} xs={6} pr={2} pb={2}>
+                        <Card onClick={() => setSelectedShirt(trait)} sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}>
                           <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
@@ -221,8 +284,8 @@ export default function BuildAFrog() {
                 {
                   showHats && hatTraits.map((trait, index) => {
                     return (
-                      <Grid item key={index} xl={2} lg={2} md={2} sm={2} xs={2} pr={2} pb={2}>
-                        <Card onClick={() => setSelectedHat(trait)} sx={{cursor: 'pointer'}}>
+                      <Grid item key={index} xl={2} lg={2} md={2} sm={3} xs={6} pr={2} pb={2}>
+                        <Card onClick={() => setSelectedHat(trait)} sx={{cursor: 'pointer', ":hover": { transform: 'scale(1.05)'}}}>
                           <CardMedia component='img' src={`${trait.imageTransparent}?img-width=200&img-height=200`} height={200} width={200} alt='' sx={{backgroundColor: '#93d0aa'}}/>
                         </Card>
                       </Grid>
