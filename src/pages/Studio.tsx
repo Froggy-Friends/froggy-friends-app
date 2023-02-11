@@ -44,21 +44,21 @@ export default function Studio() {
           <FormControl sx={{minWidth: 400}}>
             <InputLabel id="item-label">Studio View</InputLabel>
             <Select labelId="item-label" id="item" label="Studio View" value={studioView} onChange={onStudioViewChange}>
+              <MenuItem value='Build-A-Frog' sx={{fontSize: theme.typography.h6}}>
+                <Typography variant='h6'>Build-A-Frog</Typography>
+              </MenuItem>
               <MenuItem value='Pair Studio' sx={{fontSize: theme.typography.h6}}>
                 <Typography variant="h6">Pairing</Typography>
               </MenuItem>
               <MenuItem value='Trait Studio' sx={{fontSize: theme.typography.h6}}>
                 <Typography variant='h6'>Traits</Typography>
               </MenuItem>
-              <MenuItem value='Build-A-Frog' sx={{fontSize: theme.typography.h6}}>
-                <Typography variant='h6'>Build-A-Frog</Typography>
-              </MenuItem>
             </Select>
           </FormControl>
         </Stack>
+        { studioView === 'Build-A-Frog' && <BuildAFrog/>}
         { studioView === 'Pair Studio' && <FriendStudio/>}
         { studioView === 'Trait Studio' && <TraitStudio/>}
-        { studioView === 'Build-A-Frog' && <BuildAFrog/>}
       </Container>
     </Grid>
 

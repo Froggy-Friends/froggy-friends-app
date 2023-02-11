@@ -1,8 +1,9 @@
-import { ChangeEvent, Fragment, useEffect, useState } from "react";
-import { Card, CardMedia, Grid, Stack, Switch, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Button, Card, CardMedia, Grid, Skeleton, Stack, Switch, Typography } from "@mui/material";
 import { Trait } from "../models/Trait";
 import axios from "axios";
 import mergeImages from 'merge-images';
+import { saveAs } from 'file-saver';
 
 export default function BuildAFrog() {
   const [preview, setPreview] = useState('');
@@ -19,7 +20,7 @@ export default function BuildAFrog() {
   const [selectedShirt, setSelectedShirt] = useState<Trait>();
   const [selectedHat, setSelectedHat] = useState<Trait>();
   const [showBackgrounds, setShowBackgrounds] = useState(true);
-  const [showBodies, setShowBodies] = useState(true);
+  const [showBodies, setShowBodies] = useState(false);
   const [showEyes, setShowEyes] = useState(false);
   const [showMouths, setShowMouths] = useState(false);
   const [showShirts, setShowShirts] = useState(false);
@@ -82,12 +83,24 @@ export default function BuildAFrog() {
     }
   }
 
+  const downloadAsset = (asset: string, name: string) => {
+    saveAs(asset, name);
+  }
+
   return (
     <Stack id='build-a-frog' direction='row' spacing={10}>
       <Stack id='preview' pt={2} spacing={4}>
         <Typography variant='h6'>Frog Preview</Typography>
-        { preview && <img src={preview} alt='' height={400} width={400} style={{backgroundColor: 'white'}}/> }
-        { !preview && <Stack width={400} height={400} bgcolor='white'/>}
+        { !preview && <Skeleton variant='rectangular' animation='wave' height={400} width={400}/>}
+        { 
+          preview && 
+          <Stack spacing={5} alignItems='center'>
+            <img src={preview} alt='' height={400} width={400} style={{backgroundColor: 'white'}}/>
+            <Button variant='contained' color="primary" sx={{height: 50, width: 130}}onClick={() => downloadAsset(preview, 'build-a-frog.png')}>
+              Download
+            </Button>
+          </Stack>
+        }
       </Stack>
       <Stack id='choices' pt={2} spacing={5}>
         <Typography variant='h6'>Layers</Typography>
