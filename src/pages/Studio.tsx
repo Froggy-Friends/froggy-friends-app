@@ -24,7 +24,7 @@ export default function Studio() {
   const theme = useTheme();
   const location = useLocation();
   const state: any = location.state;
-  const [studioView, setStudioView] = useState(state ? state.view : 'Trait Studio');
+  const [studioView, setStudioView] = useState(state ? state.view : 'Build-A-Frog');
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   const onStudioViewChange = (event: SelectChangeEvent) => {
