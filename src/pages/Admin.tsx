@@ -4,6 +4,7 @@ import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useFroggiesOwned, useStakingDeposits } from "../client";
 import ListItem from "../components/forms/ListItem";
+import PreviewTrait from "../components/forms/PreviewTrait";
 import UpdateItem from "../components/forms/UpdateItem";
 import banner from '../images/lab.jpg';
 import { ItemPresets } from "../models/ItemPresets";
@@ -96,6 +97,7 @@ export default function Admin() {
                 <FormControlLabel value="list-collab-friend" control={<Radio />} label="List Collab Friend" />
                 <FormControlLabel value="list-trait" control={<Radio />} label="List Trait" />
                 <FormControlLabel value="update" control={<Radio />} label="Update Item" />
+                <FormControlLabel value="preview" control={<Radio />} label="Preview Trait" />
                 <FormControlLabel value="wallet" control={<Radio />} label="Wallet Checker" />
               </RadioGroup>
             </FormControl>
@@ -114,6 +116,9 @@ export default function Admin() {
           }
           {
             task === 'update' && <UpdateItem title='Update Item' type="normal" presets={presets}/>
+          }
+          {
+            task === 'preview' && <PreviewTrait title='Preview Trait'/>
           }
           {
             task === 'wallet' &&
