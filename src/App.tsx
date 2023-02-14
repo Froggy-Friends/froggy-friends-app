@@ -60,7 +60,7 @@ export default function App() {
                   <Route path="/market" element={<Market/>}/>
                   <Route path="/studio" element={<Studio/>}/>
                   <Route path="/spaces" element={<Spaces/>}/>
-                  <Route path="/leaderboard" element={isSm ? <BoardMobile/> : <Board/>} />
+                  {/* <Route path="/leaderboard" element={isSm ? <BoardMobile/> : <Board/>} /> */}
                   <Route path="/item/:id" element={<ItemDetails/>} />
                   <Route path='/frog/:id' element={<FrogDetails/>}/>
                   <Route path="/admin" element={
