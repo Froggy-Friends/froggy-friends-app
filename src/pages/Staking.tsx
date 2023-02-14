@@ -431,7 +431,7 @@ export default function Staking() {
               !account && <Typography variant='h6' pl={3} pt={5}>Login to view staked frogs</Typography>
             }
             {
-              account && !loading && owned.froggies.length === 0 && 
+              account && !loading && !friends.length && !traits.length && owned.froggies.length === 0 && 
               <Stack spacing={1} direction={isMobile ? 'column' : 'row'} alignItems='center' pt={5}>
                 <Typography pl={3} display='flex' alignItems='center'>Purchase Froggy Friends on Opensea to start your portfolio</Typography>
                 <Paper elevation={3} sx={{borderRadius: 25, width: 34, height: 34}}>

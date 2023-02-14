@@ -142,7 +142,7 @@ export default function Header(props: HeaderProps) {
                 <Stack id='links' direction='row' display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' spacing={2}>
                     <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => navigate("/staking")}>Portfolio</Typography>
                     <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => navigate("/market")}>Shop</Typography>
-                    <Typography className="link" variant="h5" color={getLinkColor('/leaderboard')} onClick={() => navigate("/leaderboard")}>Board</Typography>
+                    {/* <Typography className="link" variant="h5" color={getLinkColor('/leaderboard')} onClick={() => navigate("/leaderboard")}>Board</Typography> */}
                     <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => navigate("/studio")}>Studio</Typography>
                     <Typography className="link" variant="h5">
                       <Link href="https://marketplace.froggyfriendsnft.com" target='_blank' underline="none" color='secondary'>
@@ -259,9 +259,9 @@ export default function Header(props: HeaderProps) {
             <Grid item pb={3}>
               <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => {navigate("/market"); setSidemenuOpen(false)}}>Shop</Typography>
             </Grid>
-            <Grid item pb={3}>
+            {/* <Grid item pb={3}>
               <Typography className="link" variant="h5" color={getLinkColor('/leaderboard')} onClick={() => {navigate("/leaderboard"); setSidemenuOpen(false)}}>Board</Typography>
-            </Grid>
+            </Grid> */}
             <Grid item pb={3}>
               <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => {navigate("/studio"); setSidemenuOpen(false)}}>Studio</Typography>
             </Grid>
