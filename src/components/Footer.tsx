@@ -83,7 +83,7 @@ export default function Footer() {
               <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/market")}>Market</Typography>
             </Grid>
             <Grid item xl={2} lg={2} md={2} sm={2} xs={2}>
-              <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/leaderboard")}>Board</Typography>
+              <Typography className="link" variant="h6" color='secondary' onClick={() => navigate("/board")}>Board</Typography>
             </Grid>
           </Grid>
         </Grid>
