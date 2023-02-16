@@ -18,6 +18,8 @@ import FrogDetails from './pages/FrogDetails';
 import BoardMobile from './pages/BoardMobile';
 import Studio from './pages/Studio';
 import Spaces from './pages/Spaces';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -53,6 +55,7 @@ export default function App() {
           <ThemeProvider theme={theme}>
             <CssBaseline/>
             <DAppProvider config={config}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
               <BrowserRouter>
                 <Header isAdmin={isAdmin} onAdminChange={onAdminChange}/>
                 <Routes>
@@ -72,6 +75,7 @@ export default function App() {
                 </Routes>
                 <Footer/>
               </BrowserRouter>
+              </LocalizationProvider>
             </DAppProvider>
           </ThemeProvider>
         </ColorModeContext.Provider>
