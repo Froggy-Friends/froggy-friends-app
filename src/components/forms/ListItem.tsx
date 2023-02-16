@@ -1,5 +1,6 @@
 import { Close } from "@mui/icons-material";
 import { Stack, Typography, TextField, FormControl, FormControlLabel, Switch, InputLabel, Select, MenuItem, Input, Button, SelectChangeEvent, IconButton, Snackbar, OutlinedInput, Checkbox, ListItemText } from "@mui/material";
+import { DateTimePicker } from "@mui/x-date-pickers";
 import { useEthers } from "@usedapp/core";
 import axios from "axios";
 import { ethers } from "ethers";
@@ -36,7 +37,7 @@ const itemRequest: ItemRequest = {
     isOnSale: false
 };
 
-export type itemType = 'normal' | 'friends' | 'collabs' | 'traits';
+export type itemType = 'normal' | 'raffles' | 'friends' | 'collabs' | 'traits';
 export interface ListItemProps {
     title: string;
     type: itemType;
@@ -48,6 +49,7 @@ export default function ListItem(props: ListItemProps) {
     const { account } = useEthers();
     const [itemImage, setItemImage] = useState<File>();
     const [itemImageTransparent, setItemImageTransparent] = useState<File>();
+    const [raffleEndDate, setRaffleEndDate] = useState<string | null>(null);
     const [price, setPrice] = useState('');
     const [percent, setPercent] = useState('');
     const [supply, setSupply] = useState('');
@@ -279,6 +281,16 @@ export default function ListItem(props: ListItemProps) {
                     </Stack>
                     }
                 </Stack>
+                {  item.category === 'raffles' &&
+                <Stack id='raffles' direction='row' pb={5}>
+                    <DateTimePicker 
+                        renderInput={(props) => <TextField {...props}/>}
+                        label='RaffleEndDate'
+                        value={raffleEndDate}
+                        onChange={(newRaffleEndDate) => {setRaffleEndDate(newRaffleEndDate)}}
+                    />
+                </Stack>
+                }
                 <Stack id='contract' direction='row' spacing={2} pb={5}>
                     <TextField id='item-price' label="Price" variant="outlined" value={price} onChange={(event) => setPrice(event.target.value)} />
                     <TextField id='item-supply' label="Supply" variant="outlined" value={supply} onChange={(event) => setSupply(event.target.value)} />
