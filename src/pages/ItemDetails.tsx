@@ -15,7 +15,7 @@ import please from '../images/plz.png';
 import hype from '../images/hype.png';
 import uhhh from '../images/uhhh.png';
 import useDebounce from '../hooks/useDebounce';
-import { compareAsc, formatDistanceStrict } from 'date-fns';
+import { formatDistanceToNow, isBefore } from 'date-fns';
 import { useEthers } from "@usedapp/core";
 import { useApproveSpender, useCollabBuy, useSpendingApproved } from "../client";
 import { kFormatter } from "../utils";
@@ -60,7 +60,6 @@ export default function ItemDetails() {
     const dispatch = useAppDispatch();
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const [item, setItem] = useState<RibbitItem>();
-    const [itemEnded, setItemEnded] = useState<boolean>(false);
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
     const [showPurchaseModal, setShowPurchaseModal] = useState(false);
@@ -134,8 +133,8 @@ export default function ItemDetails() {
         try {
           const response = await axios.get<RibbitItem>(`${process.env.REACT_APP_API}/items/${id}/details`);
           let item = response.data;
+          item.endDate = +item.endDate; // string value breaks getEndDate() function must cast to number
           setItem(item);
-          setItemEnded(compareAsc(item.endDate, Date.now()) === -1);
           getItemOwners(item.id, item.name);
         } catch (error) {
           setAlertMessage("Failed to get items");
@@ -165,15 +164,11 @@ export default function ItemDetails() {
     }
 
     const getEndDate = (item: RibbitItem) => {
-        if (item && item.endDate) {
-            const result = formatDistanceStrict(item.endDate, Date.now(), {
-                addSuffix: true
-            })
-            return `${itemEnded ? 'Ended ' : 'Ends '} ${result}`;
-        } else {
-            return '';
-        }
-        
+        if (item.endDate <= 0) return '';
+
+        const endDate = new Date(item.endDate);
+        const result = formatDistanceToNow(endDate, { addSuffix: true, includeSeconds: true});
+        return `Raffle close ${result}`;
     }
 
     const getAddToCartDisabled = (item: RibbitItem) => {
@@ -271,7 +266,7 @@ export default function ItemDetails() {
                             item && item.isOnSale && item.minted !== item.supply &&
                             <Grid id='available' container pb={3}>
                                 {
-                                    !itemEnded && <Typography pr={isXs ? 3 : 5}>{getAvailable(item)}</Typography>
+                                    !isBefore(new Date(+item.endDate), new Date()) && <Typography pr={isXs ? 3 : 5}>{getAvailable(item)}</Typography>
                                 }
                                 {
                                     item.category === 'raffles' && <Typography>{getEndDate(item)}</Typography>
@@ -328,7 +323,7 @@ export default function ItemDetails() {
                                     <Typography>Add to cart</Typography>
                                 </Button>
                                 {
-                                    item.category === 'raffles' && !itemEnded &&
+                                    item.category === 'raffles' && !isBefore(new Date(+item.endDate), new Date()) &&
                                     <TextField placeholder="Number of tickets" value={tickets} onChange={onTicketsEntered} sx={{pl: 5, width: 230}}/>
                                 }
                             </Grid>
