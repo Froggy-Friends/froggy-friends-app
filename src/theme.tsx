@@ -1,5 +1,4 @@
 import { createTheme, responsiveFontSizes } from '@mui/material';
-import type {} from '@mui/x-date-pickers/themeAugmentation';
 
 const configs = {
   dark: '#181818',
@@ -45,13 +44,6 @@ export default function getTheme(isDarkMode: boolean) {
       }
     },
     components: {
-      MuiPickersPopper: {
-        styleOverrides: {
-          root: {
-            backgroundColor: isDarkMode ? configs.dark : configs.light
-          }
-        }
-      },
       MuiButton: {
         styleOverrides: {
           root: {
