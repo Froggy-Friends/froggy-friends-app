@@ -2,6 +2,7 @@ import { Close } from "@mui/icons-material";
 import { Stack, Typography, TextField, FormControl, FormControlLabel, Switch, InputLabel, Select, MenuItem, Input, Button, SelectChangeEvent, IconButton, Snackbar, OutlinedInput, Checkbox, ListItemText } from "@mui/material";
 import { useEthers } from "@usedapp/core";
 import axios from "axios";
+import { add } from "date-fns";
 import { ethers } from "ethers";
 import { ChangeEvent, useEffect, useState } from "react";
 import { ItemPresets } from "../../models/ItemPresets";
@@ -55,6 +56,7 @@ export default function UpdateItem(props: ListItemProps) {
     const { account } = useEthers();
     const [items, setItems] = useState<RibbitItem[]>([]);
     const [selectedItem, setSelectedItem] = useState<RibbitItem>(ribbitItem);
+    const [raffleEndDays, setRaffleEndDays] = useState<string>('');
     const [itemImage, setItemImage] = useState<File>();
     const [itemImageTransparent, setItemImageTransparent] = useState<File>();
     const [showAlert, setShowAlert] = useState(false);
@@ -93,6 +95,13 @@ export default function UpdateItem(props: ListItemProps) {
         }
 
     }, [selectedItem.traitLayer]);
+
+    useEffect(() => {
+        if (selectedItem.category === 'raffles') {
+            const future = add(new Date(), { days: +raffleEndDays });
+            setSelectedItem({ ...selectedItem, endDate: future.getTime()});
+        }
+    }, [raffleEndDays]);
 
     async function getCompatibleTraits(traitId: number) {
         try {
@@ -180,6 +189,10 @@ export default function UpdateItem(props: ListItemProps) {
             ...selectedItem,
             [event.target.name]: event.target.value as string
         })
+    }
+
+    const onRaffleDaysChange = (event: SelectChangeEvent) => {
+        setRaffleEndDays(event.target.value);
     }
 
     const onItemImageChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -325,6 +338,22 @@ export default function UpdateItem(props: ListItemProps) {
                         <FormControlLabel label='Physical' labelPlacement="top" name="isPhysical" control={<Switch checked={selectedItem.isPhysical} onChange={onSwitchChange} />}/>
                     </FormControl>
                 </Stack>
+                {  selectedItem.category === 'raffles' &&
+                <Stack id='raffles' pb={5}>
+                    <FormControl>
+                        <InputLabel id="raffles-label">Raffle End Days*</InputLabel>
+                        <Select labelId="raffles-label" id="raffles" name="Raffle End Days" value={raffleEndDays} label="Raffle End Days" onChange={onRaffleDaysChange}>
+                            <MenuItem value='1'>1 Day</MenuItem>
+                            <MenuItem value='2'>2 Days</MenuItem>
+                            <MenuItem value='3'>3 Days</MenuItem>
+                            <MenuItem value='4'>4 Days</MenuItem>
+                            <MenuItem value='5'>5 Days</MenuItem>
+                            <MenuItem value='6'>6 Days</MenuItem>
+                            <MenuItem value='7'>7 Days</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Stack>
+                }
                 <Stack id='contract' direction='row' spacing={2} pb={5}>
                     <TextField id='item-price' label="Price" variant="outlined" value={selectedItem.price} onChange={(event) => setSelectedItem({...selectedItem, price: +event.target.value})} />
                     <TextField id='item-supply' label="Supply" variant="outlined" value={selectedItem.supply} onChange={(event) => setSelectedItem({...selectedItem, supply: +event.target.value})} />
