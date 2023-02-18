@@ -7,6 +7,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { ItemPresets } from "../../models/ItemPresets";
 import { ItemRequest } from "../../models/ItemRequest";
 import { Trait } from "../../models/Trait";
+import { add } from "date-fns";
 
 declare var window: any;
 
@@ -36,7 +37,7 @@ const itemRequest: ItemRequest = {
     isOnSale: false
 };
 
-export type itemType = 'normal' | 'friends' | 'collabs' | 'traits';
+export type itemType = 'normal' | 'raffles' | 'friends' | 'collabs' | 'traits';
 export interface ListItemProps {
     title: string;
     type: itemType;
@@ -48,6 +49,7 @@ export default function ListItem(props: ListItemProps) {
     const { account } = useEthers();
     const [itemImage, setItemImage] = useState<File>();
     const [itemImageTransparent, setItemImageTransparent] = useState<File>();
+    const [raffleEndDays, setRaffleEndDays] = useState<string>('');
     const [price, setPrice] = useState('');
     const [percent, setPercent] = useState('');
     const [supply, setSupply] = useState('');
@@ -79,6 +81,13 @@ export default function ListItem(props: ListItemProps) {
             getTraits(item.traitLayer);
         }
     }, [item.traitLayer]);
+
+    useEffect(() => {
+        if (item.category === 'raffles') {
+            const future = add(new Date(), { days: +raffleEndDays });
+            setItem({ ...item, endDate: future.getTime()});
+        }
+    }, [raffleEndDays])
 
     const onCompatibleTraitsChanged = (event: SelectChangeEvent<typeof compatibleTraits>) => {
       const value = event.target.value;
@@ -158,6 +167,10 @@ export default function ListItem(props: ListItemProps) {
             ...item,
             [event.target.name]: event.target.value as string
         })
+    }
+
+    const onRaffleDaysChange = (event: SelectChangeEvent) => {
+        setRaffleEndDays(event.target.value);
     }
 
     const onItemImageChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -279,6 +292,22 @@ export default function ListItem(props: ListItemProps) {
                     </Stack>
                     }
                 </Stack>
+                {  item.category === 'raffles' &&
+                <Stack id='raffles' pb={5}>
+                    <FormControl>
+                        <InputLabel id="raffles-label">Raffle End Days*</InputLabel>
+                        <Select labelId="raffles-label" id="raffles" name="Raffle End Days" value={raffleEndDays} label="Raffle End Days" onChange={onRaffleDaysChange}>
+                            <MenuItem value='1'>1 Day</MenuItem>
+                            <MenuItem value='2'>2 Days</MenuItem>
+                            <MenuItem value='3'>3 Days</MenuItem>
+                            <MenuItem value='4'>4 Days</MenuItem>
+                            <MenuItem value='5'>5 Days</MenuItem>
+                            <MenuItem value='6'>6 Days</MenuItem>
+                            <MenuItem value='7'>7 Days</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Stack>
+                }
                 <Stack id='contract' direction='row' spacing={2} pb={5}>
                     <TextField id='item-price' label="Price" variant="outlined" value={price} onChange={(event) => setPrice(event.target.value)} />
                     <TextField id='item-supply' label="Supply" variant="outlined" value={supply} onChange={(event) => setSupply(event.target.value)} />
