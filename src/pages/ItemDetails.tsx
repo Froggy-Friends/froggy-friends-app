@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { makeStyles, createStyles } from '@mui/styles';
-import { ArrowBack, Check, Close, Search, Warning } from "@mui/icons-material";
+import { ArrowBack, Check, Close, ConfirmationNumber, Search, Warning } from "@mui/icons-material";
 import {  Button, Chip, Container, Grid, IconButton, Link, Snackbar, SnackbarContent, Stack, TextField, Typography, useMediaQuery, useTheme, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Skeleton, Modal, Box, LinearProgress, Theme } from "@mui/material";
 import { RibbitItem } from "../models/RibbitItem";
 import { useAppDispatch } from "../redux/hooks";
@@ -63,6 +63,7 @@ export default function ItemDetails() {
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
     const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+    const [showRaffleTickets, setShowRaffleTickets] = useState(false);
     const [itemOwners, setItemOwners] = useState<string[]>([]);
     const [filteredItemOwners, setFilteredItemOwners] = useState<string[]>([]);
     const [tickets, setTickets] = useState('');
@@ -377,7 +378,17 @@ export default function ItemDetails() {
                             <Stack spacing={3}>
                                 <Stack direction={isXs ? 'column' : 'row'} justifyContent='space-between'>
                                     <Typography fontWeight='bold' pb={3}>Item Owners</Typography>
-                                    <TextField placeholder='Search by wallet' value={search} onChange={onSearch} InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}/>
+                                    <Stack direction='row' alignItems='center' spacing={3}>
+                                        {
+                                            item?.category === 'raffles' &&
+                                            <Paper elevation={3} sx={{borderRadius: 25}}>
+                                                <IconButton className="cta" onClick={() => setShowRaffleTickets(true)}>
+                                                    <ConfirmationNumber/>
+                                                </IconButton>
+                                            </Paper>
+                                        }
+                                        <TextField placeholder='Search by wallet' value={search} onChange={onSearch} InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}/>
+                                    </Stack>
                                 </Stack>
                                 <TableContainer component={Paper} elevation={0} sx={{height: isXs ? 500 : 350}}>
                                     <Table stickyHeader aria-label="simple table">
