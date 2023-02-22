@@ -498,7 +498,12 @@ export default function ItemDetails() {
             <Modal open={showRaffleTickets} onClose={onRaffleTicketsClosed} keepMounted>
                 <Box className={classes.modal}>
                     <Stack spacing={3}>
-                        <Typography variant='h4'>{item?.name} Tickets</Typography>
+                        <Stack direction='row' justifyContent='space-between'>
+                            <Typography variant='h4'>{item?.name} Tickets</Typography>
+                            <IconButton className="cta" color='inherit' onClick={onRaffleTicketsClosed}>
+                                <Close/>
+                            </IconButton>
+                        </Stack>
                         <Typography variant='subtitle1'>{raffleTickets.length} total tickets</Typography>
                         <TableContainer component={Paper} elevation={0} sx={{height: isXs ? 500 : 350}}>
                             <Table stickyHeader aria-label="simple table">
