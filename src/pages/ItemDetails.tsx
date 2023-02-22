@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { makeStyles, createStyles } from '@mui/styles';
 import { ArrowBack, Check, Close, ConfirmationNumber, Search, Warning } from "@mui/icons-material";
@@ -47,7 +47,24 @@ const useStyles: any = makeStyles((theme: Theme) =>
       '& th, h5': {
         fontWeight: 'bold'
       }
-    }
+    },
+    modal: {
+        position: 'absolute' as 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 700,
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.secondary.main,
+        borderRadius: 5,
+        padding: theme.spacing(3),
+        minHeight: 500, 
+        justifyContent: 'space-between',
+        [theme.breakpoints.down('sm')]: {
+          height: '100%',
+          width: '100%'
+        }
+      }
   })
 );
 
@@ -68,6 +85,7 @@ export default function ItemDetails() {
     const [filteredItemOwners, setFilteredItemOwners] = useState<string[]>([]);
     const [tickets, setTickets] = useState('');
     const [search, setSearch] = useState('');
+    const [raffleTickets, setRaffleTickets] = useState<string[]>([]); // all purchased raffle tickets
     const [compatibleTraits, setCompatibleTraits] = useState<Trait[]>([]);
     const debouncedSearch = useDebounce(search, 500);
     const debouncedTickets = useDebounce(tickets, 500);
@@ -233,6 +251,18 @@ export default function ItemDetails() {
     const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(event.target.value);
       };
+    
+    const onRaffleTicketsClicked = async (event: any) => {
+        // load raffle tickets
+        const tickets = (await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${item?.id}/tickets`)).data;
+        setRaffleTickets(tickets);
+        setShowRaffleTickets(true);
+    }
+
+    const onRaffleTicketsClosed = (event: any) => {
+        setRaffleTickets([]);
+        setShowRaffleTickets(false);
+    }
 
     return (
         <Grid id='item-details' container direction='column' bgcolor={theme.palette.background.default} pt={20} pb={20}>
@@ -382,7 +412,7 @@ export default function ItemDetails() {
                                         {
                                             item?.category === 'raffles' &&
                                             <Paper elevation={3} sx={{borderRadius: 25}}>
-                                                <IconButton className="cta" onClick={() => setShowRaffleTickets(true)}>
+                                                <IconButton className="cta" onClick={onRaffleTicketsClicked}>
                                                     <ConfirmationNumber/>
                                                 </IconButton>
                                             </Paper>
@@ -463,6 +493,27 @@ export default function ItemDetails() {
                     </Link>
                 }
                 { (approveSpenderState.status === "Mining" || collabBuyState.status === "Mining") && <LinearProgress  sx={{margin: 2}}/>}
+                </Box>
+            </Modal>
+            <Modal open={showRaffleTickets} onClose={onRaffleTicketsClosed} keepMounted>
+                <Box className={classes.modal}>
+                    <Stack spacing={3}>
+                        <Typography variant='h4'>{item?.name} Tickets</Typography>
+                        <Typography variant='subtitle1'>{raffleTickets.length} total tickets</Typography>
+                        <TableContainer component={Paper} elevation={0} sx={{height: isXs ? 500 : 350}}>
+                            <Table stickyHeader aria-label="simple table">
+                                <TableBody>
+                                {raffleTickets.map((ticket, index) => (
+                                    <TableRow key={index} className={classes.row}>
+                                    <TableCell>
+                                        <Typography color='secondary'>{ticket}</Typography>
+                                    </TableCell>
+                                    </TableRow>
+                                ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Stack>
                 </Box>
             </Modal>
         </Grid>
