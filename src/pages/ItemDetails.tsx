@@ -498,10 +498,10 @@ export default function ItemDetails() {
             <Modal open={showRaffleTickets} onClose={onRaffleTicketsClosed} keepMounted>
                 <Box className={classes.modal}>
                     <Stack spacing={3}>
-                        <Stack direction='row' justifyContent='space-between'>
+                        <Stack direction='row' justifyContent='space-between' spacing={2}>
                             <Typography variant='h4'>{item?.name} Tickets</Typography>
-                            <IconButton className="cta" color='inherit' onClick={onRaffleTicketsClosed}>
-                                <Close/>
+                            <IconButton className="cta" size={isXs ? 'large' : 'medium'} color='inherit' onClick={onRaffleTicketsClosed}>
+                                <Close fontSize={isXs ? 'large' : 'medium'}/>
                             </IconButton>
                         </Stack>
                         <Typography variant='subtitle1'>{raffleTickets.length} total tickets</Typography>
