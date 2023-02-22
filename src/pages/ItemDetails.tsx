@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { makeStyles, createStyles } from '@mui/styles';
-import { ArrowBack, Check, Close, Search, Warning } from "@mui/icons-material";
+import { ArrowBack, Check, Close, ConfirmationNumber, Search, Warning } from "@mui/icons-material";
 import {  Button, Chip, Container, Grid, IconButton, Link, Snackbar, SnackbarContent, Stack, TextField, Typography, useMediaQuery, useTheme, Paper, Table, TableBody, TableCell, TableContainer, TableRow, Skeleton, Modal, Box, LinearProgress, Theme } from "@mui/material";
 import { RibbitItem } from "../models/RibbitItem";
 import { useAppDispatch } from "../redux/hooks";
@@ -47,7 +47,24 @@ const useStyles: any = makeStyles((theme: Theme) =>
       '& th, h5': {
         fontWeight: 'bold'
       }
-    }
+    },
+    modal: {
+        position: 'absolute' as 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 700,
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.secondary.main,
+        borderRadius: 5,
+        padding: theme.spacing(3),
+        minHeight: 500, 
+        justifyContent: 'space-between',
+        [theme.breakpoints.down('sm')]: {
+          height: '100%',
+          width: '100%'
+        }
+      }
   })
 );
 
@@ -63,10 +80,12 @@ export default function ItemDetails() {
     const [alertMessage, setAlertMessage] = useState<any>(undefined);
     const [showAlert, setShowAlert] = useState(false);
     const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+    const [showRaffleTickets, setShowRaffleTickets] = useState(false);
     const [itemOwners, setItemOwners] = useState<string[]>([]);
     const [filteredItemOwners, setFilteredItemOwners] = useState<string[]>([]);
     const [tickets, setTickets] = useState('');
     const [search, setSearch] = useState('');
+    const [raffleTickets, setRaffleTickets] = useState<string[]>([]); // all purchased raffle tickets
     const [compatibleTraits, setCompatibleTraits] = useState<Trait[]>([]);
     const debouncedSearch = useDebounce(search, 500);
     const debouncedTickets = useDebounce(tickets, 500);
@@ -232,6 +251,18 @@ export default function ItemDetails() {
     const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(event.target.value);
       };
+    
+    const onRaffleTicketsClicked = async (event: any) => {
+        // load raffle tickets
+        const tickets = (await axios.get<string[]>(`${process.env.REACT_APP_API}/items/${item?.id}/tickets`)).data;
+        setRaffleTickets(tickets);
+        setShowRaffleTickets(true);
+    }
+
+    const onRaffleTicketsClosed = (event: any) => {
+        setRaffleTickets([]);
+        setShowRaffleTickets(false);
+    }
 
     return (
         <Grid id='item-details' container direction='column' bgcolor={theme.palette.background.default} pt={20} pb={20}>
@@ -377,7 +408,17 @@ export default function ItemDetails() {
                             <Stack spacing={3}>
                                 <Stack direction={isXs ? 'column' : 'row'} justifyContent='space-between'>
                                     <Typography fontWeight='bold' pb={3}>Item Owners</Typography>
-                                    <TextField placeholder='Search by wallet' value={search} onChange={onSearch} InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}/>
+                                    <Stack direction='row' alignItems='center' spacing={3}>
+                                        {
+                                            item?.category === 'raffles' &&
+                                            <Paper elevation={3} sx={{borderRadius: 25}}>
+                                                <IconButton className="cta" onClick={onRaffleTicketsClicked}>
+                                                    <ConfirmationNumber/>
+                                                </IconButton>
+                                            </Paper>
+                                        }
+                                        <TextField placeholder='Search by wallet' value={search} onChange={onSearch} InputProps={{endAdornment: (<IconButton><Search/></IconButton>)}}/>
+                                    </Stack>
                                 </Stack>
                                 <TableContainer component={Paper} elevation={0} sx={{height: isXs ? 500 : 350}}>
                                     <Table stickyHeader aria-label="simple table">
@@ -452,6 +493,32 @@ export default function ItemDetails() {
                     </Link>
                 }
                 { (approveSpenderState.status === "Mining" || collabBuyState.status === "Mining") && <LinearProgress  sx={{margin: 2}}/>}
+                </Box>
+            </Modal>
+            <Modal open={showRaffleTickets} onClose={onRaffleTicketsClosed} keepMounted>
+                <Box className={classes.modal}>
+                    <Stack spacing={3}>
+                        <Stack direction='row' justifyContent='space-between' spacing={2}>
+                            <Typography variant='h4'>{item?.name} Tickets</Typography>
+                            <IconButton className="cta" size={isXs ? 'large' : 'medium'} color='inherit' onClick={onRaffleTicketsClosed}>
+                                <Close fontSize={isXs ? 'large' : 'medium'}/>
+                            </IconButton>
+                        </Stack>
+                        <Typography variant='subtitle1'>{raffleTickets.length} total tickets</Typography>
+                        <TableContainer component={Paper} elevation={0} sx={{height: isXs ? 500 : 350}}>
+                            <Table stickyHeader aria-label="simple table">
+                                <TableBody>
+                                {raffleTickets.map((ticket, index) => (
+                                    <TableRow key={index} className={classes.row}>
+                                    <TableCell>
+                                        <Typography color='secondary'>{ticket}</Typography>
+                                    </TableCell>
+                                    </TableRow>
+                                ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Stack>
                 </Box>
             </Modal>
         </Grid>
