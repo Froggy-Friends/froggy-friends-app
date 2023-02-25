@@ -277,7 +277,7 @@ export default function ListItem(props: ListItemProps) {
                     }
                     { type === 'traits' &&
                     <Stack minWidth={300}>
-                        <FormControl>
+                        <FormControl sx={{maxWidth: 300}}>
                             <InputLabel id="compatible-traits-label">Compatible Traits</InputLabel>
                             <Select labelId="compatible-traits-label" id="compatible-traits" multiple value={compatibleTraits} onChange={onCompatibleTraitsChanged} 
                                 input={<OutlinedInput label="Compatible Traits" />} renderValue={(selected) => selected.join(', ')}>
