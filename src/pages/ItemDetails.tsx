@@ -135,7 +135,6 @@ export default function ItemDetails() {
         async function getCompatibleTraits(traitId: number) {
             try {
                 const response = await axios.get<Trait[]>(`${process.env.REACT_APP_API}/traits/compatible/${traitId}`);
-                console.log("comp traits: ", response.data);
                 setCompatibleTraits(response.data);
             } catch (error) {
                 console.log("get compatible traits error: ", error);
@@ -297,7 +296,7 @@ export default function ItemDetails() {
                             item && item.isOnSale && item.minted !== item.supply &&
                             <Grid id='available' container pb={3}>
                                 {
-                                    !isBefore(new Date(+item.endDate), new Date()) && <Typography pr={isXs ? 3 : 5}>{getAvailable(item)}</Typography>
+                                    <Typography pr={isXs ? 3 : 5}>{getAvailable(item)}</Typography>
                                 }
                                 {
                                     item.category === 'raffles' && <Typography>{getEndDate(item)}</Typography>
