@@ -359,7 +359,7 @@ export default function ItemDetails() {
                             </Grid>
                         }
                         {
-                            item && item.isCollabFriend &&
+                            item && item.isCollabFriend && item.minted !== item.supply &&
                             <Grid id='buttons' container alignItems='end'>
                                 <Button variant='contained' sx={{height: 50}} onClick={() => onBuyCollabItem(item)}>
                                     <Typography>Buy Now</Typography>
