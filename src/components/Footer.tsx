@@ -68,7 +68,7 @@ export default function Footer() {
                 </Link>
               </Grid>
               <Grid item p={1}>
-                <Link href="https://discord.gg/froggylabs" underline='none' target='_blank'>
+                <Link href="https://discord.gg/froggyfriends" underline='none' target='_blank'>
                   <Fab size='small'>
                     <Avatar className={classes.avatar} alt='Discord' src={discord} sx={{height: 28, width: 28}}/>
                   </Fab>
