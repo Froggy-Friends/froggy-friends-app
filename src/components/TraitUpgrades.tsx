@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { Upgrade } from '../models/Upgrade';
 import { getDate } from '../utils';
+import { Button } from '@mui/material';
 
 function createData(
   name: string,
@@ -35,7 +36,7 @@ export default function TraitUpgrades() {
     const fetchUpgrades = async () => {
       try {
         const apiUrl = process.env.REACT_APP_API;
-        const results = (await axios.get<Upgrade[]>(`${apiUrl}/upgrades`)).data;
+        const results = (await axios.get<Upgrade[]>(`${apiUrl}/upgrades/pending`)).data;
         console.log("upgrades: ", results);
         setUpgrades(results);
       } catch (error) {
@@ -54,6 +55,7 @@ export default function TraitUpgrades() {
           <TableCell align="right">Trait Name</TableCell>
           <TableCell align="right">Upgrade State</TableCell>
           <TableCell align="right">Date</TableCell>
+          <TableCell align="right">Retry</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -63,6 +65,9 @@ export default function TraitUpgrades() {
             <TableCell align="right">{upgrade.traitName}</TableCell>
             <TableCell align="right">{upgrade.isComplete ? 'Complete' : upgrade.isPending ? 'Pending' : 'Failed'}</TableCell>
             <TableCell align="right">{getDate(upgrade.date)}</TableCell>
+            <TableCell align="right">
+              { upgrade.isPending ? <Button>Retry</Button> : ''}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
