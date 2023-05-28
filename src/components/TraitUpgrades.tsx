@@ -9,11 +9,11 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { Upgrade } from '../models/Upgrade';
 import { getDate } from '../utils';
-import { Button, IconButton, Link, Snackbar, Tooltip, Typography, useTheme } from '@mui/material';
+import { Button, IconButton, Link, Snackbar, Stack, Tooltip, Typography, useTheme } from '@mui/material';
 import { ethers } from 'ethers';
 import { useEthers } from '@usedapp/core';
 import { TraitUpgradeRequest } from '../models/TraitUpgradeRequest';
-import { Close } from '@mui/icons-material';
+import { Close, RefreshOutlined } from '@mui/icons-material';
 
 declare var window: any;
 
@@ -24,16 +24,19 @@ export default function TraitUpgrades() {
   const [alertMessage, setAlertMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
 
-  useEffect(() => {
-    const fetchUpgrades = async () => {
-      try {
-        const apiUrl = process.env.REACT_APP_API;
-        const results = (await axios.get<Upgrade[]>(`${apiUrl}/upgrades/pending`)).data;
-        setUpgrades(results);
-      } catch (error) {
-        console.log("fetch upgrades error: ", error);
-      }
+  const fetchUpgrades = async () => {
+    try {
+      setUpgrades([]);
+      const apiUrl = process.env.REACT_APP_API;
+      const results = (await axios.get<Upgrade[]>(`${apiUrl}/upgrades/pending`)).data;
+      setUpgrades(results);
+    } catch (error) {
+      setAlertMessage("There was a problem fetching pending upgrades: " + error);
+      setShowAlert(true);
     }
+  }
+
+  useEffect(() => {
     fetchUpgrades();
   }, [])
 
@@ -75,61 +78,65 @@ export default function TraitUpgrades() {
   }
 
   return (
-    <>
-    <TableContainer component={Paper} sx={{backgroundColor: theme.palette.secondary.main}}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{color: theme.palette.background.default}}>Frog ID</TableCell>
-            <TableCell sx={{color: theme.palette.background.default}} align="right">Trait Name</TableCell>
-            <TableCell sx={{color: theme.palette.background.default}} align="right">Upgrade State</TableCell>
-            <TableCell sx={{color: theme.palette.background.default}} align="right">Date</TableCell>
-            <TableCell sx={{color: theme.palette.background.default}} align="right">Wallet</TableCell>
-            <TableCell sx={{color: theme.palette.background.default}} align="right">Transaction</TableCell>
-            <TableCell sx={{color: theme.palette.background.default}} align="center">Retry</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {upgrades.map((upgrade) => (
-            <TableRow key={upgrade.id} sx={{ '&:last-child td, &:last-child th': { border: 0 }, color: theme.palette.primary.main }}>
-              <TableCell sx={{color: theme.palette.background.default}}>{upgrade.frogId}</TableCell>
-              <TableCell sx={{color: theme.palette.background.default}} align="right">{upgrade.traitName}</TableCell>
-              <TableCell sx={{color: theme.palette.background.default}} align="right">{upgrade.isComplete ? 'Complete' : upgrade.isPending ? 'Pending' : 'Failed'}</TableCell>
-              <TableCell sx={{color: theme.palette.background.default}} align="right">{getDate(upgrade.date)}</TableCell>
-              <TableCell sx={{color: theme.palette.background.default}} align="right">
-                <Tooltip title={upgrade.wallet} style={{cursor: 'pointer'}}>
-                  <Typography variant='inherit'>
-                    {upgrade.wallet.substring(0, 4)}.....{upgrade.wallet.substring(upgrade.wallet.length - 3)}
-                  </Typography>
-                </Tooltip>
-              </TableCell>
-              <TableCell sx={{color: theme.palette.background.default}} align="right">
-                <Tooltip title={upgrade.transaction} style={{cursor: 'pointer'}}>
-                  <Link variant='inherit' href={`${process.env.REACT_APP_ETHERSCAN}/tx/${upgrade.transaction}`} target="_blank">
-                    {upgrade.transaction.substring(0, 4)}.....{upgrade.transaction.substring(upgrade.transaction.length - 4)}
-                  </Link>
-                </Tooltip>
-              </TableCell>
-              <TableCell align="center">
-                { upgrade.isPending ? <Button variant='contained' onClick={() => retryUpgrade(upgrade)}>Retry</Button> : ''}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-   </TableContainer>
-   <Snackbar
-      open={showAlert} 
-      autoHideDuration={5000} 
-      message={alertMessage} 
-      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      onClose={onAlertClose}
-      action={
-      <IconButton size='small' aria-label='close' color='inherit' onClick={onAlertClose}>
-          <Close fontSize='small' />
+    <Stack direction='column' alignItems='start'>
+      <IconButton color='primary' onClick={fetchUpgrades}>
+        <RefreshOutlined/>
+        <Typography>Refresh Pending Upgrades</Typography>
       </IconButton>
-      }
-    />
-    </>
+      <TableContainer component={Paper} sx={{backgroundColor: theme.palette.secondary.main}}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{color: theme.palette.background.default}}>Frog ID</TableCell>
+              <TableCell sx={{color: theme.palette.background.default}} align="right">Trait Name</TableCell>
+              <TableCell sx={{color: theme.palette.background.default}} align="right">Upgrade State</TableCell>
+              <TableCell sx={{color: theme.palette.background.default}} align="right">Date</TableCell>
+              <TableCell sx={{color: theme.palette.background.default}} align="right">Wallet</TableCell>
+              <TableCell sx={{color: theme.palette.background.default}} align="right">Transaction</TableCell>
+              <TableCell sx={{color: theme.palette.background.default}} align="center">Retry</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {upgrades.map((upgrade) => (
+              <TableRow key={upgrade.id} sx={{ '&:last-child td, &:last-child th': { border: 0 }, color: theme.palette.primary.main }}>
+                <TableCell sx={{color: theme.palette.background.default}}>{upgrade.frogId}</TableCell>
+                <TableCell sx={{color: theme.palette.background.default}} align="right">{upgrade.traitName}</TableCell>
+                <TableCell sx={{color: theme.palette.background.default}} align="right">{upgrade.isComplete ? 'Complete' : upgrade.isPending ? 'Pending' : 'Failed'}</TableCell>
+                <TableCell sx={{color: theme.palette.background.default}} align="right">{getDate(upgrade.date)}</TableCell>
+                <TableCell sx={{color: theme.palette.background.default}} align="right">
+                  <Tooltip title={upgrade.wallet} style={{cursor: 'pointer'}}>
+                    <Typography variant='inherit'>
+                      {upgrade.wallet.substring(0, 4)}.....{upgrade.wallet.substring(upgrade.wallet.length - 3)}
+                    </Typography>
+                  </Tooltip>
+                </TableCell>
+                <TableCell sx={{color: theme.palette.background.default}} align="right">
+                  <Tooltip title={upgrade.transaction} style={{cursor: 'pointer'}}>
+                    <Link variant='inherit' href={`${process.env.REACT_APP_ETHERSCAN}/tx/${upgrade.transaction}`} target="_blank">
+                      {upgrade.transaction.substring(0, 4)}.....{upgrade.transaction.substring(upgrade.transaction.length - 4)}
+                    </Link>
+                  </Tooltip>
+                </TableCell>
+                <TableCell align="center">
+                  { upgrade.isPending ? <Button variant='contained' onClick={() => retryUpgrade(upgrade)}>Retry</Button> : ''}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+    </TableContainer>
+    <Snackbar
+        open={showAlert} 
+        autoHideDuration={5000} 
+        message={alertMessage} 
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={onAlertClose}
+        action={
+        <IconButton size='small' aria-label='close' color='inherit' onClick={onAlertClose}>
+            <Close fontSize='small' />
+        </IconButton>
+        }
+      />
+    </Stack>
   )
 }
