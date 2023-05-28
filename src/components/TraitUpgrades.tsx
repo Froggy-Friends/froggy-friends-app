@@ -9,28 +9,15 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { Upgrade } from '../models/Upgrade';
 import { getDate } from '../utils';
-import { Button, Tooltip, Typography, useTheme } from '@mui/material';
+import { Button, Link, Tooltip, Typography, useTheme } from '@mui/material';
+import { ethers } from 'ethers';
+import { useEthers } from '@usedapp/core';
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+declare var window: any;
 
 export default function TraitUpgrades() {
   const theme = useTheme();
+  const { account } = useEthers();
   const [upgrades, setUpgrades] = useState<Upgrade[]>([]);
 
   useEffect(() => {
@@ -46,8 +33,28 @@ export default function TraitUpgrades() {
     fetchUpgrades();
   }, [])
 
-  const retryUpgrade = (upgrade: Upgrade) => {
+  const retryUpgrade = async (upgrade: Upgrade) => {
     console.log("retry upgrade: ", upgrade);
+
+    try {
+      let data = {
+        account: account,
+        upgradeId: upgrade.id,
+        retry: true
+      };
+
+      const apiUrl = process.env.REACT_APP_API;
+      // prompt admin signature
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const message = JSON.stringify(data);
+      const signer = provider.getSigner();
+      const signature = await signer.signMessage(message);
+      const upgradeRequest = {...data, message: message, signature: signature};
+      const results = (await axios.post<Upgrade>(`${apiUrl}/upgrades/retry`, upgradeRequest)).data;
+      console.log("retry upgrade result: ", results);
+    } catch (error) {
+      console.log("retry upgrade error: ", error);
+    }
   }
 
   return (
@@ -80,9 +87,9 @@ export default function TraitUpgrades() {
             </TableCell>
             <TableCell sx={{color: theme.palette.background.default}} align="right">
               <Tooltip title={upgrade.transaction} style={{cursor: 'pointer'}}>
-                <Typography variant='inherit'>
+                <Link variant='inherit' href={`${process.env.REACT_APP_ETHERSCAN}/tx/${upgrade.transaction}`} target="_blank">
                   {upgrade.transaction.substring(0, 4)}.....{upgrade.transaction.substring(upgrade.transaction.length - 4)}
-                </Typography>
+                </Link>
               </Tooltip>
             </TableCell>
             <TableCell align="center">
