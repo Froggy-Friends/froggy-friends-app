@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { Upgrade } from '../models/Upgrade';
 import { getDate } from '../utils';
-import { Button } from '@mui/material';
+import { Button, useTheme } from '@mui/material';
 
 function createData(
   name: string,
@@ -30,6 +30,7 @@ const rows = [
 ];
 
 export default function TraitUpgrades() {
+  const theme = useTheme();
   const [upgrades, setUpgrades] = useState<Upgrade[]>([]);
 
   useEffect(() => {
@@ -47,26 +48,26 @@ export default function TraitUpgrades() {
   }, [])
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{backgroundColor: theme.palette.secondary.main}}>
     <Table sx={{ minWidth: 650 }} aria-label="simple table">
       <TableHead>
         <TableRow>
-          <TableCell>Frog ID</TableCell>
-          <TableCell align="right">Trait Name</TableCell>
-          <TableCell align="right">Upgrade State</TableCell>
-          <TableCell align="right">Date</TableCell>
-          <TableCell align="right">Retry</TableCell>
+          <TableCell sx={{color: theme.palette.background.default}}>Frog ID</TableCell>
+          <TableCell sx={{color: theme.palette.background.default}} align="right">Trait Name</TableCell>
+          <TableCell sx={{color: theme.palette.background.default}} align="right">Upgrade State</TableCell>
+          <TableCell sx={{color: theme.palette.background.default}} align="right">Date</TableCell>
+          <TableCell sx={{color: theme.palette.background.default}} align="center">Retry</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {upgrades.map((upgrade) => (
-          <TableRow key={upgrade.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-            <TableCell>{upgrade.frogId}</TableCell>
-            <TableCell align="right">{upgrade.traitName}</TableCell>
-            <TableCell align="right">{upgrade.isComplete ? 'Complete' : upgrade.isPending ? 'Pending' : 'Failed'}</TableCell>
-            <TableCell align="right">{getDate(upgrade.date)}</TableCell>
-            <TableCell align="right">
-              { upgrade.isPending ? <Button>Retry</Button> : ''}
+          <TableRow key={upgrade.id} sx={{ '&:last-child td, &:last-child th': { border: 0 }, color: theme.palette.primary.main }}>
+            <TableCell sx={{color: theme.palette.background.default}}>{upgrade.frogId}</TableCell>
+            <TableCell sx={{color: theme.palette.background.default}} align="right">{upgrade.traitName}</TableCell>
+            <TableCell sx={{color: theme.palette.background.default}} align="right">{upgrade.isComplete ? 'Complete' : upgrade.isPending ? 'Pending' : 'Failed'}</TableCell>
+            <TableCell sx={{color: theme.palette.background.default}} align="right">{getDate(upgrade.date)}</TableCell>
+            <TableCell align="center">
+              { upgrade.isPending ? <Button variant='contained'>Retry</Button> : ''}
             </TableCell>
           </TableRow>
         ))}
