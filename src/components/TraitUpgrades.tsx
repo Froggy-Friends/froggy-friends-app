@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import { Upgrade } from '../models/Upgrade';
 import { getDate } from '../utils';
-import { Button, useTheme } from '@mui/material';
+import { Button, Tooltip, Typography, useTheme } from '@mui/material';
 
 function createData(
   name: string,
@@ -38,7 +38,6 @@ export default function TraitUpgrades() {
       try {
         const apiUrl = process.env.REACT_APP_API;
         const results = (await axios.get<Upgrade[]>(`${apiUrl}/upgrades/pending`)).data;
-        console.log("upgrades: ", results);
         setUpgrades(results);
       } catch (error) {
         console.log("fetch upgrades error: ", error);
@@ -46,6 +45,10 @@ export default function TraitUpgrades() {
     }
     fetchUpgrades();
   }, [])
+
+  const retryUpgrade = (upgrade: Upgrade) => {
+    console.log("retry upgrade: ", upgrade);
+  }
 
   return (
     <TableContainer component={Paper} sx={{backgroundColor: theme.palette.secondary.main}}>
@@ -56,6 +59,8 @@ export default function TraitUpgrades() {
           <TableCell sx={{color: theme.palette.background.default}} align="right">Trait Name</TableCell>
           <TableCell sx={{color: theme.palette.background.default}} align="right">Upgrade State</TableCell>
           <TableCell sx={{color: theme.palette.background.default}} align="right">Date</TableCell>
+          <TableCell sx={{color: theme.palette.background.default}} align="right">Wallet</TableCell>
+          <TableCell sx={{color: theme.palette.background.default}} align="right">Transaction</TableCell>
           <TableCell sx={{color: theme.palette.background.default}} align="center">Retry</TableCell>
         </TableRow>
       </TableHead>
@@ -66,8 +71,22 @@ export default function TraitUpgrades() {
             <TableCell sx={{color: theme.palette.background.default}} align="right">{upgrade.traitName}</TableCell>
             <TableCell sx={{color: theme.palette.background.default}} align="right">{upgrade.isComplete ? 'Complete' : upgrade.isPending ? 'Pending' : 'Failed'}</TableCell>
             <TableCell sx={{color: theme.palette.background.default}} align="right">{getDate(upgrade.date)}</TableCell>
+            <TableCell sx={{color: theme.palette.background.default}} align="right">
+              <Tooltip title={upgrade.wallet} style={{cursor: 'pointer'}}>
+                <Typography variant='inherit'>
+                  {upgrade.wallet.substring(0, 4)}.....{upgrade.wallet.substring(upgrade.wallet.length - 3)}
+                </Typography>
+              </Tooltip>
+            </TableCell>
+            <TableCell sx={{color: theme.palette.background.default}} align="right">
+              <Tooltip title={upgrade.transaction} style={{cursor: 'pointer'}}>
+                <Typography variant='inherit'>
+                  {upgrade.transaction.substring(0, 4)}.....{upgrade.transaction.substring(upgrade.transaction.length - 4)}
+                </Typography>
+              </Tooltip>
+            </TableCell>
             <TableCell align="center">
-              { upgrade.isPending ? <Button variant='contained'>Retry</Button> : ''}
+              { upgrade.isPending ? <Button variant='contained' onClick={() => retryUpgrade(upgrade)}>Retry</Button> : ''}
             </TableCell>
           </TableRow>
         ))}

@@ -12,6 +12,6 @@ export const strToNum = (str: string): number => parseFloat(str.replace(/,/g, ''
 
 export const getDate = (dateUtc: string) => {
   const date = new Date(dateUtc);
-  const result = format(date, 'MMM dd @ hh:mm aa');
+  const result = format(date, 'MMM dd, y');
   return result;
 }
