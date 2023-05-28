@@ -8,6 +8,7 @@ import PreviewTrait from "../components/forms/PreviewTrait";
 import UpdateItem from "../components/forms/UpdateItem";
 import banner from '../images/lab.jpg';
 import { ItemPresets } from "../models/ItemPresets";
+import TraitUpgrades from "../components/TraitUpgrades";
 
 const useStyles: any = makeStyles(() => 
   createStyles({
@@ -87,8 +88,8 @@ export default function Admin() {
             Please check that the deployer has a balance to cover gas fees 0x09a06f3901f3b0299dd492bd35eA1bB38c5C4c9b.
           </Typography>
         </Stack>
-        <Stack direction='row' spacing={20}>
-          <Stack>
+        <Stack direction='row' spacing={10}>
+          <Stack minWidth={200}>
             <FormControl>
               <FormLabel id="admin-tasks">Admin Tasks</FormLabel>
               <RadioGroup aria-labelledby="admin-tasks" name="admin-tasks-group" value={task} onChange={onTaskChange}>
@@ -99,6 +100,7 @@ export default function Admin() {
                 <FormControlLabel value="update" control={<Radio />} label="Update Item" />
                 <FormControlLabel value="preview" control={<Radio />} label="Preview Trait" />
                 <FormControlLabel value="wallet" control={<Radio />} label="Wallet Checker" />
+                <FormControlLabel value="upgrades" control={<Radio />} label="Trait Upgrades" />
               </RadioGroup>
             </FormControl>
           </Stack>
@@ -144,6 +146,9 @@ export default function Admin() {
                 </Grid> 
               }
             </Stack>
+          }
+          {
+            task === 'upgrades' && <TraitUpgrades/>
           }
         </Stack>
       </Container>
