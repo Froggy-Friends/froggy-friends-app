@@ -10,8 +10,8 @@ import { AdminUpgradeRequest } from '../../models/AdminUpgradeRequest';
 declare var window: any;
 
 interface UpgradeRequest {
-  frogId: number;
-  itemId: number;
+  frogId: string;
+  itemId: string;
   wallet: string;
   transaction: string;
   account: string;
@@ -22,8 +22,8 @@ export default function ManualUpgrades() {
   const [alertMessage, setAlertMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [upgrade, setUpgrade] = useState<UpgradeRequest>({
-    frogId: 0,
-    itemId: 0,
+    frogId: '',
+    itemId: '',
     wallet: '',
     transaction: '',
     account: `${account}`
@@ -48,6 +48,7 @@ export default function ManualUpgrades() {
     event.preventDefault();
 
     try {
+      console.log("on upgrade submit: ", upgrade);
       // prompt admin signature
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const message = JSON.stringify(upgrade);
@@ -55,6 +56,8 @@ export default function ManualUpgrades() {
       const signature = await signer.signMessage(message);
       const upgradeRequest: AdminUpgradeRequest = {
         ...upgrade,
+        frogId: +upgrade.frogId,
+        itemId: +upgrade.itemId,
         message: message,
         signature: signature
       }
@@ -62,7 +65,17 @@ export default function ManualUpgrades() {
       const apiUrl = process.env.REACT_APP_FROGGY_FACTORY;
       const response = (await axios.post<Upgrade>(`${apiUrl}/upgrade`, upgradeRequest));
       if (response.status === 201) {
-        setAlertMessage('Upgrade started');
+        setAlertMessage('Upgrade complete');
+        setShowAlert(true);
+        setUpgrade({
+          frogId: '',
+          itemId: '',
+          wallet: '',
+          transaction: '',
+          account: `${account}`
+        })
+      } else {
+        setAlertMessage('Upgrade issue: ' + response.statusText);
         setShowAlert(true);
       }
     } catch (error) {
@@ -77,11 +90,11 @@ export default function ManualUpgrades() {
         <Stack spacing={5}>
           <Typography variant='h4'>Manual Trait Upgrade</Typography>
           <TextField id='frogId' label="Frog ID" name="frogId" variant="outlined" fullWidth value={upgrade.frogId} onChange={onInputChange} />
-          <TextField id='itemId' label="Item ID" name="itemId" variant="outlined" fullWidth value={upgrade.itemId} onChange={onInputChange} />
+          <TextField id='itemId' label="Ribbit Item ID" name="itemId" variant="outlined" fullWidth value={upgrade.itemId} onChange={onInputChange} />
           <TextField id='wallet' label="Wallet" name="wallet" variant="outlined" fullWidth value={upgrade.wallet} onChange={onInputChange} />
           <TextField id='transaction' label="Transaction" name="transaction" variant="outlined" fullWidth value={upgrade.transaction} onChange={onInputChange} />
           <Button type="submit" variant='contained' color="primary">
-              <Typography>Submit</Typography>
+            <Typography>Submit</Typography>
           </Button>
         </Stack>
       </form>
