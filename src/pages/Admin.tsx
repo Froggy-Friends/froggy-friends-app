@@ -9,6 +9,8 @@ import UpdateItem from "../components/forms/UpdateItem";
 import banner from '../images/lab.jpg';
 import { ItemPresets } from "../models/ItemPresets";
 import TraitUpgrades from "../components/TraitUpgrades";
+import ManualUpgrades from "../components/forms/ManualUpgrades";
+import SearchUpgrades from "../components/forms/SearchUpgrades";
 
 const useStyles: any = makeStyles(() => 
   createStyles({
@@ -100,7 +102,9 @@ export default function Admin() {
                 <FormControlLabel value="update" control={<Radio />} label="Update Item" />
                 <FormControlLabel value="preview" control={<Radio />} label="Preview Trait" />
                 <FormControlLabel value="wallet" control={<Radio />} label="Wallet Checker" />
-                <FormControlLabel value="upgrades" control={<Radio />} label="Trait Upgrades" />
+                <FormControlLabel value="pending" control={<Radio />} label="Pending Upgrades" />
+                <FormControlLabel value="upgrade" control={<Radio />} label="Manual Upgrade" />
+                <FormControlLabel value="search-upgrades" control={<Radio />} label="Search Upgrades" />
               </RadioGroup>
             </FormControl>
           </Stack>
@@ -148,7 +152,13 @@ export default function Admin() {
             </Stack>
           }
           {
-            task === 'upgrades' && <TraitUpgrades/>
+            task === 'pending' && <TraitUpgrades/>
+          }
+          {
+            task === 'upgrade' && <ManualUpgrades/>
+          }
+          {
+            task === 'search-upgrades' && <SearchUpgrades/>
           }
         </Stack>
       </Container>

@@ -57,14 +57,14 @@ export default function TraitUpgrades() {
         traitId: upgrade.traitId,
         transaction: upgrade.transaction
       };
-
-      const apiUrl = process.env.REACT_APP_FROGGY_FACTORY;
+      
       // prompt admin signature
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const message = JSON.stringify(data);
       const signer = provider.getSigner();
       const signature = await signer.signMessage(message);
       const upgradeRequest: TraitUpgradeRequest = {...data, message: message, signature: signature};
+      const apiUrl = process.env.REACT_APP_FROGGY_FACTORY;
       const response = (await axios.post<Upgrade>(`${apiUrl}/upgrade/retry`, upgradeRequest));
       if (response.status === 201) {
         setAlertMessage('Item created');
