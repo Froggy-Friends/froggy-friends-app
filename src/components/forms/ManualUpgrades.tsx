@@ -5,6 +5,7 @@ import { ethers } from 'ethers';
 import { useEthers } from '@usedapp/core';
 import { Upgrade } from '../../models/Upgrade';
 import { Close } from '@mui/icons-material';
+import { AdminUpgradeRequest } from '../../models/AdminUpgradeRequest';
 
 declare var window: any;
 
@@ -52,14 +53,14 @@ export default function ManualUpgrades() {
       const message = JSON.stringify(upgrade);
       const signer = provider.getSigner();
       const signature = await signer.signMessage(message);
-      const upgradeRequest = {
+      const upgradeRequest: AdminUpgradeRequest = {
         ...upgrade,
         message: message,
         signature: signature
       }
 
       const apiUrl = process.env.REACT_APP_FROGGY_FACTORY;
-      const response = (await axios.post<Upgrade>(`${apiUrl}/upgrade/manual`, upgradeRequest));
+      const response = (await axios.post<Upgrade>(`${apiUrl}/upgrade`, upgradeRequest));
       if (response.status === 201) {
         setAlertMessage('Upgrade started');
         setShowAlert(true);
@@ -71,16 +72,18 @@ export default function ManualUpgrades() {
   }
 
   return (
-    <Stack spacing={5}>
+    <Stack>
       <form onSubmit={onUpgradeSubmit}>
-        <Typography variant='h4'>Manual Trait Upgrade</Typography>
-        <TextField id='frogId' label="Frog ID" name="frogId" variant="outlined" fullWidth value={upgrade.frogId} onChange={onInputChange} />
-        <TextField id='itemId' label="Item ID" name="itemId" variant="outlined" fullWidth value={upgrade.itemId} onChange={onInputChange} />
-        <TextField id='wallet' label="Wallet" name="wallet" variant="outlined" fullWidth value={upgrade.wallet} onChange={onInputChange} />
-        <TextField id='transaction' label="Transaction" name="transaction" variant="outlined" fullWidth value={upgrade.transaction} onChange={onInputChange} />
-        <Button type="submit" variant='contained' color="primary">
-            <Typography>Submit</Typography>
-        </Button>
+        <Stack spacing={5}>
+          <Typography variant='h4'>Manual Trait Upgrade</Typography>
+          <TextField id='frogId' label="Frog ID" name="frogId" variant="outlined" fullWidth value={upgrade.frogId} onChange={onInputChange} />
+          <TextField id='itemId' label="Item ID" name="itemId" variant="outlined" fullWidth value={upgrade.itemId} onChange={onInputChange} />
+          <TextField id='wallet' label="Wallet" name="wallet" variant="outlined" fullWidth value={upgrade.wallet} onChange={onInputChange} />
+          <TextField id='transaction' label="Transaction" name="transaction" variant="outlined" fullWidth value={upgrade.transaction} onChange={onInputChange} />
+          <Button type="submit" variant='contained' color="primary">
+              <Typography>Submit</Typography>
+          </Button>
+        </Stack>
       </form>
       <Snackbar
         open={showAlert} 
