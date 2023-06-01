@@ -1,5 +1,5 @@
 import { CheckCircle, Close, ExpandMore, HourglassBottom, Info, Launch, Warning } from "@mui/icons-material"
-import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Divider, Grid, IconButton, LinearProgress, Link, Modal, Paper, Skeleton, Snackbar, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Divider, Grid, IconButton, LinearProgress, Link, Modal, Paper, Skeleton, Snackbar, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { useEthers } from "@usedapp/core"
 import { Fragment, useEffect, useState } from "react"
 import { Froggy } from "../models/Froggy"
@@ -17,6 +17,7 @@ import uhhh from '../images/uhhh.png';
 import { communityWallet, useUpgradeTrait } from "../client"
 import { ethers } from "ethers"
 import { Upgrade } from "../models/Upgrade"
+import TraitCard from "./TraitCard"
 
 declare var window: any;
 
@@ -43,7 +44,8 @@ const useStyles: any = makeStyles((theme: Theme) =>
 );
 
 export default function TraitStudio() {
-  const { account } = useEthers();
+  // const { account } = useEthers();
+  const account = '0x9a52253506f0af340c67fe386f01e6ac7fb93084';
   const classes = useStyles();
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
@@ -254,7 +256,7 @@ export default function TraitStudio() {
     <Fragment>
       <Grid id='panel' container spacing={theme.spacing(isSm ? 1 : 8)}>
         <Grid id='selections' item xl={4} lg={4} md={6} sm={12}>
-          <Stack pb={5}>
+          <Stack spacing={4} pb={5}>
             <Accordion elevation={0} defaultExpanded>
               <AccordionSummary expandIcon={<ExpandMore/>} sx={{p: 0}}>
                 <Stack>
@@ -294,9 +296,85 @@ export default function TraitStudio() {
                 }
               </AccordionDetails>
             </Accordion>
+            <Grid id='history' className="scrollable" container maxHeight={300} overflow='scroll'>
+              {
+                history && history.length > 0 &&
+                <Grid container direction='column'>
+                  <Typography color='secondary' variant='h4' pb={8}>Activity Log</Typography>
+                  {
+                    history.map(activity => {
+                      return (
+                        <Grid container key={activity.id}>
+                          <Grid item xl={3} lg={3} md={3} sm={3} xs={3}>
+                            <Typography>Frog #{activity.frogId}</Typography>
+                          </Grid>
+                          <Grid item xl={3} lg={3} md={3} sm={3} xs={3}>
+                            { activity.isTraitUpgrade && <Typography>Trait #{activity.traitId}</Typography>}
+                          </Grid>
+                          <Grid item xl={3} lg={3} md={3} sm={3} xs={3}>
+                            <Typography>{getDate(activity.date)}</Typography>
+                          </Grid>
+                          <Grid item>
+                            { activity.isTraitUpgrade && <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${activity.upgradeTx}`} target='_blank' sx={{cursor: 'pointer'}}><Launch/></Link>}
+                          </Grid>
+                        </Grid>
+                      )
+                    })
+                  }
+                </Grid>
+              }
+          </Grid>
+          </Stack>
+        </Grid>
+        <Grid id='preview' item xl={4} lg={4} md={6} sm={12} mt={3}>
+          <Paper elevation={0} sx={{ minHeight: 500}}>
             {
+              selectedFrog &&
+              <Stack spacing={4}>
+              <Typography color='secondary' variant='h5'>Preview {selectedFrog.name}</Typography>
+              <Grid container direction='column' justifyContent='space-between'>
+                <Grid item xl={3} lg={3} md={3} sm={6} pb={3}>
+                  {
+                    preview && <img src={preview} alt='' width='100%'/>
+                  }
+                  {
+                    loadingPreview && <Skeleton variant='rectangular' animation='wave' height={500}/>  
+                  }
+                  {
+                    selectedFrog.isTraitUpgraded &&
+                    <Stack spacing={4} pt={2}>
+                        <Stack direction='row' spacing={1} alignItems='center'>
+                          <Info color="secondary"/>
+                          <Typography>Trait preview unavailable for upgraded frogs</Typography>
+                      </Stack>
+                    </Stack>
+                  }
+                  {
+                    isCombinationTaken &&
+                    <Stack spacing={4} pt={2}>
+                        <Stack direction='row' spacing={1} alignItems='center'>
+                          <Info color="secondary"/>
+                          <Typography>Trait combination is already taken</Typography>
+                      </Stack>
+                    </Stack>
+                  }
+                  {
+                  selectedTrait && !selectedFrog.isTraitUpgraded && preview &&
+                  <Grid id='buttons' container justifyContent='center' pt={5}>
+                      <Button variant='contained' sx={{height: 50}} disabled={isCombinationTaken} onClick={() => onUpgradeClick(selectedFrog, selectedTrait)}>
+                          <Typography>Upgrade Frog</Typography>
+                      </Button>
+                  </Grid>
+                  }
+                </Grid>
+              </Grid>
+            </Stack>
+            }
+          </Paper>
+        </Grid>
+        {
             compatibleTraits &&
-            <Grid id='compatible-traits' item mt={3}>
+            <Grid id='compatible-traits' item xl={4} lg={4} md={6} sm={12} mt={3}>
               {
                 selectedFrog &&
                 <Stack spacing={3}>
@@ -338,27 +416,17 @@ export default function TraitStudio() {
                     compatibleTraits && compatibleTraits.body.length > 0 &&
                     <Stack spacing={1}>
                       <Typography variant='h6'>Body</Typography>
-                      <Stack direction='row'>
+                      <Grid container spacing={1}>
                       {
                         compatibleTraits.body.map(body => {
                           return (
-                            <Grid key={body.id} item pr={1}>
-                              <Card>
-                                <CardMedia component='img' src={body.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                              </Card>
-                              <Button 
-                              variant="contained" 
-                              color="primary" 
-                              sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                              disabled={!isTraitOwned(body)}
-                              onClick={() => onTraitClick(selectedFrog, body)}>
-                                {body.name}
-                              </Button>
+                            <Grid key={body.id} container item direction='column' xl={3} lg={3} md={3} sm={3} xs={3}>
+                                <TraitCard title={body.name} image={body.imageTransparent} disabled={!isTraitOwned(body)} onTraitClick={() => onTraitClick(selectedFrog, body)}/>
                             </Grid>
                           )
                         })
                       }
-                      </Stack>
+                      </Grid>
                     </Stack>
                   }
                   { compatibleTraits && compatibleTraits.eyes.length > 0 && <Divider sx={{height: 2}}/> }
@@ -476,79 +544,10 @@ export default function TraitStudio() {
                 </Stack>
               }
             </Grid>
-          }
-          </Stack>
-        </Grid>
-        <Grid id='preview' item xl={4} lg={4} md={6} sm={12} mt={3}>
-          <Paper elevation={0} sx={{ minHeight: 500}}>
-            {
-              selectedFrog &&
-              <Stack spacing={4}>
-              <Typography color='secondary' variant='h5'>Preview {selectedFrog.name}</Typography>
-              <Grid container direction='column' justifyContent='space-between'>
-                <Grid item xl={3} lg={3} md={3} sm={6} pb={3}>
-                  {
-                    preview && <img src={preview} alt='' width='100%'/>
-                  }
-                  {
-                    loadingPreview && <Skeleton variant='rectangular' animation='wave' height={500}/>  
-                  }
-                  {
-                    selectedFrog.isTraitUpgraded &&
-                    <Stack spacing={4} pt={2}>
-                        <Stack direction='row' spacing={1} alignItems='center'>
-                          <Info color="secondary"/>
-                          <Typography>Trait preview unavailable for upgraded frogs</Typography>
-                      </Stack>
-                    </Stack>
-                  }
-                  {
-                    isCombinationTaken &&
-                    <Stack spacing={4} pt={2}>
-                        <Stack direction='row' spacing={1} alignItems='center'>
-                          <Info color="secondary"/>
-                          <Typography>Trait combination is already taken</Typography>
-                      </Stack>
-                    </Stack>
-                  }
-                  {
-                  selectedTrait && !selectedFrog.isTraitUpgraded && preview &&
-                  <Grid id='buttons' container justifyContent='center' pt={5}>
-                      <Button variant='contained' sx={{height: 50}} disabled={isCombinationTaken} onClick={() => onUpgradeClick(selectedFrog, selectedTrait)}>
-                          <Typography>Upgrade Frog</Typography>
-                      </Button>
-                  </Grid>
-                  }
-                </Grid>
-              </Grid>
-            </Stack>
             }
-          </Paper>
-        </Grid>
-        <Grid id='history' item xl={4} lg={4} md={6} sm={12} mt={3}>
-          {
-            history && history.length > 0 &&
-            <Fragment>
-              <Typography color='secondary' variant='h4' pb={5}>Activity Log</Typography>
-              <Stack>
-                {
-                  history.map(activity => {
-                    return (
-                      <Stack key={activity.id} direction='row' spacing={isSm ? 2 : 4} pb={2}>
-                        { activity.isTraitUpgrade && <Typography>Trait Upgrade</Typography>}
-                        <Typography>Frog #{activity.frogId}</Typography>
-                        { activity.isTraitUpgrade && <Typography>Trait #{activity.traitId}</Typography>}
-                        <Typography>{getDate(activity.date)}</Typography>
-                        { activity.isTraitUpgrade && <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${activity.upgradeTx}`} target='_blank' sx={{cursor: 'pointer'}}><Launch/></Link>}
-                      </Stack>
-                    )
-                  })
-                }
-              </Stack>
-            </Fragment>
-          }
-        </Grid>
       </Grid>
+      <Stack>
+      </Stack>
       <Modal open={showUpgradeModal}>
         <Stack className={classes.modal}>
             <Stack direction="row" justifyContent="space-between" pb={8}>
