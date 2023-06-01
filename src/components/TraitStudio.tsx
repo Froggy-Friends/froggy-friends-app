@@ -1,5 +1,5 @@
 import { CheckCircle, Close, ExpandMore, HourglassBottom, Info, Launch, Warning } from "@mui/icons-material"
-import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardMedia, Divider, Grid, IconButton, LinearProgress, Link, Modal, Paper, Skeleton, Snackbar, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Divider, Grid, IconButton, LinearProgress, Link, Modal, Paper, Skeleton, Snackbar, Stack, Theme, Typography, useMediaQuery, useTheme } from "@mui/material"
 import { useEthers } from "@usedapp/core"
 import { Fragment, useEffect, useState } from "react"
 import { Froggy } from "../models/Froggy"
@@ -17,6 +17,7 @@ import uhhh from '../images/uhhh.png';
 import { communityWallet, useUpgradeTrait } from "../client"
 import { ethers } from "ethers"
 import { Upgrade } from "../models/Upgrade"
+import TraitCard from "./TraitCard"
 
 declare var window: any;
 
@@ -254,7 +255,7 @@ export default function TraitStudio() {
     <Fragment>
       <Grid id='panel' container spacing={theme.spacing(isSm ? 1 : 8)}>
         <Grid id='selections' item xl={4} lg={4} md={6} sm={12}>
-          <Stack pb={5}>
+          <Stack spacing={4} pb={5}>
             <Accordion elevation={0} defaultExpanded>
               <AccordionSummary expandIcon={<ExpandMore/>} sx={{p: 0}}>
                 <Stack>
@@ -294,189 +295,34 @@ export default function TraitStudio() {
                 }
               </AccordionDetails>
             </Accordion>
-            {
-            compatibleTraits &&
-            <Grid id='compatible-traits' item mt={3}>
+            <Grid id='history' className="scrollable" container maxHeight={300} overflow='scroll'>
               {
-                selectedFrog &&
-                <Stack spacing={3}>
-                  <Stack>
-                    <Typography variant='h5'>Compatible Traits</Typography>
-                    <Typography variant='subtitle1'>Owned traits have a green button you can click to preview</Typography>
-                  </Stack>
+                history && history.length > 0 &&
+                <Grid container direction='column'>
+                  <Typography color='secondary' variant='h4' pb={8}>Activity Log</Typography>
                   {
-                    compatibleTraits.all.length === 0 && <Typography>No traits compatible for {selectedFrog.name} please select a different froggy.</Typography>
+                    history.map(activity => {
+                      return (
+                        <Grid container key={activity.id}>
+                          <Grid item xl={3} lg={3} md={3} sm={3} xs={3}>
+                            <Typography>Frog #{activity.frogId}</Typography>
+                          </Grid>
+                          <Grid item xl={3} lg={3} md={3} sm={3} xs={3}>
+                            { activity.isTraitUpgrade && <Typography>Trait #{activity.traitId}</Typography>}
+                          </Grid>
+                          <Grid item xl={3} lg={3} md={3} sm={3} xs={3}>
+                            <Typography>{getDate(activity.date)}</Typography>
+                          </Grid>
+                          <Grid item>
+                            { activity.isTraitUpgrade && <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${activity.upgradeTx}`} target='_blank' sx={{cursor: 'pointer'}}><Launch/></Link>}
+                          </Grid>
+                        </Grid>
+                      )
+                    })
                   }
-                  {
-                    compatibleTraits && compatibleTraits.background.length > 0 &&
-                    <Stack spacing={1}>
-                      <Typography variant='h6'>Background</Typography>
-                      <Stack direction='row'>
-                      {
-                        compatibleTraits.background.map(bg => {
-                          return (
-                            <Grid key={bg.id} item pr={1}>
-                              <Card>
-                                <CardMedia component='img' src={bg.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                              </Card>
-                              <Button 
-                              variant="contained" 
-                              color="primary" 
-                              sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                              disabled={!isTraitOwned(bg)}
-                              onClick={() => onTraitClick(selectedFrog, bg)}>
-                                {bg.name}
-                              </Button>
-                            </Grid>
-                          )
-                        })
-                      }
-                      </Stack>
-                    </Stack>
-                  }
-                  {
-                    compatibleTraits && compatibleTraits.body.length > 0 &&
-                    <Stack spacing={1}>
-                      <Typography variant='h6'>Body</Typography>
-                      <Stack direction='row'>
-                      {
-                        compatibleTraits.body.map(body => {
-                          return (
-                            <Grid key={body.id} item pr={1}>
-                              <Card>
-                                <CardMedia component='img' src={body.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                              </Card>
-                              <Button 
-                              variant="contained" 
-                              color="primary" 
-                              sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                              disabled={!isTraitOwned(body)}
-                              onClick={() => onTraitClick(selectedFrog, body)}>
-                                {body.name}
-                              </Button>
-                            </Grid>
-                          )
-                        })
-                      }
-                      </Stack>
-                    </Stack>
-                  }
-                  { compatibleTraits && compatibleTraits.eyes.length > 0 && <Divider sx={{height: 2}}/> }
-                  {
-                    compatibleTraits && compatibleTraits.eyes.length > 0 &&
-                    <Stack spacing={1}>
-                      <Typography variant='h6'>Eyes</Typography>
-                      <Stack direction='row'>
-                      {
-                        compatibleTraits.eyes.map(eye => {
-                          return (
-                            <Grid key={eye.id} item pr={1}>
-                              <Card>
-                                <CardMedia component='img' src={eye.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                              </Card>
-                              <Button 
-                              variant="contained" 
-                              color="primary" 
-                              sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                              disabled={!isTraitOwned(eye)}
-                              onClick={() => onTraitClick(selectedFrog, eye)}>
-                                {eye.name}
-                              </Button>
-                            </Grid>
-                          )
-                        })
-                      }
-                      </Stack>
-                    </Stack>
-                  }
-                  { compatibleTraits && compatibleTraits.mouth.length > 0 && <Divider sx={{height: 2}}/>}
-                  {
-                    compatibleTraits && compatibleTraits.mouth.length > 0 &&
-                    <Stack spacing={1}>
-                      <Typography variant='h6'>Mouth</Typography>
-                      <Stack direction='row'>
-                      {
-                        compatibleTraits.mouth.map(mouth => {
-                          return (
-                            <Grid key={mouth.id} item pr={1}>
-                              <Card>
-                                <CardMedia component='img' src={mouth.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                              </Card>
-                              <Button 
-                                variant="contained" 
-                                color="primary" 
-                                sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                                disabled={!isTraitOwned(mouth)}
-                                onClick={() => onTraitClick(selectedFrog, mouth)}>
-                                {mouth.name}
-                              </Button>
-                            </Grid>
-                          )
-                        })
-                      }
-                      </Stack>
-                    </Stack>
-                  }
-                  { compatibleTraits && compatibleTraits.shirt.length > 0 && <Divider sx={{height: 2}}/>}
-                  {
-                    compatibleTraits && compatibleTraits.shirt.length > 0 &&
-                    <Stack spacing={1}>
-                      <Typography variant='h6'>Shirt</Typography>
-                      <Stack direction='row'>
-                      {
-                        compatibleTraits.shirt.map(shirt => {
-                          return (
-                            <Grid key={shirt.id} item pr={1}>
-                              <Card>
-                                <CardMedia component='img' src={shirt.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                              </Card>
-                              <Button 
-                                variant="contained" 
-                                color="primary" 
-                                sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                                disabled={!isTraitOwned(shirt)}
-                                onClick={() => onTraitClick(selectedFrog, shirt)}>
-                                {shirt.name}
-                                </Button>
-                            </Grid>
-                          )
-                        })
-                      }
-                      </Stack>
-                    </Stack>
-                  }
-                  { compatibleTraits && compatibleTraits.hat.length > 0 && <Divider sx={{height: 2}}/>}
-                  {
-                    compatibleTraits && compatibleTraits.hat.length > 0 &&
-                    <Stack spacing={1}>
-                      <Typography variant='h6'>Hat</Typography>
-                      <Stack direction='row'>
-                      {
-                        compatibleTraits.hat.map(hat => {
-                          return (
-                            <Grid key={hat.id} item pr={1}>
-                              <Card>
-                                <CardMedia component='img' src={hat.imageTransparent} height={100} alt='' sx={{backgroundColor: '#93d0aa'}}/>
-                              </Card>
-                              <Button 
-                                variant="contained" 
-                                color="primary" 
-                                sx={{mt: 2, ":disabled": { color: 'white', bgcolor: '#3C3C3C'}}} 
-                                disabled={!isTraitOwned(hat)}
-                                onClick={() => onTraitClick(selectedFrog, hat)}>
-                                {hat.name}
-                              </Button>
-                            </Grid>
-                          )
-                        })
-                      }
-                      </Stack>
-                    </Stack>
-                  }
-                </Stack>
+                </Grid>
               }
-            </Grid>
-          }
+          </Grid>
           </Stack>
         </Grid>
         <Grid id='preview' item xl={4} lg={4} md={6} sm={12} mt={3}>
@@ -525,30 +371,164 @@ export default function TraitStudio() {
             }
           </Paper>
         </Grid>
-        <Grid id='history' item xl={4} lg={4} md={6} sm={12} mt={3}>
-          {
-            history && history.length > 0 &&
-            <Fragment>
-              <Typography color='secondary' variant='h4' pb={5}>Activity Log</Typography>
-              <Stack>
-                {
-                  history.map(activity => {
-                    return (
-                      <Stack key={activity.id} direction='row' spacing={isSm ? 2 : 4} pb={2}>
-                        { activity.isTraitUpgrade && <Typography>Trait Upgrade</Typography>}
-                        <Typography>Frog #{activity.frogId}</Typography>
-                        { activity.isTraitUpgrade && <Typography>Trait #{activity.traitId}</Typography>}
-                        <Typography>{getDate(activity.date)}</Typography>
-                        { activity.isTraitUpgrade && <Link href={`${process.env.REACT_APP_ETHERSCAN}/tx/${activity.upgradeTx}`} target='_blank' sx={{cursor: 'pointer'}}><Launch/></Link>}
-                      </Stack>
-                    )
-                  })
-                }
-              </Stack>
-            </Fragment>
-          }
-        </Grid>
+        {
+            compatibleTraits &&
+            <Grid id='compatible-traits' item xl={4} lg={4} md={6} sm={12} mt={3}>
+              {
+                selectedFrog &&
+                <Stack spacing={3}>
+                  <Stack>
+                    <Typography variant='h5'>Compatible Traits</Typography>
+                    <Typography variant='subtitle1'>Owned traits have a green button you can click to preview</Typography>
+                  </Stack>
+                  {
+                    compatibleTraits.all.length === 0 && <Typography>No traits compatible for {selectedFrog.name} please select a different froggy.</Typography>
+                  }
+                  { compatibleTraits && compatibleTraits.background.length > 0 && <Divider sx={{height: 2}}/> }
+                  {
+                    compatibleTraits && compatibleTraits.background.length > 0 &&
+                    <Stack spacing={1}>
+                      <Typography variant='h6'>Background</Typography>
+                      <Grid container spacing={1}>
+                      {
+                        compatibleTraits.background.map(bg => {
+                          return (
+                            <Grid key={bg.id} container item direction='column' xl={3} lg={3} md={3} sm={3} xs={3}>
+                              <TraitCard 
+                                  title={bg.name} 
+                                  image={bg.imageTransparent} 
+                                  disabled={!isTraitOwned(bg)} 
+                                  onTraitClick={() => onTraitClick(selectedFrog, bg)}
+                                />
+                            </Grid>
+                          )
+                        })
+                      }
+                      </Grid>
+                    </Stack>
+                  }
+                  { compatibleTraits && compatibleTraits.body.length > 0 && <Divider sx={{height: 2}}/> }
+                  {
+                    compatibleTraits && compatibleTraits.body.length > 0 &&
+                    <Stack spacing={1}>
+                      <Typography variant='h6'>Body</Typography>
+                      <Grid container spacing={1}>
+                      {
+                        compatibleTraits.body.map(body => {
+                          return (
+                            <Grid key={body.id} container item direction='column' xl={3} lg={3} md={3} sm={3} xs={3}>
+                                <TraitCard 
+                                  title={body.name} 
+                                  image={body.imageTransparent} 
+                                  disabled={!isTraitOwned(body)} 
+                                  onTraitClick={() => onTraitClick(selectedFrog, body)}
+                                />
+                            </Grid>
+                          )
+                        })
+                      }
+                      </Grid>
+                    </Stack>
+                  }
+                  { compatibleTraits && compatibleTraits.eyes.length > 0 && <Divider sx={{height: 2}}/> }
+                  {
+                    compatibleTraits && compatibleTraits.eyes.length > 0 &&
+                    <Stack spacing={1}>
+                      <Typography variant='h6'>Eyes</Typography>
+                      <Grid container spacing={1}>
+                      {
+                        compatibleTraits.eyes.map(eye => {
+                          return (
+                            <Grid key={eye.id} container item direction='column' xl={3} lg={3} md={3} sm={3} xs={3}>
+                                <TraitCard 
+                                  title={eye.name} 
+                                  image={eye.imageTransparent} 
+                                  disabled={!isTraitOwned(eye)} 
+                                  onTraitClick={() => onTraitClick(selectedFrog, eye)}
+                                />
+                            </Grid>
+                          )
+                        })
+                      }
+                      </Grid>
+                    </Stack>
+                  }
+                  { compatibleTraits && compatibleTraits.mouth.length > 0 && <Divider sx={{height: 2}}/>}
+                  {
+                    compatibleTraits && compatibleTraits.mouth.length > 0 &&
+                    <Stack spacing={1}>
+                      <Typography variant='h6'>Mouth</Typography>
+                      <Grid container spacing={1}>
+                      {
+                        compatibleTraits.mouth.map(mouth => {
+                          return (
+                            <Grid key={mouth.id} container item direction='column' xl={3} lg={3} md={3} sm={3} xs={3}>
+                              <TraitCard 
+                                  title={mouth.name} 
+                                  image={mouth.imageTransparent} 
+                                  disabled={!isTraitOwned(mouth)} 
+                                  onTraitClick={() => onTraitClick(selectedFrog, mouth)}
+                                />
+                            </Grid>
+                          )
+                        })
+                      }
+                      </Grid>
+                    </Stack>
+                  }
+                  { compatibleTraits && compatibleTraits.shirt.length > 0 && <Divider sx={{height: 2}}/>}
+                  {
+                    compatibleTraits && compatibleTraits.shirt.length > 0 &&
+                    <Stack spacing={1}>
+                      <Typography variant='h6'>Shirt</Typography>
+                      <Grid container spacing={1}>
+                      {
+                        compatibleTraits.shirt.map(shirt => {
+                          return (
+                            <Grid key={shirt.id} container item direction='column' xl={3} lg={3} md={3} sm={3} xs={3}>
+                              <TraitCard 
+                                  title={shirt.name} 
+                                  image={shirt.imageTransparent} 
+                                  disabled={!isTraitOwned(shirt)} 
+                                  onTraitClick={() => onTraitClick(selectedFrog, shirt)}
+                                />
+                            </Grid>
+                          )
+                        })
+                      }
+                      </Grid>
+                    </Stack>
+                  }
+                  { compatibleTraits && compatibleTraits.hat.length > 0 && <Divider sx={{height: 2}}/>}
+                  {
+                    compatibleTraits && compatibleTraits.hat.length > 0 &&
+                    <Stack spacing={1}>
+                      <Typography variant='h6'>Hat</Typography>
+                      <Grid container spacing={1}>
+                      {
+                        compatibleTraits.hat.map(hat => {
+                          return (
+                            <Grid key={hat.id} container item direction='column' xl={3} lg={3} md={3} sm={3} xs={3}>
+                              <TraitCard 
+                                  title={hat.name} 
+                                  image={hat.imageTransparent} 
+                                  disabled={!isTraitOwned(hat)} 
+                                  onTraitClick={() => onTraitClick(selectedFrog, hat)}
+                                />
+                            </Grid>
+                          )
+                        })
+                      }
+                      </Grid>
+                    </Stack>
+                  }
+                </Stack>
+              }
+            </Grid>
+            }
       </Grid>
+      <Stack>
+      </Stack>
       <Modal open={showUpgradeModal}>
         <Stack className={classes.modal}>
             <Stack direction="row" justifyContent="space-between" pb={8}>
