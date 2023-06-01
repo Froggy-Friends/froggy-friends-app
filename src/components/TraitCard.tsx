@@ -25,11 +25,9 @@ export default function TraitCard({title, image, disabled, onTraitClick}: TraitC
   return (
     <Card className="blend" elevation={0}>
       <CardHeader title={title} titleTypographyProps={{variant: 'body2', sx: {maxWidth: getHeaderMaxWidth(), whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'} }}/>
-      <CardMedia component='img' src={image} alt='' sx={{backgroundColor: '#93d0aa'}}/>
+      <CardMedia component='img' src={image} alt='' sx={{backgroundColor: '#93d0aa', borderRadius: 25}}/>
       <CardActions sx={{display: 'flex', justifyContent: 'center'}}>
-      <Button color="primary" variant='outlined' disabled={disabled} onClick={onTraitClick}>
-          Apply
-      </Button>
+      { !disabled && <Button color="primary" variant='outlined' onClick={onTraitClick}>Apply</Button> }
       </CardActions>
     </Card>
   )
