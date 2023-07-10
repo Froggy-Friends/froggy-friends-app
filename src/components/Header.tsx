@@ -140,20 +140,8 @@ export default function Header(props: HeaderProps) {
                   }
                 </Stack>
                 <Stack id='links' direction='row' display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' spacing={2}>
-                    <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => navigate("/staking")}>Portfolio</Typography>
-                    <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => navigate("/market")}>Shop</Typography>
-                    {/* <Typography className="link" variant="h5" color={getLinkColor('/board')} onClick={() => navigate("/board")}>Board</Typography> */}
                     <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => navigate("/studio")}>Studio</Typography>
-                    <Typography className="link" variant="h5">
-                      <Link href="https://marketplace.froggyfriendsnft.com" target='_blank' underline="none" color='secondary'>
-                        Market
-                      </Link>
-                    </Typography>
-                    <Typography className="link" variant="h5">
-                      <Link href="https://swap.froggyfriendsnft.com" target='_blank' underline="none" color='secondary'>
-                        Swap
-                      </Link>
-                    </Typography>
+                    <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => navigate("/market")}>Shop</Typography>
                 </Stack>
                 <Stack id='buttons' direction='row' justifyContent="end" alignItems='center' p={1}>
                   <Stack direction='row' pr={1}>
@@ -254,30 +242,10 @@ export default function Header(props: HeaderProps) {
               </Grid>
             </Grid>
             <Grid item pb={3}>
-              <Typography className="link" variant="h5" color={getLinkColor('/staking')} onClick={() => {navigate("/staking"); setSidemenuOpen(false)}}>Portfolio</Typography>
-            </Grid>
-            <Grid item pb={3}>
-              <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => {navigate("/market"); setSidemenuOpen(false)}}>Shop</Typography>
-            </Grid>
-            {/* <Grid item pb={3}>
-              <Typography className="link" variant="h5" color={getLinkColor('/board')} onClick={() => {navigate("/board"); setSidemenuOpen(false)}}>Board</Typography>
-            </Grid> */}
-            <Grid item pb={3}>
               <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => {navigate("/studio"); setSidemenuOpen(false)}}>Studio</Typography>
             </Grid>
             <Grid item pb={3}>
-              <Typography className="link" variant="h5">
-                <Link href="https://marketplace.froggyfriendsnft.com" target='_blank' underline="none" color='secondary'>
-                  Market
-                </Link>
-              </Typography>
-            </Grid>
-            <Grid item pb={3}>
-              <Typography className="link" variant="h5">
-                <Link href="https://swap.froggyfriendsnft.com" target='_blank' underline="none" color='secondary'>
-                  Swap
-                </Link>
-              </Typography>
+              <Typography className="link" variant="h5" color={getLinkColor('/shop')} onClick={() => {navigate("/shop"); setSidemenuOpen(false)}}>Shop</Typography>
             </Grid>
             <Grid id='account' container item alignItems='center'>
               <Grid item display={!account ? "flex" : "none"} pr={2}>

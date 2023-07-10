@@ -56,11 +56,8 @@ export default function App() {
               <BrowserRouter>
                 <Header isAdmin={isAdmin} onAdminChange={onAdminChange}/>
                 <Routes>
-                  <Route path="/portfolio" element={<Staking/>} />
-                  <Route path="/market" element={<Market/>}/>
                   <Route path="/studio" element={<Studio/>}/>
-                  <Route path="/spaces" element={<Spaces/>}/>
-                  <Route path="/board" element={isSm ? <BoardMobile/> : <Board/>} />
+                  <Route path="/shop" element={<Market/>}/>
                   <Route path="/item/:id" element={<ItemDetails/>} />
                   <Route path='/frog/:id' element={<FrogDetails/>}/>
                   <Route path="/admin" element={
@@ -68,7 +65,7 @@ export default function App() {
                       <Admin/>
                     </ProtectedRoute>
                   } />
-                  <Route path="*" element={ <Navigate to="/portfolio" replace />} />
+                  <Route path="*" element={ <Navigate to="/studio" replace />} />
                 </Routes>
                 <Footer/>
               </BrowserRouter>
