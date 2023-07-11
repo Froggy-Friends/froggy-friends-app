@@ -140,8 +140,8 @@ export default function Header(props: HeaderProps) {
                   }
                 </Stack>
                 <Stack id='links' direction='row' display={isAboveTablet ? "flex" : "none"} justifyContent='space-evenly' textAlign='center' spacing={2}>
-                    <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => navigate("/studio")}>Studio</Typography>
-                    <Typography className="link" variant="h5" color={getLinkColor('/market')} onClick={() => navigate("/market")}>Shop</Typography>
+                    <Link href="/studio" variant="h5" underline="none" color={getLinkColor('/studio')}>Studio</Link>
+                    <Link href="/shop" variant="h5" underline="none" color={getLinkColor('/shop')}>Shop</Link>
                 </Stack>
                 <Stack id='buttons' direction='row' justifyContent="end" alignItems='center' p={1}>
                   <Stack direction='row' pr={1}>
@@ -242,10 +242,10 @@ export default function Header(props: HeaderProps) {
               </Grid>
             </Grid>
             <Grid item pb={3}>
-              <Typography className="link" variant="h5" color={getLinkColor('/studio')} onClick={() => {navigate("/studio"); setSidemenuOpen(false)}}>Studio</Typography>
+              <Link href="/studio" variant="h5" underline="none" color={getLinkColor('/studio')}>Studio</Link>
             </Grid>
             <Grid item pb={3}>
-              <Typography className="link" variant="h5" color={getLinkColor('/shop')} onClick={() => {navigate("/shop"); setSidemenuOpen(false)}}>Shop</Typography>
+              <Link href="/shop" variant="h5" underline="none" color={getLinkColor('/shop')}>Shop</Link>
             </Grid>
             <Grid id='account' container item alignItems='center'>
               <Grid item display={!account ? "flex" : "none"} pr={2}>
