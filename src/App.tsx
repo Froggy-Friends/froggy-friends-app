@@ -8,7 +8,6 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import getTheme from './theme';
 import config from './config';
 import Admin from "./pages/Admin";
-import Staking from "./pages/Staking";
 import Market from "./pages/Market";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
@@ -23,7 +22,7 @@ export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 const ProtectedRoute = ({ admin, children}: { admin: boolean, children: any}) => {
   if (!admin) {
-    return <Navigate to="/staking" replace/>
+    return <Navigate to="/market" replace/>
   }
   return children;
 }
@@ -56,7 +55,6 @@ export default function App() {
               <BrowserRouter>
                 <Header isAdmin={isAdmin} onAdminChange={onAdminChange}/>
                 <Routes>
-                  <Route path="/portfolio" element={<Staking/>} />
                   <Route path="/market" element={<Market/>}/>
                   <Route path="/studio" element={<Studio/>}/>
                   <Route path="/spaces" element={<Spaces/>}/>
